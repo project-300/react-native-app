@@ -1,0 +1,45 @@
+{
+  "rules": {
+    "import-spacing": true,
+    "max-line-length": [
+      true,
+      140
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "indent": [
+      true,
+      "tabs",
+      4
+    ],
+    "no-any": true,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-rest-spread",
+      "check-type",
+      "check-module",
+      "check-type-operator",
+      "check-preblock",
+      "check-postbrace"
+    ],
+    "comment-format": [
+      true,
+      "check-space"
+    ],
+    "no-consecutive-blank-lines": true
+  }
+}
