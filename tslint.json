@@ -40,6 +40,16 @@
       true,
       "check-space"
     ],
-    "no-consecutive-blank-lines": true
+    "no-consecutive-blank-lines": true,
+    "trailing-comma": [
+      true, {
+      "singleline": "never",
+      "multiline": {
+        "objects": "never",
+        "arrays": "never",
+        "functions": "never",
+        "typeLiterals": "ignore"
+      }
+    }]
   }
 }
