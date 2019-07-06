@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import {
+	Platform,
+	StyleSheet,
+	Text,
+	View
+} from 'react-native';
+import { fakeAction } from './actions';
+import { connect, MapStateToProps } from 'react-redux';
 
 const instructions = Platform.select({
 	ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -9,7 +16,7 @@ const instructions = Platform.select({
 });
 
 interface Props { }
-export default class App extends Component<Props> {
+class App extends Component<Props> {
 	render() {
 		return (
 			<View style={ styles.container}>
@@ -39,3 +46,11 @@ const styles = StyleSheet.create({
 		marginBottom: 5
 	}
 });
+
+const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
+	return {
+		state
+	};
+};
+
+export default connect(mapStateToProps, { fakeAction })(App);
