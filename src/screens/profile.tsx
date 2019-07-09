@@ -2,25 +2,17 @@ import React, { Component } from 'react';
 import {
 	StyleSheet,
 	Text,
-	View,
-	Button
+	View
 } from 'react-native';
 import { fakeAction } from '../actions';
 import { connect, MapStateToProps } from 'react-redux';
 
 interface Props { }
-class Home extends Component<Props> {
-
-	goToProfile = () => {
-		// @ts-ignore
-		this.props.navigation.navigate('Profile');
-	}
-
+class Profile extends Component<Props> {
 	render() {
 		return (
 			<View style={ styles.container}>
-				<Text style={ styles.text }>Home Screen</Text>
-				<Button onPress={ this.goToProfile } title={ 'Test' }>Go To Profile</Button>
+				<Text style={ styles.text }>Profile Screen</Text>
 			</View>
 		);
 	}
@@ -46,4 +38,4 @@ const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fakeAction })(Home);
+export default connect(mapStateToProps, { fakeAction })(Profile);
