@@ -12,7 +12,7 @@ const FakeReducer = (state = 0, action: object) => {
 		default:
 			return state;
 	}
-}
+};
 
 export default combineReducers({
 	fake: FakeReducer

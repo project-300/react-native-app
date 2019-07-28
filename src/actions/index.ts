@@ -1,4 +1,4 @@
-import { FAKE_ACTION_TYPE } from '../constants/action-types';
+import { FAKE_ACTION_TYPE } from '../constants/redux-actions';
 
 /*
 * This file will be used for exporting all actions.

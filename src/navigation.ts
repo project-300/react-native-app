@@ -1,14 +1,46 @@
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+import {
+	createAppContainer,
+	createStackNavigator,
+	createSwitchNavigator,
+	NavigationContainer
+} from 'react-navigation';
 import Home from './screens/home';
-import Profile from './screens/profile';
+import Login from './screens/login';
 
-const NavigationStack = createStackNavigator({
-	Home: { screen: Home },
-	Profile: { screen: Profile }
-}, {
-	initialRouteName: 'Home'
+const SignedOutStack: NavigationContainer = createStackNavigator({
+	Login: {
+		screen: Login,
+		navigationOptions: () => ({
+			title: 'Login'
+		})
+	}
 });
 
-const Navigation = createAppContainer(NavigationStack);
+const SignedInStack: NavigationContainer = createStackNavigator({
+	Home: {
+		screen: Home,
+		navigationOptions: () => ({
+			title: 'Home'
+		})
+	}
+});
 
-export default Navigation;
+const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
+	return createSwitchNavigator(
+		{
+			SignedInStack: {
+				screen: SignedInStack
+			},
+			SignedOutStack: {
+				screen: SignedOutStack
+			}
+		},
+		{
+			initialRouteName: signedIn ? 'SignedInStack' : 'SignedOutStack'
+		}
+	);
+};
+
+const CreateNavigator = (signedIn: boolean = false): NavigationContainer => createAppContainer(SwitchNavigator(signedIn));
+
+export default CreateNavigator;
