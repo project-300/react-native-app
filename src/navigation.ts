@@ -7,6 +7,7 @@ import {
 import Home from './screens/home';
 import Login from './screens/login';
 import SignUp from './screens/signup';
+import Verification from './screens/signup/verification';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -19,6 +20,13 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 		screen: SignUp,
 		navigationOptions: () => ({
 			title: 'Sign Up',
+			headerLeft: null
+		})
+	},
+	Verification: {
+		screen: Verification,
+		navigationOptions: () => ({
+			title: 'Verification',
 			headerLeft: null
 		})
 	}

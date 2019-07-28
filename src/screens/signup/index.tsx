@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
-	Button, TextInput, TouchableOpacity
+	Button,
+	TextInput,
+	TouchableOpacity
 } from 'react-native';
 import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
@@ -25,6 +27,10 @@ class SignUp extends Component<Props, State> {
 		const { email, username, password } = this.state;
 		const { navigate } = this.props.navigation;
 
+		if (!email) return this.setState({ error: 'Email is missing' });
+		if (!username) return this.setState({ error: 'Username is missing' });
+		if (!password) return this.setState({ error: 'Password is missing' });
+
 		return Auth.signUp({
 			username,
 			password,
@@ -32,16 +38,17 @@ class SignUp extends Component<Props, State> {
 				email
 			}
 		})
-			.then(res => {
-				navigate('Login');
+			.then(() => {
+				navigate('Verification', { username });
 			})
-			.catch(err => console.log(err));
+			.catch(err => this.setState({ error: err.message }));
 	}
 
 	render() {
 		return (
 			<View style={ styles.container }>
 				<TextInput
+					autoCapitalize='none'
 					placeholder={ 'Email Address' }
 					onChangeText={ email => this.setState({ email } ) }
 					style={ styles.input } />
