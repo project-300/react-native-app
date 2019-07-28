@@ -14,6 +14,7 @@ export interface Props {
 }
 
 export interface State {
+	email: string;
 	username: string;
 	password: string;
 	error?: string;

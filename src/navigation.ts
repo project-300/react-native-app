@@ -6,12 +6,20 @@ import {
 } from 'react-navigation';
 import Home from './screens/home';
 import Login from './screens/login';
+import SignUp from './screens/signup';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
 		screen: Login,
 		navigationOptions: () => ({
 			title: 'Login'
+		})
+	},
+	SignUp: {
+		screen: SignUp,
+		navigationOptions: () => ({
+			title: 'Sign Up',
+			headerLeft: null
 		})
 	}
 });
