@@ -9,6 +9,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import styles from './styles';
 import { Props, State } from './interfaces';
+import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
 
 class Verification extends Component<Props, State> {
 
@@ -17,8 +18,28 @@ class Verification extends Component<Props, State> {
 
 		this.state = {
 			username: props.navigation.getParam('username'),
-			code: ''
+			email: props.navigation.getParam('email'),
+			codeDeliveryDetails: props.navigation.getParam('codeDeliveryDetails'),
+			code: '',
+			verificationText: ''
 		};
+	}
+
+	componentDidMount(): void {
+		this._setVerificationText();
+	}
+
+	_setVerificationText = (): void => {
+		const { email } = this.state;
+
+		if (this.state.codeDeliveryDetails.DeliveryMedium === EMAIL)
+			this.setState({
+				verificationText: `A verification code has been sent to ${ email }. Please enter it here to complete your signup.`
+			});
+		if (this.state.codeDeliveryDetails.DeliveryMedium === PHONE)
+			this.setState({
+				verificationText: `A verification code has been sent to your phone. Please enter it here to complete your signup.`
+			});
 	}
 
 	_signUp = async (): Promise<void> => {
@@ -32,14 +53,17 @@ class Verification extends Component<Props, State> {
 			code
 		)
 			.then(() => {
-				navigate('Login')
+				navigate('Login');
 			})
-			.catch(err => this.setState({ error: err.message }));
+			.catch(err => this.setState({
+				error: err.message
+			}));
 	}
 
 	render() {
 		return (
 			<View style={ styles.container }>
+				<Text style={ styles.text }>{ this.state.verificationText }</Text>
 				<TextInput
 					placeholder={ 'Verification Code' }
 					onChangeText={ code => this.setState({ code } ) }

@@ -1,4 +1,4 @@
-import { LOGIN, SEND_MESSAGE } from '../constants/websocket-actions';
+import { SIGNUP, LOGIN, SEND_MESSAGE } from '../constants/websocket-actions';
 
 class WebSocketAPI {
 	private WS: WebSocket = new WebSocket('wss://29djb951zd.execute-api.eu-west-1.amazonaws.com/dev');
@@ -32,11 +32,24 @@ class WebSocketAPI {
 	}
 
 	public sendMessage = (data: string): void => {
-		this.WS.send(JSON.stringify({ action: SEND_MESSAGE, data }));
+		this.WS.send(JSON.stringify({
+			action: SEND_MESSAGE,
+			data
+		}));
 	}
 
 	public login = (data: object): void => {
-		this.WS.send(JSON.stringify({ action: LOGIN, data }));
+		this.WS.send(JSON.stringify({
+			action: LOGIN,
+			data
+		}));
+	}
+
+	public signup = (data: object): void => {
+		this.WS.send(JSON.stringify({
+			action: SIGNUP,
+			data
+		}));
 	}
 
 }

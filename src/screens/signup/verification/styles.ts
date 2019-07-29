@@ -10,6 +10,12 @@ const styles = StyleSheet.create<Styles>({
 		padding: 10
 	},
 
+	text: {
+		fontWeight: 'bold',
+		textAlign: 'center',
+		marginBottom: 40
+	},
+
 	input: {
 		width: '80%',
 		backgroundColor: '#DDD',

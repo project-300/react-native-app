@@ -10,6 +10,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import styles from './styles';
 import { Props, State } from './interfaces';
+import WS from '../../api/websocket';
 
 class SignUp extends Component<Props, State> {
 
@@ -38,11 +39,23 @@ class SignUp extends Component<Props, State> {
 				email
 			}
 		})
-			.then(() => {
-				navigate('Verification', { username });
+			.then(res => {
+				this._logCognitoData(res)
+					.then(() => {
+						if (res.userConfirmed) navigate('Login');
+						else navigate('Verification', {
+							username,
+							email,
+							codeDeliveryDetails: res.codeDeliveryDetails
+						});
+					});
 			})
-			.catch(err => this.setState({ error: err.message }));
+			.catch(err => this.setState({
+				error: err.message
+			}));
 	}
+
+	_logCognitoData = (res: object): Promise<void> => new Promise(resolve => resolve(WS.signup(res)));
 
 	render() {
 		return (
