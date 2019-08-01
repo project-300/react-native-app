@@ -20,6 +20,7 @@ interface CodeDeliveryDetails {
 }
 
 export interface State {
+	userId: string;
 	username: string;
 	email: string;
 	codeDeliveryDetails: CodeDeliveryDetails;

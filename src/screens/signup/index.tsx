@@ -46,7 +46,8 @@ class SignUp extends Component<Props, State> {
 						else navigate('Verification', {
 							username,
 							email,
-							codeDeliveryDetails: res.codeDeliveryDetails
+							codeDeliveryDetails: res.codeDeliveryDetails,
+							userId: res.userSub
 						});
 					});
 			})

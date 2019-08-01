@@ -1,4 +1,4 @@
-import { SIGNUP, LOGIN, SEND_MESSAGE } from '../constants/websocket-actions';
+import { SIGNUP, LOGIN, SEND_MESSAGE, CONFIRM_ACCOUNT } from '../constants/websocket-actions';
 
 class WebSocketAPI {
 	private WS: WebSocket = new WebSocket('wss://29djb951zd.execute-api.eu-west-1.amazonaws.com/dev');
@@ -48,6 +48,13 @@ class WebSocketAPI {
 	public signup = (data: object): void => {
 		this.WS.send(JSON.stringify({
 			action: SIGNUP,
+			data
+		}));
+	}
+
+	public confirmAccount = (data: object): void => {
+		this.WS.send(JSON.stringify({
+			action: CONFIRM_ACCOUNT,
 			data
 		}));
 	}

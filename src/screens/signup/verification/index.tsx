@@ -10,6 +10,7 @@ import { Auth } from 'aws-amplify';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
+import WS from '../../../api/websocket';
 
 class Verification extends Component<Props, State> {
 
@@ -17,6 +18,7 @@ class Verification extends Component<Props, State> {
 		super(props);
 
 		this.state = {
+			userId: props.navigation.getParam('userId'),
 			username: props.navigation.getParam('username'),
 			email: props.navigation.getParam('email'),
 			codeDeliveryDetails: props.navigation.getParam('codeDeliveryDetails'),
@@ -42,7 +44,7 @@ class Verification extends Component<Props, State> {
 			});
 	}
 
-	_signUp = async (): Promise<void> => {
+	_signUp = (): Promise<void> | void => {
 		const { username, code } = this.state;
 		const { navigate } = this.props.navigation;
 
@@ -52,13 +54,16 @@ class Verification extends Component<Props, State> {
 			username,
 			code
 		)
-			.then(() => {
-				navigate('Login');
+			.then(res => {
+				this._logCognitoData(res)
+					.then(() => navigate('Login'));
 			})
 			.catch(err => this.setState({
 				error: err.message
 			}));
 	}
+
+	_logCognitoData = (res: object): Promise<void> => new Promise(resolve => resolve(WS.confirmAccount({ userId: this.state.userId })));
 
 	render() {
 		return (
