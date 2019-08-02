@@ -19,3 +19,11 @@ export interface State {
 	password: string;
 	error?: string;
 }
+
+export interface SignupResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
