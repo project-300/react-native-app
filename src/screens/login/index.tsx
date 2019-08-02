@@ -8,8 +8,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import { signIn } from '../../auth';
 import styles from './styles';
-import { Props, State } from './interfaces';
-import WS from '../../api/websocket';
+import { LoginResult, Props, State } from './interfaces';
 
 // Documentation: /docs/login.md
 
@@ -31,20 +30,34 @@ class Login extends Component<Props, State> {
 		if (!username) return this.setState({ error: 'Username is missing' });
 		if (!password) return this.setState({ error: 'Password is missing' });
 
-		return Auth.signIn(username, password)
-			.then(res => {
-				signIn()
-					.then(() => {
-						this._logCognitoData(res)
-							.then(() => navigate('Home'));
-					});
-			})
-			.catch(err => {
-				this.setState({ error: err.message });
+		try {
+			const auth = await Auth.signIn(username, password);
+			await signIn();
+
+			const apiRes: LoginResult = await this._logCognitoData(auth);
+			if (apiRes.success) navigate('Home');
+		} catch (e) {
+			this.setState({
+				error: e.message || e.description
 			});
+		}
 	}
 
-	_logCognitoData = (res: object): Promise<void> => new Promise(resolve => resolve(WS.login(res)));
+	_logCognitoData = async (authData: object): Promise<LoginResult> => {
+		const res: Response = await fetch('https://h4q090fyzg.execute-api.eu-west-1.amazonaws.com/dev/login', {
+			method: 'POST',
+			body: JSON.stringify(authData),
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			}
+		});
+
+		const ok = res.ok;
+		const data: LoginResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
 
 	render() {
 		return (

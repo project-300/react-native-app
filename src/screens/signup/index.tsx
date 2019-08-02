@@ -9,8 +9,9 @@ import {
 import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import styles from './styles';
-import { Props, State } from './interfaces';
-import WS from '../../api/websocket';
+import { Props, State, SignupResult } from './interfaces';
+
+// Documentation: /docs/signup.md
 
 class SignUp extends Component<Props, State> {
 
@@ -32,31 +33,46 @@ class SignUp extends Component<Props, State> {
 		if (!username) return this.setState({ error: 'Username is missing' });
 		if (!password) return this.setState({ error: 'Password is missing' });
 
-		return Auth.signUp({
-			username,
-			password,
-			attributes: {
-				email
-			}
-		})
-			.then(res => {
-				this._logCognitoData(res)
-					.then(() => {
-						if (res.userConfirmed) navigate('Login');
-						else navigate('Verification', {
-							username,
-							email,
-							codeDeliveryDetails: res.codeDeliveryDetails,
-							userId: res.userSub
-						});
-					});
-			})
-			.catch(err => this.setState({
-				error: err.message
-			}));
+		try {
+			const auth = await Auth.signUp({
+				username,
+				password,
+				attributes: {
+					email
+				}
+			});
+
+			const apiRes: SignupResult = await this._logUserDetails(auth);
+
+			if (auth.userConfirmed && apiRes.success) navigate('Login');
+			else navigate('Verification', {
+				username,
+				email,
+				codeDeliveryDetails: auth.codeDeliveryDetails,
+				userId: auth.userSub
+			});
+		} catch (e) {
+			this.setState({
+				error: e.message || e.description
+			});
+		}
 	}
 
-	_logCognitoData = (res: object): Promise<void> => new Promise(resolve => resolve(WS.signup(res)));
+	_logUserDetails = async (details: object): Promise<SignupResult> => {
+		const res: Response = await fetch('https://h4q090fyzg.execute-api.eu-west-1.amazonaws.com/dev/signup', {
+			method: 'POST',
+			body: JSON.stringify(details),
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			}
+		});
+
+		const ok = res.ok;
+		const data: SignupResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
 
 	render() {
 		return (

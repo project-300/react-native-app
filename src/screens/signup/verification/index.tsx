@@ -8,9 +8,8 @@ import {
 import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import styles from './styles';
-import { Props, State } from './interfaces';
+import { ConfirmationResult, Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
-import WS from '../../../api/websocket';
 
 class Verification extends Component<Props, State> {
 
@@ -44,26 +43,43 @@ class Verification extends Component<Props, State> {
 			});
 	}
 
-	_signUp = (): Promise<void> | void => {
+	_signUp = async (): Promise<void> => {
 		const { username, code } = this.state;
 		const { navigate } = this.props.navigation;
 
 		if (!code) return this.setState({ error: 'Verification Code is missing' });
 
-		return Auth.confirmSignUp(
-			username,
-			code
-		)
-			.then(res => {
-				this._logCognitoData(res)
-					.then(() => navigate('Login'));
-			})
-			.catch(err => this.setState({
-				error: err.message
-			}));
+		try {
+			await Auth.confirmSignUp(
+				username,
+				code
+			);
+
+			const apiRes: ConfirmationResult = await this._confirmAccount();
+
+			if (apiRes.success) navigate('Login');
+		} catch (e) {
+			this.setState({
+				error: e.message || e.description
+			});
+		}
 	}
 
-	_logCognitoData = (res: object): Promise<void> => new Promise(resolve => resolve(WS.confirmAccount({ userId: this.state.userId })));
+	_confirmAccount = async (): Promise<ConfirmationResult> => {
+		const res: Response = await fetch('https://h4q090fyzg.execute-api.eu-west-1.amazonaws.com/dev/account-confirmation', {
+			method: 'POST',
+			body: JSON.stringify({ userId: this.state.userId }),
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			}
+		});
+
+		const ok = res.ok;
+		const data: ConfirmationResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
 
 	render() {
 		return (
