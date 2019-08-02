@@ -10,6 +10,7 @@ import { Auth } from 'aws-amplify';
 import styles from './styles';
 import { ConfirmationResult, Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
+import HttpAPI from '../../../api/http';
 
 class Verification extends Component<Props, State> {
 
@@ -44,7 +45,7 @@ class Verification extends Component<Props, State> {
 	}
 
 	_signUp = async (): Promise<void> => {
-		const { username, code } = this.state;
+		const { username, code, userId } = this.state;
 		const { navigate } = this.props.navigation;
 
 		if (!code) return this.setState({ error: 'Verification Code is missing' });
@@ -55,7 +56,7 @@ class Verification extends Component<Props, State> {
 				code
 			);
 
-			const apiRes: ConfirmationResult = await this._confirmAccount();
+			const apiRes: ConfirmationResult = await HttpAPI.confirmAccount({ userId });
 
 			if (apiRes.success) navigate('Login');
 		} catch (e) {
@@ -63,22 +64,6 @@ class Verification extends Component<Props, State> {
 				error: e.message || e.description
 			});
 		}
-	}
-
-	_confirmAccount = async (): Promise<ConfirmationResult> => {
-		const res: Response = await fetch('https://h4q090fyzg.execute-api.eu-west-1.amazonaws.com/dev/account-confirmation', {
-			method: 'POST',
-			body: JSON.stringify({ userId: this.state.userId }),
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-			}
-		});
-
-		const ok = res.ok;
-		const data: ConfirmationResult = await res.json();
-
-		if (!ok) throw data.error || Error('Unknown Error');
-		return data;
 	}
 
 	render() {

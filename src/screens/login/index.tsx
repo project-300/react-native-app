@@ -9,6 +9,7 @@ import { Auth } from 'aws-amplify';
 import { signIn } from '../../auth';
 import styles from './styles';
 import { LoginResult, Props, State } from './interfaces';
+import HttpAPI from '../../api/http';
 
 // Documentation: /docs/login.md
 
@@ -34,29 +35,13 @@ class Login extends Component<Props, State> {
 			const auth = await Auth.signIn(username, password);
 			await signIn();
 
-			const apiRes: LoginResult = await this._logCognitoData(auth);
+			const apiRes: LoginResult = await HttpAPI.login(auth);
 			if (apiRes.success) navigate('Home');
 		} catch (e) {
 			this.setState({
 				error: e.message || e.description
 			});
 		}
-	}
-
-	_logCognitoData = async (authData: object): Promise<LoginResult> => {
-		const res: Response = await fetch('https://h4q090fyzg.execute-api.eu-west-1.amazonaws.com/dev/login', {
-			method: 'POST',
-			body: JSON.stringify(authData),
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-			}
-		});
-
-		const ok = res.ok;
-		const data: LoginResult = await res.json();
-
-		if (!ok) throw data.error || Error('Unknown Error');
-		return data;
 	}
 
 	render() {

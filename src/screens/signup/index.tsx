@@ -10,6 +10,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import styles from './styles';
 import { Props, State, SignupResult } from './interfaces';
+import HttpAPI from '../../api/http';
 
 // Documentation: /docs/signup.md
 
@@ -42,7 +43,7 @@ class SignUp extends Component<Props, State> {
 				}
 			});
 
-			const apiRes: SignupResult = await this._logUserDetails(auth);
+			const apiRes: SignupResult = await HttpAPI.signUp(auth);
 
 			if (auth.userConfirmed && apiRes.success) navigate('Login');
 			else navigate('Verification', {
@@ -56,22 +57,6 @@ class SignUp extends Component<Props, State> {
 				error: e.message || e.description
 			});
 		}
-	}
-
-	_logUserDetails = async (details: object): Promise<SignupResult> => {
-		const res: Response = await fetch('https://h4q090fyzg.execute-api.eu-west-1.amazonaws.com/dev/signup', {
-			method: 'POST',
-			body: JSON.stringify(details),
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-			}
-		});
-
-		const ok = res.ok;
-		const data: SignupResult = await res.json();
-
-		if (!ok) throw data.error || Error('Unknown Error');
-		return data;
 	}
 
 	render() {
