@@ -1,4 +1,4 @@
-import { ConfirmationResult } from '../screens/signup/verification/interfaces';
+import { ConfirmationResult } from '../screens/signup/confirmation/interfaces';
 import { SignupResult } from '../screens/signup/interfaces';
 import { LoginResult } from '../screens/login/interfaces';
 import { ACCOUNT_CONFIRM, LOGIN, SIGNUP } from '../constants/api-paths';

@@ -46,7 +46,7 @@ class SignUp extends Component<Props, State> {
 			const apiRes: SignupResult = await HttpAPI.signUp(auth);
 
 			if (auth.userConfirmed && apiRes.success) navigate('Login');
-			else navigate('Verification', {
+			else navigate('Confirmation', {
 				username,
 				email,
 				codeDeliveryDetails: auth.codeDeliveryDetails,

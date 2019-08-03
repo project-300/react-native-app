@@ -19,6 +19,6 @@ If the details entered do not meet any of the requirements on Cognito's side, th
 #### Success 
 If the validation is successful, an account is created with AWS Cognito. This account is unconfirmed. The user will receive an email with a 6-digit code.
 
-The app will bring them to a new screen (`/src/screens/signup/verification`) where they must enter the 6 digits to confirm their account.
+The app will bring them to a new screen (`/src/screens/signup/confirmation`) where they must enter the 6 digits to confirm their account.
 
 The app will then redirect to the login screen.

@@ -25,7 +25,7 @@ export interface State {
 	email: string;
 	codeDeliveryDetails: CodeDeliveryDetails;
 	code: string;
-	verificationText: string;
+	confirmationText: string;
 	error?: string;
 }
 

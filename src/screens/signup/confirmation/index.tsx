@@ -12,7 +12,7 @@ import { ConfirmationResult, Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
 import HttpAPI from '../../../api/http';
 
-class Verification extends Component<Props, State> {
+class Confirmation extends Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props);
@@ -23,24 +23,24 @@ class Verification extends Component<Props, State> {
 			email: props.navigation.getParam('email'),
 			codeDeliveryDetails: props.navigation.getParam('codeDeliveryDetails'),
 			code: '',
-			verificationText: ''
+			confirmationText: ''
 		};
 	}
 
 	componentDidMount(): void {
-		this._setVerificationText();
+		this._setConfirmationText();
 	}
 
-	_setVerificationText = (): void => {
+	_setConfirmationText = (): void => {
 		const { email } = this.state;
 
 		if (this.state.codeDeliveryDetails.DeliveryMedium === EMAIL)
 			this.setState({
-				verificationText: `A verification code has been sent to ${ email }. Please enter it here to complete your signup.`
+				confirmationText: `A confirmation code has been sent to ${ email }. Please enter it here to complete your signup.`
 			});
 		if (this.state.codeDeliveryDetails.DeliveryMedium === PHONE)
 			this.setState({
-				verificationText: `A verification code has been sent to your phone. Please enter it here to complete your signup.`
+				confirmationText: `A confirmation code has been sent to your phone. Please enter it here to complete your signup.`
 			});
 	}
 
@@ -48,7 +48,7 @@ class Verification extends Component<Props, State> {
 		const { username, code, userId } = this.state;
 		const { navigate } = this.props.navigation;
 
-		if (!code) return this.setState({ error: 'Verification Code is missing' });
+		if (!code) return this.setState({ error: 'Confirmation Code is missing' });
 
 		try {
 			await Auth.confirmSignUp(
@@ -69,9 +69,9 @@ class Verification extends Component<Props, State> {
 	render() {
 		return (
 			<View style={ styles.container }>
-				<Text style={ styles.text }>{ this.state.verificationText }</Text>
+				<Text style={ styles.text }>{ this.state.confirmationText }</Text>
 				<TextInput
-					placeholder={ 'Verification Code' }
+					placeholder={ 'Confirmation Code' }
 					onChangeText={ code => this.setState({ code } ) }
 					style={ styles.input } />
 				<Button
@@ -92,4 +92,4 @@ const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { })(Verification);
+export default connect(mapStateToProps, { })(Confirmation);
