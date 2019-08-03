@@ -1,7 +1,8 @@
 import { SIGNUP, LOGIN, SEND_MESSAGE, CONFIRM_ACCOUNT } from '../constants/websocket-actions';
+import { SERVER_WSS_URL } from '../../environment/env';
 
 class WebSocketAPI {
-	private WS: WebSocket = new WebSocket('wss://29djb951zd.execute-api.eu-west-1.amazonaws.com/dev');
+	private WS: WebSocket = new WebSocket(SERVER_WSS_URL);
 
 	constructor() {
 		this.setup();

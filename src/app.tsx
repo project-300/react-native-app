@@ -4,10 +4,10 @@ import { createStore} from 'redux';
 import reducers from '../src/reducers';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
-import awsConfig from './aws/config';
 import { isSignedIn } from './auth';
+import { AWS_CONFIG } from '../environment/env';
 
-Amplify.configure(awsConfig);
+Amplify.configure(AWS_CONFIG);
 
 const store = createStore(reducers);
 
