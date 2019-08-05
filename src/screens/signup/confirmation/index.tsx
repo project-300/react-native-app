@@ -44,7 +44,7 @@ class Confirmation extends Component<Props, State> {
 			});
 	}
 
-	_signUp = async (): Promise<void> => {
+	_confirmSignUp = async (): Promise<void> => {
 		const { username, code, userId } = this.state;
 		const { navigate } = this.props.navigation;
 
@@ -75,7 +75,7 @@ class Confirmation extends Component<Props, State> {
 					onChangeText={ code => this.setState({ code } ) }
 					style={ styles.input } />
 				<Button
-					onPress={ this._signUp }
+					onPress={ this._confirmSignUp }
 					title={ 'Confirm' } />
 				<Text
 					style={ styles.error }>

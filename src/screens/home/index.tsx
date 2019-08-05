@@ -4,9 +4,8 @@ import {
 	ScrollView,
 	Button
 } from 'react-native';
-import { fakeAction } from '../../actions';
 import { connect, MapStateToProps } from 'react-redux';
-import { signOut } from '../../auth';
+import { storeLogout } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
 
@@ -16,21 +15,18 @@ class Index extends Component<Props, State> {
 		super(props);
 	}
 
-	render() {
-		const { navigate } = this.props.navigation;
+	_logout = () => storeLogout().then(() => this.props.navigation.navigate('Login'));
 
+	render() {
 		return (
 			<ScrollView style={ styles.container }>
 				<Text
 					style={ styles.text }>
 					Home Screen
 				</Text>
-				<Button onPress={
-					() => {
-						signOut()
-							.then(() => navigate('Login'));
-					}
-				} title={ 'Logout' } />
+				<Button
+					onPress={ this._logout }
+					title={ 'Logout' } />
 			</ScrollView>
 		);
 	}
@@ -42,4 +38,4 @@ const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fakeAction })(Index);
+export default connect(mapStateToProps, { })(Index);

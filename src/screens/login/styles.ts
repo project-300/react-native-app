@@ -20,7 +20,16 @@ const styles = StyleSheet.create<Styles>({
 	},
 
 	button: {
+		backgroundColor: '#02b2cc',
+		padding: 10,
+		borderRadius: 4,
 		width: '80%'
+	},
+
+	buttonText: {
+		alignSelf: 'center',
+		color: 'white',
+		fontWeight: 'bold'
 	},
 
 	error: {

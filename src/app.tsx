@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import reducers from '../src/reducers';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
-import { isSignedIn } from './auth';
+import { isStoreLoggedIn } from './auth';
 import { AWS_CONFIG } from '../environment/env';
+import toastr from './helpers/toastr';
 
 Amplify.configure(AWS_CONFIG);
 
-const store = createStore(reducers);
+const store = applyMiddleware(thunk)(createStore)(reducers);
 
 interface AppProps { }
 interface AppState {
-	signedIn: boolean;
-	checkedSignIn: boolean;
+	loggedIn: boolean;
+	checkedLoggedIn: boolean;
 }
 
 export default class App extends Component<AppProps, AppState> {
@@ -23,23 +25,26 @@ export default class App extends Component<AppProps, AppState> {
 		super(props);
 
 		this.state = {
-			signedIn: false,
-			checkedSignIn: false
+			loggedIn: false,
+			checkedLoggedIn: false
 		};
 	}
 
-	componentDidMount() {
-		isSignedIn()
-			.then((res: boolean) => this.setState({ signedIn: res, checkedSignIn: true }))
-			.catch((err: object) => console.log(err));
+	async componentDidMount() {
+		try {
+			const loggedIn = await isStoreLoggedIn();
+			this.setState({ loggedIn, checkedLoggedIn: true });
+		} catch (err) {
+			toastr.error('Unable to authenticate');
+		}
 	}
 
 	render() {
-		const { checkedSignIn, signedIn } = this.state;
+		const { checkedLoggedIn, loggedIn } = this.state;
 
-		if (!checkedSignIn) return null; // Replace with Splash Screen
+		if (!checkedLoggedIn) return null; // Replace with Splash Screen
 
-		const Layout = CreateNavigator(signedIn);
+		const Layout = CreateNavigator(loggedIn);
 
 		return (
 			<Provider store={ store }>

@@ -1,11 +1,11 @@
 import { AsyncStorage } from 'react-native';
 import { AUTH_KEY } from './constants/storage-keys';
 
-export const signIn = (): Promise<void> => AsyncStorage.setItem(AUTH_KEY, 'true');
+export const storeLogin = (): Promise<void> => AsyncStorage.setItem(AUTH_KEY, 'true');
 
-export const signOut = (): Promise<void> => AsyncStorage.removeItem(AUTH_KEY);
+export const storeLogout = (): Promise<void> => AsyncStorage.removeItem(AUTH_KEY);
 
-export const isSignedIn = (): Promise<boolean> => {
+export const isStoreLoggedIn = (): Promise<boolean> => {
 	return new Promise((resolve, reject) => {
 		AsyncStorage.getItem(AUTH_KEY)
 			.then((res: string | null) => {
