@@ -5,7 +5,7 @@ const initialState = {
 	isLoggedIn: false
 };
 
-const loginReducer = (state = initialState, action) => {
+const loginReducer = (state = initialState, action: { type: string }) => {
 	switch (action.type) {
 		case LOGIN_REQUEST:
 			return { ...state, isLoggingIn: true };

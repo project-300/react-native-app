@@ -32,12 +32,9 @@ const styles = StyleSheet.create<Styles>({
 		fontWeight: 'bold'
 	},
 
-	error: {
-		color: '#FF0000'
-	},
-
-	underline: {
-		textDecorationLine: 'underline'
+	signUpLink: {
+		textDecorationLine: 'underline',
+		marginTop: 40
 	}
 });
 

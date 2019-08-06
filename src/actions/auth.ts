@@ -7,11 +7,11 @@ import { LoginResult } from '../screens/login/interfaces';
 import HttpAPI from '../api/http';
 import toastr from '../helpers/toastr';
 
-export const loginRequest = () => ({ type: LOGIN_REQUEST });
+const loginRequest = () => ({ type: LOGIN_REQUEST });
 
-export const loginSuccess = () => ({ type: LOGIN_SUCCESS });
+const loginSuccess = () => ({ type: LOGIN_SUCCESS });
 
-export const loginFailure = () => ({ type: LOGIN_FAILURE });
+const loginFailure = () => ({ type: LOGIN_FAILURE });
 
 export const login = (username: string, password: string) => {
 	return async (dispatch: ThunkDispatch<{ }, { }, AnyAction>) => {

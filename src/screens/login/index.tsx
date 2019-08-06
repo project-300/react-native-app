@@ -57,7 +57,7 @@ class Login extends Component<Props, State> {
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={ () => this.props.navigation.navigate('SignUp') }>
-					<Text style={ styles.underline }>
+					<Text style={ styles.signUpLink }>
 						Not registered yet? Sign Up
 					</Text>
 				</TouchableOpacity>

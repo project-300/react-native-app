@@ -6,14 +6,13 @@ export interface Styles {
 	input: TextStyle;
 	button: ViewStyle;
 	buttonText: TextStyle;
-	error: TextStyle;
-	underline: TextStyle;
+	signUpLink: TextStyle;
 }
 
 export interface Props {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 	isLoggingIn: boolean;
-	error: string;
+	isLoggedIn: boolean;
 	login: Function;
 }
 

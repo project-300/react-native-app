@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
-	Button,
-	TextInput
+	TextInput, TouchableOpacity
 } from 'react-native';
 import { connect, MapStateToProps } from 'react-redux';
-import { Auth } from 'aws-amplify';
 import styles from './styles';
-import { ConfirmationResult, Props, State } from './interfaces';
+import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
-import HttpAPI from '../../../api/http';
+import { Reducer } from 'redux';
+import { confirmAccount } from '../../../actions';
+import toastr from '../../../helpers/toastr';
 
 class Confirmation extends Component<Props, State> {
 
@@ -18,10 +18,6 @@ class Confirmation extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			userId: props.navigation.getParam('userId'),
-			username: props.navigation.getParam('username'),
-			email: props.navigation.getParam('email'),
-			codeDeliveryDetails: props.navigation.getParam('codeDeliveryDetails'),
 			code: '',
 			confirmationText: ''
 		};
@@ -32,38 +28,26 @@ class Confirmation extends Component<Props, State> {
 	}
 
 	_setConfirmationText = (): void => {
-		const { email } = this.state;
+		const { email } = this.props;
 
-		if (this.state.codeDeliveryDetails.DeliveryMedium === EMAIL)
+		if (this.props.codeDeliveryDetails.DeliveryMedium === EMAIL)
 			this.setState({
 				confirmationText: `A confirmation code has been sent to ${ email }. Please enter it here to complete your signup.`
 			});
-		if (this.state.codeDeliveryDetails.DeliveryMedium === PHONE)
+		if (this.props.codeDeliveryDetails.DeliveryMedium === PHONE)
 			this.setState({
 				confirmationText: `A confirmation code has been sent to your phone. Please enter it here to complete your signup.`
 			});
 	}
 
 	_confirmSignUp = async (): Promise<void> => {
-		const { username, code, userId } = this.state;
-		const { navigate } = this.props.navigation;
+		const { username, userId } = this.props;
+		const { code } = this.state;
 
-		if (!code) return this.setState({ error: 'Confirmation Code is missing' });
+		if (!code) return toastr.error('Confirmation Code is missing');
 
-		try {
-			await Auth.confirmSignUp(
-				username,
-				code
-			);
-
-			const apiRes: ConfirmationResult = await HttpAPI.confirmAccount({ userId });
-
-			if (apiRes.success) navigate('Login');
-		} catch (e) {
-			this.setState({
-				error: e.message || e.description
-			});
-		}
+		const res = await this.props.confirmAccount(userId, username, code);
+		if (res) this.props.navigation.navigate('Login');
 	}
 
 	render() {
@@ -74,22 +58,23 @@ class Confirmation extends Component<Props, State> {
 					placeholder={ 'Confirmation Code' }
 					onChangeText={ code => this.setState({ code } ) }
 					style={ styles.input } />
-				<Button
-					onPress={ this._confirmSignUp }
-					title={ 'Confirm' } />
-				<Text
-					style={ styles.error }>
-					{ this.state.error }
-				</Text>
+				<TouchableOpacity
+					disabled={ this.props.isConfirmingAccount }
+					style={ styles.button }
+					onPress={ this._confirmSignUp }>
+					<Text
+						style={ styles.buttonText }
+					>Confirm</Text>
+				</TouchableOpacity>
 			</View>
 		);
 	}
 }
 
-const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
+const mapStateToProps: MapStateToProps<{ }, { }, { signUpReducer: Reducer }> = (state) => {
 	return {
-		state
+		...state.signUpReducer
 	};
 };
 
-export default connect(mapStateToProps, { })(Confirmation);
+export default connect(mapStateToProps, { confirmAccount })(Confirmation);

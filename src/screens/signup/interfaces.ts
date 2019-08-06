@@ -5,19 +5,20 @@ export interface Styles {
 	container: ViewStyle;
 	input: TextStyle;
 	button: ViewStyle;
-	error: TextStyle;
-	underline: TextStyle;
+	buttonText: TextStyle;
+	loginLink: TextStyle;
 }
 
 export interface Props {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+	isCreatingAccount: boolean;
+	signUp: Function;
 }
 
 export interface State {
 	email: string;
 	username: string;
 	password: string;
-	error?: string;
 }
 
 export interface SignupResult {

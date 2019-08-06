@@ -20,15 +20,21 @@ const styles = StyleSheet.create<Styles>({
 	},
 
 	button: {
+		backgroundColor: '#02b2cc',
+		padding: 10,
+		borderRadius: 4,
 		width: '80%'
 	},
 
-	error: {
-		color: '#FF0000'
+	buttonText: {
+		alignSelf: 'center',
+		color: 'white',
+		fontWeight: 'bold'
 	},
 
-	underline: {
-		textDecorationLine: 'underline'
+	loginLink: {
+		textDecorationLine: 'underline',
+		marginTop: 40
 	}
 });
 

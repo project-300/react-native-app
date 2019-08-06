@@ -9,7 +9,7 @@ import { storeLogout } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
 
-class Index extends Component<Props, State> {
+class Home extends Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props);
@@ -38,4 +38,4 @@ const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { })(Index);
+export default connect(mapStateToProps, { })(Home);

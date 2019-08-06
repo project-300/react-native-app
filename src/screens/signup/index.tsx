@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import {
 	Text,
 	View,
-	Button,
 	TextInput,
 	TouchableOpacity
 } from 'react-native';
 import { connect, MapStateToProps } from 'react-redux';
-import { Auth } from 'aws-amplify';
 import styles from './styles';
-import { Props, State, SignupResult } from './interfaces';
-import HttpAPI from '../../api/http';
+import { Props, State } from './interfaces';
+import toastr from '../../helpers/toastr';
+import { signUp } from '../../actions';
+import { Reducer } from 'redux';
 
 // Documentation: /docs/signup.md
 
@@ -26,37 +26,17 @@ class SignUp extends Component<Props, State> {
 		};
 	}
 
-	_signUp = async (): Promise<void> => {
+	_signUp = async (): Promise<void | boolean> => {
 		const { email, username, password } = this.state;
 		const { navigate } = this.props.navigation;
 
-		if (!email) return this.setState({ error: 'Email is missing' });
-		if (!username) return this.setState({ error: 'Username is missing' });
-		if (!password) return this.setState({ error: 'Password is missing' });
+		if (!email) return toastr.error('Email is missing');
+		if (!username) return toastr.error('Username is missing');
+		if (!password) return toastr.error('Password is missing');
 
-		try {
-			const auth = await Auth.signUp({
-				username,
-				password,
-				attributes: {
-					email
-				}
-			});
-
-			const apiRes: SignupResult = await HttpAPI.signUp(auth);
-
-			if (auth.userConfirmed && apiRes.success) navigate('Login');
-			else navigate('Confirmation', {
-				username,
-				email,
-				codeDeliveryDetails: auth.codeDeliveryDetails,
-				userId: auth.userSub
-			});
-		} catch (e) {
-			this.setState({
-				error: e.message || e.description
-			});
-		}
+		const res = await this.props.signUp(email, username, password);
+		if (res && res.confirmationRequired) return navigate('Confirmation');
+		if (res && !res.confirmationRequired) return navigate('Login');
 	}
 
 	render() {
@@ -76,16 +56,17 @@ class SignUp extends Component<Props, State> {
 					placeholder={ 'Password' }
 					onChangeText={ password => this.setState({ password } ) }
 					style={ styles.input } />
-				<Button
-					onPress={ this._signUp }
-					title={ 'Sign Up' } />
-				<Text
-					style={ styles.error }>
-					{ this.state.error }
-				</Text>
+				<TouchableOpacity
+					disabled={ this.props.isCreatingAccount }
+					style={ styles.button }
+					onPress={ this._signUp }>
+					<Text
+						style={ styles.buttonText }
+					>Sign Up</Text>
+				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={ () => this.props.navigation.navigate('Login') }>
-					<Text style={ styles.underline }>
+					<Text style={ styles.loginLink }>
 						Already signed up? Login
 					</Text>
 				</TouchableOpacity>
@@ -94,10 +75,10 @@ class SignUp extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
+const mapStateToProps: MapStateToProps<{ }, { }, { signUpReducer: Reducer }> = (state) => {
 	return {
-		state
+		...state.signUpReducer
 	};
 };
 
-export default connect(mapStateToProps, { })(SignUp);
+export default connect(mapStateToProps, { signUp })(SignUp);
