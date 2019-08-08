@@ -1,11 +1,13 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../constants/redux-actions';
+import { LoginState } from '../types/redux-reducer-state-types';
+import { LoginActionTypes } from '../types/redux-action-types';
 
-const initialState = {
+const initialState: LoginState = {
 	isLoggingIn: false,
 	isLoggedIn: false
 };
 
-const loginReducer = (state = initialState, action: { type: string }) => {
+const loginReducer = (state: LoginState = initialState, action: LoginActionTypes): LoginState => {
 	switch (action.type) {
 		case LOGIN_REQUEST:
 			return { ...state, isLoggingIn: true };

@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	View,
-	TextInput, TouchableOpacity
+	TextInput, TouchableOpacity, AppState
 } from 'react-native';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
-import { Reducer } from 'redux';
 import { confirmAccount } from '../../../actions';
 import toastr from '../../../helpers/toastr';
 
 class Confirmation extends Component<Props, State> {
 
-	constructor(props: Props) {
+	public constructor(props: Props) {
 		super(props);
 
 		this.state = {
@@ -23,11 +22,11 @@ class Confirmation extends Component<Props, State> {
 		};
 	}
 
-	componentDidMount(): void {
+	public componentDidMount(): void {
 		this._setConfirmationText();
 	}
 
-	_setConfirmationText = (): void => {
+	private _setConfirmationText = (): void => {
 		const { email } = this.props;
 
 		if (this.props.codeDeliveryDetails.DeliveryMedium === EMAIL)
@@ -40,7 +39,7 @@ class Confirmation extends Component<Props, State> {
 			});
 	}
 
-	_confirmSignUp = async (): Promise<void> => {
+	private _confirmSignUp = async (): Promise<void> => {
 		const { username, userId } = this.props;
 		const { code } = this.state;
 
@@ -50,13 +49,13 @@ class Confirmation extends Component<Props, State> {
 		if (res) this.props.navigation.navigate('Login');
 	}
 
-	render() {
+	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
 				<Text style={ styles.text }>{ this.state.confirmationText }</Text>
 				<TextInput
 					placeholder={ 'Confirmation Code' }
-					onChangeText={ code => this.setState({ code } ) }
+					onChangeText={ (code: string): void => this.setState({ code }) }
 					style={ styles.input } />
 				<TouchableOpacity
 					disabled={ this.props.isConfirmingAccount }
@@ -71,10 +70,8 @@ class Confirmation extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps: MapStateToProps<{ }, { }, { signUpReducer: Reducer }> = (state) => {
-	return {
-		...state.signUpReducer
-	};
-};
+const mapStateToProps = (state: AppState): AppState => ({
+	...state.signUpReducer
+});
 
 export default connect(mapStateToProps, { confirmAccount })(Confirmation);

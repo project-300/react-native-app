@@ -34,11 +34,3 @@ export interface State {
 	code: string;
 	confirmationText: string;
 }
-
-export interface ConfirmationResult {
-	success: boolean;
-	error?: {
-		code: string;
-		description: string;
-	};
-}

@@ -1,22 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity, AppState
 } from 'react-native';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { login } from '../../actions';
 import toastr from '../../helpers/toastr';
-import { Reducer } from 'redux';
 
 // Documentation: /docs/login.md
 
 class Login extends Component<Props, State> {
 
-	constructor(props: Props) {
+	public constructor(props: Props) {
 		super(props);
 
 		this.state = {
@@ -25,27 +24,27 @@ class Login extends Component<Props, State> {
 		};
 	}
 
-	_loginAttempt = async (): Promise<void> => {
+	private _loginAttempt = async (): Promise<void> => {
 		const { username, password } = this.state;
 
 		if (!username) return toastr.error('Username is missing');
 		if (!password) return toastr.error('Password is missing');
 
-		const res = await this.props.login(username, password);
+		const res: boolean = await this.props.login(username, password);
 		res && this.props.navigation.navigate('Home');
 	}
 
-	render() {
+	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
 				<TextInput
 					placeholder={ 'Username' }
-					onChangeText={ username => this.setState({ username } ) }
+					onChangeText={ (username: string): void => this.setState({ username }) }
 					style={ styles.input } />
 				<TextInput
 					secureTextEntry={ true }
 					placeholder={ 'Password' }
-					onChangeText={ password => this.setState({ password } ) }
+					onChangeText={ (password: string): void => this.setState({ password }) }
 					style={ styles.input } />
 				<TouchableOpacity
 					disabled={ this.props.isLoggingIn }
@@ -56,7 +55,7 @@ class Login extends Component<Props, State> {
 					>Login</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={ () => this.props.navigation.navigate('SignUp') }>
+					onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
 					<Text style={ styles.signUpLink }>
 						Not registered yet? Sign Up
 					</Text>
@@ -66,10 +65,8 @@ class Login extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps: MapStateToProps<{ }, { }, { loginReducer: Reducer }> = (state) => {
-	return {
-		...state.loginReducer
-	};
-};
+const mapStateToProps = (state: AppState): AppState => ({
+	...state.loginReducer
+});
 
 export default connect(mapStateToProps, { login })(Login);

@@ -4,7 +4,7 @@ import { SERVER_WSS_URL } from '../../environment/env';
 class WebSocketAPI {
 	private WS: WebSocket = new WebSocket(SERVER_WSS_URL);
 
-	constructor() {
+	public constructor() {
 		this.setup();
 	}
 
@@ -15,19 +15,16 @@ class WebSocketAPI {
 
 		this.WS.onmessage = (e: object): void => {
 			// a message was received
-			// @ts-ignore
 			console.log(e.data);
 		};
 
 		this.WS.onerror = (e: object): void => {
 			// an error occurred
-			// @ts-ignore
 			console.log(e.message);
 		};
 
 		this.WS.onclose = (e: object): void => {
 			// connection closed
-			// @ts-ignore
 			console.log(e.code, e.reason);
 		};
 	}

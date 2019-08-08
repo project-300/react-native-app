@@ -1,4 +1,5 @@
 {
+  "extends": "tslint:all",
   "rules": {
     "import-spacing": true,
     "max-line-length": [
@@ -15,7 +16,8 @@
     ],
     "semicolon": [
       true,
-      "always"
+      "always",
+      "ignore-interfaces"
     ],
     "indent": [
       true,
@@ -42,14 +44,73 @@
     ],
     "no-consecutive-blank-lines": true,
     "trailing-comma": [
-      true, {
-      "singleline": "never",
-      "multiline": {
-        "objects": "never",
-        "arrays": "never",
-        "functions": "never",
-        "typeLiterals": "ignore"
+      true,
+      {
+        "singleline": "never",
+        "multiline": {
+          "objects": "never",
+          "arrays": "never",
+          "functions": "never",
+          "typeLiterals": "ignore"
+        }
       }
-    }]
+    ],
+    "await-promise": [
+      true,
+      "RequestPromise"
+    ],
+    "completed-docs": false,
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "linebreak-style": false,
+    "newline-before-return": false,
+    "newline-per-chained-call": false,
+    "no-angle-bracket-type-assertion": false,
+    "no-implicit-dependencies": false,
+    "no-inferrable-types": false,
+    "no-object-literal-type-assertion": false,
+    "no-parameter-properties": false,
+    "no-unnecessary-class": ["allow-static-only"],
+    "no-use-before-declare": false,
+    "no-void-expression": false,
+    "only-arrow-functions": false,
+    "ordered-imports": false,
+    "prefer-template": [
+      true,
+      "allow-single-concat"
+    ],
+    "promise-function-async": false,
+    "restrict-plus-operands": false,
+    "strict-boolean-expressions": false,
+    "variable-name": false,
+    "max-classes-per-file": false,
+    "no-default-import": false,
+    "no-default-export": false,
+    "no-submodule-imports": false,
+    "object-literal-sort-keys": false,
+    "no-empty-interface": false,
+    "member-ordering": false,
+    "interface-over-type-literal": false,
+    "curly": false,
+    "no-unused-expression": false,
+    "arrow-return-shorthand": false,
+    "no-shadowed-variable": false,
+    "no-console": false,
+    "no-null-keyword": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "arrow-call-signature",
+      "parameter",
+      "arrow-parameter",
+      "property-declaration",
+      "member-variable-declaration"
+    ]
   }
 }

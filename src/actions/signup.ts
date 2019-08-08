@@ -7,30 +7,34 @@ import {
 	SIGNUP_CONFIRMATION_SUCCESS,
 	SIGNUP_CONFIRMATION_FAILURE
 } from '../constants/redux-actions';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
 import HttpAPI from '../api/http';
 import toastr from '../helpers/toastr';
-import { SignupResult } from '../screens/signup/interfaces';
-import { ConfirmationResult } from '../screens/signup/confirmation/interfaces';
+import { SignupResult, ConfirmationResult } from '../types/http-responses';
+import { AppActions } from '../types/redux-action-types';
 
-const signUpRequest = () => ({ type: SIGNUP_REQUEST });
+const signUpRequest = (): AppActions => ({ type: SIGNUP_REQUEST });
 
-const signUpSuccess = () => ({ type: SIGNUP_SUCCESS });
+const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 
-const signUpFailure = () => ({ type: SIGNUP_FAILURE });
+const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
 
-const signUpRequireConfirmation = (payload: object) => ({ type: SIGNUP_CONFIRMATION_REQUIRED, payload });
+const signUpRequireConfirmation = (payload: object): AppActions => ({ type: SIGNUP_CONFIRMATION_REQUIRED, payload });
 
-const signUpConfirmationRequest = () => ({ type: SIGNUP_CONFIRMATION_REQUEST });
+const signUpConfirmationRequest = (): AppActions => ({ type: SIGNUP_CONFIRMATION_REQUEST });
 
-const signUpConfirmationSuccess = () => ({ type: SIGNUP_CONFIRMATION_SUCCESS });
+const signUpConfirmationSuccess = (): AppActions => ({ type: SIGNUP_CONFIRMATION_SUCCESS });
 
-const signUpConfirmationFailure = () => ({ type: SIGNUP_CONFIRMATION_FAILURE });
+const signUpConfirmationFailure = (): AppActions => ({ type: SIGNUP_CONFIRMATION_FAILURE });
 
-export const signUp = (email: string, username: string, password: string) => {
-	return async (dispatch: ThunkDispatch<{ }, { }, AnyAction>) => {
+interface SignUpResponse {
+	ok: boolean;
+	confirmationRequired?: boolean;
+}
+
+export const signUp = (email: string, username: string, password: string): (dispatch: Dispatch<AppActions>) => Promise<SignUpResponse> => {
+	return async (dispatch: Dispatch<AppActions>): Promise<SignUpResponse> => {
 		dispatch(signUpRequest());
 
 		try {
@@ -46,27 +50,26 @@ export const signUp = (email: string, username: string, password: string) => {
 
 			dispatch(signUpSuccess());
 
-			if (authRes.userConfirmed && apiRes.success) return { confirmationRequired: false };
-			else {
-				dispatch(signUpRequireConfirmation({
-					username,
-					email,
-					codeDeliveryDetails: authRes.codeDeliveryDetails,
-					userId: authRes.userSub
-				}));
+			if (authRes.userConfirmed && apiRes.success) return { ok: true, confirmationRequired: false };
 
-				return { confirmationRequired: true };
-			}
+			dispatch(signUpRequireConfirmation({
+				username,
+				email,
+				codeDeliveryDetails: authRes.codeDeliveryDetails,
+				userId: authRes.userSub
+			}));
+
+			return { ok: true, confirmationRequired: true };
 		} catch (err) {
 			dispatch(signUpFailure());
 			toastr.error(err.message);
-			return false;
+			return { ok: false };
 		}
 	};
 };
 
-export const confirmAccount = (userId: string, username: string, code: string) => {
-	return async (dispatch: ThunkDispatch<{ }, { }, AnyAction>) => {
+export const confirmAccount = (userId: string, username: string, code: string): (dispatch: Dispatch) => Promise<boolean> => {
+	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(signUpConfirmationRequest());
 
 		try {
@@ -81,6 +84,8 @@ export const confirmAccount = (userId: string, username: string, code: string) =
 				dispatch(signUpConfirmationSuccess());
 				return true;
 			}
+
+			return false;
 		} catch (err) {
 			dispatch(signUpConfirmationFailure());
 			toastr.error(err.message);

@@ -2,7 +2,8 @@ import {
 	createAppContainer,
 	createStackNavigator,
 	createSwitchNavigator,
-	NavigationContainer
+	NavigationContainer,
+	NavigationStackScreenOptions
 } from 'react-navigation';
 import Home from './screens/home';
 import Login from './screens/login';
@@ -12,22 +13,22 @@ import Confirmation from './screens/signup/confirmation';
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
 		screen: Login,
-		navigationOptions: () => ({
+		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Login'
 		})
 	},
 	SignUp: {
 		screen: SignUp,
-		navigationOptions: () => ({
+		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Sign Up',
-			headerLeft: null
+			headerLeft: undefined
 		})
 	},
 	Confirmation: {
 		screen: Confirmation,
-		navigationOptions: () => ({
+		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Confirmation',
-			headerLeft: null
+			headerLeft: undefined
 		})
 	}
 });
@@ -35,7 +36,7 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 const SignedInStack: NavigationContainer = createStackNavigator({
 	Home: {
 		screen: Home,
-		navigationOptions: () => ({
+		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Home'
 		})
 	}

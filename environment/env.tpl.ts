@@ -1,7 +1,9 @@
+import { AWS_CONFIG_TYPE } from '../src/types/aws';
+
 export const SERVER_HTTPS_URL: string = '{{ SERVER_HTTPS_URL }}'; 	// AWS Lambda HTTPS stage URL
 export const SERVER_WSS_URL: string = '{{ SERVER_WSS_URL }}';		// AWS Lambda WSS stage URL
 
-export const AWS_CONFIG: object = {
+export const AWS_CONFIG: AWS_CONFIG_TYPE = {
 	identityPoolId: '{{ IDENTITY_POOL_ID }}',						// AWS Cognito Identity Pool ID
 	region: '{{ REGION }}',											// AWS Region
 	userPoolId: '{{ USER_POOL_ID }}',								// AWS Cognito User Pool ID

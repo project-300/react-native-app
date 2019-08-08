@@ -12,6 +12,6 @@ export const isStoreLoggedIn = (): Promise<boolean> => {
 				if (res !== null) resolve(true);
 				else resolve(false);
 			})
-			.catch((err: object) => reject(err));
+			.catch(reject);
 	});
 };

@@ -21,10 +21,7 @@ export interface State {
 	password: string;
 }
 
-export interface SignupResult {
-	success: boolean;
-	error?: {
-		code: string;
-		description: string;
-	};
+export interface ReduxSuccessResponse {
+	ok: boolean,
+	confirmationRequired?: boolean;
 }

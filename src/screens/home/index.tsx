@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	ScrollView,
-	Button
+	Button, AppState
 } from 'react-native';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { storeLogout } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
 
 class Home extends Component<Props, State> {
 
-	constructor(props: Props) {
+	public constructor(props: Props) {
 		super(props);
 	}
 
-	_logout = () => storeLogout().then(() => this.props.navigation.navigate('Login'));
+	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
 
-	render() {
+	public render(): ReactElement {
 		return (
 			<ScrollView style={ styles.container }>
 				<Text
@@ -32,10 +32,8 @@ class Home extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
-	return {
-		state
-	};
-};
+const mapStateToProps = (state: AppState): AppState => ({
+	state
+});
 
 export default connect(mapStateToProps, { })(Home);

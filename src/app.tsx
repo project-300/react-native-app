@@ -1,27 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import reducers from '../src/reducers';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
 import { isStoreLoggedIn } from './auth';
 import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
+import { store } from './store';
 
 Amplify.configure(AWS_CONFIG);
 
-const store = applyMiddleware(thunk)(createStore)(reducers);
-
-interface AppProps { }
-interface AppState {
+interface Props { }
+interface State {
 	loggedIn: boolean;
 	checkedLoggedIn: boolean;
 }
 
-export default class App extends Component<AppProps, AppState> {
+export default class App extends Component<Props, State> {
 
-	constructor(props: object) {
+	public constructor(props: object) {
 		super(props);
 
 		this.state = {
@@ -30,7 +26,7 @@ export default class App extends Component<AppProps, AppState> {
 		};
 	}
 
-	async componentDidMount() {
+	public async componentDidMount(): Promise<void> {
 		try {
 			const loggedIn = await isStoreLoggedIn();
 			this.setState({ loggedIn, checkedLoggedIn: true });
@@ -39,7 +35,7 @@ export default class App extends Component<AppProps, AppState> {
 		}
 	}
 
-	render() {
+	public render(): ReactElement | null {
 		const { checkedLoggedIn, loggedIn } = this.state;
 
 		if (!checkedLoggedIn) return null; // Replace with Splash Screen

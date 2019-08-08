@@ -7,13 +7,15 @@ import {
 	SIGNUP_CONFIRMATION_SUCCESS,
 	SIGNUP_CONFIRMATION_FAILURE
 } from '../constants/redux-actions';
+import { SignUpState } from '../types/redux-reducer-state-types';
+import { SignUpActionTypes } from '../types/redux-action-types';
 
-const initialState = {
+const initialState: SignUpState = {
 	isCreatingAccount: false,
 	isConfirmingAccount: false
 };
 
-const signUpReducer = (state = initialState, action: { type: string, payload: object }) => {
+const signUpReducer = (state: SignUpState = initialState, action: SignUpActionTypes): SignUpState => {
 	switch (action.type) {
 		case SIGNUP_REQUEST:
 			return { ...state, isCreatingAccount: true };

@@ -1,20 +1,20 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../constants/redux-actions';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
 import { storeLogin } from '../auth';
-import { LoginResult } from '../screens/login/interfaces';
+import { LoginResult } from '../types/http-responses';
 import HttpAPI from '../api/http';
 import toastr from '../helpers/toastr';
+import { AppActions } from '../types/redux-action-types';
 
-const loginRequest = () => ({ type: LOGIN_REQUEST });
+const loginRequest = (): AppActions => ({ type: LOGIN_REQUEST });
 
-const loginSuccess = () => ({ type: LOGIN_SUCCESS });
+const loginSuccess = (): AppActions => ({ type: LOGIN_SUCCESS });
 
-const loginFailure = () => ({ type: LOGIN_FAILURE });
+const loginFailure = (): AppActions => ({ type: LOGIN_FAILURE });
 
-export const login = (username: string, password: string) => {
-	return async (dispatch: ThunkDispatch<{ }, { }, AnyAction>) => {
+export const login = (username: string, password: string): (dispatch: Dispatch) => Promise<boolean> => {
+	return async (dispatch: Dispatch): Promise<boolean > => {
 		dispatch(loginRequest());
 
 		try {
@@ -26,6 +26,8 @@ export const login = (username: string, password: string) => {
 				dispatch(loginSuccess());
 				return true;
 			}
+
+			return false;
 		} catch (err) {
 			dispatch(loginFailure());
 			toastr.error(err.message);

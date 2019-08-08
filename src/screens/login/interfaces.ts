@@ -20,11 +20,3 @@ export interface State {
 	username: string;
 	password: string;
 }
-
-export interface LoginResult {
-	success: boolean;
-	error?: {
-		code: string;
-		description: string;
-	};
-}
