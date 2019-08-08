@@ -6,11 +6,22 @@ export interface Styles {
 	text: TextStyle;
 	input: TextStyle;
 	button: ViewStyle;
-	error: TextStyle;
+	buttonText: TextStyle;
 }
 
 export interface Props {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+	isConfirmingAccount: boolean;
+	username: string;
+	email: string;
+	userId: string;
+	signUp: Function;
+	confirmAccount: Function;
+	codeDeliveryDetails: {
+		AttributeName: string;
+		DeliveryMedium: string;
+		Destination: string;
+	};
 }
 
 interface CodeDeliveryDetails {
@@ -20,10 +31,6 @@ interface CodeDeliveryDetails {
 }
 
 export interface State {
-	username: string;
-	email: string;
-	codeDeliveryDetails: CodeDeliveryDetails;
 	code: string;
-	verificationText: string;
-	error?: string;
+	confirmationText: string;
 }

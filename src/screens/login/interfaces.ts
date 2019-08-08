@@ -5,16 +5,18 @@ export interface Styles {
 	container: ViewStyle;
 	input: TextStyle;
 	button: ViewStyle;
-	error: TextStyle;
-	underline: TextStyle;
+	buttonText: TextStyle;
+	signUpLink: TextStyle;
 }
 
 export interface Props {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+	isLoggingIn: boolean;
+	isLoggedIn: boolean;
+	login: Function;
 }
 
 export interface State {
 	username: string;
 	password: string;
-	error?: string;
 }

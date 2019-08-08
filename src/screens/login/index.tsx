@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	View,
-	Button, TextInput, TouchableOpacity
+	TextInput,
+	TouchableOpacity, AppState
 } from 'react-native';
-import { connect, MapStateToProps } from 'react-redux';
-import { Auth } from 'aws-amplify';
-import { signIn } from '../../auth';
+import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import WS from '../../api/websocket';
+import { login } from '../../actions';
+import toastr from '../../helpers/toastr';
 
 // Documentation: /docs/login.md
 
 class Login extends Component<Props, State> {
 
-	constructor(props: Props) {
+	public constructor(props: Props) {
 		super(props);
 
 		this.state = {
@@ -24,50 +24,39 @@ class Login extends Component<Props, State> {
 		};
 	}
 
-	_loginAttempt = async (): Promise<void> => {
+	private _loginAttempt = async (): Promise<void> => {
 		const { username, password } = this.state;
-		const { navigate } = this.props.navigation;
 
-		if (!username) return this.setState({ error: 'Username is missing' });
-		if (!password) return this.setState({ error: 'Password is missing' });
+		if (!username) return toastr.error('Username is missing');
+		if (!password) return toastr.error('Password is missing');
 
-		return Auth.signIn(username, password)
-			.then(res => {
-				signIn()
-					.then(() => {
-						this._logCognitoData(res)
-							.then(() => navigate('Home'));
-					});
-			})
-			.catch(err => {
-				this.setState({ error: err.message });
-			});
+		const res: boolean = await this.props.login(username, password);
+		res && this.props.navigation.navigate('Home');
 	}
 
-	_logCognitoData = (res: object): Promise<void> => new Promise(resolve => resolve(WS.login(res)));
-
-	render() {
+	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
 				<TextInput
 					placeholder={ 'Username' }
-					onChangeText={ username => this.setState({ username } ) }
+					onChangeText={ (username: string): void => this.setState({ username }) }
 					style={ styles.input } />
 				<TextInput
 					secureTextEntry={ true }
 					placeholder={ 'Password' }
-					onChangeText={ password => this.setState({ password } ) }
+					onChangeText={ (password: string): void => this.setState({ password }) }
 					style={ styles.input } />
-				<Button
-					onPress={ this._loginAttempt }
-					title={ 'Sign In' } />
-				<Text
-					style={ styles.error }>
-					{ this.state.error }
-				</Text>
 				<TouchableOpacity
-					onPress={ () => this.props.navigation.navigate('SignUp') }>
-					<Text style={ styles.underline }>
+					disabled={ this.props.isLoggingIn }
+					style={ styles.button }
+					onPress={ this._loginAttempt }>
+					<Text
+						style={ styles.buttonText }
+					>Login</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
+					<Text style={ styles.signUpLink }>
 						Not registered yet? Sign Up
 					</Text>
 				</TouchableOpacity>
@@ -76,10 +65,8 @@ class Login extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps: MapStateToProps<{ }, { }, { }> = (state) => {
-	return {
-		state
-	};
-};
+const mapStateToProps = (state: AppState): AppState => ({
+	...state.loginReducer
+});
 
-export default connect(mapStateToProps, { })(Login);
+export default connect(mapStateToProps, { login })(Login);
