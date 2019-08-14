@@ -6,8 +6,18 @@ export interface Styles {
 	text: TextStyle;
 }
 
-export interface Props {
+export interface LinkDispatchProps {
+	onFetchLifts(): void;
+}
+
+export interface LinkStateProp {
+	allLifts: object;
+}
+
+export interface HomePageProps {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
+
+export type Props = HomePageProps & LinkStateProp & LinkDispatchProps;
 
 export interface State { }

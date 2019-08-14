@@ -22,4 +22,14 @@ export interface ConfirmationResult {
 	};
 }
 
-export type HttpResponse = ConfirmationResult | SignupResult | LoginResult;
+export interface Lift {
+	_id: string;
+	name: {
+		first: string;
+		last: string;
+	}
+	leavingFrom: string;
+	goingTo: string;
+}
+
+export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | Lift;
