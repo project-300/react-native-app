@@ -1,4 +1,4 @@
-import { SIGNUP, LOGIN, SEND_MESSAGE, CONFIRM_ACCOUNT } from '../constants/websocket-actions';
+import { GET_APPLICATIONS } from '../constants/websocket-actions';
 import { SERVER_WSS_URL } from '../../environment/env';
 
 class WebSocketAPI {
@@ -10,7 +10,7 @@ class WebSocketAPI {
 
 	private setup = (): void => {
 		this.WS.onopen = (): void => {
-			this.sendMessage('Connected');
+			console.log('Connected');
 		};
 
 		this.WS.onmessage = (e: object): void => {
@@ -29,31 +29,11 @@ class WebSocketAPI {
 		};
 	}
 
-	public sendMessage = (data: string): void => {
+	public getApplications = (subscribe: boolean): void => {
 		this.WS.send(JSON.stringify({
-			action: SEND_MESSAGE,
-			data
-		}));
-	}
-
-	public login = (data: object): void => {
-		this.WS.send(JSON.stringify({
-			action: LOGIN,
-			data
-		}));
-	}
-
-	public signup = (data: object): void => {
-		this.WS.send(JSON.stringify({
-			action: SIGNUP,
-			data
-		}));
-	}
-
-	public confirmAccount = (data: object): void => {
-		this.WS.send(JSON.stringify({
-			action: CONFIRM_ACCOUNT,
-			data
+			action: GET_APPLICATIONS,
+			subscription: 'admin/driver-applications',
+			subscribe
 		}));
 	}
 
