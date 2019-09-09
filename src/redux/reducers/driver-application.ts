@@ -1,10 +1,12 @@
 import {
 	DRIVER_APPLICATION_REQUEST,
 	DRIVER_APPLICATION_SUCCESS,
-	DRIVER_APPLICATION_FAILURE
+	DRIVER_APPLICATION_FAILURE,
+	STORE_APPLICATIONS
 } from '../../constants/redux-actions';
 import { DriverApplicationState } from '../../types/redux-reducer-state-types';
 import { DriverApplicationActionTypes } from '../../types/redux-action-types';
+import SubReceiver, { CollectionItem } from '../subscriptions';
 
 const initialState: DriverApplicationState = {
 	isApplying: false,
@@ -19,6 +21,9 @@ const driverApplicationReducer = (state: DriverApplicationState = initialState, 
 			return { ...state, isApplying: false };
 		case DRIVER_APPLICATION_FAILURE:
 			return { ...state, isApplying: false };
+		case STORE_APPLICATIONS:
+			const applications = SubReceiver.updateCollection(action.payload, [ ...state.applications ] as CollectionItem[]);
+			return { ...state, applications };
 		default:
 			return state;
 	}
