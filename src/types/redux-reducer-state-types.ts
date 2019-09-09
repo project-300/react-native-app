@@ -8,3 +8,8 @@ export interface SignUpState {
 	isConfirmingAccount: boolean;
 	payload?: object;
 }
+
+export interface DriverApplicationState {
+	isApplying: boolean;
+	applications: object[];
+}

@@ -1,3 +1,6 @@
-export const SIGNUP = '/signup';
-export const ACCOUNT_CONFIRM = '/account-confirmation';
-export const LOGIN = '/login';
+export const SIGNUP: string = '/signup';
+export const ACCOUNT_CONFIRM: string = '/account-confirmation';
+export const LOGIN: string = '/login';
+export const DRIVER_APPLICATION: string = '/driver-application';
+export const APPROVE_APPLICATION: string = '/approve-application';
+export const DELETE_APPLICATION: string = '/delete-application';

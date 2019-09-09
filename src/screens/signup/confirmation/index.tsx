@@ -2,13 +2,15 @@ import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	View,
-	TextInput, TouchableOpacity, AppState
+	TextInput,
+	TouchableOpacity,
+	AppState
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
-import { confirmAccount } from '../../../actions';
+import { confirmAccount } from '../../../redux/actions';
 import toastr from '../../../helpers/toastr';
 
 class Confirmation extends Component<Props, State> {
