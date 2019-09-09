@@ -4,6 +4,8 @@ import { TextStyle, ViewStyle } from 'react-native';
 export interface Styles {
 	container: ViewStyle;
 	text: TextStyle;
+	button: TextStyle;
+	buttonText: TextStyle;
 }
 
 export interface Props {
