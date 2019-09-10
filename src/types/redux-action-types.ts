@@ -74,7 +74,8 @@ export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
 	SignUpConfirmationRequired | SignUpConfirmationRequest | SignUpConfirmationSuccess | SignUpConfirmationFailure;
 
-export type DriverApplicationActionTypes = DriverApplicationRequest | DriverApplicationSuccess |
-	DriverApplicationFailure | StoreApplicationsRequest;
+export type DriverApplicationActionTypes = DriverApplicationRequest | DriverApplicationSuccess | DriverApplicationFailure;
+
+export type AdminDriverApplicationsActionTypes = StoreApplicationsRequest;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes;

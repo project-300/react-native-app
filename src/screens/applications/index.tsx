@@ -87,7 +87,7 @@ class Applications extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): AppState => ({
-	...state.driverApplicationReducer
+	...state.adminDriverApplicationsReducer
 });
 
 export default connect(mapStateToProps, {

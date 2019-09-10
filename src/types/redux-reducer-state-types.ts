@@ -11,5 +11,8 @@ export interface SignUpState {
 
 export interface DriverApplicationState {
 	isApplying: boolean;
+}
+
+export interface AdminDriverApplicationsState {
 	applications: object[];
 }
