@@ -1,6 +1,6 @@
 import { applyMiddleware, createStore, Store } from 'redux';
 import thunk, { ThunkMiddleware } from 'redux-thunk';
-import reducers from './reducers';
+import reducers from './redux/reducers';
 import { AppActions } from './types/redux-action-types';
 
 export type AppState = ReturnType<typeof reducers>;

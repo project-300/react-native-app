@@ -6,13 +6,13 @@ import {
 	SIGNUP_CONFIRMATION_REQUEST,
 	SIGNUP_CONFIRMATION_SUCCESS,
 	SIGNUP_CONFIRMATION_FAILURE
-} from '../constants/redux-actions';
+} from '../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
-import HttpAPI from '../api/http';
-import toastr from '../helpers/toastr';
-import { SignupResult, ConfirmationResult } from '../types/http-responses';
-import { AppActions } from '../types/redux-action-types';
+import HttpAPI from '../../api/http';
+import toastr from '../../helpers/toastr';
+import { SignupResult, ConfirmationResult } from '../../types/http-responses';
+import { AppActions } from '../../types/redux-action-types';
 
 const signUpRequest = (): AppActions => ({ type: SIGNUP_REQUEST });
 

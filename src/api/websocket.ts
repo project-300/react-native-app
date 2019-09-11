@@ -1,60 +1,65 @@
-import { SIGNUP, LOGIN, SEND_MESSAGE, CONFIRM_ACCOUNT } from '../constants/websocket-actions';
 import { SERVER_WSS_URL } from '../../environment/env';
+import { store } from '../store';
+import { storeApplications } from '../redux/actions';
+import { userId } from '../auth';
+import { SubscriptionPayload } from '../redux/subscriptions';
+import { ADMIN_DRIVER_APPLICATIONS } from '../constants/websocket-subscriptions';
 
 class WebSocketAPI {
+
 	private WS: WebSocket = new WebSocket(SERVER_WSS_URL);
 
 	public constructor() {
-		this.setup();
+		this._setup();
 	}
 
-	private setup = (): void => {
+	private _setup = (): void => {
 		this.WS.onopen = (): void => {
-			this.sendMessage('Connected');
+			console.log('Connected');
 		};
 
-		this.WS.onmessage = (e: object): void => {
-			// a message was received
-			console.log(e.data);
+		this.WS.onmessage = (ev: MessageEvent): void => {
+			const data: SubscriptionPayload = JSON.parse(ev.data);
+			if (data && data.subscription) this._dispatchSubscriptionData(data);
 		};
 
-		this.WS.onerror = (e: object): void => {
-			// an error occurred
-			console.log(e.message);
+		this.WS.onerror = (ev: Event): void => {
+			console.log('Websocket Error', ev);
 		};
 
-		this.WS.onclose = (e: object): void => {
-			// connection closed
-			console.log(e.code, e.reason);
+		this.WS.onclose = (ev: CloseEvent): void => {
+			console.log(ev.code, ev.reason);
 		};
 	}
 
-	public sendMessage = (data: string): void => {
+	public subscribe = async (subscription: string): Promise<void> => {
 		this.WS.send(JSON.stringify({
-			action: SEND_MESSAGE,
-			data
+			action: subscription,
+			subscription,
+			userId: await userId(),
+			subscribe: true
 		}));
 	}
 
-	public login = (data: object): void => {
+	public unsubscribe = async (subscription: string): Promise<void> => {
 		this.WS.send(JSON.stringify({
-			action: LOGIN,
-			data
+			action: subscription,
+			subscription,
+			userId: await userId(),
+			subscribe: false
 		}));
 	}
 
-	public signup = (data: object): void => {
-		this.WS.send(JSON.stringify({
-			action: SIGNUP,
-			data
-		}));
-	}
+	private _dispatchSubscriptionData = (payload: SubscriptionPayload): void => {
+		const { subscription } = payload;
 
-	public confirmAccount = (data: object): void => {
-		this.WS.send(JSON.stringify({
-			action: CONFIRM_ACCOUNT,
-			data
-		}));
+		switch (subscription) {
+			case ADMIN_DRIVER_APPLICATIONS:
+				store.dispatch(storeApplications(payload));
+				break;
+			default:
+				return;
+		}
 	}
 
 }

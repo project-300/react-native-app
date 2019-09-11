@@ -6,9 +6,9 @@ import {
 	SIGNUP_CONFIRMATION_REQUEST,
 	SIGNUP_CONFIRMATION_SUCCESS,
 	SIGNUP_CONFIRMATION_FAILURE
-} from '../constants/redux-actions';
-import { SignUpState } from '../types/redux-reducer-state-types';
-import { SignUpActionTypes } from '../types/redux-action-types';
+} from '../../constants/redux-actions';
+import { SignUpState } from '../../types/redux-reducer-state-types';
+import { SignUpActionTypes } from '../../types/redux-action-types';
 
 const initialState: SignUpState = {
 	isCreatingAccount: false,

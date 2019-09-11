@@ -1,5 +1,6 @@
 export interface LoginResult {
 	success: boolean;
+	userId?: string;
 	error?: {
 		code: string;
 		description: string;
@@ -22,4 +23,12 @@ export interface ConfirmationResult {
 	};
 }
 
-export type HttpResponse = ConfirmationResult | SignupResult | LoginResult;
+export interface DriverApplicationResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
+export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult;

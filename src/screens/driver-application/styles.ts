@@ -5,8 +5,7 @@ const styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
-		paddingTop: 20
+		alignItems: 'center'
 	},
 
 	text: {
@@ -18,7 +17,6 @@ const styles = StyleSheet.create<Styles>({
 	button: {
 		backgroundColor: '#02b2cc',
 		padding: 10,
-		marginBottom: 10,
 		borderRadius: 4,
 		width: '80%',
 	},

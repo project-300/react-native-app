@@ -2,7 +2,8 @@ import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	ScrollView,
-	Button, AppState
+	AppState,
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { storeLogout } from '../../auth';
@@ -19,14 +20,22 @@ class Home extends Component<Props, State> {
 
 	public render(): ReactElement {
 		return (
-			<ScrollView style={ styles.container }>
-				<Text
-					style={ styles.text }>
-					Home Screen
-				</Text>
-				<Button
+			<ScrollView contentContainerStyle={ styles.container }>
+				<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('Applications') }
+					style={ styles.button }>
+					<Text style={ styles.buttonText }>Applications (Testing only)</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('DriverApplication') }
+					style={ styles.button }>
+					<Text style={ styles.buttonText }>Want to become a driver?</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
 					onPress={ this._logout }
-					title={ 'Logout' } />
+					style={ styles.button }>
+					<Text style={ styles.buttonText }>Logout</Text>
+				</TouchableOpacity>
 			</ScrollView>
 		);
 	}

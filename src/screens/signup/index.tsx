@@ -3,13 +3,14 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity, AppState
+	TouchableOpacity,
+	AppState
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, ReduxSuccessResponse, State } from './interfaces';
 import toastr from '../../helpers/toastr';
-import { signUp } from '../../actions';
+import { signUp } from '../../redux/actions';
 
 // Documentation: /docs/signup.md
 

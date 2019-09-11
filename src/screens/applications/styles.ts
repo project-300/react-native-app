@@ -4,9 +4,7 @@ import { Styles } from './interfaces';
 const styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
-		paddingTop: 20
+		backgroundColor: '#F5FCFF'
 	},
 
 	text: {
@@ -15,12 +13,24 @@ const styles = StyleSheet.create<Styles>({
 		margin: 10
 	},
 
+	applicationRow: {
+		margin: 4,
+		padding: 10,
+		backgroundColor: '#ffedcc'
+	},
+
+	title: {
+		fontWeight: 'bold',
+		fontSize: 18,
+		alignSelf: 'center',
+		marginBottom: 10
+	},
+
 	button: {
+		marginTop: 10,
 		backgroundColor: '#02b2cc',
 		padding: 10,
-		marginBottom: 10,
-		borderRadius: 4,
-		width: '80%',
+		borderRadius: 4
 	},
 
 	buttonText: {

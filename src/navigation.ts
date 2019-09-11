@@ -9,6 +9,8 @@ import Home from './screens/home';
 import Login from './screens/login';
 import SignUp from './screens/signup';
 import Confirmation from './screens/signup/confirmation';
+import DriverApplication from './screens/driver-application';
+import Applications from './screens/applications';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -38,6 +40,18 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		screen: Home,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Home'
+		})
+	},
+	DriverApplication: {
+		screen: DriverApplication,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Driver Application'
+		})
+	},
+	Applications: {
+		screen: Applications,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Applications'
 		})
 	}
 });

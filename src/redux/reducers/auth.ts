@@ -1,6 +1,6 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../constants/redux-actions';
-import { LoginState } from '../types/redux-reducer-state-types';
-import { LoginActionTypes } from '../types/redux-action-types';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../../constants/redux-actions';
+import { LoginState } from '../../types/redux-reducer-state-types';
+import { LoginActionTypes } from '../../types/redux-action-types';
 
 const initialState: LoginState = {
 	isLoggingIn: false,

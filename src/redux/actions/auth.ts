@@ -1,11 +1,11 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../constants/redux-actions';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
-import { storeLogin } from '../auth';
-import { LoginResult } from '../types/http-responses';
-import HttpAPI from '../api/http';
-import toastr from '../helpers/toastr';
-import { AppActions } from '../types/redux-action-types';
+import { storeLogin } from '../../auth';
+import { LoginResult } from '../../types/http-responses';
+import HttpAPI from '../../api/http';
+import toastr from '../../helpers/toastr';
+import { AppActions } from '../../types/redux-action-types';
 
 const loginRequest = (): AppActions => ({ type: LOGIN_REQUEST });
 
@@ -21,8 +21,8 @@ export const login = (username: string, password: string): (dispatch: Dispatch) 
 			const auth = await Auth.signIn(username, password);
 			const apiRes: LoginResult = await HttpAPI.login(auth);
 
-			if (apiRes.success) {
-				await storeLogin();
+			if (apiRes.success && apiRes.userId) {
+				await storeLogin(apiRes.userId);
 				dispatch(loginSuccess());
 				return true;
 			}

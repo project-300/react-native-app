@@ -103,6 +103,7 @@
     "no-shadowed-variable": false,
     "no-console": false,
     "no-null-keyword": false,
+    "prefer-function-over-method": false,
     "typedef": [
       true,
       "call-signature",
