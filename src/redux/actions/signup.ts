@@ -46,7 +46,7 @@ export const signUp = (email: string, username: string, password: string): (disp
 				}
 			});
 
-			const apiRes: SignupResult = await HttpAPI.signUp(authRes);
+			const apiRes: SignupResult = await HttpAPI.signUp({ auth: authRes, email, username });
 
 			dispatch(signUpSuccess());
 
