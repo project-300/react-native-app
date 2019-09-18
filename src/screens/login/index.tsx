@@ -3,14 +3,15 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity,
-	AppState
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { login } from '../../redux/actions';
 import toastr from '../../helpers/toastr';
+import { LoginState } from '../../types/redux-reducer-state-types';
+import { AppState } from '../../store';
 
 // Documentation: /docs/login.md
 
@@ -66,7 +67,7 @@ class Login extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
+const mapStateToProps = (state: AppState): LoginState => ({
 	...state.loginReducer
 });
 

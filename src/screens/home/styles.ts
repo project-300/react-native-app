@@ -20,7 +20,7 @@ const styles = StyleSheet.create<Styles>({
 		padding: 10,
 		marginBottom: 10,
 		borderRadius: 4,
-		width: '80%',
+		width: '80%'
 	},
 
 	buttonText: {

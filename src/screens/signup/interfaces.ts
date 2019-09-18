@@ -1,5 +1,6 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { CommonProps } from '../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
@@ -9,10 +10,9 @@ export interface Styles {
 	loginLink: TextStyle;
 }
 
-export interface Props {
-	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+export interface Props extends CommonProps {
 	isCreatingAccount: boolean;
-	signUp: Function;
+	signUp(e: string, u: string, p: string): Promise<SignUpActionResponse>;
 }
 
 export interface State {
@@ -21,7 +21,7 @@ export interface State {
 	password: string;
 }
 
-export interface ReduxSuccessResponse {
+export interface SignUpActionResponse {
 	ok: boolean,
 	confirmationRequired?: boolean;
 }

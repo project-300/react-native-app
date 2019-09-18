@@ -1,7 +1,6 @@
 import React, { Component, ReactElement } from 'react';
 import {
 	ScrollView,
-	AppState,
 	FlatList,
 	Text,
 	View,
@@ -9,10 +8,13 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { DriverApplication, Props, State } from './interfaces';
+import { Props, State } from './interfaces';
 import WS from '../../api/websocket';
 import { ADMIN_DRIVER_APPLICATIONS } from '../../constants/websocket-subscriptions';
 import { storeApplications, approveApplication, deleteApplication } from '../../redux/actions';
+import { DriverApplicationObject } from '@project-300/common-types';
+import { AppState } from '../../store';
+import { AdminDriverApplicationsState } from '../../types/redux-reducer-state-types';
 
 class Applications extends Component<Props, State> {
 
@@ -36,7 +38,7 @@ class Applications extends Component<Props, State> {
 		await this.props.deleteApplication(userId);
 	}
 
-	private _renderRow = ({ item, index }: { item: DriverApplication; index: number }): ReactElement => {
+	private _renderRow = ({ item, index }: { item: DriverApplicationObject; index: number }): ReactElement => {
 		const approvalButton =
 			<TouchableOpacity
 				style={ styles.button }
@@ -79,14 +81,14 @@ class Applications extends Component<Props, State> {
 					data={ this.props.applications }
 					extraData={ this.props }
 					renderItem={ this._renderRow }
-					keyExtractor={ (item: DriverApplication): string => item.userId }
+					keyExtractor={ (item: DriverApplicationObject): string => item.userId }
 				/>
 			</ScrollView>
 		);
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
+const mapStateToProps = (state: AppState): AdminDriverApplicationsState => ({
 	...state.adminDriverApplicationsReducer
 });
 

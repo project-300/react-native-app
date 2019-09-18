@@ -3,14 +3,15 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity,
-	AppState
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { Props, ReduxSuccessResponse, State } from './interfaces';
+import { Props, SignUpActionResponse, State } from './interfaces';
 import toastr from '../../helpers/toastr';
 import { signUp } from '../../redux/actions';
+import { SignUpState } from '../../types/redux-reducer-state-types';
+import { AppState } from '../../store';
 
 // Documentation: /docs/signup.md
 
@@ -34,7 +35,7 @@ class SignUp extends Component<Props, State> {
 		if (!username) return toastr.error('Username is missing');
 		if (!password) return toastr.error('Password is missing');
 
-		const res: ReduxSuccessResponse = await this.props.signUp(email, username, password);
+		const res: SignUpActionResponse = await this.props.signUp(email, username, password);
 		if (!res) return;
 		if (res.ok && res.confirmationRequired) return navigate('Confirmation');
 		if (res.ok && !res.confirmationRequired) return navigate('Login');
@@ -76,7 +77,7 @@ class SignUp extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
+const mapStateToProps = (state: AppState): SignUpState => ({
 	...state.signUpReducer
 });
 

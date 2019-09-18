@@ -13,6 +13,7 @@ import HttpAPI from '../../api/http';
 import toastr from '../../helpers/toastr';
 import { SignupResult, ConfirmationResult } from '../../types/http-responses';
 import { AppActions } from '../../types/redux-action-types';
+import { SignUpActionResponse } from '../../screens/signup/interfaces';
 
 const signUpRequest = (): AppActions => ({ type: SIGNUP_REQUEST });
 
@@ -28,13 +29,8 @@ const signUpConfirmationSuccess = (): AppActions => ({ type: SIGNUP_CONFIRMATION
 
 const signUpConfirmationFailure = (): AppActions => ({ type: SIGNUP_CONFIRMATION_FAILURE });
 
-interface SignUpResponse {
-	ok: boolean;
-	confirmationRequired?: boolean;
-}
-
-export const signUp = (email: string, username: string, password: string): (dispatch: Dispatch<AppActions>) => Promise<SignUpResponse> => {
-	return async (dispatch: Dispatch<AppActions>): Promise<SignUpResponse> => {
+export const signUp = (email: string, username: string, password: string): (dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse> => {
+	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse> => {
 		dispatch(signUpRequest());
 
 		try {

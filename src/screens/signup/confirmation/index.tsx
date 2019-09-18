@@ -3,8 +3,7 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity,
-	AppState
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -12,6 +11,8 @@ import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
 import { confirmAccount } from '../../../redux/actions';
 import toastr from '../../../helpers/toastr';
+import { SignUpState } from '../../../types/redux-reducer-state-types';
+import { AppState } from '../../../store';
 
 class Confirmation extends Component<Props, State> {
 
@@ -72,7 +73,7 @@ class Confirmation extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
+const mapStateToProps = (state: AppState): SignUpState => ({
 	...state.signUpReducer
 });
 

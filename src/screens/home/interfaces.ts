@@ -1,5 +1,6 @@
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TextStyle, ViewStyle } from 'react-native';
+import { CommonProps } from '../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
@@ -8,8 +9,6 @@ export interface Styles {
 	buttonText: TextStyle;
 }
 
-export interface Props {
-	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-}
+export interface Props extends CommonProps { }
 
 export interface State { }
