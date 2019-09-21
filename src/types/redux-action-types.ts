@@ -94,6 +94,18 @@ export interface UserProfileSubFailure {
 	type: typeof USER_PROFILE_SUB_FAILURE;
 }
 
+export interface UpdateEmailRequest {
+	type: typeof UPDATE_EMAIL_REQUEST;
+}
+
+export interface UpdateEmailSuccess {
+	type: typeof UPDATE_EMAIL_SUCCESS;
+}
+
+export interface UpdateEmailFailure {
+	type: typeof UPDATE_EMAIL_FAILURE;
+}
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
@@ -105,4 +117,7 @@ export type AdminDriverApplicationsActionTypes = StoreApplicationsRequest;
 
 export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure;
 
-export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes;
+export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
+
+export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
+	UpdateEmailActionTypes;

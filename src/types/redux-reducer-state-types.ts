@@ -25,4 +25,8 @@ export interface UserProfileState {
 	user: User | null;
 }
 
+export interface UpdateEmailState {
+	isUpdating: boolean;
+}
+
 export interface HomeState { }

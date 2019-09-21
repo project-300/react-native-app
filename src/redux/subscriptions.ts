@@ -1,28 +1,12 @@
 import _ from 'lodash';
-
-export interface SubscriptionPayload {
-	subscription: string;
-	type: PublishType;
-	isCollection: boolean;
-	objectId: string;
-	data: CollectionItem | CollectionItem[] | string;
-}
-
-export interface CollectionItem {
-	[id: string]: string;
-}
-
-enum PublishType {
-	QUERY = 'QUERY',
-	INSERT = 'INSERT',
-	UPDATE = 'UPDATE',
-	DELETE = 'DELETE'
-}
+import { SubscriptionPayload, CollectionItem, PublishType, SubscriptionPayloadData } from '@project-300/common-types';
 
 class SubscriptionReceiver {
 
-	public updateCollection = (payload: SubscriptionPayload, collection: CollectionItem[]): CollectionItem[] => {
+	public updateCollection = (payload: SubscriptionPayload, collection: CollectionItem[]): CollectionItem[] | void => {
 		const { type, isCollection, objectId, data } = payload;
+		if (!type || !objectId || !data) return;
+
 		let updatedCollection: CollectionItem[] = collection;
 
 		if (isCollection && data instanceof Array) {
@@ -45,7 +29,7 @@ class SubscriptionReceiver {
 	private mapItemToCollection = (
 		type: PublishType,
 		id: string,
-		item: CollectionItem[] | CollectionItem | string,
+		item: SubscriptionPayloadData,
 		collection: CollectionItem[]
 	): CollectionItem[] => {
 		if (!id || !item) return collection;
