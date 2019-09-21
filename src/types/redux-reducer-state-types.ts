@@ -1,3 +1,5 @@
+import { DriverApplicationObject, User } from '@project-300/common-types';
+
 export interface LoginState {
 	isLoggingIn: boolean;
 	isLoggedIn: boolean;
@@ -14,5 +16,13 @@ export interface DriverApplicationState {
 }
 
 export interface AdminDriverApplicationsState {
-	applications: object[];
+	applications: DriverApplicationObject[];
 }
+
+export interface UserProfileState {
+	subscribing: boolean;
+	receivedData: boolean;
+	user: User | null;
+}
+
+export interface HomeState { }
