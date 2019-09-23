@@ -5,3 +5,4 @@ export const DRIVER_APPLICATION: string = '/driver-application';
 export const APPROVE_APPLICATION: string = '/approve-application';
 export const DELETE_APPLICATION: string = '/delete-application';
 export const UPDATE_EMAIL: string = '/user/update-email';
+export const UPDATE_AVATAR: string = '/user/update-avatar';

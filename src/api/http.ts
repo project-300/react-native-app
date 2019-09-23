@@ -5,7 +5,7 @@ import {
 	DRIVER_APPLICATION,
 	APPROVE_APPLICATION,
 	DELETE_APPLICATION,
-	UPDATE_EMAIL
+	UPDATE_EMAIL, UPDATE_AVATAR
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -25,6 +25,8 @@ export default class HttpAPI {
 	public static deleteApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DELETE_APPLICATION);
 
 	public static updateEmail = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_EMAIL);
+
+	public static updateAvatar = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_AVATAR);
 
 	private static send = async (req: object, path: string): Promise<HttpResponse> => {
 		const res: Response = await fetch(`${SERVER_HTTPS_URL}${path}`, {

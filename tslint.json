@@ -104,6 +104,7 @@
     "no-console": false,
     "no-null-keyword": false,
     "prefer-function-over-method": false,
+    "no-magic-numbers": false,
     "typedef": [
       true,
       "call-signature",
