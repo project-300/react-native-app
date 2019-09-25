@@ -18,6 +18,8 @@ import HttpAPI from '../../api/http';
 import { userId } from '../../auth';
 import ImagePicker, { Response as ImageResponse } from 'react-native-image-picker';
 import ImageResizer, { Response as ResizedResponse } from 'react-native-image-resizer';
+import toastr from '../../helpers/toastr';
+import { SecretKeyResult } from '../../types/http-responses';
 
 const options = {
 	title: 'Select Avatar',
@@ -48,8 +50,12 @@ class Profile extends Component<Props, State> {
 			if (img.didCancel) {
 				console.log('User cancelled image picker');
 			} else if (img.error) {
-				console.log('ImagePicker Error: ', img.error);
+				toastr.error('An error occurred');
 			} else {
+				const keyResponse: SecretKeyResult = await HttpAPI.getS3SecretKey();
+
+				if (!keyResponse.success) return toastr.error('Unable to retrieve S3 key');
+
 				const currentWidth: number = img.width;
 				const currentHeight: number = img.height;
 				let newWidth: number = currentWidth;
@@ -75,8 +81,8 @@ class Profile extends Component<Props, State> {
 					keyPrefix: 'avatars/',
 					bucket: 'react-native-test-upload',
 					region: 'eu-west-1',
-					accessKey: '',
-					secretKey: '',
+					accessKey: 'AKIAIQPEVSX4RIRRKUDQ',
+					secretKey: keyResponse.secretKey,
 					successActionStatus: 201
 				};
 
