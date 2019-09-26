@@ -21,6 +21,7 @@ import ImageResizer, { Response as ResizedResponse } from 'react-native-image-re
 import toastr from '../../helpers/toastr';
 import { SecretKeyResult } from '../../types/http-responses';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { ReduceImage } from '../../helpers/image-resizing';
 
 const options = {
 	title: 'Select Avatar',
@@ -57,20 +58,7 @@ class Profile extends Component<Props, State> {
 
 				if (!keyResponse.success) return toastr.error('Unable to retrieve S3 key');
 
-				const currentWidth: number = img.width;
-				const currentHeight: number = img.height;
-				let newWidth: number = currentWidth;
-				let newHeight: number = currentHeight;
-
-				if (currentWidth > currentHeight && currentWidth > 500) {
-					newWidth = 500;
-					newHeight = (currentHeight / currentWidth) * newWidth;
-				} else if (currentHeight > currentWidth && currentHeight > 500) {
-					newHeight = 500;
-					newWidth = (currentWidth / currentHeight) * newHeight;
-				}
-
-				const rs: ResizedResponse = await ImageResizer.createResizedImage(img.uri, newWidth, newHeight, 'JPEG', 100);
+				const rs: ResizedResponse = await ReduceImage(img, 500);
 
 				const file = {
 					uri: rs.uri,
