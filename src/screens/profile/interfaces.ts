@@ -8,10 +8,13 @@ export interface Styles {
 	text: TextStyle;
 	button: TextStyle;
 	buttonText: TextStyle;
-	profileImage: ImageStyle;
+	profileImageContainer: ViewStyle;
+	userTypeTag: ViewStyle;
+	userTypeTagText: TextStyle;
 	username: TextStyle;
 	email: TextStyle;
 	editButton: TextStyle;
+	updatePassword: TextStyle;
 }
 
 export interface Props extends CommonProps {

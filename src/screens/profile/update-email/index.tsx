@@ -11,6 +11,8 @@ import { Props, State } from './interfaces';
 import { AppState } from '../../../store';
 import { UpdateEmailState } from '../../../types/redux-reducer-state-types';
 import { updateEmail } from '../../../redux/actions/user/update-email';
+import * as EmailValidator from 'email-validator';
+import toastr from '../../../helpers/toastr';
 
 class UpdateEmail extends Component<Props, State> {
 
@@ -26,10 +28,12 @@ class UpdateEmail extends Component<Props, State> {
 	private _updateEmail = async (): Promise<void> => {
 		if (this.props.isUpdating || !this.state.newEmail) return;
 
-		const { newEmail } = this.state;
-		const success = await this.props.updateEmail(newEmail);
+		const newEmail = this.state.newEmail.toLowerCase();
+		if (!EmailValidator.validate(newEmail)) return toastr.error('Invalid Email Address');
 
-		if (success) {
+		const res = await this.props.updateEmail(newEmail);
+
+		if (res) {
 			this.setState({ currentEmail: newEmail });
 			if (this._newEmailInput.current) this._newEmailInput.current.clear(); // Clear the TextInput
 		}

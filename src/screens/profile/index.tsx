@@ -4,7 +4,7 @@ import {
 	Text,
 	View,
 	Image,
-	TouchableOpacity
+	TouchableOpacity, Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -20,6 +20,7 @@ import ImagePicker, { Response as ImageResponse } from 'react-native-image-picke
 import ImageResizer, { Response as ResizedResponse } from 'react-native-image-resizer';
 import toastr from '../../helpers/toastr';
 import { SecretKeyResult } from '../../types/http-responses';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const options = {
 	title: 'Select Avatar',
@@ -97,32 +98,53 @@ class Profile extends Component<Props, State> {
 	}
 
 	public render(): ReactElement {
-		if (!this.props.user) return <View />; 		// Add loading spinner
+		if (!this.props.user || !this.props.user.email) { // Replace with loading spinner
+			return <View>
+				<Text style={ {
+					alignSelf: 'center',
+					fontWeight: 'bold',
+					fontSize: 20,
+					marginTop: Dimensions.get('window').height / 3
+				} }>Loading...</Text>
+			</View>;
+		}
+
+		const avatarSize = Dimensions.get('screen').width / 2;
+		const avatarCircle = { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2 };
 
 		return (
 			<View>
 				<ScrollView>
 					<TouchableOpacity
 						onPress={ this._changeImage }
+						style={ { ...styles.profileImageContainer, ...avatarCircle } }
 					>
 						<Image
 							source={ { uri: this.props.user.avatar || 'https://pecb.com/conferences/wp-content/uploads/2017/10/no-profile-picture.jpg' } }
-							style={ styles.profileImage }
+							style={ avatarCircle }
 						/>
 					</TouchableOpacity>
-					<Text
-						style={ styles.username }
-					>{ this.props.user.username }</Text>
+
+					<View style={ styles.userTypeTag }>
+						<Text style={ styles.userTypeTagText }>{ this.props.user.userType }</Text>
+					</View>
+
+					<Text style={ styles.username }>{ this.props.user.username }</Text>
+
 					<Text
 						style={ styles.email }
-					>{ this.props.user.email } <Text
-							style={ styles.editButton }
-							onPress={ (): void => {
-								if (!this.props.user) return;
-								this.props.navigation.navigate('UpdateEmail', { email: this.props.user.email });
-							} }
-						>Change</Text>
+						onPress={ (): void => {
+							if (!this.props.user || !this.props.user.email) return;
+							this.props.navigation.navigate('UpdateEmail', { email: this.props.user.email });
+						} }
+					>
+						{ this.props.user.email } <Icon name='pen' size={ 22 } style={ { paddingLeft: 10, color: 'grey' } } />
 					</Text>
+
+					<Text
+						onPress={ (): boolean => this.props.navigation.navigate('UpdatePassword') }
+						style={ styles.updatePassword }
+					>Change My Password</Text>
 				</ScrollView>
 			</View>
 		);

@@ -39,7 +39,7 @@ export default class HttpAPI {
 			}
 		});
 
-		const ok = res.ok;
+		const ok: boolean = res.ok;
 		const data: HttpResponse = await res.json();
 
 		if (!ok) throw data.error || Error('Unknown Error');

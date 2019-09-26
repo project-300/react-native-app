@@ -11,6 +11,7 @@ import { Props, State } from './interfaces';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 class Home extends Component<Props, State> {
 
@@ -24,7 +25,7 @@ class Home extends Component<Props, State> {
 				<TouchableOpacity
 					onPress={ (): boolean => navigation.navigate('Profile') }
 				>
-					<Text>Profile</Text>
+					<Icon name='user' size={ 22 } style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } } />
 				</TouchableOpacity>
 			)
 		};

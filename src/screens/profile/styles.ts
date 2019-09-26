@@ -29,19 +29,31 @@ const styles = StyleSheet.create<Styles>({
 		fontWeight: 'bold'
 	},
 
-	profileImage: {
+	profileImageContainer: {
 		alignSelf: 'center',
-		width: 160,
-		height: 160,
-		borderRadius: 120,
 		marginTop: 20
+	},
+
+	userTypeTag: {
+		backgroundColor: 'red',
+		width: 100,
+		alignSelf: 'center',
+		borderRadius: 8,
+		marginTop: -20,
+		marginBottom: 20,
+		padding: 2
+	},
+
+	userTypeTagText: {
+		alignSelf: 'center',
+		color: 'white',
+		fontWeight: 'bold'
 	},
 
 	username: {
 		alignSelf: 'center',
 		fontSize: 24,
-		fontWeight: 'bold',
-		marginTop: 10
+		fontWeight: 'bold'
 	},
 
 	email: {
@@ -54,6 +66,12 @@ const styles = StyleSheet.create<Styles>({
 	editButton: {
 		color: '#999',
 		fontSize: 18
+	},
+
+	updatePassword: {
+		alignSelf: 'center',
+		marginTop: 20,
+		fontWeight: 'bold'
 	}
 });
 

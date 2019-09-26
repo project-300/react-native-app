@@ -7,11 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "@project-300/common-types": "^1.0.7",
+    "@project-300/common-types": "^1.0.8",
     "@types/lodash": "^4.14.138",
+    "@types/react-native-vector-icons": "^6.4.2",
     "@types/react-redux": "^7.1.1",
     "aws-amplify": "^1.1.30",
     "aws-amplify-react-native": "^2.1.14",
+    "email-validator": "^2.0.4",
     "lodash": "^4.17.15",
     "react": "16.8.3",
     "react-native": "0.59.9",
@@ -21,6 +23,7 @@
     "react-native-image-resizer": "^1.0.1",
     "react-native-root-toast": "^3.1.2",
     "react-native-scripts": "^2.0.1",
+    "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^3.11.0",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
