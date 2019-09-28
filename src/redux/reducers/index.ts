@@ -5,6 +5,7 @@ import driverApplicationReducer from './driver-application';
 import adminDriverApplicationsReducer from './admin/driver-applications';
 import userProfileReducer from './user/profile';
 import updateUserFieldReducer from './user/update-user-field';
+import updatePasswordReducer from './user/update-password';
 
 export default combineReducers({
 	signUpReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
 	driverApplicationReducer,
 	adminDriverApplicationsReducer,
 	userProfileReducer,
-	updateUserFieldReducer
+	updateUserFieldReducer,
+	updatePasswordReducer
 });

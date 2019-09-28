@@ -13,6 +13,7 @@ import DriverApplication from './screens/driver-application';
 import Applications from './screens/applications';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
+import UpdatePassword from './screens/profile/update-password';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -65,8 +66,13 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 	UpdateUserField: {
 		screen: UpdateUserField,
 		navigationOptions: (): NavigationStackScreenOptions => ({ })
+	},
+	UpdatePassword: {
+		screen: UpdatePassword,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Update Password'
+		})
 	}
-
 });
 
 const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {

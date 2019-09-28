@@ -4,6 +4,7 @@ import { Styles } from './interfaces';
 const styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
+		backgroundColor: '#F5FCFF',
 		alignItems: 'center',
 		paddingTop: 20
 	},

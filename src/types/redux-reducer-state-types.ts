@@ -29,4 +29,8 @@ export interface UpdateUserFieldState {
 	isUpdating: boolean;
 }
 
+export interface UpdatePasswordState {
+	isUpdating: boolean;
+}
+
 export interface HomeState { }
