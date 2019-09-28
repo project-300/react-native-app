@@ -3,10 +3,7 @@ import { Styles } from './interfaces';
 
 const styles = StyleSheet.create<Styles>({
 	container: {
-		flex: 1,
-		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
-		paddingTop: 20
+		backgroundColor: '#FFF'
 	},
 
 	text: {
@@ -34,6 +31,15 @@ const styles = StyleSheet.create<Styles>({
 		marginTop: 20
 	},
 
+	editIconContainer: {
+		position: 'absolute',
+		right: 10,
+		top: 10,
+		backgroundColor: 'grey',
+		padding: 10,
+		borderRadius: 20
+	},
+
 	userTypeTag: {
 		backgroundColor: 'red',
 		width: 100,
@@ -56,22 +62,23 @@ const styles = StyleSheet.create<Styles>({
 		fontWeight: 'bold'
 	},
 
-	email: {
-		alignSelf: 'center',
-		fontSize: 20,
+	editRowFirstItem: {
+		borderTopWidth: 0.5,
+		marginTop: 40
+	},
+
+	editRow: {
+		borderBottomWidth: 0.5,
+		padding: 20
+	},
+
+	label: {
 		fontWeight: 'bold',
-		marginTop: 10
+		color: 'black'
 	},
 
-	editButton: {
-		color: '#999',
-		fontSize: 18
-	},
-
-	updatePassword: {
-		alignSelf: 'center',
-		marginTop: 20,
-		fontWeight: 'bold'
+	editText: {
+		fontSize: 16
 	}
 });
 

@@ -25,7 +25,7 @@ export interface UserProfileState {
 	user: User | null;
 }
 
-export interface UpdateEmailState {
+export interface UpdateUserFieldState {
 	isUpdating: boolean;
 }
 

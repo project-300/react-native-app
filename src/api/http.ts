@@ -5,7 +5,9 @@ import {
 	DRIVER_APPLICATION,
 	APPROVE_APPLICATION,
 	DELETE_APPLICATION,
-	UPDATE_EMAIL, UPDATE_AVATAR, S3_KEY_REQUEST
+	UPDATE_USER_FIELD,
+	UPDATE_AVATAR,
+	S3_KEY_REQUEST
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -24,7 +26,7 @@ export default class HttpAPI {
 
 	public static deleteApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DELETE_APPLICATION);
 
-	public static updateEmail = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_EMAIL);
+	public static updateUserField = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_USER_FIELD);
 
 	public static updateAvatar = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_AVATAR);
 

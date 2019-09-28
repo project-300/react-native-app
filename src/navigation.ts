@@ -12,7 +12,7 @@ import Confirmation from './screens/signup/confirmation';
 import DriverApplication from './screens/driver-application';
 import Applications from './screens/applications';
 import Profile from './screens/profile';
-import UpdateEmail from './screens/profile/update-email';
+import UpdateUserField from './screens/profile/update-user-field';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -62,11 +62,9 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 			title: 'Profile'
 		})
 	},
-	UpdateEmail: {
-		screen: UpdateEmail,
-		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Email'
-		})
+	UpdateUserField: {
+		screen: UpdateUserField,
+		navigationOptions: (): NavigationStackScreenOptions => ({ })
 	}
 
 });

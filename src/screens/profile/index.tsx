@@ -4,7 +4,8 @@ import {
 	Text,
 	View,
 	Image,
-	TouchableOpacity, Dimensions
+	TouchableOpacity,
+	Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -17,11 +18,12 @@ import { RNS3 } from 'react-native-aws3';
 import HttpAPI from '../../api/http';
 import { userId } from '../../auth';
 import ImagePicker, { Response as ImageResponse } from 'react-native-image-picker';
-import ImageResizer, { Response as ResizedResponse } from 'react-native-image-resizer';
+import { Response as ResizedResponse } from 'react-native-image-resizer';
 import toastr from '../../helpers/toastr';
 import { SecretKeyResult } from '../../types/http-responses';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { ReduceImage } from '../../helpers/image-resizing';
+import { EditTypes } from '../../types/common';
 
 const options = {
 	title: 'Select Avatar',
@@ -29,6 +31,12 @@ const options = {
 		skipBackup: true,
 		path: 'images'
 	}
+};
+
+export const EditFields =  {
+	EMAIL: { type: 'Email Address', field: EditTypes.EMAIL },
+	FIRST_NAME: { type: 'First Name', field: EditTypes.FIRST_NAME },
+	LAST_NAME: { type: 'Last Name', field: EditTypes.LAST_NAME }
 };
 
 class Profile extends Component<Props, State> {
@@ -97,42 +105,63 @@ class Profile extends Component<Props, State> {
 			</View>;
 		}
 
+		const { user, navigation } = this.props;
 		const avatarSize = Dimensions.get('screen').width / 2;
 		const avatarCircle = { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2 };
 
 		return (
-			<View>
+			<View style={ styles.container }>
 				<ScrollView>
 					<TouchableOpacity
 						onPress={ this._changeImage }
 						style={ { ...styles.profileImageContainer, ...avatarCircle } }
 					>
 						<Image
-							source={ { uri: this.props.user.avatar || 'https://pecb.com/conferences/wp-content/uploads/2017/10/no-profile-picture.jpg' } }
+							source={ { uri: user.avatar || 'https://pecb.com/conferences/wp-content/uploads/2017/10/no-profile-picture.jpg' } }
 							style={ avatarCircle }
 						/>
+						<View style={ styles.editIconContainer }>
+							<Icon name='pen' size={ 14 } style={ { color: 'white' } } />
+						</View>
 					</TouchableOpacity>
 
 					<View style={ styles.userTypeTag }>
-						<Text style={ styles.userTypeTagText }>{ this.props.user.userType }</Text>
+						<Text style={ styles.userTypeTagText }>{ user.userType }</Text>
 					</View>
 
-					<Text style={ styles.username }>{ this.props.user.username }</Text>
+					<Text style={ styles.username }>{ user.username }</Text>
 
-					<Text
-						style={ styles.email }
-						onPress={ (): void => {
-							if (!this.props.user || !this.props.user.email) return;
-							this.props.navigation.navigate('UpdateEmail', { email: this.props.user.email });
-						} }
+					<TouchableOpacity
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.EMAIL, value: user.email }) }
+						style={ { ...styles.editRow, ...styles.editRowFirstItem } }
 					>
-						{ this.props.user.email } <Icon name='pen' size={ 22 } style={ { paddingLeft: 10, color: 'grey' } } />
-					</Text>
+						<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
+						<Text style={ styles.editText }>{ user.email }</Text>
+					</TouchableOpacity>
 
-					<Text
-						onPress={ (): boolean => this.props.navigation.navigate('UpdatePassword') }
-						style={ styles.updatePassword }
-					>Change My Password</Text>
+					<TouchableOpacity
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.FIRST_NAME, value: user.firstName }) }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.FIRST_NAME.type }</Text>
+						<Text style={ styles.editText }>{ user.firstName || 'Add my first name' }</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.LAST_NAME, value: user.lastName }) }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.LAST_NAME.type }</Text>
+						<Text style={ styles.editText }>{ user.lastName || 'Add my last name' }</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						onPress={ (): boolean => navigation.navigate('UpdatePassword') }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>Password</Text>
+						<Text style={ styles.editText }>******</Text>
+					</TouchableOpacity>
 				</ScrollView>
 			</View>
 		);

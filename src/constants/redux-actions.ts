@@ -28,7 +28,7 @@ export const USER_PROFILE_SUB_RECEIVED: string = 'USER_PROFILE_SUB_RECEIVED';
 export const USER_PROFILE_SUB_FAILURE: string = 'USER_PROFILE_SUB_FAILURE';
 export const USER_PROFILE_UNSUB: string = 'USER_PROFILE_UNSUB';
 
-// Update Email
-export const UPDATE_EMAIL_REQUEST: string = 'UPDATE_EMAIL_REQUEST';
-export const UPDATE_EMAIL_SUCCESS: string = 'UPDATE_EMAIL_SUCCESS';
-export const UPDATE_EMAIL_FAILURE: string = 'UPDATE_EMAIL_FAILURE';
+// Update User
+export const UPDATE_USER_REQUEST: string = 'UPDATE_USER_REQUEST';
+export const UPDATE_USER_SUCCESS: string = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_FAILURE: string = 'UPDATE_USER_FAILURE';

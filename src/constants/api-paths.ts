@@ -4,6 +4,6 @@ export const LOGIN: string = '/login';
 export const DRIVER_APPLICATION: string = '/driver-application';
 export const APPROVE_APPLICATION: string = '/approve-application';
 export const DELETE_APPLICATION: string = '/delete-application';
-export const UPDATE_EMAIL: string = '/user/update-email';
+export const UPDATE_USER_FIELD: string = '/user/update-field';
 export const UPDATE_AVATAR: string = '/user/update-avatar';
 export const S3_KEY_REQUEST: string = '/aws/s3-key';

@@ -4,7 +4,7 @@ import loginReducer from './auth';
 import driverApplicationReducer from './driver-application';
 import adminDriverApplicationsReducer from './admin/driver-applications';
 import userProfileReducer from './user/profile';
-import updateEmailReducer from './user/update-email';
+import updateUserFieldReducer from './user/update-user-field';
 
 export default combineReducers({
 	signUpReducer,
@@ -12,5 +12,5 @@ export default combineReducers({
 	driverApplicationReducer,
 	adminDriverApplicationsReducer,
 	userProfileReducer,
-	updateEmailReducer
+	updateUserFieldReducer
 });

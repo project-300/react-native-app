@@ -9,12 +9,14 @@ export interface Styles {
 	button: TextStyle;
 	buttonText: TextStyle;
 	profileImageContainer: ViewStyle;
+	editIconContainer: ViewStyle;
 	userTypeTag: ViewStyle;
 	userTypeTagText: TextStyle;
 	username: TextStyle;
-	email: TextStyle;
-	editButton: TextStyle;
-	updatePassword: TextStyle;
+	editRowFirstItem: ViewStyle;
+	editRow: ViewStyle;
+	label: TextStyle;
+	editText: TextStyle;
 }
 
 export interface Props extends CommonProps {

@@ -1,6 +1,5 @@
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TextStyle, ViewStyle } from 'react-native';
-import { CommonProps } from '../../../types/common';
+import { CommonProps, EditTypes } from '../../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
@@ -12,12 +11,12 @@ export interface Styles {
 }
 
 export interface Props extends CommonProps {
-	email: string;
 	isUpdating: boolean;
-	updateEmail(e: string): Promise<boolean>;
+	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
 }
 
 export interface State {
-	currentEmail: string,
-	newEmail: string;
+	type: string;
+	field: EditTypes;
+	value: string;
 }
