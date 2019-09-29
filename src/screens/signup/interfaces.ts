@@ -32,4 +32,5 @@ export interface SignUpActionResponse {
 	email?: string,
 	codeDeliveryDetails?: CodeDeliveryDetails,
 	userId?: string;
+	isSignUp?: boolean;
 }

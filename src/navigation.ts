@@ -67,6 +67,13 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		screen: UpdateUserField,
 		navigationOptions: (): NavigationStackScreenOptions => ({ })
 	},
+	Confirmation: {
+		screen: Confirmation,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Confirmation',
+			headerLeft: undefined
+		})
+	},
 	UpdatePassword: {
 		screen: UpdatePassword,
 		navigationOptions: (): NavigationStackScreenOptions => ({

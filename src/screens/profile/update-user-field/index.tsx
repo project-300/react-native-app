@@ -10,6 +10,7 @@ import * as EmailValidator from 'email-validator';
 import toastr from '../../../helpers/toastr';
 import { EditTypes } from '../../../types/common';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { userId } from '../../../auth';
 
 class UpdateUserField extends Component<Props, State> {
 
@@ -40,7 +41,8 @@ class UpdateUserField extends Component<Props, State> {
 		}
 
 		const res: boolean = await this.props.updateUserField(field, type, value);
-		if (res) this.props.navigation.goBack();
+		if (res && field === EditTypes.EMAIL) this.props.navigation.navigate('Confirmation', { email: value, userId: await userId() });
+		else if (res) this.props.navigation.goBack();
 	}
 
 	public render(): ReactElement {

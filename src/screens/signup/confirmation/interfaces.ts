@@ -11,7 +11,7 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	isConfirmingAccount: boolean;
-	confirmAccount(uId: string, u: string, c: string): Promise<boolean>;
+	confirmAccount(uId: string, c: string, iSU: boolean, u: string): Promise<boolean>;
 }
 
 interface CodeDeliveryDetails {
@@ -27,4 +27,5 @@ export interface State {
 	email: string,
 	codeDeliveryDetails: CodeDeliveryDetails,
 	userId: string;
+	isSignUp: boolean;
 }

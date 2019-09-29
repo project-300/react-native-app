@@ -24,10 +24,11 @@ class Confirmation extends Component<Props, State> {
 		this.state = {
 			code: '',
 			confirmationText: '',
-			username: getParam('username'),
-			email: getParam('email'),
-			codeDeliveryDetails: getParam('codeDeliveryDetails'),
-			userId: getParam('userId')
+			username: getParam('username', ''),
+			email: getParam('email', ''),
+			codeDeliveryDetails: getParam('codeDeliveryDetails', { }),
+			userId: getParam('userId', ''),
+			isSignUp: getParam('isSignUp', false)
 		};
 	}
 
@@ -50,12 +51,13 @@ class Confirmation extends Component<Props, State> {
 	}
 
 	private _confirmSignUp = async (): Promise<void> => {
-		const { username, userId, code } = this.state;
+		const { username, userId, code, isSignUp } = this.state;
 
 		if (!code) return toastr.error('Confirmation Code is missing');
 
-		const res = await this.props.confirmAccount(userId, username, code);
-		if (res) this.props.navigation.navigate('Login');
+		const res = await this.props.confirmAccount(userId, code, isSignUp, username);
+		if (res && isSignUp) this.props.navigation.navigate('Login');
+		else if (res) this.props.navigation.navigate('Profile');
 	}
 
 	public render(): ReactElement {

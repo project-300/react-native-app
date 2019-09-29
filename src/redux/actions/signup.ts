@@ -17,8 +17,6 @@ const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 
 const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
 
-const signUpRequireConfirmation = (payload: object): AppActions => ({ type: SIGNUP_CONFIRMATION_REQUIRED, payload });
-
 export const signUp = (email: string, username: string, password: string):
 	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse> => {
 	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse> => {
@@ -48,7 +46,8 @@ export const signUp = (email: string, username: string, password: string):
 				username,
 				email,
 				codeDeliveryDetails: authRes.codeDeliveryDetails,
-				userId: authRes.userSub
+				userId: authRes.userSub,
+				isSignUp: true
 			};
 		} catch (err) {
 			dispatch(signUpFailure());

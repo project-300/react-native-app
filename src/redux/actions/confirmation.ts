@@ -16,15 +16,13 @@ const signUpConfirmationSuccess = (): AppActions => ({ type: SIGNUP_CONFIRMATION
 
 const signUpConfirmationFailure = (): AppActions => ({ type: SIGNUP_CONFIRMATION_FAILURE });
 
-export const confirmAccount = (userId: string, username: string, code: string): (dispatch: Dispatch) => Promise<boolean> => {
+export const confirmAccount = (userId: string, code: string, isSignUp: boolean, username?: string): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(signUpConfirmationRequest());
 
 		try {
-			await Auth.confirmSignUp(
-				username,
-				code
-			);
+			if (isSignUp && username) await Auth.confirmSignUp(username, code);
+			else await Auth.verifyCurrentUserAttributeSubmit('email', code);
 
 			const apiRes: ConfirmationResult = await HttpAPI.confirmAccount({ userId });
 
@@ -33,10 +31,12 @@ export const confirmAccount = (userId: string, username: string, code: string): 
 				return true;
 			}
 
+			if (apiRes.error) throw Error(apiRes.error.description);
+
 			return false;
 		} catch (err) {
 			dispatch(signUpConfirmationFailure());
-			toastr.error(err.message);
+			toastr.error(err.message || err.description);
 			return false;
 		}
 	};
