@@ -1,4 +1,5 @@
 export * from './signup';
+export * from './confirmation';
 export * from './auth';
 export * from './driver-application';
 export * from './admin/driver-applications';

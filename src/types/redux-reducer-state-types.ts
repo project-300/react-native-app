@@ -7,8 +7,11 @@ export interface LoginState {
 
 export interface SignUpState {
 	isCreatingAccount: boolean;
-	isConfirmingAccount: boolean;
 	payload?: object;
+}
+
+export interface ConfirmState {
+	isConfirmingAccount: boolean;
 }
 
 export interface DriverApplicationState {

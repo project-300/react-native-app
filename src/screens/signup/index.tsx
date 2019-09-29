@@ -41,7 +41,8 @@ class SignUp extends Component<Props, State> {
 
 		const res: SignUpActionResponse = await this.props.signUp(email, username, password);
 		if (!res) return;
-		if (res.ok && res.confirmationRequired) return navigate('Confirmation');
+		console.log(res);
+		if (res.ok && res.confirmationRequired) return navigate('Confirmation', { ...res });
 		if (res.ok && !res.confirmationRequired) return navigate('Login');
 	}
 

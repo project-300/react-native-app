@@ -1,5 +1,6 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
+import { CodeDeliveryDetails } from 'amazon-cognito-identity-js';
 
 export interface Styles {
 	container: ViewStyle;
@@ -27,4 +28,8 @@ export interface State {
 export interface SignUpActionResponse {
 	ok: boolean,
 	confirmationRequired?: boolean;
+	username?: string;
+	email?: string,
+	codeDeliveryDetails?: CodeDeliveryDetails,
+	userId?: string;
 }

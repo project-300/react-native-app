@@ -11,7 +11,7 @@ import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
 import { confirmAccount } from '../../../redux/actions';
 import toastr from '../../../helpers/toastr';
-import { SignUpState } from '../../../types/redux-reducer-state-types';
+import { ConfirmState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
 
 class Confirmation extends Component<Props, State> {
@@ -19,9 +19,15 @@ class Confirmation extends Component<Props, State> {
 	public constructor(props: Props) {
 		super(props);
 
+		const { getParam } = this.props.navigation;
+
 		this.state = {
 			code: '',
-			confirmationText: ''
+			confirmationText: '',
+			username: getParam('username'),
+			email: getParam('email'),
+			codeDeliveryDetails: getParam('codeDeliveryDetails'),
+			userId: getParam('userId')
 		};
 	}
 
@@ -30,21 +36,21 @@ class Confirmation extends Component<Props, State> {
 	}
 
 	private _setConfirmationText = (): void => {
-		const { email } = this.props;
+		const { email, codeDeliveryDetails } = this.state;
+		const { DeliveryMedium } = codeDeliveryDetails;
 
-		if (this.props.codeDeliveryDetails.DeliveryMedium === EMAIL)
+		if (DeliveryMedium === EMAIL)
 			this.setState({
 				confirmationText: `A confirmation code has been sent to ${ email }. Please enter it here to complete your signup.`
 			});
-		if (this.props.codeDeliveryDetails.DeliveryMedium === PHONE)
+		if (DeliveryMedium === PHONE)
 			this.setState({
 				confirmationText: `A confirmation code has been sent to your phone. Please enter it here to complete your signup.`
 			});
 	}
 
 	private _confirmSignUp = async (): Promise<void> => {
-		const { username, userId } = this.props;
-		const { code } = this.state;
+		const { username, userId, code } = this.state;
 
 		if (!code) return toastr.error('Confirmation Code is missing');
 
@@ -73,8 +79,8 @@ class Confirmation extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): SignUpState => ({
-	...state.signUpReducer
+const mapStateToProps = (state: AppState): ConfirmState => ({
+	...state.confirmReducer
 });
 
 export default connect(mapStateToProps, { confirmAccount })(Confirmation);
