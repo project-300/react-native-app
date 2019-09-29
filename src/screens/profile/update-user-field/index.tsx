@@ -50,6 +50,7 @@ class UpdateUserField extends Component<Props, State> {
 					value={ this.state.value }
 					style={ styles.input }
 					onChangeText={ (value: string): void => this.setState({ value })}
+					autoFocus
 				/>
 				<TouchableOpacity
 					onPress={ (): Promise<void> => this._updateValue() }

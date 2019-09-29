@@ -28,7 +28,15 @@ const styles = StyleSheet.create<Styles>({
 
 	profileImageContainer: {
 		alignSelf: 'center',
-		marginTop: 20
+		marginTop: 20,
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 4
+		},
+		shadowOpacity: 0.3,
+		shadowRadius: 4.65,
+		elevation: 8
 	},
 
 	editIconContainer: {
@@ -37,7 +45,8 @@ const styles = StyleSheet.create<Styles>({
 		top: 10,
 		backgroundColor: 'grey',
 		padding: 10,
-		borderRadius: 20
+		borderRadius: 20,
+		elevation: 10
 	},
 
 	userTypeTag: {
@@ -47,7 +56,8 @@ const styles = StyleSheet.create<Styles>({
 		borderRadius: 8,
 		marginTop: -20,
 		marginBottom: 20,
-		padding: 2
+		padding: 2,
+		elevation: 10
 	},
 
 	userTypeTagText: {

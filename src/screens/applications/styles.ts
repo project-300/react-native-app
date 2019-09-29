@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 
-const styles = StyleSheet.create<Styles>({
+const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF'

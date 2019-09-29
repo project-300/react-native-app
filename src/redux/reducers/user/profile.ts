@@ -25,7 +25,7 @@ const userProfileReducer = (state: UserProfileState = initialState, action: User
 		case USER_PROFILE_SUB_FAILURE:
 			return { ...state, subscribing: false, receivedData: false };
 		case USER_PROFILE_UNSUB:
-			return { ...state, subscribing: false, receivedData: false, user: { } };
+			return { ...state, subscribing: false, receivedData: false, user: null };
 		default:
 			return state;
 	}

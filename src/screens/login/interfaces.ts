@@ -1,13 +1,15 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { CommonProps } from '../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
 	input: TextStyle;
+	inputContainer: ViewStyle;
 	button: ViewStyle;
 	buttonText: TextStyle;
 	signUpLink: TextStyle;
+	showPasswordIconContainer: ViewStyle;
+	showPasswordIcon: TextStyle;
 }
 
 export interface Props extends CommonProps {
@@ -19,4 +21,5 @@ export interface Props extends CommonProps {
 export interface State {
 	username: string;
 	password: string;
+	hidePassword: boolean;
 }

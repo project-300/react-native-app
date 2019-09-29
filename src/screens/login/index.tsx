@@ -12,6 +12,7 @@ import { login } from '../../redux/actions';
 import toastr from '../../helpers/toastr';
 import { LoginState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 // Documentation: /docs/login.md
 
@@ -22,11 +23,14 @@ class Login extends Component<Props, State> {
 
 		this.state = {
 			username: '',
-			password: ''
+			password: '',
+			hidePassword: true
 		};
 	}
 
 	private _loginAttempt = async (): Promise<void> => {
+		this.setState({ hidePassword: true });
+
 		const { username, password } = this.state;
 
 		if (!username) return toastr.error('Username is missing');
@@ -39,15 +43,30 @@ class Login extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
-				<TextInput
-					placeholder={ 'Username' }
-					onChangeText={ (username: string): void => this.setState({ username }) }
-					style={ styles.input } />
-				<TextInput
-					secureTextEntry={ true }
-					placeholder={ 'Password' }
-					onChangeText={ (password: string): void => this.setState({ password }) }
-					style={ styles.input } />
+				<View style={ styles.inputContainer }>
+					<TextInput
+						placeholder={ 'Username' }
+						onChangeText={ (username: string): void => this.setState({ username }) }
+						style={ styles.input } />
+				</View>
+				<View style={ styles.inputContainer }>
+					<TextInput
+						secureTextEntry={ this.state.hidePassword }
+						placeholder={ 'Password' }
+						style={ styles.input }
+						onChangeText={ (password: string): void => this.setState({ password })}
+					/>
+					<TouchableOpacity
+						style={ styles.showPasswordIconContainer }
+						onPress={ (): void => this.setState({ hidePassword: !this.state.hidePassword }) }
+					>
+						<Icon
+							name={ this.state.hidePassword ? 'eye' : 'eye-slash' }
+							style={ styles.showPasswordIcon }
+						/>
+					</TouchableOpacity>
+				</View>
+
 				<TouchableOpacity
 					disabled={ this.props.isLoggingIn }
 					style={ styles.button }

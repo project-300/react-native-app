@@ -3,7 +3,10 @@ import { CommonProps } from '../../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
+	inputContainer: ViewStyle;
 	input: TextStyle;
+	showPasswordIconContainer: ViewStyle;
+	showPasswordIcon: TextStyle;
 	text: TextStyle;
 	pushDown: TextStyle;
 	button: ViewStyle;
@@ -18,4 +21,6 @@ export interface Props extends CommonProps {
 export interface State {
 	newPassword: string;
 	currentPassword: string;
+	hideNewPassword: boolean,
+	hideCurrentPassword: boolean;
 }

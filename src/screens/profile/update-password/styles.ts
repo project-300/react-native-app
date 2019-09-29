@@ -1,21 +1,44 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 
-const styles = StyleSheet.create<Styles>({
+const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
 		alignItems: 'center',
+		justifyContent: 'center',
 		paddingTop: 20
 	},
 
+	inputContainer: {
+		width: '80%'
+	},
+
 	input: {
-		width: '80%',
 		backgroundColor: '#DDD',
 		borderRadius: 4,
 		marginBottom: 10,
 		paddingVertical: 10,
 		paddingHorizontal: 12
+	},
+
+	showPasswordIconContainer: {
+		position: 'absolute',
+		alignItems: 'center',
+		right: 10,
+		top: 0,
+		height: 47.5,
+		width: 40,
+		paddingTop: 16,
+		marginRight: -10,
+		borderTopRightRadius: 4,
+		borderBottomRightRadius: 4,
+		backgroundColor: '#CCC'
+	},
+
+	showPasswordIcon: {
+		color: 'black',
+		fontSize: 18
 	},
 
 	text: {
