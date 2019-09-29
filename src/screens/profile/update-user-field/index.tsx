@@ -1,4 +1,4 @@
-import React, { Component, ReactElement, RefObject } from 'react';
+import React, { Component, ReactElement } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';

@@ -23,6 +23,7 @@ export interface UserProfileState {
 	subscribing: boolean;
 	receivedData: boolean;
 	user: User | null;
+	uploadingAvatar: boolean;
 }
 
 export interface UpdateUserFieldState {

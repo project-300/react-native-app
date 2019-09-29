@@ -105,6 +105,8 @@
     "no-null-keyword": false,
     "prefer-function-over-method": false,
     "no-magic-numbers": false,
+    "no-require-imports": false,
+    "class-name": false,
     "typedef": [
       true,
       "call-signature",

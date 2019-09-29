@@ -14,24 +14,11 @@ import WS from '../../api/websocket';
 import { userProfileSubRequest, userProfileUnsub } from '../../redux/actions';
 import { UserProfileState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import { RNS3 } from 'react-native-aws3';
-import HttpAPI from '../../api/http';
-import { userId } from '../../auth';
 import ImagePicker, { Response as ImageResponse } from 'react-native-image-picker';
-import { Response as ResizedResponse } from 'react-native-image-resizer';
 import toastr from '../../helpers/toastr';
-import { SecretKeyResult } from '../../types/http-responses';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { ReduceImage } from '../../helpers/image-resizing';
 import { EditTypes } from '../../types/common';
-
-const options = {
-	title: 'Select Avatar',
-	storageOptions: {
-		skipBackup: true,
-		path: 'images'
-	}
-};
+import { uploadAvatar } from '../../redux/actions/';
 
 export const EditFields =  {
 	EMAIL: { type: 'Email Address', field: EditTypes.EMAIL },
@@ -56,39 +43,19 @@ class Profile extends Component<Props, State> {
 	}
 
 	private _changeImage = (): void => {
+		const options = {
+			title: 'Upload Avatar',
+			storageOptions: {
+				skipBackup: true,
+				path: 'images'
+			}
+		};
+
 		ImagePicker.showImagePicker(options, async (img: ImageResponse) => {
-			if (img.didCancel) {
-				console.log('User cancelled image picker');
-			} else if (img.error) {
+			if (img.error) {
 				toastr.error('An error occurred');
-			} else {
-				const keyResponse: SecretKeyResult = await HttpAPI.getS3SecretKey();
-
-				if (!keyResponse.success) return toastr.error('Unable to retrieve S3 key');
-
-				const rs: ResizedResponse = await ReduceImage(img, 500);
-
-				const file = {
-					uri: rs.uri,
-					name: img.fileName,
-					type: img.type
-				};
-
-				const config = {
-					keyPrefix: 'avatars/',
-					bucket: 'react-native-test-upload',
-					region: 'eu-west-1',
-					accessKey: 'AKIAIQPEVSX4RIRRKUDQ',
-					secretKey: keyResponse.secretKey,
-					successActionStatus: 201
-				};
-
-				const res = await RNS3.put(file, config); // Upload to AWS S3 Bucket
-
-				const backend = await HttpAPI.updateAvatar({
-					avatarURL: res.body.postResponse.location,
-					userId: await userId()
-				});
+			} else if (!img.didCancel) {
+				await this.props.uploadAvatar(img);
 			}
 		});
 	}
@@ -117,7 +84,7 @@ class Profile extends Component<Props, State> {
 						style={ { ...styles.profileImageContainer, ...avatarCircle } }
 					>
 						<Image
-							source={ { uri: user.avatar || 'https://pecb.com/conferences/wp-content/uploads/2017/10/no-profile-picture.jpg' } }
+							source={ user.avatar ? { uri: user.avatar } : require('./../../assets/images/no-avatar.jpg') }
 							style={ avatarCircle }
 						/>
 						<View style={ styles.editIconContainer }>
@@ -172,4 +139,4 @@ const mapStateToProps = (state: AppState): UserProfileState => ({
 	...state.userProfileReducer
 });
 
-export default connect(mapStateToProps, { userProfileSubRequest, userProfileUnsub })(Profile);
+export default connect(mapStateToProps, { userProfileSubRequest, userProfileUnsub, uploadAvatar })(Profile);
