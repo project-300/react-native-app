@@ -1,5 +1,5 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { CommonProps } from '../../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
@@ -9,19 +9,9 @@ export interface Styles {
 	buttonText: TextStyle;
 }
 
-export interface Props {
-	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+export interface Props extends CommonProps {
 	isConfirmingAccount: boolean;
-	username: string;
-	email: string;
-	userId: string;
-	signUp: Function;
-	confirmAccount: Function;
-	codeDeliveryDetails: {
-		AttributeName: string;
-		DeliveryMedium: string;
-		Destination: string;
-	};
+	confirmAccount(uId: string, c: string, iSU: boolean, u: string): Promise<boolean>;
 }
 
 interface CodeDeliveryDetails {
@@ -33,4 +23,9 @@ interface CodeDeliveryDetails {
 export interface State {
 	code: string;
 	confirmationText: string;
+	username: string;
+	email: string,
+	codeDeliveryDetails: CodeDeliveryDetails,
+	userId: string;
+	isSignUp: boolean;
 }

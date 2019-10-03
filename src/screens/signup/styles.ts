@@ -10,8 +10,11 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 10
 	},
 
+	inputContainer: {
+		width: '80%'
+	},
+
 	input: {
-		width: '80%',
 		backgroundColor: '#DDD',
 		borderRadius: 4,
 		marginBottom: 10,
@@ -35,6 +38,25 @@ const styles: Styles = StyleSheet.create<Styles>({
 	loginLink: {
 		textDecorationLine: 'underline',
 		marginTop: 40
+	},
+
+	showPasswordIconContainer: {
+		position: 'absolute',
+		alignItems: 'center',
+		right: 10,
+		top: 0,
+		height: 47.5,
+		width: 40,
+		paddingTop: 16,
+		marginRight: -10,
+		borderTopRightRadius: 4,
+		borderBottomRightRadius: 4,
+		backgroundColor: '#CCC'
+	},
+
+	showPasswordIcon: {
+		color: 'black',
+		fontSize: 18
 	}
 });
 

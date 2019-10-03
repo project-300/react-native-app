@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 
-const styles = StyleSheet.create<Styles>({
+const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
@@ -20,7 +20,7 @@ const styles = StyleSheet.create<Styles>({
 		padding: 10,
 		marginBottom: 10,
 		borderRadius: 4,
-		width: '80%',
+		width: '80%'
 	},
 
 	buttonText: {

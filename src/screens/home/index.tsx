@@ -2,18 +2,33 @@ import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	ScrollView,
-	AppState,
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { storeLogout } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { HomeState } from '../../types/redux-reducer-state-types';
+import { AppState } from '../../store';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 class Home extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
+	}
+
+	public static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationState, NavigationParams> }): { } => {
+		return {
+			headerRight: (
+				<TouchableOpacity
+					onPress={ (): boolean => navigation.navigate('Profile') }
+				>
+					<Icon name='user' size={ 22 } style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } } />
+				</TouchableOpacity>
+			)
+		};
 	}
 
 	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
@@ -41,8 +56,6 @@ class Home extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
-	state
-});
+const mapStateToProps = (state: AppState): HomeState => ({ });
 
 export default connect(mapStateToProps, { })(Home);

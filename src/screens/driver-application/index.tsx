@@ -2,13 +2,14 @@ import React, { Component, ReactElement } from 'react';
 import {
 	Text,
 	ScrollView,
-	AppState,
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { apply } from '../../redux/actions';
+import { AppState } from '../../store';
+import { DriverApplicationState } from '../../types/redux-reducer-state-types';
 
 class DriverApplication extends Component<Props, State> {
 
@@ -37,7 +38,7 @@ class DriverApplication extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
+const mapStateToProps = (state: AppState): DriverApplicationState => ({
 	...state.driverApplicationReducer
 });
 

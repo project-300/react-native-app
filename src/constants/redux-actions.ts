@@ -21,3 +21,22 @@ export const DRIVER_APPLICATION_FAILURE: string = 'DRIVER_APPLICATION_FAILURE';
 
 // Admin Driver Applications (WebSockets Demo)
 export const STORE_APPLICATIONS: string = 'STORE_APPLICATIONS';
+
+// User Profile
+export const USER_PROFILE_SUB_REQUEST: string = 'USER_PROFILE_SUB_REQUEST';
+export const USER_PROFILE_SUB_RECEIVED: string = 'USER_PROFILE_SUB_RECEIVED';
+export const USER_PROFILE_SUB_FAILURE: string = 'USER_PROFILE_SUB_FAILURE';
+export const USER_PROFILE_UNSUB: string = 'USER_PROFILE_UNSUB';
+export const UPLOAD_AVATAR_REQUEST: string = 'UPLOAD_AVATAR_REQUEST';
+export const UPLOAD_AVATAR_SUCCESS: string = 'UPLOAD_AVATAR_SUCCESS';
+export const UPLOAD_AVATAR_FAILURE: string = 'UPLOAD_AVATAR_FAILURE';
+
+// Update User
+export const UPDATE_USER_REQUEST: string = 'UPDATE_USER_REQUEST';
+export const UPDATE_USER_SUCCESS: string = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_FAILURE: string = 'UPDATE_USER_FAILURE';
+
+// Update Password
+export const UPDATE_PASSWORD_REQUEST: string = 'UPDATE_PASSWORD_REQUEST';
+export const UPDATE_PASSWORD_SUCCESS: string = 'UPDATE_PASSWORD_SUCCESS';
+export const UPDATE_PASSWORD_FAILURE: string = 'UPDATE_PASSWORD_FAILURE';

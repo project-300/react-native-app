@@ -3,8 +3,7 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity,
-	AppState
+	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -12,15 +11,24 @@ import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
 import { confirmAccount } from '../../../redux/actions';
 import toastr from '../../../helpers/toastr';
+import { ConfirmState } from '../../../types/redux-reducer-state-types';
+import { AppState } from '../../../store';
 
 class Confirmation extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
 
+		const { getParam } = this.props.navigation;
+
 		this.state = {
 			code: '',
-			confirmationText: ''
+			confirmationText: '',
+			username: getParam('username', ''),
+			email: getParam('email', ''),
+			codeDeliveryDetails: getParam('codeDeliveryDetails', { }),
+			userId: getParam('userId', ''),
+			isSignUp: getParam('isSignUp', false)
 		};
 	}
 
@@ -29,26 +37,27 @@ class Confirmation extends Component<Props, State> {
 	}
 
 	private _setConfirmationText = (): void => {
-		const { email } = this.props;
+		const { email, codeDeliveryDetails } = this.state;
+		const { DeliveryMedium } = codeDeliveryDetails;
 
-		if (this.props.codeDeliveryDetails.DeliveryMedium === EMAIL)
+		if (DeliveryMedium === EMAIL)
 			this.setState({
 				confirmationText: `A confirmation code has been sent to ${ email }. Please enter it here to complete your signup.`
 			});
-		if (this.props.codeDeliveryDetails.DeliveryMedium === PHONE)
+		if (DeliveryMedium === PHONE)
 			this.setState({
 				confirmationText: `A confirmation code has been sent to your phone. Please enter it here to complete your signup.`
 			});
 	}
 
 	private _confirmSignUp = async (): Promise<void> => {
-		const { username, userId } = this.props;
-		const { code } = this.state;
+		const { username, userId, code, isSignUp } = this.state;
 
 		if (!code) return toastr.error('Confirmation Code is missing');
 
-		const res = await this.props.confirmAccount(userId, username, code);
-		if (res) this.props.navigation.navigate('Login');
+		const res = await this.props.confirmAccount(userId, code, isSignUp, username);
+		if (res && isSignUp) this.props.navigation.navigate('Login');
+		else if (res) this.props.navigation.navigate('Profile');
 	}
 
 	public render(): ReactElement {
@@ -72,8 +81,8 @@ class Confirmation extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AppState => ({
-	...state.signUpReducer
+const mapStateToProps = (state: AppState): ConfirmState => ({
+	...state.confirmReducer
 });
 
 export default connect(mapStateToProps, { confirmAccount })(Confirmation);

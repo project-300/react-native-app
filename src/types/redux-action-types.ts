@@ -1,14 +1,22 @@
 import {
 	LOGIN_FAILURE,
 	LOGIN_REQUEST,
-	LOGIN_SUCCESS, SIGNUP_CONFIRMATION_FAILURE, SIGNUP_CONFIRMATION_REQUEST,
-	SIGNUP_CONFIRMATION_REQUIRED, SIGNUP_CONFIRMATION_SUCCESS,
+	LOGIN_SUCCESS,
+	SIGNUP_CONFIRMATION_FAILURE,
+	SIGNUP_CONFIRMATION_REQUEST,
+	SIGNUP_CONFIRMATION_REQUIRED,
+	SIGNUP_CONFIRMATION_SUCCESS,
 	SIGNUP_FAILURE,
 	SIGNUP_REQUEST,
 	SIGNUP_SUCCESS,
 	DRIVER_APPLICATION_REQUEST,
 	DRIVER_APPLICATION_SUCCESS,
-	DRIVER_APPLICATION_FAILURE, STORE_APPLICATIONS
+	DRIVER_APPLICATION_FAILURE,
+	STORE_APPLICATIONS,
+	USER_PROFILE_SUB_REQUEST,
+	USER_PROFILE_UNSUB,
+	USER_PROFILE_SUB_RECEIVED,
+	USER_PROFILE_SUB_FAILURE, UPDATE_EMAIL_REQUEST, UPDATE_EMAIL_SUCCESS, UPDATE_EMAIL_FAILURE
 } from '../constants/redux-actions';
 
 export interface LoginRequest {
@@ -66,7 +74,36 @@ export interface DriverApplicationFailure {
 
 export interface StoreApplicationsRequest {
 	type: typeof STORE_APPLICATIONS;
-	payload?: object;
+	payload: object;
+}
+
+export interface UserProfileSubRequest {
+	type: typeof USER_PROFILE_SUB_REQUEST;
+}
+
+export interface UserProfileUnsub {
+	type: typeof USER_PROFILE_UNSUB;
+}
+
+export interface UserProfileSubReceived {
+	type: typeof USER_PROFILE_SUB_RECEIVED;
+	payload: object;
+}
+
+export interface UserProfileSubFailure {
+	type: typeof USER_PROFILE_SUB_FAILURE;
+}
+
+export interface UpdateEmailRequest {
+	type: typeof UPDATE_EMAIL_REQUEST;
+}
+
+export interface UpdateEmailSuccess {
+	type: typeof UPDATE_EMAIL_SUCCESS;
+}
+
+export interface UpdateEmailFailure {
+	type: typeof UPDATE_EMAIL_FAILURE;
 }
 
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
@@ -78,4 +115,9 @@ export type DriverApplicationActionTypes = DriverApplicationRequest | DriverAppl
 
 export type AdminDriverApplicationsActionTypes = StoreApplicationsRequest;
 
-export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes;
+export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure;
+
+export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
+
+export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
+	UpdateEmailActionTypes;

@@ -1,6 +1,6 @@
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TextStyle, ViewStyle } from 'react-native';
-import { AppActions } from '../../types/redux-action-types';
+import { DriverApplicationObject } from '@project-300/common-types';
+import { CommonProps } from '../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
@@ -11,9 +11,8 @@ export interface Styles {
 	buttonText: TextStyle;
 }
 
-export interface Props {
-	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-	applications: [];
+export interface Props extends CommonProps {
+	applications: DriverApplicationObject[];
 	isApplying: boolean;
 	approveApplication(userId: string): Promise<boolean>;
 	deleteApplication(userId: string): Promise<boolean>;
@@ -21,13 +20,4 @@ export interface Props {
 
 export interface State {
 	applications: [];
-}
-
-export interface DriverApplication {
-	userId: string;
-	approved?: boolean;
-	times: {
-		applied: string;
-		approved?: string;
-	}
 }

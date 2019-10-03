@@ -11,6 +11,9 @@ import SignUp from './screens/signup';
 import Confirmation from './screens/signup/confirmation';
 import DriverApplication from './screens/driver-application';
 import Applications from './screens/applications';
+import Profile from './screens/profile';
+import UpdateUserField from './screens/profile/update-user-field';
+import UpdatePassword from './screens/profile/update-password';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -52,6 +55,29 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		screen: Applications,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Applications'
+		})
+	},
+	Profile: {
+		screen: Profile,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Profile'
+		})
+	},
+	UpdateUserField: {
+		screen: UpdateUserField,
+		navigationOptions: (): NavigationStackScreenOptions => ({ })
+	},
+	Confirmation: {
+		screen: Confirmation,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Confirmation',
+			headerLeft: undefined
+		})
+	},
+	UpdatePassword: {
+		screen: UpdatePassword,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Update Password'
 		})
 	}
 });
