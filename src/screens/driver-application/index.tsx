@@ -11,7 +11,7 @@ import { apply } from '../../redux/actions';
 import { AppState } from '../../store';
 import { DriverApplicationState } from '../../types/redux-reducer-state-types';
 
-class DriverApplication extends Component<Props, State> {
+export class DriverApplication extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);

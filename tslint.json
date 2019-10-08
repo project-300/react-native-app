@@ -60,10 +60,7 @@
       "RequestPromise"
     ],
     "completed-docs": false,
-    "file-name-casing": [
-      true,
-      "kebab-case"
-    ],
+    "file-name-casing": false,
     "interface-name": [
       true,
       "never-prefix"
@@ -107,6 +104,12 @@
     "no-magic-numbers": false,
     "no-require-imports": false,
     "class-name": false,
+    "no-import-side-effect": [
+      true,
+      {
+        "ignore-module": "(react-native|\\.html|\\.css)$"
+      }
+    ],
     "typedef": [
       true,
       "call-signature",

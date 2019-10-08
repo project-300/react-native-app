@@ -26,7 +26,7 @@ export const EditFields =  {
 	LAST_NAME: { type: 'Last Name', field: EditTypes.LAST_NAME }
 };
 
-class Profile extends Component<Props, State> {
+export class Profile extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);

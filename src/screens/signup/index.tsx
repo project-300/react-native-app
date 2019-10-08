@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 // Documentation: /docs/signup.md
 
-class SignUp extends Component<Props, State> {
+export class SignUp extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);

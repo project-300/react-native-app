@@ -4,16 +4,21 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint --project tsconfig.json"
   },
   "dependencies": {
     "@project-300/common-types": "^1.0.9",
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/lodash": "^4.14.138",
     "@types/react-native-vector-icons": "^6.4.2",
     "@types/react-redux": "^7.1.1",
-    "aws-amplify": "^1.1.30",
+    "aws-amplify": "^1.1.28",
     "aws-amplify-react-native": "^2.1.14",
     "email-validator": "^2.0.4",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "lodash": "^4.17.15",
     "react": "16.8.3",
     "react-native": "0.59.9",
@@ -36,14 +41,21 @@
     "@types/react": "^16.8.22",
     "@types/react-native": "^0.57.64",
     "@types/react-test-renderer": "^16.8.2",
-    "babel-jest": "^24.8.0",
-    "jest": "^24.8.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.54.1",
+    "react-dom": "^16.10.2",
     "react-test-renderer": "16.8.3",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": [
+      "react-native",
+      "react"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation)/"
+    ]
   }
 }

@@ -13,7 +13,7 @@ import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-class Home extends Component<Props, State> {
+export class Home extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
