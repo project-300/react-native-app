@@ -19,7 +19,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		borderRadius: 4,
 		marginBottom: 10,
 		paddingVertical: 10,
-		paddingHorizontal: 12
+		paddingHorizontal: 12,
+		height: 47.5
 	},
 
 	button: {
