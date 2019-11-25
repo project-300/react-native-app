@@ -14,6 +14,7 @@ import Applications from './screens/applications';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
 import UpdatePassword from './screens/profile/update-password';
+import MyJourneys from './screens/driver/journeys';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -78,6 +79,12 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		screen: UpdatePassword,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Update Password'
+		})
+	},
+	DriverMyJourneys: {
+		screen: MyJourneys,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'My Journeys'
 		})
 	}
 });

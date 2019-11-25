@@ -47,6 +47,11 @@ export class Home extends Component<Props, State> {
 					<Text style={ styles.buttonText }>Want to become a driver?</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('DriverMyJourneys') }
+					style={ styles.button }>
+					<Text style={ styles.buttonText }>Start My Journey</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
 					onPress={ this._logout }
 					style={ styles.button }>
 					<Text style={ styles.buttonText }>Logout</Text>
