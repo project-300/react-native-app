@@ -36,4 +36,10 @@ export interface SecretKeyResult {
 	secretKey: string;
 }
 
-export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult | SecretKeyResult;
+export interface DriverJourneysResult {
+	success: boolean;
+	journeys: [];
+}
+
+export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult |
+	SecretKeyResult | DriverJourneysResult;

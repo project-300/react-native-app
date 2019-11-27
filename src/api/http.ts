@@ -7,7 +7,7 @@ import {
 	DELETE_APPLICATION,
 	UPDATE_USER_FIELD,
 	UPDATE_AVATAR,
-	S3_KEY_REQUEST
+	S3_KEY_REQUEST, DRIVER_JOURNEYS
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -31,6 +31,8 @@ export default class HttpAPI {
 	public static updateAvatar = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_AVATAR);
 
 	public static getS3SecretKey = (): Promise<HttpResponse> => HttpAPI.send({ }, S3_KEY_REQUEST);
+
+	public static getDriverJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_JOURNEYS);
 
 	private static send = async (req: object, path: string): Promise<HttpResponse> => {
 		const res: Response = await fetch(`${SERVER_HTTPS_URL}${path}`, {

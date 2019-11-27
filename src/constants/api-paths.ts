@@ -7,3 +7,4 @@ export const DELETE_APPLICATION: string = '/delete-application';
 export const UPDATE_USER_FIELD: string = '/user/update-field';
 export const UPDATE_AVATAR: string = '/user/update-avatar';
 export const S3_KEY_REQUEST: string = '/aws/s3-key';
+export const DRIVER_JOURNEYS: string = '/driver/my-journeys';

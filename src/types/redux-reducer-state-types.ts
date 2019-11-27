@@ -1,4 +1,4 @@
-import { DriverApplicationObject, User } from '@project-300/common-types';
+import { DriverApplicationObject, Journey, User } from '@project-300/common-types';
 
 export interface LoginState {
 	isLoggingIn: boolean;
@@ -35,6 +35,11 @@ export interface UpdateUserFieldState {
 
 export interface UpdatePasswordState {
 	isUpdating: boolean;
+}
+
+export interface DriverJourneysState {
+	isRequesting: boolean;
+	journeys: Journey[];
 }
 
 export interface HomeState { }

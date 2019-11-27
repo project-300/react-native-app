@@ -49,7 +49,7 @@ export class Home extends Component<Props, State> {
 				<TouchableOpacity
 					onPress={ (): boolean => this.props.navigation.navigate('DriverMyJourneys') }
 					style={ styles.button }>
-					<Text style={ styles.buttonText }>Start My Journey</Text>
+					<Text style={ styles.buttonText }>My Journeys</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={ this._logout }

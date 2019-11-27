@@ -19,6 +19,7 @@ class WebSocketAPI {
 		};
 
 		this.WS.onmessage = (ev: MessageEvent): void => {
+			console.log(ev);
 			const data: SubscriptionPayload = JSON.parse(ev.data);
 			if (data && data.subscription) this._dispatchSubscriptionData(data);
 		};

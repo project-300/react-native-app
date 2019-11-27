@@ -15,7 +15,6 @@ In order to run your own local version of the app, make sure to add the environm
 - Name the new file `env.ts`
 - Fill in the URL and Config values
 
-
 ## MacOS
 
 Running an iOS simulator is very easy. Android can cause issues.
@@ -38,3 +37,6 @@ echo "sdk.dir = /Users/USERNAME/Library/Android/sdk" > local.properties
 
 This create a file that points to the Android SDK.
 
+## Serverless Offline
+If you want to connect to a locally running instance of the serverless API, change the IS_OFFLINE
+variable in the .env file to true.
