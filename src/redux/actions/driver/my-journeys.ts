@@ -19,8 +19,6 @@ export const getJourneys = (): (dispatch: Dispatch) => Promise<void> => {
 		try {
 			const apiRes: DriverJourneysResult = await HttpAPI.getDriverJourneys({ userId: 'user212' });
 
-			console.log(apiRes);
-
 			if (apiRes.success && apiRes.journeys) {
 				dispatch(driverJourneysSuccess(apiRes.journeys));
 			}
