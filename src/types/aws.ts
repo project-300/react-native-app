@@ -1,4 +1,4 @@
-export type AWS_CONFIG_TYPE = {
+export type AWS_COGNITO_CONFIG_TYPE = {
 	identityPoolId: string;
 	region: string;
 	userPoolId: string;
