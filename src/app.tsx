@@ -3,11 +3,11 @@ import { Provider } from 'react-redux';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
 import { isStoreLoggedIn } from './auth';
-import { AWS_CONFIG } from '../environment/env';
+import { AWS_COGNITO_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
 
-Amplify.configure(AWS_CONFIG);
+Amplify.configure(AWS_COGNITO_CONFIG);
 
 interface Props { }
 interface State {
