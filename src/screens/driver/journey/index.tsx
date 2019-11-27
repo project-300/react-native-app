@@ -35,6 +35,29 @@ export class JourneyMap extends Component<Props, State> {
 					// onPress={ (e) => this.addWayPoint(e.nativeEvent.coordinate) }
 				>
 				</MapView>
+				{/*<View style={ { ...styles.start, ...this.locationSearchHeight() } }>*/}
+				{/*	<TouchableOpacity onPress={ () => this.setState({ searching: !this.state.searching }) } style={styles.welcome}>*/}
+				{/*		<Text>Search</Text>*/}
+				{/*	</TouchableOpacity>*/}
+
+				{/*	{ this.state.searching ?*/}
+				{/*		<View>*/}
+				{/*			<TextInput*/}
+				{/*				style={ { backgroundColor: 'lightgrey', borderRadius: 4, marginBottom: 20 } }*/}
+				{/*				placeholder={ 'Destination...' }*/}
+				{/*				onChangeText={ (place) => {*/}
+				{/*					this.setState({ place })*/}
+				{/*					this.onChangeTextDelayed()*/}
+				{/*				} } />*/}
+				{/*			<FlatList*/}
+				{/*				data={ this.state.places }*/}
+				{/*				extraData={ this.state }*/}
+				{/*				renderItem={ this.renderPlaceRow }*/}
+				{/*				keyExtractor={ item => item.id }*/}
+				{/*			/>*/}
+				{/*		</View> :*/}
+				{/*		null }*/}
+				{/*</View>*/}
 			</View>
 		);
 	}
