@@ -25,4 +25,8 @@ export interface State {
 		longitudeDelta: number;
 	}
 	route: [] | null;
+	midpoint: {
+		latitude: number;
+		longitude: number;
+	}
 }

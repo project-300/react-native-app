@@ -18,6 +18,7 @@ import { Journey } from '@project-300/common-types';
 import MapBoxPolyline from '@mapbox/polyline';
 import toastr from '../../../helpers/toastr';
 import { GoogleMapsAPIKey } from '../../../../environment/env';
+import { getDistance } from 'geolib';
 
 export class JourneyMap extends Component<Props, State> {
 
@@ -34,7 +35,11 @@ export class JourneyMap extends Component<Props, State> {
 				latitudeDelta: 0.015,
 				longitudeDelta: 0.0121
 			},
-			route: null
+			route: null,
+			midpoint: {
+				latitude: 0,
+				longitude: 0
+			}
 		};
 	}
 
@@ -51,7 +56,10 @@ export class JourneyMap extends Component<Props, State> {
 
 		this._findCoordinates();
 		await this._getJourneyDetails();
-		await this._mapRoute();
+		this._mapRoute().then(() => {
+			this._setMidpoint();
+			this._zoomToMidpoint();
+		});
 	}
 
 	private _findCoordinates = (): void => {
@@ -77,25 +85,6 @@ export class JourneyMap extends Component<Props, State> {
 		);
 	}
 
-	private _getDirections = async (): Promise<void | object> => {
-		if (!this.props.journey) return toastr.error('No Journey Set');
-
-		const origin = `${this.props.journey.origin.lat},${this.props.journey.origin.long}`
-		const destination = `${this.props.journey.destination.lat},${this.props.journey.destination.long}`
-
-		console.log(origin, destination);
-		const res = await fetch(
-			`https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GoogleMapsAPIKey}`, {
-			method: 'GET'
-		});
-
-		const ok = res.ok;
-		const data = await res.json();
-		console.log('DATA');
-		console.log(data);
-		return data;
-	}
-
 	private _mapRoute = async (): Promise<void> => {
 		const directions = await this._getDirections();
 		const points = MapBoxPolyline.decode(directions.routes[0].overview_polyline.points)
@@ -105,6 +94,61 @@ export class JourneyMap extends Component<Props, State> {
 		}));
 
 		this.setState({ route: coords });
+	}
+
+	private _getDirections = async (): Promise<void | object> => {
+		if (!this.props.journey) return toastr.error('No Journey Set');
+
+		const origin = `${this.props.journey.origin.lat},${this.props.journey.origin.long}`
+		const destination = `${this.props.journey.destination.lat},${this.props.journey.destination.long}`
+
+		const res = await fetch(
+			`https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GoogleMapsAPIKey}`, {
+			method: 'GET'
+		});
+
+		const ok = res.ok;
+		const data = await res.json();
+		return data;
+	}
+
+	private _setMidpoint = (): void => {
+		const { origin, destination } = this.props.journey as Journey;
+
+		this.setState({
+			midpoint: {
+				latitude: (origin.lat + destination.lat) / 2,
+				longitude: (origin.long + destination.long) / 2
+			}
+		});
+	}
+
+	private _zoomToMidpoint = (): void => {
+		const journey: Journey = this.props.journey as Journey;
+
+		const distance = getDistance(
+			{ latitude: journey.origin.lat, longitude: journey.origin.long },
+			{ latitude: journey.destination.lat, longitude: journey.destination.long }
+		) / 2;
+		const circumference = 40075;
+		const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
+		const angularDistance = distance / circumference;
+		const latitudeDelta = distance / oneDegreeOfLatitudeInMeters;
+		const longitudeDelta = Math.abs(
+			Math.atan2(
+			Math.sin(angularDistance) * Math.cos(this.state.midpoint.latitude),
+			Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
+			)
+		);
+
+		this.setState({
+			driverRegion: {
+				latitude: this.state.midpoint.latitude,
+				longitude: this.state.midpoint.longitude,
+				latitudeDelta,
+				longitudeDelta
+			}
+		});
 	}
 
 	private _getJourneyDetails = async (): Promise<void> => {
@@ -155,7 +199,7 @@ export class JourneyMap extends Component<Props, State> {
 
 				<View style={ { ...styles.bottomPanel } }>
 					<TouchableOpacity style={ styles.button }>
-						<Text style={ styles.buttonText }>Search</Text>
+						<Text style={ styles.buttonText }>Start</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
