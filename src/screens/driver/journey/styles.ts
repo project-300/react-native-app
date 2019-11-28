@@ -4,7 +4,13 @@ import { Styles } from './interfaces';
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF'
+		backgroundColor: '#F5FCFF',
+		justifyContent: 'flex-end'
+	},
+
+	mapContainer: {
+		flex: 1,
+		...StyleSheet.absoluteFillObject
 	},
 
 	button: {
@@ -23,6 +29,14 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	map: {
 		...StyleSheet.absoluteFillObject
+	},
+
+	bottomPanel: {
+		marginTop: 200,
+		backgroundColor: 'white',
+		width: '100%',
+		padding: 20,
+		elevation: 20
 	}
 });
 

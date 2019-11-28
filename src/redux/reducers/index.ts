@@ -8,6 +8,7 @@ import userProfileReducer from './user/profile';
 import updateUserFieldReducer from './user/update-user-field';
 import updatePasswordReducer from './user/update-password';
 import driverJourneysReducer from './driver/my-journeys';
+import journeyDetailsReducer from './driver/journey';
 
 export default combineReducers({
 	signUpReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
 	userProfileReducer,
 	updateUserFieldReducer,
 	updatePasswordReducer,
-	driverJourneysReducer
+	driverJourneysReducer,
+	journeyDetailsReducer
 });

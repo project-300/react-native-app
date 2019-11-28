@@ -22,7 +22,7 @@ import {
 	UPDATE_EMAIL_FAILURE,
 	DRIVER_JOURNEYS_REQUEST,
 	DRIVER_JOURNEYS_SUCCESS,
-	DRIVER_JOURNEYS_FAILURE
+	DRIVER_JOURNEYS_FAILURE, JOURNEY_DETAILS_REQUEST, JOURNEY_DETAILS_SUCCESS, JOURNEY_DETAILS_FAILURE
 } from '../constants/redux-actions';
 import { Journey } from '@project-300/common-types';
 
@@ -126,6 +126,19 @@ export interface DriverJourneysFailure {
 	type: typeof DRIVER_JOURNEYS_FAILURE;
 }
 
+export interface JourneyDetailsRequest {
+	type: typeof JOURNEY_DETAILS_REQUEST;
+}
+
+export interface JourneyDetailsSuccess {
+	type: typeof JOURNEY_DETAILS_SUCCESS;
+	journeys: Journey[];
+}
+
+export interface JourneyDetailsFailure {
+	type: typeof JOURNEY_DETAILS_FAILURE;
+}
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
@@ -141,5 +154,7 @@ export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | U
 
 export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSuccess | DriverJourneysFailure;
 
+export type JourneyDetailsActionTypes = JourneyDetailsRequest | JourneyDetailsSuccess | JourneyDetailsFailure;
+
 export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | DriverJourneysActionTypes;
+	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyDetailsActionTypes;

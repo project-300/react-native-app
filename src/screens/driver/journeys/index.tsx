@@ -21,6 +21,7 @@ export class MyJourneys extends Component<Props, State> {
 	}
 
 	public async componentDidMount(): Promise<void> {
+		console.log(this.props);
 		await this.props.getJourneys();
 	}
 
@@ -38,7 +39,7 @@ export class MyJourneys extends Component<Props, State> {
 				</Text>
 				<TouchableOpacity
 					style={ styles.button }
-					onPress={ (): boolean => this.props.navigation.navigate('JourneyMap') }
+					onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyId: item.journeyId }) }
 				>
 					<Text style={ styles.buttonText }>Start Journey</Text>
 				</TouchableOpacity>

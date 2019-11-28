@@ -15,7 +15,7 @@ import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
 import UpdatePassword from './screens/profile/update-password';
 import MyJourneys from './screens/driver/journeys';
-import { JourneyMap } from './screens/driver/journey';
+import JourneyMap from './screens/driver/journey';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {

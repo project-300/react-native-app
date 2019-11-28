@@ -42,4 +42,9 @@ export interface DriverJourneysState {
 	journeys: Journey[];
 }
 
+export interface JourneyDetailsState {
+	isRequesting: boolean;
+	journey?: Journey;
+}
+
 export interface HomeState { }

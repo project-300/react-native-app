@@ -8,10 +8,12 @@
     "lint": "tslint --project tsconfig.json"
   },
   "dependencies": {
+    "@mapbox/polyline": "^1.1.0",
     "@project-300/common-types": "^1.1.2",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/lodash": "^4.14.138",
+    "@types/mapbox__polyline": "^1.0.0",
     "@types/react-native-vector-icons": "^6.4.2",
     "@types/react-redux": "^7.1.1",
     "aws-amplify": "^1.1.28",
