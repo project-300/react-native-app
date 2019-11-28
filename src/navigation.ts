@@ -14,6 +14,7 @@ import Applications from './screens/applications';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
 import UpdatePassword from './screens/profile/update-password';
+import AddLift from './screens/lifts/add-lift'
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -76,6 +77,12 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 	},
 	UpdatePassword: {
 		screen: UpdatePassword,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Update Password'
+		})
+	},
+	AddLift: {
+		screen: AddLift,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Update Password'
 		})
