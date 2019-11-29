@@ -183,15 +183,11 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _startJourney = async (): Promise<void> => {
-		console.log('START');
 		await this.props.startJourney(this.state.journeyId);
 		this._zoomToDriverPosition();
 	}
 
-	private _endJourney = async (): Promise<void> => {
-		console.log('END');
-		await this.props.endJourney(this.state.journeyId);
-	}
+	private _endJourney = async (): Promise<void> => await this.props.endJourney(this.state.journeyId);
 
 	private _zoomToDriverPosition = (): void => {
 		const currentPosition = this.state.currentPosition;

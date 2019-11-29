@@ -25,6 +25,12 @@ const styles: Styles = StyleSheet.create<Styles>({
 		margin: 4,
 		padding: 10,
 		backgroundColor: '#ffedcc'
+	},
+
+	noJourneys: {
+		alignSelf: 'center',
+		fontWeight: 'bold',
+		padding: 20
 	}
 });
 

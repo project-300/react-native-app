@@ -8,7 +8,8 @@ import { Journey } from '@project-300/common-types';
 
 const driverJourneysRequest = (): AppActions => ({ type: DRIVER_JOURNEYS_REQUEST });
 
-const driverJourneysSuccess = (journeys: Journey[]): AppActions => ({ type: DRIVER_JOURNEYS_SUCCESS, journeys });
+const driverJourneysSuccess = (journeys: { previous: Journey[]; current: Journey[] }):
+	AppActions => ({ type: DRIVER_JOURNEYS_SUCCESS, journeys });
 
 const driverJourneysFailure = (): AppActions => ({ type: DRIVER_JOURNEYS_FAILURE });
 
@@ -19,10 +20,12 @@ export const getJourneys = (): (dispatch: Dispatch) => Promise<void> => {
 		try {
 			const apiRes: DriverJourneysResult = await HttpAPI.getDriverJourneys({ userId: 'user212' });
 
+			console.log(apiRes);
 			if (apiRes.success && apiRes.journeys) {
 				dispatch(driverJourneysSuccess(apiRes.journeys));
 			}
 		} catch (err) {
+			console.log(err);
 			dispatch(driverJourneysFailure());
 			toastr.error(err.message);
 		}

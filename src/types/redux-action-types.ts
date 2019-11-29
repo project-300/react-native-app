@@ -119,7 +119,7 @@ export interface DriverJourneysRequest {
 
 export interface DriverJourneysSuccess {
 	type: typeof DRIVER_JOURNEYS_SUCCESS;
-	journeys: Journey[];
+	journeys: { previous: Journey[]; current: Journey[] };
 }
 
 export interface DriverJourneysFailure {

@@ -12,7 +12,6 @@ const driverJourneysReducer = (state: DriverJourneysState = initialState, action
 		case DRIVER_JOURNEYS_REQUEST:
 			return { ...state, isRequesting: true };
 		case DRIVER_JOURNEYS_SUCCESS:
-			console.log(state);
 			return { ...state, isRequesting: false, journeys: action.journeys };
 		case DRIVER_JOURNEYS_FAILURE:
 			return { ...state, isRequesting: false };
