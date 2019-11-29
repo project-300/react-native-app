@@ -9,3 +9,5 @@ export const UPDATE_AVATAR: string = '/user/update-avatar';
 export const S3_KEY_REQUEST: string = '/aws/s3-key';
 export const DRIVER_JOURNEYS: string = '/driver/my-journeys';
 export const JOURNEY_DETAILS: string = '/journey/get-details';
+export const START_JOURNEY: string = '/journey/start';
+export const END_JOURNEY: string = '/journey/end';

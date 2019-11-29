@@ -11,7 +11,7 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { JourneyDetailsState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getJourneyDetails } from '../../../redux/actions';
+import { getJourneyDetails, startJourney, endJourney } from '../../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
 import { Journey } from '@project-300/common-types';
@@ -162,6 +162,16 @@ export class JourneyMap extends Component<Props, State> {
 		});
 	}
 
+	private _startJourney = async (): Promise<void> => {
+		console.log('START');
+		await this.props.startJourney(this.state.journeyId);
+	}
+
+	private _endJourney = async (): Promise<void> => {
+		console.log('END');
+		await this.props.endJourney(this.state.journeyId);
+	}
+
 	private _createMarker = (loc: { lat: number; long: number; name: string }): ReactElement => {
 		return <Marker
 			coordinate={ {
@@ -198,9 +208,26 @@ export class JourneyMap extends Component<Props, State> {
 				</View>
 
 				<View style={ { ...styles.bottomPanel } }>
-					<TouchableOpacity style={ styles.button }>
-						<Text style={ styles.buttonText }>Start</Text>
-					</TouchableOpacity>
+					{
+						this.props.status === 'NOT_STARTED' &&
+							<TouchableOpacity style={ styles.button } onPress={ this._startJourney }>
+								<Text style={ styles.buttonText }>Start</Text>
+							</TouchableOpacity>
+					}
+
+					{
+						this.props.status === 'STARTED' &&
+							<TouchableOpacity style={ styles.button } onPress={ this._endJourney }>
+								<Text style={ styles.buttonText }>End</Text>
+							</TouchableOpacity>
+					}
+
+					{
+						this.props.status === 'FINISHED' &&
+							<TouchableOpacity style={ styles.button } onPress={ (): void => { this.props.navigation.goBack(); } }>
+								<Text style={ styles.buttonText }>Done</Text>
+							</TouchableOpacity>
+					}
 				</View>
 			</View>
 		);
@@ -211,4 +238,4 @@ const mapStateToProps = (state: AppState): JourneyDetailsState => ({
 	...state.journeyDetailsReducer
 });
 
-export default connect(mapStateToProps, { getJourneyDetails })(JourneyMap);
+export default connect(mapStateToProps, { getJourneyDetails, startJourney, endJourney })(JourneyMap);

@@ -43,7 +43,10 @@ export interface DriverJourneysState {
 }
 
 export interface JourneyDetailsState {
-	isRequesting: boolean;
+	status: string;
+	isStarting: boolean;
+	isEnding: boolean;
+	isRequestingJourneyDetails: boolean;
 	journey?: Journey;
 }
 

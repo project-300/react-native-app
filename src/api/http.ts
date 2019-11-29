@@ -9,7 +9,9 @@ import {
 	UPDATE_AVATAR,
 	S3_KEY_REQUEST,
 	DRIVER_JOURNEYS,
-	JOURNEY_DETAILS
+	JOURNEY_DETAILS,
+	START_JOURNEY,
+	END_JOURNEY
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -37,6 +39,10 @@ export default class HttpAPI {
 	public static getDriverJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_JOURNEYS);
 
 	public static getJourneyDetails = (data: object): Promise<HttpResponse> => HttpAPI.send(data, JOURNEY_DETAILS);
+
+	public static startJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, START_JOURNEY);
+
+	public static endJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, END_JOURNEY);
 
 	private static send = async (req: object, path: string): Promise<HttpResponse> => {
 		const res: Response = await fetch(`${SERVER_HTTPS_URL}${path}`, {

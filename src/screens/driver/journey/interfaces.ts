@@ -12,8 +12,14 @@ export interface Styles {
 }
 
 export interface Props extends CommonProps {
+	status: string;
+	isStarting: boolean;
+	isEnding: boolean;
+	isRequestingJourneyDetails: boolean;
 	journey: Journey | undefined;
 	getJourneyDetails(j: string): Promise<void>;
+	startJourney(j: string): Promise<void>;
+	endJourney(j: string): Promise<void>;
 }
 
 export interface State {

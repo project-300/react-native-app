@@ -14,17 +14,16 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	button: {
-		backgroundColor: '#02b2cc',
-		padding: 10,
-		borderRadius: 4,
-		marginTop: 10,
-		width: '100%'
+		backgroundColor: '#6c2bcc',
+		paddingVertical: 14,
+		width: '100%',
 	},
 
 	buttonText: {
 		alignSelf: 'center',
 		color: 'white',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		fontSize: 24
 	},
 
 	map: {
@@ -35,7 +34,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		marginTop: 200,
 		backgroundColor: 'white',
 		width: '100%',
-		padding: 20,
 		elevation: 20
 	}
 });
