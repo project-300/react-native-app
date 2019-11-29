@@ -94,3 +94,17 @@ It may only require component state management, using this.state
 
 Dispatch Redux actions within the main Action being called wherever possible to reduce the code and references within the component.
 ```
+
+## Maps
+
+To use Google Maps types, add this line to the top of your file.
+
+Include the forward slashes (3) - This is not a comment. It is a reference.
+
+```
+/// <reference types="@types/googlemaps" />
+```
+
+Or use the `/src/types/maps.ts` types. 
+
+If a type does not exist in this file, add it for convenience.

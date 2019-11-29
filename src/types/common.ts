@@ -9,3 +9,8 @@ export enum EditTypes {
 	FIRST_NAME = 'firstName',
 	LAST_NAME = 'lastName'
 }
+
+export interface Coords {
+	latitude: number;
+	longitude: number;
+}

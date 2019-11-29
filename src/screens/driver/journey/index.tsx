@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, Ref, RefObject } from 'react';
 import {
 	View,
 	Alert,
@@ -11,7 +11,7 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { JourneyDetailsState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getJourneyDetails, startJourney, endJourney } from '../../../redux/actions';
+import { getJourneyDetails, startJourney, endJourney, login } from '../../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
 import { Journey } from '@project-300/common-types';
@@ -19,6 +19,8 @@ import MapBoxPolyline from '@mapbox/polyline';
 import toastr from '../../../helpers/toastr';
 import { GoogleMapsAPIKey } from '../../../../environment/env';
 import { getDistance } from 'geolib';
+import { Coords } from '../../../types/common';
+import { Directions } from '../../../types/maps';
 
 export class JourneyMap extends Component<Props, State> {
 
@@ -35,6 +37,10 @@ export class JourneyMap extends Component<Props, State> {
 				latitudeDelta: 0.015,
 				longitudeDelta: 0.0121
 			},
+			currentPosition: {
+				latitude: 37.78825,
+				longitude: -122.4324
+			},
 			route: null,
 			midpoint: {
 				latitude: 0,
@@ -44,21 +50,27 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	public async componentDidMount(): Promise<void> {
-		const savedPos = await DriverLocation.getCurrentPosition();
+		const savedPos = await DriverLocation.getCurrentPosition(); // Get last updated location
 
 		this.setState({
 			driverRegion: {
 				...savedPos,
 				latitudeDelta: 0.015,
 				longitudeDelta: 0.0121
-			}
+			},
+			currentPosition: savedPos
 		});
 
 		this._findCoordinates();
+
 		await this._getJourneyDetails();
+
 		this._mapRoute().then(() => {
 			this._setMidpoint();
 			this._zoomToMidpoint();
+
+				// Zoom into driver position if continuing journey
+			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') setTimeout(this._zoomToDriverPosition, 1000);
 		});
 	}
 
@@ -86,29 +98,37 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _mapRoute = async (): Promise<void> => {
-		const directions = await this._getDirections();
-		const points = MapBoxPolyline.decode(directions.routes[0].overview_polyline.points)
-		const coords = points.map((point) => ({
-			latitude: point[0],
-			longitude: point[1]
-		}));
+		const directions: Directions = await this._getDirections() as Directions;
+
+		if (!directions) return;
+
+		// Ignore type error - Interface must be out of date
+		const points: number[][] = MapBoxPolyline.decode(directions.routes[0].overview_polyline.points);
+
+		const coords: Coords[] = points.map((point: number[]) => { // Each point is an array of 2 numbers, eg. [ 53.29165, -9.01906 ]
+			return ({
+				latitude: point[0],
+				longitude: point[1]
+			});
+		});
 
 		this.setState({ route: coords });
 	}
 
-	private _getDirections = async (): Promise<void | object> => {
+	private _getDirections = async (): Promise<void | Directions> => {
 		if (!this.props.journey) return toastr.error('No Journey Set');
 
-		const origin = `${this.props.journey.origin.lat},${this.props.journey.origin.long}`
-		const destination = `${this.props.journey.destination.lat},${this.props.journey.destination.long}`
+		const origin = `${this.props.journey.origin.lat},${this.props.journey.origin.long}`;
+		const destination = `${this.props.journey.destination.lat},${this.props.journey.destination.long}`;
 
 		const res = await fetch(
 			`https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GoogleMapsAPIKey}`, {
 			method: 'GET'
 		});
 
-		const ok = res.ok;
-		const data = await res.json();
+		if (!res.ok) return toastr.error('Error Retrieving Directions');
+
+		const data: Directions = await res.json();
 		return data;
 	}
 
@@ -165,11 +185,29 @@ export class JourneyMap extends Component<Props, State> {
 	private _startJourney = async (): Promise<void> => {
 		console.log('START');
 		await this.props.startJourney(this.state.journeyId);
+		this._zoomToDriverPosition();
 	}
 
 	private _endJourney = async (): Promise<void> => {
 		console.log('END');
 		await this.props.endJourney(this.state.journeyId);
+	}
+
+	private _zoomToDriverPosition = (): void => {
+		const currentPosition = this.state.currentPosition;
+
+		this._map.animateCamera({
+			center: {
+				latitude: Number(currentPosition.latitude),
+				longitude: Number(currentPosition.longitude)
+			},
+			pitch: 0,
+			heading: 0,
+			altitude: 200,
+			zoom: 15
+		}, {
+			duration: 2000
+		});
 	}
 
 	private _createMarker = (loc: { lat: number; long: number; name: string }): ReactElement => {
@@ -182,6 +220,8 @@ export class JourneyMap extends Component<Props, State> {
 		/>;
 	}
 
+	private _map: MapView = React.createRef<MapView>();
+
 	public render(): ReactElement {
 		const journey: Journey = this.props.journey as Journey;
 
@@ -192,9 +232,10 @@ export class JourneyMap extends Component<Props, State> {
 						provider={ PROVIDER_GOOGLE }
 						style={ styles.map }
 						region={ this.state.driverRegion }
+						ref={ (m: MapView): MapView => this._map = m }
 					>
-						{ this.props.journey && this._createMarker(journey.origin) }
-						{ this.props.journey && this._createMarker(journey.destination) }
+						{ journey && this._createMarker(journey.origin) }
+						{ journey && this._createMarker(journey.destination) }
 
 						{
 							this.state.route &&
@@ -207,28 +248,33 @@ export class JourneyMap extends Component<Props, State> {
 					</MapView>
 				</View>
 
-				<View style={ { ...styles.bottomPanel } }>
-					{
-						this.props.status === 'NOT_STARTED' &&
-							<TouchableOpacity style={ styles.button } onPress={ this._startJourney }>
-								<Text style={ styles.buttonText }>Start</Text>
-							</TouchableOpacity>
-					}
+				{
+					journey &&
+						<View style={ { ...styles.bottomPanel } }>
+							{
+								journey.journeyStatus === 'NOT_STARTED' &&
+								<TouchableOpacity style={ styles.button } onPress={ this._startJourney }>
+									<Text style={ styles.buttonText }>Start</Text>
+								</TouchableOpacity>
+							}
 
-					{
-						this.props.status === 'STARTED' &&
-							<TouchableOpacity style={ styles.button } onPress={ this._endJourney }>
-								<Text style={ styles.buttonText }>End</Text>
-							</TouchableOpacity>
-					}
+							{
+								journey.journeyStatus === 'STARTED' &&
+								<TouchableOpacity style={ styles.button } onPress={ this._endJourney }>
+									<Text style={ styles.buttonText }>End</Text>
+								</TouchableOpacity>
+							}
 
-					{
-						this.props.status === 'FINISHED' &&
-							<TouchableOpacity style={ styles.button } onPress={ (): void => { this.props.navigation.goBack(); } }>
-								<Text style={ styles.buttonText }>Done</Text>
-							</TouchableOpacity>
-					}
-				</View>
+							{
+								journey.journeyStatus === 'FINISHED' &&
+								<TouchableOpacity style={ styles.button } onPress={ (): void => {
+									this.props.navigation.goBack();
+								} }>
+									<Text style={ styles.buttonText }>Done</Text>
+								</TouchableOpacity>
+							}
+						</View>
+				}
 			</View>
 		);
 	}
@@ -238,4 +284,8 @@ const mapStateToProps = (state: AppState): JourneyDetailsState => ({
 	...state.journeyDetailsReducer
 });
 
-export default connect(mapStateToProps, { getJourneyDetails, startJourney, endJourney })(JourneyMap);
+export default connect(mapStateToProps, {
+	getJourneyDetails,
+	startJourney,
+	endJourney
+})(JourneyMap);

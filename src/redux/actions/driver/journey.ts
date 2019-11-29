@@ -24,13 +24,13 @@ const journeyDetailsFailure = (): AppActions => ({ type: JOURNEY_DETAILS_FAILURE
 
 const startJourneyRequest = (): AppActions => ({ type: START_JOURNEY_REQUEST });
 
-const startJourneySuccess = (): AppActions => ({ type: START_JOURNEY_SUCCESS });
+const startJourneySuccess = (journey: Journey): AppActions => ({ type: START_JOURNEY_SUCCESS, journey });
 
 const startJourneyFailure = (): AppActions => ({ type: START_JOURNEY_FAILURE });
 
 const endJourneyRequest = (): AppActions => ({ type: END_JOURNEY_REQUEST });
 
-const endJourneySuccess = (): AppActions => ({ type: END_JOURNEY_SUCCESS });
+const endJourneySuccess = (journey: Journey): AppActions => ({ type: END_JOURNEY_SUCCESS, journey });
 
 const endJourneyFailure = (): AppActions => ({ type: END_JOURNEY_FAILURE });
 
@@ -60,7 +60,7 @@ export const startJourney = (journeyId: string): (dispatch: Dispatch) => Promise
 			const apiRes: JourneyDetailsResult = await HttpAPI.startJourney({ journeyId });
 
 			console.log(apiRes);
-			if (apiRes.success) dispatch(startJourneySuccess());
+			if (apiRes.success && apiRes.journey) dispatch(startJourneySuccess(apiRes.journey));
 		} catch (err) {
 			console.log(err);
 			dispatch(startJourneyFailure());
@@ -78,7 +78,7 @@ export const endJourney = (journeyId: string): (dispatch: Dispatch) => Promise<v
 			const apiRes: JourneyDetailsResult = await HttpAPI.endJourney({ journeyId });
 
 			console.log(apiRes);
-			if (apiRes.success) dispatch(endJourneySuccess());
+			if (apiRes.success && apiRes.journey) dispatch(endJourneySuccess(apiRes.journey));
 		} catch (err) {
 			console.log(err);
 			dispatch(endJourneyFailure());

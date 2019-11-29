@@ -11,6 +11,7 @@ import {
 } from '../../../constants/redux-actions';
 import { JourneyDetailsState } from '../../../types/redux-reducer-state-types';
 import { JourneyDetailsActionTypes } from '../../../types/redux-action-types';
+import { Journey } from '@project-300/common-types';
 
 const initialState: JourneyDetailsState = {
 	status: 'NOT_STARTED',
@@ -31,13 +32,13 @@ const journeyDetailsReducer = (state: JourneyDetailsState = initialState, action
 		case START_JOURNEY_REQUEST:
 			return { ...state, isStarting: true };
 		case START_JOURNEY_SUCCESS:
-			return { ...state, isStarting: false, status: 'STARTED' };
+			return { ...state, isStarting: false, journey: action.journey };
 		case START_JOURNEY_FAILURE:
 			return { ...state, isStarting: false };
 		case END_JOURNEY_REQUEST:
 			return { ...state, isEnding: false };
 		case END_JOURNEY_SUCCESS:
-			return { ...state, isEnding: false, status: 'FINISHED' };
+			return { ...state, isEnding: false, journey: action.journey };
 		case END_JOURNEY_FAILURE:
 			return { ...state, isEnding: false };
 		default:

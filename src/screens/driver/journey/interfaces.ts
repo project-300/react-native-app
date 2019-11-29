@@ -1,5 +1,5 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { CommonProps } from '../../../types/common';
+import { CommonProps, Coords } from '../../../types/common';
 import { Journey } from '@project-300/common-types';
 
 export interface Styles {
@@ -12,7 +12,7 @@ export interface Styles {
 }
 
 export interface Props extends CommonProps {
-	status: string;
+	// status: string;
 	isStarting: boolean;
 	isEnding: boolean;
 	isRequestingJourneyDetails: boolean;
@@ -30,7 +30,11 @@ export interface State {
 		latitudeDelta: number;
 		longitudeDelta: number;
 	}
-	route: [] | null;
+	currentPosition: {
+		latitude: number;
+		longitude: number;
+	}
+	route: Coords[] | null;
 	midpoint: {
 		latitude: number;
 		longitude: number;

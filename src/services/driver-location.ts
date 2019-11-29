@@ -1,9 +1,5 @@
 import { AsyncStorage } from 'react-native';
-
-interface Coords {
-	latitude: number;
-	longitude: number;
-}
+import { Coords } from '../types/common';
 
 class DriverLocation {
 

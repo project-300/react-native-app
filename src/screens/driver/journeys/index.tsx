@@ -13,6 +13,7 @@ import { DriverJourneysState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
 import { getJourneys } from '../../../redux/actions';
 import { Journey } from '@project-300/common-types';
+import { NavigationEvents } from 'react-navigation';
 
 export class MyJourneys extends Component<Props, State> {
 
@@ -20,10 +21,11 @@ export class MyJourneys extends Component<Props, State> {
 		super(props);
 	}
 
-	public async componentDidMount(): Promise<void> {
+	public componentDidMount(): void {
 		console.log(this.props);
-		await this.props.getJourneys();
 	}
+
+	private _getJourneys = async (): Promise<void> => await this.props.getJourneys();
 
 	private _renderRow = ({ item, index }: { item: Journey; index: number }): ReactElement => {
 		return (
@@ -37,12 +39,26 @@ export class MyJourneys extends Component<Props, State> {
 				<Text>
 					{ item.pricePerSeat } euro per seat
 				</Text>
-				<TouchableOpacity
-					style={ styles.button }
-					onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyId: item.journeyId }) }
-				>
-					<Text style={ styles.buttonText }>Start Journey</Text>
-				</TouchableOpacity>
+
+				{
+					item.journeyStatus === 'NOT_STARTED' &&
+						<TouchableOpacity
+							style={ styles.button }
+							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyId: item.journeyId }) }
+						>
+							<Text style={ styles.buttonText }>Start Journey</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					item.journeyStatus === 'STARTED' &&
+						<TouchableOpacity
+							style={ styles.button }
+							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyId: item.journeyId }) }
+						>
+							<Text style={ styles.buttonText }>Continue Journey</Text>
+						</TouchableOpacity>
+				}
 			</View>
 		);
 	}
@@ -50,6 +66,8 @@ export class MyJourneys extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<ScrollView contentContainerStyle={ styles.container }>
+				<NavigationEvents onDidFocus={ this._getJourneys } />
+
 				<FlatList
 					data={ this.props.journeys }
 					extraData={ this.props }
