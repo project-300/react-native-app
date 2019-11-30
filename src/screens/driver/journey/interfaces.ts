@@ -43,5 +43,6 @@ export interface State {
 	midpoint: {
 		latitude: number;
 		longitude: number;
-	}
+	};
+	tracker: number | null;
 }

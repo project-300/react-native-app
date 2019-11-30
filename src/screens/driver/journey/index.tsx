@@ -44,12 +44,13 @@ export class JourneyMap extends Component<Props, State> {
 				latitudeDelta: 0.015,
 				longitudeDelta: 0.0121
 			},
-			route: null,
-			routeTravelled: [],
 			midpoint: {
 				latitude: 0,
 				longitude: 0
-			}
+			},
+			route: null,
+			routeTravelled: [],
+			tracker: null
 		};
 	}
 
@@ -68,18 +69,19 @@ export class JourneyMap extends Component<Props, State> {
 
 		this._mapRoute().then(() => {
 			this._setMidpoint();
-			this._zoomToMidpoint();
 
 				// Zoom into driver position if continuing journey
 			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
 				this._trackDriver();
-				// setTimeout(this._zoomToDriverPosition, 1000);
+			}
+			if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
+				this._zoomToMidpoint();
 			}
 		});
 	}
 
 	private _trackDriver = (): void => {
-		navigator.geolocation.watchPosition(async (location: Position) => {
+		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
 			const coords = {
 				latitude: location.coords.latitude,
 				longitude: location.coords.longitude,
@@ -95,13 +97,24 @@ export class JourneyMap extends Component<Props, State> {
 				})
 			});
 
-			console.log(this.state.routeTravelled);
-
 			await this._updateSavedLocation(location.coords);
 		},
 	 (error: PositionError) => console.log(error.message),
 { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 }
 		);
+
+		console.log(tracker);
+		this.setState({ tracker });
+	}
+
+	private _stopTracking = (): void => {
+		const tracker: number = this.state.tracker as number;
+
+		console.log(tracker);
+
+		if (tracker) navigator.geolocation.clearWatch(tracker);
+
+		this.setState({ tracker: null });
 	}
 
 	private _mapRoute = async (): Promise<void> => {
@@ -169,7 +182,7 @@ export class JourneyMap extends Component<Props, State> {
 		);
 
 		this.setState({
-			driverRegion: {
+			currentPosition: {
 				latitude: this.state.midpoint.latitude,
 				longitude: this.state.midpoint.longitude,
 				latitudeDelta,
@@ -195,7 +208,10 @@ export class JourneyMap extends Component<Props, State> {
 		this._trackDriver();
 	}
 
-	private _endJourney = async (): Promise<void> => await this.props.endJourney(this.state.journeyId);
+	private _endJourney = async (): Promise<void> => {
+		await this.props.endJourney(this.state.journeyId);
+		this._stopTracking();
+	}
 
 	private _zoomToDriverPosition = (): void => {
 		const currentPosition = this.state.currentPosition;
@@ -229,11 +245,9 @@ export class JourneyMap extends Component<Props, State> {
 		longitude: this.state.currentPosition.longitude,
 		latitudeDelta: this.state.currentPosition.latitudeDelta,
 		longitudeDelta: this.state.currentPosition.longitudeDelta
-	});
+	})
 
 	private _map: MapView = React.createRef<MapView>();
-
-	private _driverMarker: Marker = React.createRef<Marker>();
 
 	public render(): ReactElement {
 		const journey: Journey = this.props.journey as Journey;
@@ -267,10 +281,16 @@ export class JourneyMap extends Component<Props, State> {
 							/>
 						}
 
+						{
+							journey && journey.journeyStatus === 'STARTED' &&
+								<Polyline
+									coordinates={ this.state.routeTravelled }
+									strokeColor={ 'green' }
+									strokeWidth={ 4 }
+								/>
+						}
+
 						<Marker
-							// ref={ (marker: Marker): void => {
-							// 	this._driverMarker = marker;
-							// }}
 							coordinate={ this.state.currentPosition }
 						/>
 					</MapView>
