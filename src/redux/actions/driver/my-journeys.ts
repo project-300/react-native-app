@@ -1,32 +1,36 @@
-import { DRIVER_JOURNEYS_REQUEST, DRIVER_JOURNEYS_SUCCESS, DRIVER_JOURNEYS_FAILURE } from '../../../constants/redux-actions';
+import { JOURNEYS_REQUEST, JOURNEYS_SUCCESS, JOURNEYS_FAILURE } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
-import { DriverJourneysResult } from '../../../types/http-responses';
+import { JourneysResult } from '../../../types/http-responses';
 import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { Journey } from '@project-300/common-types';
+import { userId } from '../../../auth';
 
-const driverJourneysRequest = (): AppActions => ({ type: DRIVER_JOURNEYS_REQUEST });
+const journeysRequest = (): AppActions => ({ type: JOURNEYS_REQUEST });
 
-const driverJourneysSuccess = (journeys: { previous: Journey[]; current: Journey[] }):
-	AppActions => ({ type: DRIVER_JOURNEYS_SUCCESS, journeys });
+const journeysSuccess = (journeys: { previous: Journey[]; current: Journey[] }): AppActions => ({ type: JOURNEYS_SUCCESS, journeys });
 
-const driverJourneysFailure = (): AppActions => ({ type: DRIVER_JOURNEYS_FAILURE });
+const journeysFailure = (): AppActions => ({ type: JOURNEYS_FAILURE });
 
-export const getJourneys = (): (dispatch: Dispatch) => Promise<void> => {
+export const getJourneys = (driver: boolean): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
-		dispatch(driverJourneysRequest());
+		dispatch(journeysRequest());
+
+		const uId: string = await userId() as string;
 
 		try {
-			const apiRes: DriverJourneysResult = await HttpAPI.getDriverJourneys({ userId: 'user212' });
+			const apiRes: JourneysResult = (driver ?
+				await HttpAPI.getDriverJourneys({ userId: uId }) :
+				await HttpAPI.getPassengerJourneys({ userId: uId })) as JourneysResult;
 
 			console.log(apiRes);
-			if (apiRes.success && apiRes.journeys) {
-				dispatch(driverJourneysSuccess(apiRes.journeys));
-			}
+
+			if (apiRes.success && apiRes.journeys) dispatch(journeysSuccess(apiRes.journeys));
+			else dispatch(journeysFailure());
 		} catch (err) {
 			console.log(err);
-			dispatch(driverJourneysFailure());
+			dispatch(journeysFailure());
 			toastr.error(err.message);
 		}
 	};

@@ -82,7 +82,7 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 			title: 'Update Password'
 		})
 	},
-	DriverMyJourneys: {
+	MyJourneys: {
 		screen: MyJourneys,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'My Journeys'

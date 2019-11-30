@@ -5,18 +5,29 @@ import {
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
-import { storeLogout } from '../../auth';
+import { storeLogout, userType } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { ActionSheet } from 'native-base';
 
 export class Home extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
+
+		this.state = {
+			driverView: false
+		};
+	}
+
+	public async componentDidMount(): Promise<void> {
+		const uType: string = await userType() as string;
+
+		this.setState({ driverView: uType === 'Driver' });
 	}
 
 	public static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationState, NavigationParams> }): { } => {
@@ -34,6 +45,9 @@ export class Home extends Component<Props, State> {
 	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
 
 	public render(): ReactElement {
+		const BUTTONS = [ 'Driver', 'Passenger', 'Cancel' ];
+		const CANCEL_INDEX = 2;
+
 		return (
 			<ScrollView contentContainerStyle={ styles.container }>
 				<TouchableOpacity
@@ -47,7 +61,21 @@ export class Home extends Component<Props, State> {
 					<Text style={ styles.buttonText }>Want to become a driver?</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('DriverMyJourneys') }
+					onPress={ (): void => {
+						this.state.driverView ?
+							ActionSheet.show(
+								{
+									options: BUTTONS,
+									cancelButtonIndex: CANCEL_INDEX,
+									title: 'View Journeys As'
+								},
+								(i: number) => {
+									if (BUTTONS[i] === 'Cancel') return;
+									this.props.navigation.navigate('MyJourneys', { driverView: BUTTONS[i] === 'Driver' });
+								}
+							) :
+							this.props.navigation.navigate('MyJourneys', { driverView: false });
+					} }
 					style={ styles.button }>
 					<Text style={ styles.buttonText }>My Journeys</Text>
 				</TouchableOpacity>

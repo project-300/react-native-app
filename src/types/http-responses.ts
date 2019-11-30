@@ -3,6 +3,7 @@ import { Journey } from '@project-300/common-types';
 export interface LoginResult {
 	success: boolean;
 	userId?: string;
+	userType?: string;
 	error?: {
 		code: string;
 		description: string;
@@ -42,9 +43,13 @@ export interface SecretKeyResult {
 	};
 }
 
-export interface DriverJourneysResult {
+export interface JourneysResult {
 	success: boolean;
-	journeys: Journey[];
+	journeys: {
+		current: Journey[];
+		previous: Journey[];
+	};
+	journeyCount: number;
 	error?: {
 		code: string;
 		description: string;
@@ -61,4 +66,4 @@ export interface JourneyDetailsResult {
 }
 
 export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult |
-	SecretKeyResult | DriverJourneysResult | JourneyDetailsResult;
+	SecretKeyResult | JourneysResult | JourneyDetailsResult;

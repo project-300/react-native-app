@@ -46,10 +46,10 @@ export const UPDATE_EMAIL_REQUEST: string = 'UPDATE_EMAIL_REQUEST';
 export const UPDATE_EMAIL_SUCCESS: string = 'UPDATE_EMAIL_SUCCESS';
 export const UPDATE_EMAIL_FAILURE: string = 'UPDATE_EMAIL_FAILURE';
 
-// Driver Journeys
-export const DRIVER_JOURNEYS_REQUEST: string = 'DRIVER_JOURNEYS_REQUEST';
-export const DRIVER_JOURNEYS_SUCCESS: string = 'DRIVER_JOURNEYS_SUCCESS';
-export const DRIVER_JOURNEYS_FAILURE: string = 'DRIVER_JOURNEYS_FAILURE';
+// Journeys
+export const JOURNEYS_REQUEST: string = 'JOURNEYS_REQUEST';
+export const JOURNEYS_SUCCESS: string = 'JOURNEYS_SUCCESS';
+export const JOURNEYS_FAILURE: string = 'JOURNEYS_FAILURE';
 
 // Journey
 export const JOURNEY_DETAILS_REQUEST: string = 'JOURNEY_DETAILS_REQUEST';

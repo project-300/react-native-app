@@ -8,12 +8,17 @@ export interface Styles {
 	buttonText: TextStyle;
 	applicationRow: ViewStyle;
 	centerText: TextStyle;
+	bold: TextStyle;
+	cardHeader: ViewStyle;
+	journeyHeading: TextStyle;
 }
 
 export interface Props extends CommonProps {
-	getJourneys(): Promise<void>;
+	getJourneys(d: boolean): Promise<void>;
 	isRequesting: boolean;
 	journeys: { previous: Journey[]; current: Journey[] };
 }
 
-export interface State { }
+export interface State {
+	driverView: boolean; // View the list with extra driver functionality (eg. Start a journey)
+}

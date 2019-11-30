@@ -11,4 +11,6 @@ export interface Styles {
 
 export interface Props extends CommonProps { }
 
-export interface State { }
+export interface State {
+	driverView: boolean;
+}

@@ -20,9 +20,9 @@ export const login = (username: string, password: string): (dispatch: Dispatch) 
 		try {
 			const auth = await Auth.signIn(username, password);
 			const apiRes: LoginResult = await HttpAPI.login(auth);
-
-			if (apiRes.success && apiRes.userId) {
-				await storeLogin(apiRes.userId);
+			
+			if (apiRes.success && apiRes.userId && apiRes.userType) {
+				await storeLogin(apiRes.userId, apiRes.userType);
 				dispatch(loginSuccess());
 				return true;
 			}

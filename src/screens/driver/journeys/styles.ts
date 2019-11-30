@@ -11,7 +11,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		backgroundColor: '#02b2cc',
 		padding: 10,
 		borderRadius: 4,
-		marginTop: 10,
 		width: '100%'
 	},
 
@@ -31,6 +30,18 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignSelf: 'center',
 		fontWeight: 'bold',
 		padding: 20
+	},
+
+	bold: {
+		fontWeight: 'bold'
+	},
+
+	cardHeader : {
+		justifyContent: 'center'
+	},
+
+	journeyHeading: {
+		fontSize: 16
 	}
 });
 

@@ -12,7 +12,7 @@ import {
 	JOURNEY_DETAILS,
 	START_JOURNEY,
 	END_JOURNEY,
-	JOURNEY_DRIVER_MOVEMENT
+	JOURNEY_DRIVER_MOVEMENT, PASSENGER_JOURNEYS
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -38,6 +38,8 @@ export default class HttpAPI {
 	public static getS3SecretKey = (): Promise<HttpResponse> => HttpAPI.send({ }, S3_KEY_REQUEST);
 
 	public static getDriverJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_JOURNEYS);
+
+	public static getPassengerJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, PASSENGER_JOURNEYS);
 
 	public static getJourneyDetails = (data: object): Promise<HttpResponse> => HttpAPI.send(data, JOURNEY_DETAILS);
 

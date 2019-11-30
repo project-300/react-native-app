@@ -6,6 +6,7 @@ import { isStoreLoggedIn } from './auth';
 import { AWS_COGNITO_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
+import { Root } from 'native-base';
 
 Amplify.configure(AWS_COGNITO_CONFIG);
 
@@ -44,7 +45,9 @@ export default class App extends Component<Props, State> {
 
 		return (
 			<Provider store={ store }>
-				<Layout />
+				<Root>
+					<Layout />
+				</Root>
 		  	</Provider>
 		);
 	}
