@@ -9,6 +9,7 @@ export interface Styles {
 	buttonText: TextStyle;
 	map: ViewStyle;
 	bottomPanel: ViewStyle;
+	spinner: ViewStyle;
 }
 
 export interface Props extends CommonProps {

@@ -9,11 +9,15 @@ import {
 	END_JOURNEY_SUCCESS,
 	END_JOURNEY_FAILURE
 } from '../../../constants/redux-actions';
-import { JourneyDetailsState } from '../../../types/redux-reducer-state-types';
-import { JourneyDetailsActionTypes } from '../../../types/redux-action-types';
-import { Journey } from '@project-300/common-types';
+import { JourneyMapState } from '../../../types/redux-reducer-state-types';
+import {
+	EndJourneySuccess,
+	JourneyDetailsSuccess,
+	JourneyMapActionTypes,
+	StartJourneySuccess
+} from '../../../types/redux-action-types';
 
-const initialState: JourneyDetailsState = {
+const initialState: JourneyMapState = {
 	status: 'NOT_STARTED',
 	isStarting: false,
 	isEnding: false,
@@ -21,24 +25,32 @@ const initialState: JourneyDetailsState = {
 	journey: undefined
 };
 
-const journeyDetailsReducer = (state: JourneyDetailsState = initialState, action: JourneyDetailsActionTypes): JourneyDetailsState => {
+const journeyDetailsReducer = (state: JourneyMapState = initialState, action: JourneyMapActionTypes): JourneyMapState => {
+	let payload;
+
 	switch (action.type) {
 		case JOURNEY_DETAILS_REQUEST:
 			return { ...state, isRequestingJourneyDetails: true };
 		case JOURNEY_DETAILS_SUCCESS:
-			return { ...state, isRequestingJourneyDetails: false, journey: action.journey };
+			payload = action as JourneyDetailsSuccess;
+
+			return { ...state, isRequestingJourneyDetails: false, journey: payload.journey };
 		case JOURNEY_DETAILS_FAILURE:
 			return { ...state, isRequestingJourneyDetails: false };
 		case START_JOURNEY_REQUEST:
 			return { ...state, isStarting: true };
 		case START_JOURNEY_SUCCESS:
-			return { ...state, isStarting: false, journey: action.journey };
+			payload = action as StartJourneySuccess;
+
+			return { ...state, isStarting: false, journey: payload.journey };
 		case START_JOURNEY_FAILURE:
 			return { ...state, isStarting: false };
 		case END_JOURNEY_REQUEST:
-			return { ...state, isEnding: false };
+			return { ...state, isEnding: true };
 		case END_JOURNEY_SUCCESS:
-			return { ...state, isEnding: false, journey: action.journey };
+			payload = action as EndJourneySuccess;
+
+			return { ...state, isEnding: false, journey: payload.journey };
 		case END_JOURNEY_FAILURE:
 			return { ...state, isEnding: false };
 		default:

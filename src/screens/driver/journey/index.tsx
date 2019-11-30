@@ -1,17 +1,16 @@
-import React, { Component, ReactElement, Ref, RefObject } from 'react';
+import React, { Component, ReactElement } from 'react';
 import {
 	View,
 	Alert,
 	TouchableOpacity,
-	Text,
-	Button
+	Text
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { JourneyDetailsState } from '../../../types/redux-reducer-state-types';
+import { JourneyMapState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getJourneyDetails, startJourney, endJourney, login } from '../../../redux/actions';
+import { getJourneyDetails, startJourney, endJourney } from '../../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
 import { Journey } from '@project-300/common-types';
@@ -21,6 +20,8 @@ import { GoogleMapsAPIKey } from '../../../../environment/env';
 import { getDistance } from 'geolib';
 import { Coords } from '../../../types/common';
 import { Directions } from '../../../types/maps';
+import { Container } from 'native-base';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export class JourneyMap extends Component<Props, State> {
 
@@ -222,7 +223,12 @@ export class JourneyMap extends Component<Props, State> {
 		const journey: Journey = this.props.journey as Journey;
 
 		return (
-			<View style={ styles.container }>
+			<Container>
+				<Spinner
+					visible={ this.props.isStarting || this.props.isEnding }
+					textContent={ 'Loading...' }
+					// textStyle={ styles.spinnerTextStyle }
+				/>
 				<View style={ styles.mapContainer }>
 					<MapView
 						provider={ PROVIDER_GOOGLE }
@@ -250,7 +256,7 @@ export class JourneyMap extends Component<Props, State> {
 							{
 								journey.journeyStatus === 'NOT_STARTED' &&
 								<TouchableOpacity style={ styles.button } onPress={ this._startJourney }>
-									<Text style={ styles.buttonText }>Start</Text>
+									<Text style={ styles.buttonText }>Start </Text>
 								</TouchableOpacity>
 							}
 
@@ -271,12 +277,12 @@ export class JourneyMap extends Component<Props, State> {
 							}
 						</View>
 				}
-			</View>
+			</Container>
 		);
 	}
 }
 
-const mapStateToProps = (state: AppState): JourneyDetailsState => ({
+const mapStateToProps = (state: AppState): JourneyMapState => ({
 	...state.journeyDetailsReducer
 });
 

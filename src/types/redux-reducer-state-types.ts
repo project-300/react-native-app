@@ -39,10 +39,10 @@ export interface UpdatePasswordState {
 
 export interface DriverJourneysState {
 	isRequesting: boolean;
-	journeys: Journey[];
+	journeys: { current: Journey[]; previous: Journey[] };
 }
 
-export interface JourneyDetailsState {
+export interface JourneyMapState {
 	status: string;
 	isStarting: boolean;
 	isEnding: boolean;

@@ -14,7 +14,7 @@ import { AppState } from '../../../store';
 import { getJourneys } from '../../../redux/actions';
 import { Journey } from '@project-300/common-types';
 import { NavigationEvents } from 'react-navigation';
-import { Container, Tab, Tabs } from 'native-base';
+import { Container, Tab, Tabs, Content, Spinner } from 'native-base';
 
 export class MyJourneys extends Component<Props, State> {
 
@@ -70,32 +70,53 @@ export class MyJourneys extends Component<Props, State> {
 				<NavigationEvents onDidFocus={ this._getJourneys } />
 
 				<Container>
-					<Tabs>
-						<Tab heading='Current'>
-							{
-								this.props.journeys.current.length ?
-									<FlatList
-										data={ this.props.journeys.current }
-										extraData={ this.props }
-										renderItem={ this._renderRow }
-										keyExtractor={ (item: Journey): string => item.journeyId }
-									/> :
-									<Text style={ styles.noJourneys }>You have no current journeys.</Text>
-							}
-						</Tab>
-						<Tab heading='Previous'>
-							{
-								this.props.journeys.previous.length ?
-									<FlatList
-										data={ this.props.journeys.previous }
-										extraData={ this.props }
-										renderItem={ this._renderRow }
-										keyExtractor={ (item: Journey): string => item.journeyId }
-									/> :
-									<Text>You have no previous journeys.</Text>
-							}
-						</Tab>
-					</Tabs>
+					<Content>
+						<Tabs>
+							<Tab heading='Current'>
+								{
+									this.props.isRequesting && <Spinner />
+								}
+								{
+									this.props.journeys.current.length ?
+										<FlatList
+											data={ this.props.journeys.current }
+											extraData={ this.props }
+											renderItem={ this._renderRow }
+											keyExtractor={ (item: Journey): string => item.journeyId }
+										/> :
+										<View>
+											<Text style={ styles.centerText }>
+												{
+													this.props.isRequesting ?
+														'Retrieving current journeys.' :
+														'You have no current journeys.'
+												}
+											</Text>
+										</View>
+								}
+							</Tab>
+							<Tab heading='Previous'>
+								{
+									this.props.journeys.previous.length ?
+										<FlatList
+											data={ this.props.journeys.previous }
+											extraData={ this.props }
+											renderItem={ this._renderRow }
+											keyExtractor={ (item: Journey): string => item.journeyId }
+										/> :
+										<View>
+											<Text style={ styles.centerText }>
+												{
+													this.props.isRequesting ?
+														'Retrieving previous journeys.' :
+														'You have no previous journeys.'
+												}
+											</Text>
+										</View>
+								}
+							</Tab>
+						</Tabs>
+					</Content>
 				</Container>
 			</ScrollView>
 		);

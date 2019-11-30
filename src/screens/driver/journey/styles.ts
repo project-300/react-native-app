@@ -16,7 +16,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	button: {
 		backgroundColor: '#6c2bcc',
 		paddingVertical: 14,
-		width: '100%',
+		width: '100%'
 	},
 
 	buttonText: {
@@ -27,14 +27,21 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	map: {
-		...StyleSheet.absoluteFillObject
+		...StyleSheet.absoluteFillObject,
+		marginBottom: 50 // Ensure this is the height of the button
 	},
 
 	bottomPanel: {
-		marginTop: 200,
+		position: 'absolute',
+		bottom: 0,
 		backgroundColor: 'white',
 		width: '100%',
 		elevation: 20
+	},
+
+	spinner: {
+		position: 'absolute',
+		top: 100
 	}
 });
 

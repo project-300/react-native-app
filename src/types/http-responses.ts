@@ -36,16 +36,28 @@ export interface DriverApplicationResult {
 export interface SecretKeyResult {
 	success: boolean;
 	secretKey: string;
+	error?: {
+		code: string;
+		description: string;
+	};
 }
 
 export interface DriverJourneysResult {
 	success: boolean;
 	journeys: Journey[];
+	error?: {
+		code: string;
+		description: string;
+	};
 }
 
 export interface JourneyDetailsResult {
 	success: boolean;
 	journey: Journey;
+	error?: {
+		code: string;
+		description: string;
+	};
 }
 
 export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult |

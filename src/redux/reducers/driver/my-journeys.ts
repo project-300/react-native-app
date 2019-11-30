@@ -4,7 +4,7 @@ import { DriverJourneysActionTypes } from '../../../types/redux-action-types';
 
 const initialState: DriverJourneysState = {
 	isRequesting: false,
-	journeys: []
+	journeys: { current: [], previous: [] }
 };
 
 const driverJourneysReducer = (state: DriverJourneysState = initialState, action: DriverJourneysActionTypes): DriverJourneysState => {

@@ -27,7 +27,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		backgroundColor: '#ffedcc'
 	},
 
-	noJourneys: {
+	centerText: {
 		alignSelf: 'center',
 		fontWeight: 'bold',
 		padding: 20

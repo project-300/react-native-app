@@ -22,7 +22,12 @@ import {
 	UPDATE_EMAIL_FAILURE,
 	DRIVER_JOURNEYS_REQUEST,
 	DRIVER_JOURNEYS_SUCCESS,
-	DRIVER_JOURNEYS_FAILURE, JOURNEY_DETAILS_REQUEST, JOURNEY_DETAILS_SUCCESS, JOURNEY_DETAILS_FAILURE
+	DRIVER_JOURNEYS_FAILURE,
+	JOURNEY_DETAILS_REQUEST,
+	JOURNEY_DETAILS_SUCCESS,
+	JOURNEY_DETAILS_FAILURE,
+	START_JOURNEY_REQUEST,
+	START_JOURNEY_SUCCESS, START_JOURNEY_FAILURE, END_JOURNEY_REQUEST, END_JOURNEY_SUCCESS, END_JOURNEY_FAILURE
 } from '../constants/redux-actions';
 import { Journey } from '@project-300/common-types';
 
@@ -132,11 +137,37 @@ export interface JourneyDetailsRequest {
 
 export interface JourneyDetailsSuccess {
 	type: typeof JOURNEY_DETAILS_SUCCESS;
-	journeys: Journey[];
+	journey: Journey;
 }
 
 export interface JourneyDetailsFailure {
 	type: typeof JOURNEY_DETAILS_FAILURE;
+}
+
+export interface StartJourneyRequest {
+	type: typeof START_JOURNEY_REQUEST;
+}
+
+export interface StartJourneySuccess {
+	type: typeof START_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface StartJourneyFailure {
+	type: typeof START_JOURNEY_FAILURE;
+}
+
+export interface EndJourneyRequest {
+	type: typeof END_JOURNEY_REQUEST;
+}
+
+export interface EndJourneySuccess {
+	type: typeof END_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface EndJourneyFailure {
+	type: typeof END_JOURNEY_FAILURE;
 }
 
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
@@ -156,5 +187,11 @@ export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSu
 
 export type JourneyDetailsActionTypes = JourneyDetailsRequest | JourneyDetailsSuccess | JourneyDetailsFailure;
 
+export type StartJourneyActionTypes = StartJourneyRequest | StartJourneySuccess | StartJourneyFailure;
+
+export type EndJourneyActionTypes = EndJourneyRequest | EndJourneySuccess | EndJourneyFailure;
+
+export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActionTypes | EndJourneyActionTypes;
+
 export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyDetailsActionTypes;
+	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyMapActionTypes;

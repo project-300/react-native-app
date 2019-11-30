@@ -40,7 +40,7 @@ export const getJourneyDetails = (journeyId: string): (dispatch: Dispatch) => Pr
 		dispatch(journeyDetailsRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.getJourneyDetails({ journeyId });
+			const apiRes: JourneyDetailsResult = await HttpAPI.getJourneyDetails({ journeyId }) as JourneyDetailsResult;
 
 			console.log(apiRes);
 			if (apiRes.success && apiRes.journey) dispatch(journeyDetailsSuccess(apiRes.journey));
@@ -57,7 +57,7 @@ export const startJourney = (journeyId: string): (dispatch: Dispatch) => Promise
 		dispatch(startJourneyRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.startJourney({ journeyId });
+			const apiRes: JourneyDetailsResult = await HttpAPI.startJourney({ journeyId }) as JourneyDetailsResult;
 
 			console.log(apiRes);
 			if (apiRes.success && apiRes.journey) dispatch(startJourneySuccess(apiRes.journey));
@@ -75,7 +75,7 @@ export const endJourney = (journeyId: string): (dispatch: Dispatch) => Promise<v
 		dispatch(endJourneyRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.endJourney({ journeyId });
+			const apiRes: JourneyDetailsResult = await HttpAPI.endJourney({ journeyId }) as JourneyDetailsResult;
 
 			console.log(apiRes);
 			if (apiRes.success && apiRes.journey) dispatch(endJourneySuccess(apiRes.journey));

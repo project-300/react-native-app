@@ -7,11 +7,12 @@ export interface Styles {
 	button: TextStyle;
 	buttonText: TextStyle;
 	applicationRow: ViewStyle;
-	noJourneys: TextStyle;
+	centerText: TextStyle;
 }
 
 export interface Props extends CommonProps {
 	getJourneys(): Promise<void>;
+	isRequesting: boolean;
 	journeys: { previous: Journey[]; current: Journey[] };
 }
 
