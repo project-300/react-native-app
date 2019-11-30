@@ -10,6 +10,7 @@ export interface Styles {
 	map: ViewStyle;
 	bottomPanel: ViewStyle;
 	spinner: ViewStyle;
+	spinnerTextStyle: TextStyle;
 }
 
 export interface Props extends CommonProps {
@@ -34,8 +35,11 @@ export interface State {
 	currentPosition: {
 		latitude: number;
 		longitude: number;
+		latitudeDelta: number;
+		longitudeDelta: number;
 	}
 	route: Coords[] | null;
+	routeTravelled: Coords[];
 	midpoint: {
 		latitude: number;
 		longitude: number;

@@ -42,6 +42,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 	spinner: {
 		position: 'absolute',
 		top: 100
+	},
+
+	spinnerTextStyle: {
+		color: '#FFF'
 	}
 });
 

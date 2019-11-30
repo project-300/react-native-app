@@ -3,7 +3,7 @@ import {
 	View,
 	Alert,
 	TouchableOpacity,
-	Text
+	Text, Platform
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -11,7 +11,7 @@ import { Props, State } from './interfaces';
 import { JourneyMapState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
 import { getJourneyDetails, startJourney, endJourney } from '../../../redux/actions';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { AnimatedRegion, Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
 import { Journey } from '@project-300/common-types';
 import MapBoxPolyline from '@mapbox/polyline';
@@ -40,9 +40,12 @@ export class JourneyMap extends Component<Props, State> {
 			},
 			currentPosition: {
 				latitude: 37.78825,
-				longitude: -122.4324
+				longitude: -122.4324,
+				latitudeDelta: 0.015,
+				longitudeDelta: 0.0121
 			},
 			route: null,
+			routeTravelled: [],
 			midpoint: {
 				latitude: 0,
 				longitude: 0
@@ -54,15 +57,12 @@ export class JourneyMap extends Component<Props, State> {
 		const savedPos = await DriverLocation.getCurrentPosition(); // Get last updated location
 
 		this.setState({
-			driverRegion: {
+			currentPosition: {
 				...savedPos,
 				latitudeDelta: 0.015,
 				longitudeDelta: 0.0121
-			},
-			currentPosition: savedPos
+			}
 		});
-
-		this._findCoordinates();
 
 		await this._getJourneyDetails();
 
@@ -71,29 +71,35 @@ export class JourneyMap extends Component<Props, State> {
 			this._zoomToMidpoint();
 
 				// Zoom into driver position if continuing journey
-			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') setTimeout(this._zoomToDriverPosition, 1000);
+			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
+				this._trackDriver();
+				// setTimeout(this._zoomToDriverPosition, 1000);
+			}
 		});
 	}
 
-	private _findCoordinates = (): void => {
-		navigator.geolocation.getCurrentPosition(async (location: Position) => {
-			this.setState({
-				driverRegion: {
-					latitude: location.coords.latitude,
-					longitude: location.coords.longitude,
-					latitudeDelta: 0.015,
-					longitudeDelta: 0.0121
-				}
-			});
-
-			await DriverLocation.setCurrentPosition({
+	private _trackDriver = (): void => {
+		navigator.geolocation.watchPosition(async (location: Position) => {
+			const coords = {
 				latitude: location.coords.latitude,
-				longitude: location.coords.longitude
+				longitude: location.coords.longitude,
+				latitudeDelta: 0.015,
+				longitudeDelta: 0.0121
+			};
+
+			this.setState({
+				currentPosition: coords,
+				routeTravelled: this.state.routeTravelled.concat({
+					latitude: location.coords.latitude,
+					longitude: location.coords.longitude
+				})
 			});
 
-			this._updateSavedLocation(location.coords);
+			console.log(this.state.routeTravelled);
+
+			await this._updateSavedLocation(location.coords);
 		},
-	 (error: PositionError) => Alert.alert(error.message),
+	 (error: PositionError) => console.log(error.message),
 { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 }
 		);
 	}
@@ -185,7 +191,8 @@ export class JourneyMap extends Component<Props, State> {
 
 	private _startJourney = async (): Promise<void> => {
 		await this.props.startJourney(this.state.journeyId);
-		this._zoomToDriverPosition();
+		// this._zoomToDriverPosition();
+		this._trackDriver();
 	}
 
 	private _endJourney = async (): Promise<void> => await this.props.endJourney(this.state.journeyId);
@@ -217,23 +224,35 @@ export class JourneyMap extends Component<Props, State> {
 		/>;
 	}
 
+	private _getMapRegion = (): Region => ({
+		latitude: this.state.currentPosition.latitude,
+		longitude: this.state.currentPosition.longitude,
+		latitudeDelta: this.state.currentPosition.latitudeDelta,
+		longitudeDelta: this.state.currentPosition.longitudeDelta
+	});
+
 	private _map: MapView = React.createRef<MapView>();
+
+	private _driverMarker: Marker = React.createRef<Marker>();
 
 	public render(): ReactElement {
 		const journey: Journey = this.props.journey as Journey;
+		let spinnerText: string = '';
+		if (this.props.isStarting) spinnerText = 'Starting...';
+		if (this.props.isEnding) spinnerText = 'Ending...';
 
 		return (
 			<Container>
 				<Spinner
 					visible={ this.props.isStarting || this.props.isEnding }
-					textContent={ 'Loading...' }
-					// textStyle={ styles.spinnerTextStyle }
+					textContent={ spinnerText }
+					textStyle={ styles.spinnerTextStyle }
 				/>
 				<View style={ styles.mapContainer }>
 					<MapView
 						provider={ PROVIDER_GOOGLE }
 						style={ styles.map }
-						region={ this.state.driverRegion }
+						region={ this._getMapRegion() }
 						ref={ (m: MapView): MapView => this._map = m }
 					>
 						{ journey && this._createMarker(journey.origin) }
@@ -247,6 +266,13 @@ export class JourneyMap extends Component<Props, State> {
 								strokeWidth={ 4 }
 							/>
 						}
+
+						<Marker
+							// ref={ (marker: Marker): void => {
+							// 	this._driverMarker = marker;
+							// }}
+							coordinate={ this.state.currentPosition }
+						/>
 					</MapView>
 				</View>
 
