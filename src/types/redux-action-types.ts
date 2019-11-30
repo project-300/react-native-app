@@ -27,7 +27,13 @@ import {
 	JOURNEY_DETAILS_SUCCESS,
 	JOURNEY_DETAILS_FAILURE,
 	START_JOURNEY_REQUEST,
-	START_JOURNEY_SUCCESS, START_JOURNEY_FAILURE, END_JOURNEY_REQUEST, END_JOURNEY_SUCCESS, END_JOURNEY_FAILURE
+	START_JOURNEY_SUCCESS,
+	START_JOURNEY_FAILURE,
+	END_JOURNEY_REQUEST,
+	END_JOURNEY_SUCCESS,
+	END_JOURNEY_FAILURE,
+	DRIVER_MOVEMENT_REQUEST,
+	DRIVER_MOVEMENT_SUCCESS, DRIVER_MOVEMENT_FAILURE
 } from '../constants/redux-actions';
 import { Journey } from '@project-300/common-types';
 
@@ -170,6 +176,19 @@ export interface EndJourneyFailure {
 	type: typeof END_JOURNEY_FAILURE;
 }
 
+export interface DriverMovementRequest {
+	type: typeof DRIVER_MOVEMENT_REQUEST;
+}
+
+export interface DriverMovementSuccess {
+	type: typeof DRIVER_MOVEMENT_SUCCESS;
+	journey: Journey;
+}
+
+export interface DriverMovementFailure {
+	type: typeof DRIVER_MOVEMENT_FAILURE;
+}
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
@@ -191,7 +210,9 @@ export type StartJourneyActionTypes = StartJourneyRequest | StartJourneySuccess 
 
 export type EndJourneyActionTypes = EndJourneyRequest | EndJourneySuccess | EndJourneyFailure;
 
-export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActionTypes | EndJourneyActionTypes;
+export type DriverMovementActionTypes = DriverMovementRequest | DriverMovementSuccess | DriverMovementFailure;
+
+export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActionTypes | EndJourneyActionTypes | DriverMovementActionTypes;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
 	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyMapActionTypes;

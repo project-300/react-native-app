@@ -7,14 +7,17 @@ import {
 	START_JOURNEY_FAILURE,
 	END_JOURNEY_REQUEST,
 	END_JOURNEY_SUCCESS,
-	END_JOURNEY_FAILURE
+	END_JOURNEY_FAILURE,
+	DRIVER_MOVEMENT_REQUEST,
+	DRIVER_MOVEMENT_SUCCESS,
+	DRIVER_MOVEMENT_FAILURE
 } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { JourneyDetailsResult } from '../../../types/http-responses';
 import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
-import { Journey } from '@project-300/common-types';
+import { Coords, Journey } from '@project-300/common-types';
 
 const journeyDetailsRequest = (): AppActions => ({ type: JOURNEY_DETAILS_REQUEST });
 
@@ -33,6 +36,12 @@ const endJourneyRequest = (): AppActions => ({ type: END_JOURNEY_REQUEST });
 const endJourneySuccess = (journey: Journey): AppActions => ({ type: END_JOURNEY_SUCCESS, journey });
 
 const endJourneyFailure = (): AppActions => ({ type: END_JOURNEY_FAILURE });
+
+const driverMovementRequest = (): AppActions => ({ type: DRIVER_MOVEMENT_REQUEST });
+
+const driverMovementSuccess = (journey: Journey): AppActions => ({ type: DRIVER_MOVEMENT_SUCCESS, journey });
+
+const driverMovementFailure = (): AppActions => ({ type: DRIVER_MOVEMENT_FAILURE });
 
 export const getJourneyDetails = (journeyId: string): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
@@ -82,6 +91,24 @@ export const endJourney = (journeyId: string): (dispatch: Dispatch) => Promise<v
 		} catch (err) {
 			console.log(err);
 			dispatch(endJourneyFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const driverMovement = (journeyId: string, coords: Coords): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		console.log('driver movement');
+		dispatch(driverMovementRequest());
+
+		try {
+			const apiRes: JourneyDetailsResult = await HttpAPI.driverMovement({ journeyId, coords}) as JourneyDetailsResult;
+
+			console.log(apiRes);
+			if (apiRes.success && apiRes.journey) dispatch(driverMovementSuccess(apiRes.journey));
+		} catch (err) {
+			console.log(err);
+			dispatch(driverMovementFailure());
 			toastr.error(err.message);
 		}
 	};

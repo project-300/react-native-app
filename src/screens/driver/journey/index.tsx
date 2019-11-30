@@ -1,24 +1,22 @@
 import React, { Component, ReactElement } from 'react';
 import {
 	View,
-	Alert,
 	TouchableOpacity,
-	Text, Platform
+	Text
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { JourneyMapState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getJourneyDetails, startJourney, endJourney } from '../../../redux/actions';
-import MapView, { AnimatedRegion, Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import { getJourneyDetails, startJourney, endJourney, driverMovement } from '../../../redux/actions';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
-import { Journey } from '@project-300/common-types';
+import { Coords, Journey, Place } from '@project-300/common-types';
 import MapBoxPolyline from '@mapbox/polyline';
 import toastr from '../../../helpers/toastr';
 import { GoogleMapsAPIKey } from '../../../../environment/env';
 import { getDistance } from 'geolib';
-import { Coords } from '../../../types/common';
 import { Directions } from '../../../types/maps';
 import { Container } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -68,36 +66,45 @@ export class JourneyMap extends Component<Props, State> {
 		await this._getJourneyDetails();
 
 		this._mapRoute().then(() => {
-			this._setMidpoint();
-
 				// Zoom into driver position if continuing journey
 			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
 				this._trackDriver();
 			}
 			if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
+				this._setMidpoint();
 				this._zoomToMidpoint();
 			}
 		});
 	}
 
+	public componentWillUnmount(): void {
+		this._stopTracking();
+	}
+
 	private _trackDriver = (): void => {
 		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
-			const coords = {
+			const coords: Coords = {
 				latitude: location.coords.latitude,
-				longitude: location.coords.longitude,
+				longitude: location.coords.longitude
+			}
+			const region = {
+				...coords,
 				latitudeDelta: 0.015,
 				longitudeDelta: 0.0121
 			};
 
 			this.setState({
-				currentPosition: coords,
+				currentPosition: region,
 				routeTravelled: this.state.routeTravelled.concat({
 					latitude: location.coords.latitude,
 					longitude: location.coords.longitude
 				})
 			});
 
-			await this._updateSavedLocation(location.coords);
+			if (this.props.journey) {
+				await this._updateSavedLocation(coords);
+				await this.props.driverMovement(this.props.journey.journeyId, coords);
+			}
 		},
 	 (error: PositionError) => console.log(error.message),
 { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 }
@@ -138,8 +145,8 @@ export class JourneyMap extends Component<Props, State> {
 	private _getDirections = async (): Promise<void | Directions> => {
 		if (!this.props.journey) return toastr.error('No Journey Set');
 
-		const origin = `${this.props.journey.origin.lat},${this.props.journey.origin.long}`;
-		const destination = `${this.props.journey.destination.lat},${this.props.journey.destination.long}`;
+		const origin = `${this.props.journey.origin.latitude},${this.props.journey.origin.longitude}`;
+		const destination = `${this.props.journey.destination.latitude},${this.props.journey.destination.longitude}`;
 
 		const res = await fetch(
 			`https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GoogleMapsAPIKey}`, {
@@ -157,18 +164,19 @@ export class JourneyMap extends Component<Props, State> {
 
 		this.setState({
 			midpoint: {
-				latitude: (origin.lat + destination.lat) / 2,
-				longitude: (origin.long + destination.long) / 2
+				latitude: (origin.latitude + destination.latitude) / 2,
+				longitude: (origin.longitude + destination.longitude) / 2
 			}
 		});
 	}
 
 	private _zoomToMidpoint = (): void => {
 		const journey: Journey = this.props.journey as Journey;
+		const { origin, destination } = journey;
 
 		const distance = getDistance(
-			{ latitude: journey.origin.lat, longitude: journey.origin.long },
-			{ latitude: journey.destination.lat, longitude: journey.destination.long }
+			{ latitude: origin.latitude, longitude: origin.longitude },
+			{ latitude: destination.latitude, longitude: destination.longitude }
 		) / 2;
 		const circumference = 40075;
 		const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
@@ -180,6 +188,13 @@ export class JourneyMap extends Component<Props, State> {
 			Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
 			)
 		);
+
+		console.log({
+						latitude: this.state.midpoint.latitude,
+						longitude: this.state.midpoint.longitude,
+						latitudeDelta,
+						longitudeDelta
+					});
 
 		this.setState({
 			currentPosition: {
@@ -195,12 +210,7 @@ export class JourneyMap extends Component<Props, State> {
 		await this.props.getJourneyDetails(this.state.journeyId);
 	}
 
-	private _updateSavedLocation = async (coords: Coordinates): Promise<void> => {
-		await DriverLocation.setCurrentPosition({
-			latitude: coords.latitude,
-			longitude: coords.longitude
-		});
-	}
+	private _updateSavedLocation = async (coords: Coords): Promise<void> => await DriverLocation.setCurrentPosition(coords);
 
 	private _startJourney = async (): Promise<void> => {
 		await this.props.startJourney(this.state.journeyId);
@@ -230,11 +240,11 @@ export class JourneyMap extends Component<Props, State> {
 		});
 	}
 
-	private _createMarker = (loc: { lat: number; long: number; name: string }): ReactElement => {
+	private _createMarker = (loc: Place): ReactElement => {
 		return <Marker
 			coordinate={ {
-				latitude: loc.lat,
-				longitude: loc.long
+				latitude: loc.latitude,
+				longitude: loc.longitude
 			} }
 			title={ loc.name }
 		/>;
@@ -284,7 +294,7 @@ export class JourneyMap extends Component<Props, State> {
 						{
 							journey && journey.journeyStatus === 'STARTED' &&
 								<Polyline
-									coordinates={ this.state.routeTravelled }
+									coordinates={ journey.routeTravelled }
 									strokeColor={ 'green' }
 									strokeWidth={ 4 }
 								/>
@@ -335,5 +345,6 @@ const mapStateToProps = (state: AppState): JourneyMapState => ({
 export default connect(mapStateToProps, {
 	getJourneyDetails,
 	startJourney,
-	endJourney
+	endJourney,
+	driverMovement
 })(JourneyMap);

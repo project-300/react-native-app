@@ -7,10 +7,14 @@ import {
 	START_JOURNEY_FAILURE,
 	END_JOURNEY_REQUEST,
 	END_JOURNEY_SUCCESS,
-	END_JOURNEY_FAILURE
+	END_JOURNEY_FAILURE,
+	DRIVER_MOVEMENT_REQUEST,
+	DRIVER_MOVEMENT_SUCCESS,
+	DRIVER_MOVEMENT_FAILURE
 } from '../../../constants/redux-actions';
 import { JourneyMapState } from '../../../types/redux-reducer-state-types';
 import {
+	DriverMovementSuccess,
 	EndJourneySuccess,
 	JourneyDetailsSuccess,
 	JourneyMapActionTypes,
@@ -21,6 +25,7 @@ const initialState: JourneyMapState = {
 	status: 'NOT_STARTED',
 	isStarting: false,
 	isEnding: false,
+	isMoving: false,
 	isRequestingJourneyDetails: false,
 	journey: undefined
 };
@@ -53,6 +58,14 @@ const journeyDetailsReducer = (state: JourneyMapState = initialState, action: Jo
 			return { ...state, isEnding: false, journey: payload.journey };
 		case END_JOURNEY_FAILURE:
 			return { ...state, isEnding: false };
+		case DRIVER_MOVEMENT_REQUEST:
+			return { ...state, isMoving: true };
+		case DRIVER_MOVEMENT_SUCCESS:
+			payload = action as DriverMovementSuccess;
+
+			return { ...state, isMoving: false, journey: payload.journey };
+		case DRIVER_MOVEMENT_FAILURE:
+			return { ...state, isMoving: false };
 		default:
 			return state;
 	}
