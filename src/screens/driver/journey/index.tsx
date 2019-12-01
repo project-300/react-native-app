@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react';
 import {
 	View,
 	TouchableOpacity,
-	Text
+	Text, Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -48,6 +48,7 @@ export class JourneyMap extends Component<Props, State> {
 			},
 			route: null,
 			routeTravelled: [],
+			movementCount: 0,
 			tracker: null
 		};
 	}
@@ -69,6 +70,7 @@ export class JourneyMap extends Component<Props, State> {
 				// Zoom into driver position if continuing journey
 			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
 				this._trackDriver();
+				this._setRouteTravelled();
 			}
 			if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
 				this._setMidpoint();
@@ -83,6 +85,8 @@ export class JourneyMap extends Component<Props, State> {
 
 	private _trackDriver = (): void => {
 		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
+			this.setState({ movementCount: this.state.movementCount + 1 });
+
 			const coords: Coords = {
 				latitude: location.coords.latitude,
 				longitude: location.coords.longitude
@@ -101,13 +105,13 @@ export class JourneyMap extends Component<Props, State> {
 				})
 			});
 
-			if (this.props.journey) {
+			if (this.props.journey && this.state.movementCount % 10 === 0) { // Save movement every 10 movements
 				await this._updateSavedLocation(coords);
 				await this.props.driverMovement(this.props.journey.journeyId, coords);
 			}
 		},
 	 (error: PositionError) => console.log(error.message),
-{ enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 }
+{ enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 }
 		);
 
 		console.log(tracker);
@@ -123,6 +127,9 @@ export class JourneyMap extends Component<Props, State> {
 
 		this.setState({ tracker: null });
 	}
+
+	private _setRouteTravelled = (): void =>
+		this.props.journey && this.setState({ routeTravelled: this.props.journey.routeTravelled });
 
 	private _mapRoute = async (): Promise<void> => {
 		const directions: Directions = await this._getDirections() as Directions;
@@ -188,13 +195,6 @@ export class JourneyMap extends Component<Props, State> {
 			Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
 			)
 		);
-
-		console.log({
-						latitude: this.state.midpoint.latitude,
-						longitude: this.state.midpoint.longitude,
-						latitudeDelta,
-						longitudeDelta
-					});
 
 		this.setState({
 			currentPosition: {
@@ -294,7 +294,7 @@ export class JourneyMap extends Component<Props, State> {
 						{
 							journey && journey.journeyStatus === 'STARTED' &&
 								<Polyline
-									coordinates={ journey.routeTravelled }
+									coordinates={ this.state.routeTravelled }
 									strokeColor={ 'green' }
 									strokeWidth={ 4 }
 								/>

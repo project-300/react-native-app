@@ -34,17 +34,18 @@ export interface State {
 		latitudeDelta: number;
 		longitudeDelta: number;
 	}
-	currentPosition: {
+	currentPosition: { // The current position of the driver - Used for centering map & tracking
 		latitude: number;
 		longitude: number;
 		latitudeDelta: number;
 		longitudeDelta: number;
 	}
-	route: Coords[] | null;
-	routeTravelled: Coords[];
-	midpoint: {
+	midpoint: { // Center point between origin and destination of a journey
 		latitude: number;
 		longitude: number;
 	};
-	tracker: number | null;
+	route: Coords[] | null; // Coordinates of route path - Used to draw route on map. These are planned movements from origin to destination.
+	routeTravelled: Coords[]; // Coordinates of movement points - Used to draw route on map. These are movements already made, not planned route.
+	movementCount: number; // A count of movements made. Every 5 or 10 movements is logged in the DB for routeTravelled.
+	tracker: number | null; // ID of the tracker - Used to stop tracking when the journey ends
 }
