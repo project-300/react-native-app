@@ -33,7 +33,8 @@ class WebSocketAPI {
 		};
 	}
 
-	public subscribe = async (subscription: string, append?: string): Promise<void> => { // append can be used as an extra detail for filtering subscriptions, eg. object id
+		// append can be used as an extra detail for filtering subscriptions, eg. object id
+	public subscribe = async (subscription: string, append?: string): Promise<void> => {
 		this.WS.send(JSON.stringify({
 			action: subscription,
 			subscription: append ? `${subscription}/#${append}` : subscription,

@@ -9,12 +9,15 @@ import {
 	PassengerJourneyDetailsSuccess,
 	PassengerJourneyDetailsActionTypes
 } from '../../../types/redux-action-types';
-import { Journey, SubscriptionPayload } from '@project-300/common-types';
+import { Coords, Journey, SubscriptionPayload } from '@project-300/common-types';
+import MapUtils from '../../../services/map-utils';
 
 const initialState: DriverTrackingState = {
 	isRequesting: false,
 	isComplete: false,
-	journey: undefined
+	journey: undefined,
+	routeTravelled: [],
+	direction: 0
 };
 
 const driverTrackingReducer = (state: DriverTrackingState = initialState, action: PassengerJourneyDetailsActionTypes):
@@ -29,13 +32,24 @@ const driverTrackingReducer = (state: DriverTrackingState = initialState, action
 			const journey: Journey = payload.journey;
 			const driverLocation = journey.driver.lastLocation;
 
-			return { ...state, isRequesting: false, journey, driverLocation };
+			return { ...state, isRequesting: false, journey, driverLocation, routeTravelled: journey.routeTravelled };
 		case PASSENGER_JOURNEY_DETAILS_FAILURE:
 			return { ...state, isRequesting: false };
 		case UPDATE_DRIVER_LOCATION:
 			payload = action.payload as SubscriptionPayload;
+			const routeTravelled = state.routeTravelled.concat(payload.data.location);
 
-			return { ...state, driverLocation: payload.data.location };
+			// const mapCenter = state.driverLocation ?
+			// 	MapUtils.calculateMapCenter(state.driverLocation, state.passengerLocation) :
+			// 	driverLocation;
+
+			const length: number = state.routeTravelled.length;
+			const start: Coords = state.routeTravelled[length - 2];
+			const end: Coords = state.routeTravelled[length - 1];
+
+			const direction: number = MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude)
+
+			return { ...state, driverLocation: payload.data.location, routeTravelled, direction };
 		default:
 			return state;
 	}

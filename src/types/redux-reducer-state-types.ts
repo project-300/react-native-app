@@ -1,4 +1,5 @@
 import { Coords, DriverApplicationObject, Journey, User } from '@project-300/common-types';
+import { Region } from 'react-native-maps';
 
 export interface LoginState {
 	isLoggingIn: boolean;
@@ -54,8 +55,12 @@ export interface JourneyMapState {
 export interface DriverTrackingState {
 	isRequesting: boolean;
 	isComplete: boolean;
+	mapRegion?: Region;
 	journey?: Journey;
 	driverLocation?: Coords;
+	passengerLocation?: Coords;
+	routeTravelled: Coords[],
+	direction: number;
 }
 
 export interface HomeState { }

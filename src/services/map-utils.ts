@@ -34,6 +34,25 @@ class MapUtils {
 		};
 	}
 
+	private static _toRadians = (degrees: number): number => degrees * Math.PI / 180;
+
+	private static _toDegrees = (radians: number): number => radians * 180 / Math.PI;
+
+	public static direction = (xLat: number, xLng: number, yLat: number, yLng: number): number => {
+		const xLatRad: number = MapUtils._toRadians(xLat);
+		const xLngRad = MapUtils._toRadians(xLng);
+		const yLatRad = MapUtils._toRadians(yLat);
+		const yLngRad = MapUtils._toRadians(yLng);
+
+		const y = Math.sin(yLngRad - xLngRad) * Math.cos(yLatRad);
+		const x = Math.cos(xLatRad) * Math.sin(yLatRad) - Math.sin(xLatRad) * Math.cos(yLatRad) * Math.cos(yLngRad - xLngRad);
+
+		let bearing = Math.atan2(y, x);
+		bearing = MapUtils._toDegrees(bearing);
+
+		return (bearing + 360) % 360;
+	}
+
 }
 
 export default MapUtils;

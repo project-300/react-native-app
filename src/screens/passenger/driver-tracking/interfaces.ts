@@ -19,6 +19,8 @@ export interface Props extends CommonProps {
 	isComplete: boolean;
 	driverLocation: Coords | null;
 	passengerLocation: Coords | null;
+	routeTravelled: Coords[];
+	direction: number;
 	getPassengerJourneyDetails(j: string): Promise<void>;
 }
 
@@ -32,4 +34,5 @@ export interface State {
 		latitudeDelta: number;
 		longitudeDelta: number;
 	};
+	forceTracking: boolean;
 }
