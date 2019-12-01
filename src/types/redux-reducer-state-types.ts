@@ -55,7 +55,7 @@ export interface DriverTrackingState {
 	isRequesting: boolean;
 	isComplete: boolean;
 	journey?: Journey;
-	driverLocation: Coords;
+	driverLocation?: Coords;
 }
 
 export interface HomeState { }

@@ -24,6 +24,7 @@ export interface Props extends CommonProps {
 
 export interface State {
 	journeyId: string;
+	subscription: string;
 	driverRouteTravelled: Coords[];
 	mapRegion: {
 		latitude: number;

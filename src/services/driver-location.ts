@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { Coords } from '../types/common';
+import { Coords } from '@project-300/common-types';
 
 class DriverLocation {
 

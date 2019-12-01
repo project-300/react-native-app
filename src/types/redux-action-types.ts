@@ -37,9 +37,9 @@ import {
 	DRIVER_MOVEMENT_FAILURE,
 	PASSENGER_JOURNEY_DETAILS_REQUEST,
 	PASSENGER_JOURNEY_DETAILS_SUCCESS,
-	PASSENGER_JOURNEY_DETAILS_FAILURE
+	PASSENGER_JOURNEY_DETAILS_FAILURE, UPDATE_DRIVER_LOCATION
 } from '../constants/redux-actions';
-import { Journey } from '@project-300/common-types';
+import { Journey, SubscriptionPayload } from '@project-300/common-types';
 
 export interface LoginRequest {
 	type: typeof LOGIN_REQUEST;
@@ -96,7 +96,7 @@ export interface DriverApplicationFailure {
 
 export interface StoreApplicationsRequest {
 	type: typeof STORE_APPLICATIONS;
-	payload: object;
+	payload: SubscriptionPayload;
 }
 
 export interface UserProfileSubRequest {
@@ -167,6 +167,11 @@ export interface PassengerJourneyDetailsFailure {
 	type: typeof PASSENGER_JOURNEY_DETAILS_FAILURE;
 }
 
+export interface UpdateDriverLocation {
+	type: typeof UPDATE_DRIVER_LOCATION;
+	payload: SubscriptionPayload;
+}
+
 export interface StartJourneyRequest {
 	type: typeof START_JOURNEY_REQUEST;
 }
@@ -224,7 +229,7 @@ export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSu
 export type JourneyDetailsActionTypes = JourneyDetailsRequest | JourneyDetailsSuccess | JourneyDetailsFailure;
 
 export type PassengerJourneyDetailsActionTypes = PassengerJourneyDetailsRequest | PassengerJourneyDetailsSuccess |
-	PassengerJourneyDetailsFailure;
+	PassengerJourneyDetailsFailure | UpdateDriverLocation;
 
 export type StartJourneyActionTypes = StartJourneyRequest | StartJourneySuccess | StartJourneyFailure;
 

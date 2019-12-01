@@ -6,8 +6,9 @@ import { DriverApplicationResult } from '../../../types/http-responses';
 import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
+import { SubscriptionPayload } from '@project-300/common-types';
 
-export const storeApplications = (payload: object): AppActions => ({ type: STORE_APPLICATIONS, payload });
+export const storeApplications = (payload: SubscriptionPayload): AppActions => ({ type: STORE_APPLICATIONS, payload });
 
 export const approveApplication = (userId: string): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean > => {

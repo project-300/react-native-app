@@ -97,7 +97,8 @@ export class JourneyMap extends Component<Props, State> {
 				})
 			});
 
-			if (this.props.journey && this.state.movementCount % 10 === 0) { // Save movement every 10 movements
+				//  && this.state.movementCount % 10 === 0
+			if (this.props.journey) { // Save movement every 10 movements
 				await this._updateSavedLocation(coords);
 				await this.props.driverMovement(this.props.journey.journeyId, coords);
 			}

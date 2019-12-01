@@ -1,8 +1,8 @@
 import { SERVER_WSS_URL } from '../../environment/env';
 import { store } from '../store';
-import { storeApplications, userProfileSubReceived, userProfileSubFailure } from '../redux/actions';
+import { storeApplications, userProfileSubReceived, userProfileSubFailure, updateDriverLocation } from '../redux/actions';
 import { userId } from '../auth';
-import { ADMIN_DRIVER_APPLICATIONS, USER_PROFILE } from '../constants/websocket-subscriptions';
+import { ADMIN_DRIVER_APPLICATIONS, USER_PROFILE, JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
 import { SubscriptionPayload } from '@project-300/common-types';
 
 class WebSocketAPI {
@@ -33,26 +33,31 @@ class WebSocketAPI {
 		};
 	}
 
-	public subscribe = async (subscription: string): Promise<void> => {
+	public subscribe = async (subscription: string, append?: string): Promise<void> => { // append can be used as an extra detail for filtering subscriptions, eg. object id
 		this.WS.send(JSON.stringify({
 			action: subscription,
-			subscription,
+			subscription: append ? `${subscription}/#${append}` : subscription,
 			userId: await userId(),
 			subscribe: true
 		}));
 	}
 
-	public unsubscribe = async (subscription: string): Promise<void> => {
+	public unsubscribe = async (subscription: string, append?: string): Promise<void> => {
 		this.WS.send(JSON.stringify({
 			action: subscription,
-			subscription,
+			subscription: append ? `${subscription}/#${append}` : subscription,
 			userId: await userId(),
 			subscribe: false
 		}));
 	}
 
 	private _dispatchSubscriptionData = (payload: SubscriptionPayload): void => {
-		const { subscription } = payload;
+		let { subscription }  = payload;
+
+		console.log(subscription);
+		if (subscription && subscription.indexOf('/#')) subscription = subscription.split('/#')[0];
+		console.log(subscription);
+
 
 		switch (subscription) {
 			case ADMIN_DRIVER_APPLICATIONS:
@@ -61,6 +66,10 @@ class WebSocketAPI {
 			case USER_PROFILE:
 				if (payload.error) store.dispatch(userProfileSubFailure(payload));
 				else store.dispatch(userProfileSubReceived(payload));
+				break;
+			case JOURNEY_DRIVER_LOCATION:
+				console.log(payload);
+				store.dispatch(updateDriverLocation(payload));
 				break;
 			default:
 				return;

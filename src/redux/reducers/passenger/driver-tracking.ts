@@ -1,14 +1,15 @@
 import {
 	PASSENGER_JOURNEY_DETAILS_REQUEST,
 	PASSENGER_JOURNEY_DETAILS_SUCCESS,
-	PASSENGER_JOURNEY_DETAILS_FAILURE
+	PASSENGER_JOURNEY_DETAILS_FAILURE,
+	UPDATE_DRIVER_LOCATION
 } from '../../../constants/redux-actions';
 import { DriverTrackingState } from '../../../types/redux-reducer-state-types';
 import {
 	PassengerJourneyDetailsSuccess,
 	PassengerJourneyDetailsActionTypes
 } from '../../../types/redux-action-types';
-import { Journey } from '@project-300/common-types';
+import { Journey, SubscriptionPayload } from '@project-300/common-types';
 
 const initialState: DriverTrackingState = {
 	isRequesting: false,
@@ -31,6 +32,10 @@ const driverTrackingReducer = (state: DriverTrackingState = initialState, action
 			return { ...state, isRequesting: false, journey, driverLocation };
 		case PASSENGER_JOURNEY_DETAILS_FAILURE:
 			return { ...state, isRequesting: false };
+		case UPDATE_DRIVER_LOCATION:
+			payload = action.payload as SubscriptionPayload;
+
+			return { ...state, driverLocation: payload.data.location };
 		default:
 			return state;
 	}
