@@ -101,6 +101,7 @@ export class MyJourneys extends Component<Props, State> {
 				</CardItem>
 				<CardItem bordered>
 					<Body>
+						<Text>The journey begins at { journey.times.leavingAt }</Text>
 						<Text>
 							{ journey.seatsLeft } / { journey.totalNoOfSeats } seats left
 						</Text>
@@ -110,12 +111,24 @@ export class MyJourneys extends Component<Props, State> {
 					</Body>
 				</CardItem>
 				<CardItem footer bordered>
-					<TouchableOpacity
-						style={ styles.button }
-						onPress={ (): void => { } }
-					>
-						<Text style={ styles.buttonText }>Cancel Journey</Text>
-					</TouchableOpacity>
+					{
+						journey.journeyStatus === 'NOT_STARTED' &&
+							<TouchableOpacity
+								style={ styles.button }
+								onPress={ (): void => { } }
+							>
+								<Text style={ styles.buttonText }>Cancel Journey</Text>
+							</TouchableOpacity>
+					}
+					{
+						journey.journeyStatus === 'STARTED' &&
+							<TouchableOpacity
+								style={ styles.button }
+								onPress={ (): boolean => this.props.navigation.navigate('DriverTrackingMap', { journeyId: journey.journeyId }) }
+							>
+								<Text style={ styles.buttonText }>View Map</Text>
+							</TouchableOpacity>
+					}
 				</CardItem>
 			</Card>
 		);

@@ -1,4 +1,4 @@
-import { DriverApplicationObject, Journey, User } from '@project-300/common-types';
+import { Coords, DriverApplicationObject, Journey, User } from '@project-300/common-types';
 
 export interface LoginState {
 	isLoggingIn: boolean;
@@ -49,6 +49,13 @@ export interface JourneyMapState {
 	isMoving: boolean;
 	isRequestingJourneyDetails: boolean;
 	journey?: Journey;
+}
+
+export interface DriverTrackingState {
+	isRequesting: boolean;
+	isComplete: boolean;
+	journey?: Journey;
+	driverLocation: Coords;
 }
 
 export interface HomeState { }

@@ -20,9 +20,9 @@ import {
 	UPDATE_EMAIL_REQUEST,
 	UPDATE_EMAIL_SUCCESS,
 	UPDATE_EMAIL_FAILURE,
-	DRIVER_JOURNEYS_REQUEST,
-	DRIVER_JOURNEYS_SUCCESS,
-	DRIVER_JOURNEYS_FAILURE,
+	JOURNEYS_REQUEST,
+	JOURNEYS_SUCCESS,
+	JOURNEYS_FAILURE,
 	JOURNEY_DETAILS_REQUEST,
 	JOURNEY_DETAILS_SUCCESS,
 	JOURNEY_DETAILS_FAILURE,
@@ -33,7 +33,11 @@ import {
 	END_JOURNEY_SUCCESS,
 	END_JOURNEY_FAILURE,
 	DRIVER_MOVEMENT_REQUEST,
-	DRIVER_MOVEMENT_SUCCESS, DRIVER_MOVEMENT_FAILURE
+	DRIVER_MOVEMENT_SUCCESS,
+	DRIVER_MOVEMENT_FAILURE,
+	PASSENGER_JOURNEY_DETAILS_REQUEST,
+	PASSENGER_JOURNEY_DETAILS_SUCCESS,
+	PASSENGER_JOURNEY_DETAILS_FAILURE
 } from '../constants/redux-actions';
 import { Journey } from '@project-300/common-types';
 
@@ -125,16 +129,16 @@ export interface UpdateEmailFailure {
 }
 
 export interface DriverJourneysRequest {
-	type: typeof DRIVER_JOURNEYS_REQUEST;
+	type: typeof JOURNEYS_REQUEST;
 }
 
 export interface DriverJourneysSuccess {
-	type: typeof DRIVER_JOURNEYS_SUCCESS;
+	type: typeof JOURNEYS_SUCCESS;
 	journeys: { previous: Journey[]; current: Journey[] };
 }
 
 export interface DriverJourneysFailure {
-	type: typeof DRIVER_JOURNEYS_FAILURE;
+	type: typeof JOURNEYS_FAILURE;
 }
 
 export interface JourneyDetailsRequest {
@@ -148,6 +152,19 @@ export interface JourneyDetailsSuccess {
 
 export interface JourneyDetailsFailure {
 	type: typeof JOURNEY_DETAILS_FAILURE;
+}
+
+export interface PassengerJourneyDetailsRequest {
+	type: typeof PASSENGER_JOURNEY_DETAILS_REQUEST;
+}
+
+export interface PassengerJourneyDetailsSuccess {
+	type: typeof PASSENGER_JOURNEY_DETAILS_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerJourneyDetailsFailure {
+	type: typeof PASSENGER_JOURNEY_DETAILS_FAILURE;
 }
 
 export interface StartJourneyRequest {
@@ -206,6 +223,9 @@ export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSu
 
 export type JourneyDetailsActionTypes = JourneyDetailsRequest | JourneyDetailsSuccess | JourneyDetailsFailure;
 
+export type PassengerJourneyDetailsActionTypes = PassengerJourneyDetailsRequest | PassengerJourneyDetailsSuccess |
+	PassengerJourneyDetailsFailure;
+
 export type StartJourneyActionTypes = StartJourneyRequest | StartJourneySuccess | StartJourneyFailure;
 
 export type EndJourneyActionTypes = EndJourneyRequest | EndJourneySuccess | EndJourneyFailure;
@@ -214,5 +234,7 @@ export type DriverMovementActionTypes = DriverMovementRequest | DriverMovementSu
 
 export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActionTypes | EndJourneyActionTypes | DriverMovementActionTypes;
 
+export type DriverTrackingActionTypes = PassengerJourneyDetailsActionTypes;
+
 export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyMapActionTypes;
+	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes;

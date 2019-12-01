@@ -14,7 +14,6 @@ export interface Styles {
 }
 
 export interface Props extends CommonProps {
-	// status: string;
 	isStarting: boolean;
 	isEnding: boolean;
 	isMoving: boolean;
