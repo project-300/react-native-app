@@ -44,7 +44,6 @@ export interface State {
 		latitude: number;
 		longitude: number;
 	};
-	route: Coords[] | null; // Coordinates of route path - Used to draw route on map. These are planned movements from origin to destination.
 	routeTravelled: Coords[]; // Coordinates of movement points - Used to draw route on map. These are movements already made, not planned route.
 	movementCount: number; // A count of movements made. Every 5 or 10 movements is logged in the DB for routeTravelled.
 	tracker: number | null; // ID of the tracker - Used to stop tracking when the journey ends

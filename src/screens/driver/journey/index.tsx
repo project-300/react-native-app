@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react';
 import {
 	View,
 	TouchableOpacity,
-	Text, Dimensions
+	Text
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -13,11 +13,7 @@ import { getJourneyDetails, startJourney, endJourney, driverMovement } from '../
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
 import { Coords, Journey, Place } from '@project-300/common-types';
-import MapBoxPolyline from '@mapbox/polyline';
-import toastr from '../../../helpers/toastr';
-import { GoogleMapsAPIKey } from '../../../../environment/env';
 import { getDistance } from 'geolib';
-import { Directions } from '../../../types/maps';
 import { Container } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -46,7 +42,6 @@ export class JourneyMap extends Component<Props, State> {
 				latitude: 0,
 				longitude: 0
 			},
-			route: null,
 			routeTravelled: [],
 			movementCount: 0,
 			tracker: null
@@ -66,17 +61,14 @@ export class JourneyMap extends Component<Props, State> {
 
 		await this._getJourneyDetails();
 
-		this._mapRoute().then(() => {
-				// Zoom into driver position if continuing journey
-			if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
-				this._trackDriver();
-				this._setRouteTravelled();
-			}
-			if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
-				this._setMidpoint();
-				this._zoomToMidpoint();
-			}
-		});
+		if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
+			this._trackDriver();
+			this._setRouteTravelled();
+		}
+		if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
+			this._setMidpoint();
+			this._zoomToMidpoint();
+		}
 	}
 
 	public componentWillUnmount(): void {
@@ -128,43 +120,7 @@ export class JourneyMap extends Component<Props, State> {
 		this.setState({ tracker: null });
 	}
 
-	private _setRouteTravelled = (): void =>
-		this.props.journey && this.setState({ routeTravelled: this.props.journey.routeTravelled });
-
-	private _mapRoute = async (): Promise<void> => {
-		const directions: Directions = await this._getDirections() as Directions;
-
-		if (!directions) return;
-
-		// Ignore type error - Interface must be out of date
-		const points: number[][] = MapBoxPolyline.decode(directions.routes[0].overview_polyline.points);
-
-		const coords: Coords[] = points.map((point: number[]) => { // Each point is an array of 2 numbers, eg. [ 53.29165, -9.01906 ]
-			return ({
-				latitude: point[0],
-				longitude: point[1]
-			});
-		});
-
-		this.setState({ route: coords });
-	}
-
-	private _getDirections = async (): Promise<void | Directions> => {
-		if (!this.props.journey) return toastr.error('No Journey Set');
-
-		const origin = `${this.props.journey.origin.latitude},${this.props.journey.origin.longitude}`;
-		const destination = `${this.props.journey.destination.latitude},${this.props.journey.destination.longitude}`;
-
-		const res = await fetch(
-			`https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GoogleMapsAPIKey}`, {
-			method: 'GET'
-		});
-
-		if (!res.ok) return toastr.error('Error Retrieving Directions');
-
-		const data: Directions = await res.json();
-		return data;
-	}
+	private _setRouteTravelled = (): void => this.props.journey && this.setState({ routeTravelled: this.props.journey.routeTravelled });
 
 	private _setMidpoint = (): void => {
 		const { origin, destination } = this.props.journey as Journey;
@@ -283,12 +239,12 @@ export class JourneyMap extends Component<Props, State> {
 						{ journey && this._createMarker(journey.destination) }
 
 						{
-							this.state.route &&
-							<Polyline
-								coordinates={ this.state.route }
-								strokeColor={ 'red' }
-								strokeWidth={ 4 }
-							/>
+							journey && journey.plannedRoute &&
+								<Polyline
+									coordinates={ journey.plannedRoute }
+									strokeColor={ 'red' }
+									strokeWidth={ 4 }
+								/>
 						}
 
 						{
