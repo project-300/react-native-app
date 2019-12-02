@@ -84,6 +84,11 @@ export class Home extends Component<Props, State> {
 					style={ styles.logoutButton }>
 					<Text style={ styles.logoutButtonText }>Logout</Text>
 				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
+					style={ styles.button }>
+					<Text style={ styles.buttonText }>New Journey</Text>
+				</TouchableOpacity>
 			</ScrollView>
 		);
 	}

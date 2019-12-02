@@ -16,6 +16,7 @@ import UpdatePassword from './screens/profile/update-password';
 import MyJourneys from './screens/driver/journeys';
 import JourneyMap from './screens/driver/journey';
 import DriverTracking from './screens/passenger/driver-tracking';
+import NewJourney from './screens/new-journey';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -92,6 +93,12 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		screen: DriverTracking,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Driver Tracking'
+		})
+	},
+	NewJourney: {
+		screen: NewJourney,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'New Journey'
 		})
 	}
 });
