@@ -22,10 +22,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		flex: 1
 	},
 
-	header: {
-		paddingBottom: 5
-	},
-
 	icon: {
 		height: 30,
 		width: 30
@@ -89,6 +85,14 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignSelf: 'center',
 		color: 'white',
 		fontWeight: 'bold'
+	},
+
+	divider: {
+		height: 0.5,
+		width: '100%',
+		borderWidth: 0.5,
+		borderColor: 'grey',
+		marginVertical: 20
 	}
 });
 
