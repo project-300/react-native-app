@@ -25,6 +25,7 @@
     "enzyme-adapter-react-16": "^1.14.0",
     "geolib": "^3.1.0",
     "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "native-base": "^2.13.8",
     "react": "16.8.3",
     "react-native": "0.59.9",

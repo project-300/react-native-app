@@ -11,6 +11,7 @@ export interface Styles {
 	bold: TextStyle;
 	cardHeader: ViewStyle;
 	journeyHeading: TextStyle;
+	textRow: TextStyle;
 }
 
 export interface Props extends CommonProps {

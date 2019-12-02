@@ -11,9 +11,11 @@ import { Props, State } from './interfaces';
 import { JourneysState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
 import { getJourneys, cancelPassengerAcceptedJourney } from '../../../redux/actions';
-import { Journey } from '@project-300/common-types';
+import { Journey, PassengerBrief } from '@project-300/common-types';
 import { NavigationEvents } from 'react-navigation';
 import { Container, Tab, Tabs, Content, Spinner, Card, CardItem, Body } from 'native-base';
+import DatesTimes from '../../../services/dates-times';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export class MyJourneys extends Component<Props, State> {
 
@@ -49,11 +51,30 @@ export class MyJourneys extends Component<Props, State> {
 				</CardItem>
 				<CardItem bordered>
 					<Body>
-						<Text>
-							{ journey.seatsLeft } / { journey.totalNoOfSeats } seats left
+						<Text style={ styles.textRow }>
+							There are <Text style={ styles.bold }>{ journey.seatsLeft }
+							</Text> / <Text style={ styles.bold }>
+								{ journey.totalNoOfSeats }
+							</Text> seats left
 						</Text>
-						<Text>
-							{ journey.pricePerSeat } euro per seat
+
+						<Text style={ styles.textRow }>
+							<Text style={ styles.bold }> €{ journey.pricePerSeat }</Text> euro per seat
+						</Text>
+
+						<Text style={ styles.textRow }>Your passengers:
+							{
+								journey.passengers.map((p: PassengerBrief) => {
+									return <Text>
+										<Text style={ styles.bold }> <Icon
+												name='user'
+												size={ 14 }
+												style={ { marginLeft: 5, color: 'grey' } }
+												solid
+											/> { p.firstName } { p.lastName }</Text>
+									</Text>;
+								})
+							}
 						</Text>
 					</Body>
 				</CardItem>
@@ -101,35 +122,40 @@ export class MyJourneys extends Component<Props, State> {
 				</CardItem>
 				<CardItem bordered>
 					<Body>
-						<Text>The journey begins at { journey.times.leavingAt }</Text>
-						<Text>
-							{ journey.seatsLeft } / { journey.totalNoOfSeats } seats left
+						<Text style={ styles.textRow }>The journey begins at <Text style={ styles.bold }>
+								{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
+							</Text> on <Text style={ styles.bold }>
+								{ DatesTimes.readableDate(journey.times.leavingAt) }
+							</Text>
 						</Text>
-						<Text>
-							{ journey.pricePerSeat } euro per seat
+						<Text style={ styles.textRow }>
+							Your driver is <Text style={ styles.bold }>{ journey.driver.firstName } { journey.driver.lastName }</Text>
 						</Text>
 					</Body>
 				</CardItem>
-				<CardItem footer bordered>
-					{
-						journey.journeyStatus === 'NOT_STARTED' &&
-							<TouchableOpacity
-								style={ styles.button }
-								onPress={ (): Promise<void> => this.props.cancelPassengerAcceptedJourney(item.journeyId) }
-							>
-								<Text style={ styles.buttonText }>Cancel Journey { this.props.isCancelling && 'CANCELLING' }</Text>
-							</TouchableOpacity>
-					}
-					{
-						journey.journeyStatus === 'STARTED' &&
-							<TouchableOpacity
-								style={ styles.button }
-								onPress={ (): boolean => this.props.navigation.navigate('DriverTrackingMap', { journeyId: journey.journeyId }) }
-							>
-								<Text style={ styles.buttonText }>View Map</Text>
-							</TouchableOpacity>
-					}
-				</CardItem>
+				{
+					journey.journeyStatus !== 'FINISHED' &&
+						<CardItem footer bordered>
+							{
+								journey.journeyStatus === 'NOT_STARTED' &&
+									<TouchableOpacity
+										style={ styles.button }
+										onPress={ (): Promise<void> => this.props.cancelPassengerAcceptedJourney(item.journeyId) }
+									>
+										<Text style={ styles.buttonText }>Cancel Journey { this.props.isCancelling && 'CANCELLING' }</Text>
+									</TouchableOpacity>
+							}
+							{
+								journey.journeyStatus === 'STARTED' &&
+									<TouchableOpacity
+										style={ styles.button }
+										onPress={ (): boolean => this.props.navigation.navigate('DriverTrackingMap', { journeyId: journey.journeyId }) }
+									>
+										<Text style={ styles.buttonText }>View Map</Text>
+									</TouchableOpacity>
+							}
+						</CardItem>
+				}
 			</Card>
 		);
 	}
