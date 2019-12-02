@@ -50,16 +50,15 @@ export class Home extends Component<Props, State> {
 
 		return (
 			<ScrollView contentContainerStyle={ styles.container }>
-				<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('Applications') }
-					style={ styles.button }>
-					<Text style={ styles.buttonText }>Applications (Testing only)</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('DriverApplication') }
-					style={ styles.button }>
-					<Text style={ styles.buttonText }>Want to become a driver?</Text>
-				</TouchableOpacity>
+				{
+					!this.state.driverView &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('DriverApplication') }
+							style={ styles.button }>
+							<Text style={ styles.buttonText }>Want to become a driver?</Text>
+						</TouchableOpacity>
+				}
+
 				<TouchableOpacity
 					onPress={ (): void => {
 						this.state.driverView ?
@@ -81,8 +80,8 @@ export class Home extends Component<Props, State> {
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={ this._logout }
-					style={ styles.button }>
-					<Text style={ styles.buttonText }>Logout</Text>
+					style={ styles.logoutButton }>
+					<Text style={ styles.logoutButtonText }>Logout</Text>
 				</TouchableOpacity>
 			</ScrollView>
 		);

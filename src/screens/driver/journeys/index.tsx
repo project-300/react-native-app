@@ -43,8 +43,8 @@ export class MyJourneys extends Component<Props, State> {
 						<Text style={ styles.bold }>
 							{ journey.origin.name }
 						</Text> to <Text style={ styles.bold }>
-						{ journey.destination.name }
-					</Text>
+							{ journey.destination.name }
+						</Text>
 					</Text>
 				</CardItem>
 				<CardItem bordered>

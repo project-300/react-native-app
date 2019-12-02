@@ -27,6 +27,22 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignSelf: 'center',
 		color: 'white',
 		fontWeight: 'bold'
+	},
+
+	logoutButton: {
+		position: 'absolute',
+		bottom: 0,
+		width: '100%',
+		elevation: 20,
+		backgroundColor: 'red',
+		padding: 20,
+		alignItems: 'center'
+	},
+
+	logoutButtonText: {
+		fontWeight: 'bold',
+		fontSize: 16,
+		color: 'white'
 	}
 });
 

@@ -7,6 +7,8 @@ export interface Styles {
 	text: TextStyle;
 	button: TextStyle;
 	buttonText: TextStyle;
+	logoutButton: ViewStyle;
+	logoutButtonText: TextStyle;
 }
 
 export interface Props extends CommonProps { }
