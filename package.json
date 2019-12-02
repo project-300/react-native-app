@@ -8,7 +8,7 @@
     "lint": "tslint --project tsconfig.json"
   },
   "dependencies": {
-    "@project-300/common-types": "^1.0.9",
+    "@project-300/common-types": "^1.2.1",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/lodash": "^4.14.138",
@@ -20,6 +20,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "lodash": "^4.17.15",
+    "native-base": "^2.13.8",
     "react": "16.8.3",
     "react-native": "0.59.9",
     "react-native-aws3": "0.0.9",
