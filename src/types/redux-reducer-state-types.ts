@@ -40,6 +40,7 @@ export interface UpdatePasswordState {
 
 export interface JourneysState {
 	isRequesting: boolean;
+	isCancelling: boolean;
 	journeys: { current: Journey[]; previous: Journey[] };
 }
 

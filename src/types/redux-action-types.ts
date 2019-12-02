@@ -37,7 +37,11 @@ import {
 	DRIVER_MOVEMENT_FAILURE,
 	PASSENGER_JOURNEY_DETAILS_REQUEST,
 	PASSENGER_JOURNEY_DETAILS_SUCCESS,
-	PASSENGER_JOURNEY_DETAILS_FAILURE, UPDATE_DRIVER_LOCATION
+	PASSENGER_JOURNEY_DETAILS_FAILURE,
+	UPDATE_DRIVER_LOCATION,
+	CANCEL_PASSENGER_JOURNEY_REQUEST,
+	CANCEL_PASSENGER_JOURNEY_SUCCESS,
+	CANCEL_PASSENGER_JOURNEY_FAILURE
 } from '../constants/redux-actions';
 import { Journey, SubscriptionPayload } from '@project-300/common-types';
 
@@ -141,6 +145,19 @@ export interface DriverJourneysFailure {
 	type: typeof JOURNEYS_FAILURE;
 }
 
+export interface CancelPassengerAcceptedRequest {
+	type: typeof CANCEL_PASSENGER_JOURNEY_REQUEST;
+}
+
+export interface CancelPassengerAcceptedSuccess {
+	type: typeof CANCEL_PASSENGER_JOURNEY_SUCCESS;
+	journeys: { previous: Journey[]; current: Journey[] };
+}
+
+export interface CancelPassengerAcceptedFailure {
+	type: typeof CANCEL_PASSENGER_JOURNEY_FAILURE;
+}
+
 export interface JourneyDetailsRequest {
 	type: typeof JOURNEY_DETAILS_REQUEST;
 }
@@ -226,6 +243,11 @@ export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | U
 
 export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSuccess | DriverJourneysFailure;
 
+export type CancelPassengerAcceptedActionTypes = CancelPassengerAcceptedRequest | CancelPassengerAcceptedSuccess |
+	CancelPassengerAcceptedFailure;
+
+export type JourneysActionTypes = DriverJourneysActionTypes | CancelPassengerAcceptedActionTypes;
+
 export type JourneyDetailsActionTypes = JourneyDetailsRequest | JourneyDetailsSuccess | JourneyDetailsFailure;
 
 export type PassengerJourneyDetailsActionTypes = PassengerJourneyDetailsRequest | PassengerJourneyDetailsSuccess |
@@ -242,4 +264,4 @@ export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActi
 export type DriverTrackingActionTypes = PassengerJourneyDetailsActionTypes;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | DriverJourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes;
+	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes;

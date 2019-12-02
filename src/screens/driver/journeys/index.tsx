@@ -10,7 +10,7 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { JourneysState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getJourneys } from '../../../redux/actions';
+import { getJourneys, cancelPassengerAcceptedJourney } from '../../../redux/actions';
 import { Journey } from '@project-300/common-types';
 import { NavigationEvents } from 'react-navigation';
 import { Container, Tab, Tabs, Content, Spinner, Card, CardItem, Body } from 'native-base';
@@ -115,9 +115,9 @@ export class MyJourneys extends Component<Props, State> {
 						journey.journeyStatus === 'NOT_STARTED' &&
 							<TouchableOpacity
 								style={ styles.button }
-								onPress={ (): void => { } }
+								onPress={ (): Promise<void> => this.props.cancelPassengerAcceptedJourney(item.journeyId) }
 							>
-								<Text style={ styles.buttonText }>Cancel Journey</Text>
+								<Text style={ styles.buttonText }>Cancel Journey { this.props.isCancelling && 'CANCELLING' }</Text>
 							</TouchableOpacity>
 					}
 					{
@@ -209,4 +209,4 @@ const mapStateToProps = (state: AppState): JourneysState => ({
 	...state.driverJourneysReducer
 });
 
-export default connect(mapStateToProps, { getJourneys })(MyJourneys);
+export default connect(mapStateToProps, { getJourneys, cancelPassengerAcceptedJourney })(MyJourneys);

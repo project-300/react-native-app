@@ -15,7 +15,9 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	getJourneys(d: boolean): Promise<void>;
+	cancelPassengerAcceptedJourney(j: string): Promise<void>;
 	isRequesting: boolean;
+	isCancelling: boolean;
 	journeys: { previous: Journey[]; current: Journey[] };
 }
 
