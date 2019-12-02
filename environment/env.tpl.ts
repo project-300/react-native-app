@@ -15,3 +15,5 @@ export const S3_CONFIG: S3_CONFIG_TYPE_BRIEF = {
 	region: '{{ REGION }}',											// AWS S3 Bucket Region
 	accessKey: '{{ ACCESS_KEY }}'									// AWS S3 Bucket Client Access Key
 };
+
+export const MAPS_API_KEY: string = '{{ MAPS_API_KEY }}}'

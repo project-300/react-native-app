@@ -14,7 +14,7 @@ import Applications from './screens/applications';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
 import UpdatePassword from './screens/profile/update-password';
-import { NewJourney } from './screens/new-journey/intex';
+import { NewJourney } from './screens/new-journey/index';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
