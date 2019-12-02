@@ -161,45 +161,45 @@ export class MyJourneys extends Component<Props, State> {
 		return (
 			<Container>
 				<NavigationEvents onDidFocus={ this._getJourneys } />
-					<Tabs>
-						<Tab heading='Current'>
-							<Content padder>
-								{
-									this.props.isRequesting && <Spinner />
-								}
-								{
-									this.props.journeys.current.length ?
-										this._journeyList(this.props.journeys.current) :
-										<View>
-											<Text style={ styles.centerText }>
-												{
-													this.props.isRequesting ?
-														'Retrieving current journeys.' :
-														'You have no current journeys.'
-												}
-											</Text>
-										</View>
-								}
-							</Content>
-						</Tab>
-						<Tab heading='Previous'>
-							<Content padder>
-								{
-									this.props.journeys.previous.length ?
-										this._journeyList(this.props.journeys.previous) :
-										<View>
-											<Text style={ styles.centerText }>
-												{
-													this.props.isRequesting ?
-														'Retrieving previous journeys.' :
-														'You have no previous journeys.'
-												}
-											</Text>
-										</View>
-								}
-							</Content>
-						</Tab>
-					</Tabs>
+				<Tabs>
+					<Tab heading='Current'>
+						<Content padder>
+							{
+								this.props.isRequesting && <Spinner />
+							}
+							{
+								this.props.journeys.current.length ?
+									this._journeyList(this.props.journeys.current) :
+									<View>
+										<Text style={ styles.centerText }>
+											{
+												this.props.isRequesting ?
+													'Retrieving current journeys.' :
+													'You have no current journeys.'
+											}
+										</Text>
+									</View>
+							}
+						</Content>
+					</Tab>
+					<Tab heading='Previous'>
+						<Content padder>
+							{
+								this.props.journeys.previous.length ?
+									this._journeyList(this.props.journeys.previous) :
+									<View>
+										<Text style={ styles.centerText }>
+											{
+												this.props.isRequesting ?
+													'Retrieving previous journeys.' :
+													'You have no previous journeys.'
+											}
+										</Text>
+									</View>
+							}
+						</Content>
+					</Tab>
+				</Tabs>
 			</Container>
 		);
 	}

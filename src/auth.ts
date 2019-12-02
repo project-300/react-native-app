@@ -11,6 +11,8 @@ export const userId = async (): Promise<string | null> => AsyncStorage.getItem(U
 
 export const userType = async (): Promise<string | null> => AsyncStorage.getItem(USER_TYPE);
 
+export const setUserType = async (userType: string): Promise<void> => AsyncStorage.setItem(USER_TYPE, userType);
+
 export const storeLogout = async (): Promise<void> => {
 	await AsyncStorage.removeItem(AUTH_KEY);
 	await AsyncStorage.removeItem(USERID_KEY);

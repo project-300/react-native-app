@@ -8,7 +8,7 @@ import { DriverApplicationResult } from '../../types/http-responses';
 import HttpAPI from '../../api/http';
 import toastr from '../../helpers/toastr';
 import { AppActions } from '../../types/redux-action-types';
-import { userId } from '../../auth';
+import { setUserType, userId } from '../../auth';
 
 const driverApplicationRequest = (): AppActions => ({ type: DRIVER_APPLICATION_REQUEST });
 
@@ -24,6 +24,7 @@ export const apply = (): (dispatch: Dispatch) => Promise<boolean> => {
 			const apiRes: DriverApplicationResult = await HttpAPI.driverApplication({ userId: await userId() });
 
 			if (apiRes.success) {
+				await setUserType('Driver'); // ********** Temporarily switch to Driver user type on auto approve
 				dispatch(driverApplicationSuccess());
 				toastr.success('You have successfully submitted your application');
 				return true;

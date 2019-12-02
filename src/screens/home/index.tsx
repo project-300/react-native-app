@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { storeLogout, userType } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationEvents, NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -24,7 +24,7 @@ export class Home extends Component<Props, State> {
 		};
 	}
 
-	public async componentDidMount(): Promise<void> {
+	private _setUserType = async (): Promise<void> => {
 		const uType: string = await userType() as string;
 
 		this.setState({ driverView: uType === 'Driver' });
@@ -50,6 +50,7 @@ export class Home extends Component<Props, State> {
 
 		return (
 			<ScrollView contentContainerStyle={ styles.container }>
+				<NavigationEvents onDidFocus={ this._setUserType } />
 				{
 					!this.state.driverView &&
 						<TouchableOpacity

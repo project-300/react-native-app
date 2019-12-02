@@ -9,6 +9,9 @@ import {
 	SIGNUP_FAILURE,
 	SIGNUP_REQUEST,
 	SIGNUP_SUCCESS,
+	DRIVER_APPLICATION_REQUEST,
+	DRIVER_APPLICATION_SUCCESS,
+	DRIVER_APPLICATION_FAILURE,
 	USER_PROFILE_SUB_REQUEST,
 	USER_PROFILE_UNSUB,
 	USER_PROFILE_SUB_RECEIVED,
@@ -109,6 +112,18 @@ export interface UpdateEmailSuccess {
 
 export interface UpdateEmailFailure {
 	type: typeof UPDATE_EMAIL_FAILURE;
+}
+
+export interface DriverApplicationRequest {
+	type: typeof DRIVER_APPLICATION_REQUEST;
+}
+
+export interface DriverApplicationSuccess {
+	type: typeof DRIVER_APPLICATION_SUCCESS;
+}
+
+export interface DriverApplicationFailure {
+	type: typeof DRIVER_APPLICATION_FAILURE;
 }
 
 export interface DriverJourneysRequest {
@@ -216,6 +231,8 @@ export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | 
 
 export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
 
+export type DriverApplicationActionTypes = DriverApplicationRequest | DriverApplicationSuccess | DriverApplicationFailure;
+
 export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSuccess | DriverJourneysFailure;
 
 export type CancelPassengerAcceptedActionTypes = CancelPassengerAcceptedRequest | CancelPassengerAcceptedSuccess |
@@ -239,4 +256,4 @@ export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActi
 export type DriverTrackingActionTypes = PassengerJourneyDetailsActionTypes;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes;
+	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes | DriverApplicationActionTypes;
