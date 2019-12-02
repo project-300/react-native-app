@@ -1,4 +1,4 @@
-import { Coords, DriverApplicationObject, Journey, User } from '@project-300/common-types';
+import { Coords, Journey, User } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 
 export interface LoginState {
@@ -17,10 +17,6 @@ export interface ConfirmState {
 
 export interface DriverApplicationState {
 	isApplying: boolean;
-}
-
-export interface AdminDriverApplicationsState {
-	applications: DriverApplicationObject[];
 }
 
 export interface UserProfileState {

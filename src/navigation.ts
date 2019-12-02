@@ -10,7 +10,6 @@ import Login from './screens/login';
 import SignUp from './screens/signup';
 import Confirmation from './screens/signup/confirmation';
 import DriverApplication from './screens/driver-application';
-import Applications from './screens/applications';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
 import UpdatePassword from './screens/profile/update-password';
@@ -52,12 +51,6 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		screen: DriverApplication,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Driver Application'
-		})
-	},
-	Applications: {
-		screen: Applications,
-		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Applications'
 		})
 	},
 	Profile: {

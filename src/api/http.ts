@@ -3,8 +3,6 @@ import {
 	LOGIN,
 	SIGNUP,
 	DRIVER_APPLICATION,
-	APPROVE_APPLICATION,
-	DELETE_APPLICATION,
 	UPDATE_USER_FIELD,
 	UPDATE_AVATAR,
 	S3_KEY_REQUEST,
@@ -28,10 +26,6 @@ export default class HttpAPI {
 	public static login = (data: object): Promise<HttpResponse> => HttpAPI.send(data, LOGIN);
 
 	public static driverApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_APPLICATION);
-
-	public static approveApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, APPROVE_APPLICATION);
-
-	public static deleteApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DELETE_APPLICATION);
 
 	public static updateUserField = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_USER_FIELD);
 
