@@ -22,8 +22,23 @@ import {
   UPDATE_EMAIL_FAILURE,
   GET_ALL_JOURNEYS_FAILURE,
   GET_ALL_JOURNEYS_REQUEST,
-  GET_ALL_JOURNEYS_SUCCESS
+  GET_ALL_JOURNEYS_SUCCESS,
+  UPDATE_ADD_USER_JOURNEY_REQUEST,
+  UPDATE_ADD_USER_JOURNEY_SUCCESS,
+  UPDATE_ADD_USER_JOURNEY_FAILURE
 } from '../constants/redux-actions';
+
+export interface UpdateAddUserJourneyRequest {
+  type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
+}
+
+export interface UpdateAddUserJourneySuccess {
+  type: typeof UPDATE_ADD_USER_JOURNEY_SUCCESS;
+}
+
+export interface UpdateAddUserJourneyFailure {
+  type: typeof UPDATE_ADD_USER_JOURNEY_FAILURE;
+}
 
 export interface GetAllJourneysRequest {
   type: typeof GET_ALL_JOURNEYS_REQUEST;
@@ -128,7 +143,10 @@ export interface UpdateEmailFailure {
 export type JourneyActionTypes =
   | GetAllJourneysRequest
   | GetAllJourneysSuccess
-  | GetAllJourneysFailure;
+  | GetAllJourneysFailure
+  | UpdateAddUserJourneyRequest
+  | UpdateAddUserJourneySuccess
+  | UpdateAddUserJourneyFailure;
 
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 

@@ -1,9 +1,15 @@
 import {
   GET_ALL_JOURNEYS_REQUEST,
   GET_ALL_JOURNEYS_SUCCESS,
-  GET_ALL_JOURNEYS_FAILURE
+  GET_ALL_JOURNEYS_FAILURE,
+  UPDATE_ADD_USER_JOURNEY_SUCCESS,
+  UPDATE_ADD_USER_JOURNEY_REQUEST,
+  UPDATE_ADD_USER_JOURNEY_FAILURE
 } from '../../constants/redux-actions';
-import { AllJourneysListState } from '../../types/redux-reducer-state-types';
+import {
+  AllJourneysListState,
+  UpdateAddUserJourneyState
+} from '../../types/redux-reducer-state-types';
 import { JourneyActionTypes } from '../../types/redux-action-types';
 //
 const initialState: AllJourneysListState = {
@@ -11,7 +17,11 @@ const initialState: AllJourneysListState = {
   journeys: []
 };
 
-const journeyReducer = (
+const initialUserJourneyState: UpdateAddUserJourneyState = {
+  isAdding: false
+};
+
+const allJourneysReducer = (
   state: AllJourneysListState = initialState,
   action: JourneyActionTypes
 ): AllJourneysListState => {
@@ -27,4 +37,21 @@ const journeyReducer = (
   }
 };
 
-export default journeyReducer;
+const updateAddUserJourney = (
+  state: UpdateAddUserJourneyState = initialUserJourneyState,
+  action: JourneyActionTypes
+): UpdateAddUserJourneyState => {
+  switch (action.type) {
+    case UPDATE_ADD_USER_JOURNEY_REQUEST:
+      return { ...state, isAdding: true };
+    case UPDATE_ADD_USER_JOURNEY_SUCCESS:
+      return { ...state, isAdding: false };
+    case UPDATE_ADD_USER_JOURNEY_FAILURE:
+      return { ...state, isAdding: false };
+    default:
+      return state;
+  }
+};
+
+export default allJourneysReducer;
+export { updateAddUserJourney };

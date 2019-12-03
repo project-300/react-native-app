@@ -21,6 +21,7 @@ export interface Props extends CommonProps {
   journeys: Journey[];
   fetchingData: boolean;
   getAllJourneys(): Promise<void>;
+  updateAddUserJourney(journey: Journey): Promise<void>;
 }
 
 export interface State {

@@ -8,3 +8,4 @@ export const UPDATE_USER_FIELD: string = '/user/update-field';
 export const UPDATE_AVATAR: string = '/user/update-avatar';
 export const S3_KEY_REQUEST: string = '/aws/s3-key';
 export const GET_ALL_JOURNEYS: string = '/journeys/all';
+export const UPDATE_ADD_USER_JOURNEY: string = '/journeys/add-passenger';

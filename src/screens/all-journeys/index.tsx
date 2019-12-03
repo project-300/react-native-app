@@ -12,7 +12,7 @@ import { Props, State } from './interfaces';
 import { AppState } from '../../store';
 import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import { Journey } from '@project-300/common-types';
-import { getAllJourneys } from '../../redux/actions/journey';
+import { getAllJourneys, updateAddUserJourney } from '../../redux/actions';
 import {
   Container,
   Tab,
@@ -33,7 +33,9 @@ class AllJourneys extends Component<Props, State> {
     await this.props.getAllJourneys();
   }
 
-  private async _joinJourney(): Promise<void> {}
+  private async _joinJourney(journey: Journey): Promise<void> {
+    await this.props.updateAddUserJourney(journey);
+  }
 
   private _renderRow = ({
     item,
@@ -61,17 +63,10 @@ class AllJourneys extends Component<Props, State> {
           </Body>
         </CardItem>
         <CardItem footer bordered>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.button}
-            onPress={(): boolean =>
-              this.props.navigation.navigate('PassengerJourneyDetails', {
-                journeyId: journey.journeyId
-              })
-            }
+            onPress={() => this._joinJourney(journey)}
           >
-            <Text style={styles.buttonText}>View Details</Text>
-          </TouchableOpacity> */}
-          <TouchableOpacity style={styles.button} onPress={this._joinJourney}>
             <Text style={styles.buttonText}>Join</Text>
           </TouchableOpacity>
         </CardItem>
@@ -97,9 +92,11 @@ class AllJourneys extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): AllJourneysListState => ({
-  ...state.journeyReducer
+  ...state.allJourneysReducer,
+  ...state.updateAddUserJourney
 });
 
 export default connect(mapStateToProps, {
-  getAllJourneys
+  getAllJourneys,
+  updateAddUserJourney
 })(AllJourneys);

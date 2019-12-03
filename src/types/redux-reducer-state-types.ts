@@ -4,6 +4,10 @@ import {
   Journey
 } from '@project-300/common-types';
 
+export interface UpdateAddUserJourneyState {
+  isAdding: boolean;
+}
+
 export interface AllJourneysListState {
   fetchingData: boolean;
   journeys: Journey[];

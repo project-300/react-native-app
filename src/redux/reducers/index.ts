@@ -7,7 +7,8 @@ import adminDriverApplicationsReducer from './admin/driver-applications';
 import userProfileReducer from './user/profile';
 import updateUserFieldReducer from './user/update-user-field';
 import updatePasswordReducer from './user/update-password';
-import journeyReducer from './journey';
+import allJourneysReducer from './journey';
+import { updateAddUserJourney } from './journey';
 
 export default combineReducers({
   signUpReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
   userProfileReducer,
   updateUserFieldReducer,
   updatePasswordReducer,
-  journeyReducer
+  allJourneysReducer,
+  updateAddUserJourney
 });
