@@ -1,7 +1,7 @@
 import {
 	GOOGLE_PLACES_SEARCH_REQUEST,
 	GOOGLE_PLACES_SEARCH_SUCCESS,
-	GOOGLE_PLACES_SEARCH_FAILURE
+	GOOGLE_PLACES_SEARCH_FAILURE, GOOGLE_PLACES_SEARCH_CLEAR_RESULTS
 } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import toastr from '../../../helpers/toastr';
@@ -16,11 +16,18 @@ const googlePlacesSearchSuccess = (places: GooglePlace[]): AppActions => ({ type
 
 const googlePlacesSearchFailure = (): AppActions => ({ type: GOOGLE_PLACES_SEARCH_FAILURE });
 
+export const googlePlacesSearchClearResults = (): AppActions => ({ type: GOOGLE_PLACES_SEARCH_CLEAR_RESULTS });
+
 export const googlePlacesSearch = (query: string): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		dispatch(googlePlacesSearchRequest());
 
 		try {
+			if (!query) { // Empty search - No results
+				dispatch(googlePlacesSearchSuccess([ ]));
+				return;
+			}
+
 			const apiRes: GooglePlacesSearchResult = await ExternalApi.GooglePlaces(query);
 
 			console.log(apiRes);

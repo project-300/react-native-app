@@ -17,11 +17,15 @@ export interface Styles {
 	divider: ViewStyle;
 	placesList: ViewStyle;
 	placeItem: ViewStyle;
+	continueButton: ViewStyle;
+	buttonValid: ViewStyle;
+	buttonInvalid: ViewStyle;
 }
 
 export interface Props extends CommonProps {
 	places: GooglePlace[];
 	googlePlacesSearch(q: string): Promise<void>;
+	googlePlacesSearchClearResults(): void;
 }
 
 export interface State {
@@ -34,10 +38,14 @@ export interface State {
 	isDateTimePickerVisible: boolean;
 	isSearching: boolean;
 	openLocationPanel: boolean,
+	openConfirmPanel: boolean,
 	locationType: string;
 	placesFieldText: string;
 	origin: GooglePlace | null;
 	destination: GooglePlace | null;
+	totalNoOfSeats: number;
+	pricePerSeat: number;
+	leavingAt: Date;
  }
 
 export interface Place {

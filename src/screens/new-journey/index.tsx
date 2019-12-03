@@ -1,7 +1,9 @@
 import React, { Component, ReactElement } from 'react';
 import {
 	FlatList,
-	Text, TouchableOpacity,
+	ScrollView,
+	Text,
+	TouchableOpacity,
 	View
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -10,13 +12,24 @@ import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import MapView, { PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps';
-import { Container, Form, Item, Input, H1, Label, Button } from 'native-base';
+import { Container, Form, Item, Input, H1, Label, Button, Icon } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
-import { googlePlacesSearch } from '../../redux/actions';
+import { googlePlacesSearch, googlePlacesSearchClearResults } from '../../redux/actions';
+import DatesTimes from '../../services/dates-times';
 
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
+
+export interface CreateJourney {
+	times: {
+		leavingAt: Date | string;
+	};
+	destination: GooglePlace;
+	origin: GooglePlace;
+	totalNoOfSeats: number;
+	pricePerSeat: number;
+}
 
 export class NewJourney extends Component<Props, State> {
 
@@ -50,21 +63,36 @@ export class NewJourney extends Component<Props, State> {
 			isDateTimePickerVisible: false,
 			isSearching: false,
 			openLocationPanel: false,
+			openConfirmPanel: false,
 			locationType: 'ORIGIN',
 			placesFieldText: '',
 			origin: null,
-			destination: null
+			destination: null,
+			totalNoOfSeats: 0,
+			pricePerSeat: 0,
+			leavingAt: new Date()
 		};
 	}
 
-	private searchPlaces = async (query: string): Promise<void> => {
+	private _searchPlaces = async (query: string): Promise<void> => {
 		this.setState({ isSearching: true, placesFieldText: query });
 		await this.props.googlePlacesSearch(query);
 	}
 
-	private _openMap = (): void => this.setState({ formTop: undefined, droppingMarker: true });
+	private _createJourney = (): void => {
+		const { origin, destination, totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
+		const journey: CreateJourney = {
+			origin,
+			destination,
+			totalNoOfSeats,
+			pricePerSeat,
+			times: {
+				leavingAt
+			}
+		};
 
-	private _closeMap = (): void => this.setState({ formTop: 0, droppingMarker: false });
+		console.log(journey);
+	}
 
 	private _journeyForm = (): ReactElement => {
 		return <Form>
@@ -75,6 +103,8 @@ export class NewJourney extends Component<Props, State> {
 						<Text>Choose Origin</Text>
 					</Button>
 			}
+
+			<View style={ styles.divider } />
 
 			{ this.state.destination && <Text>{ this.state.destination.structured_formatting.main_text }</Text> }
 			{
@@ -87,9 +117,26 @@ export class NewJourney extends Component<Props, State> {
 			<View style={ styles.divider } />
 
 			<Text>What time are you leaving?</Text>
+			<Text onPress={ this._showDateTimePicker }>{ this._leavingAtString() }</Text>
+
+			<Text>How many seats will be available?</Text>
 			<Item floatingLabel>
-				<Label>Departure Time</Label>
-				<Input onFocus={ this._showDateTimePicker } />
+				<Label>Seats</Label>
+				<Input
+					keyboardType={ 'numeric' }
+					value={ `${this.state.totalNoOfSeats}` }
+					onChangeText={ (val: string): void => this.setState({ totalNoOfSeats: val ? parseInt(val, 10) : 0 }) }
+				/>
+			</Item>
+
+			<Text>Seat price?</Text>
+			<Item floatingLabel>
+				<Label>Price</Label>
+				<Input
+					keyboardType={ 'numeric' }
+					value={ `${this.state.pricePerSeat}` }
+					onChangeText={ (val: string): void => this.setState({ pricePerSeat: val ? parseInt(val, 10) : 0 }) }
+				/>
 			</Item>
 
 			<DateTimePicker
@@ -97,16 +144,20 @@ export class NewJourney extends Component<Props, State> {
 				isVisible={ this.state.isDateTimePickerVisible }
 				onConfirm={ this._handleDatePicked }
 				onCancel={ this._hideDateTimePicker }
+				minimumDate={ new Date() }
 			/>
 		</Form>;
 	}
 
 	private _chooseLocationPanel = (locationType: string): ReactElement => {
 		return <View>
+			<TouchableOpacity onPress={ this._closeLocationPanel }>
+				<Icon name='arrow-back' />
+			</TouchableOpacity>
 			<H1 style={ { alignSelf: 'center' } }>{ locationType }</H1>
 			<Item floatingLabel>
 				<Label>{ locationType }</Label>
-				<Input onChangeText={ (query: string): Promise<void> => this.searchPlaces(query) } />
+				<Input onChangeText={ (query: string): Promise<void> => this._searchPlaces(query) } />
 			</Item>
 			{
 				!this.state.placesFieldText &&
@@ -128,6 +179,17 @@ export class NewJourney extends Component<Props, State> {
 		</View>;
 	}
 
+	private _confirmPanel = (): ReactElement => {
+		if (!this.state.origin || !this.state.destination) return <View><Text>Origin or Destination is missing</Text></View>;
+
+		return <View>
+			<Text>You are travelling from { this.state.origin.structured_formatting.main_text } to { this.state.destination.structured_formatting.main_text }.</Text>
+			<Text>There are { this.state.totalNoOfSeats } seats available.</Text>
+			<Text>Price per seat: €{ this.state.pricePerSeat }</Text>
+			<Text>You will be departing from { this.state.origin.structured_formatting.main_text } at { DatesTimes.hoursMinutes(this.state.leavingAt) } on { DatesTimes.readableDate(this.state.leavingAt)  }</Text>
+		</View>;
+	}
+
 	private _renderPlaceRow = ({ item, index }: { item: GooglePlace; index: number }): ReactElement<TouchableOpacity> => {
 		return (
 			<TouchableOpacity style={ styles.placeItem } onPress={ (): void => this._selectPlace(item) }>
@@ -141,9 +203,21 @@ export class NewJourney extends Component<Props, State> {
 		if (this.state.locationType === ORIGIN) this.setState({ origin: place });
 		if (this.state.locationType === DESTINATION) this.setState({ destination: place });
 		this.setState({ isSearching: false, openLocationPanel: false, placesFieldText: '' });
+		this.props.googlePlacesSearchClearResults();
 	}
 
+	private _formValid = (): boolean => {
+		const { totalNoOfSeats, origin, destination } = this.state;
+
+		if (!totalNoOfSeats || !origin || !destination) return false;
+		return true;
+	}
+
+	private _leavingAtString = (): string => `${DatesTimes.readableDate(this.state.leavingAt)} at ${DatesTimes.hoursMinutes(this.state.leavingAt)}`;
+
 	private _chooseOrigin = (): void => this.setState({ openLocationPanel: true, locationType: ORIGIN });
+
+	private _closeLocationPanel = (): void => this.setState({ openLocationPanel: false });
 
 	private _chooseDestination = (): void => this.setState({ openLocationPanel: true, locationType: DESTINATION });
 
@@ -151,13 +225,18 @@ export class NewJourney extends Component<Props, State> {
 
 	private _hideDateTimePicker = (): void => this.setState({ isDateTimePickerVisible: false });
 
+	private _showConfirmPanel = (): void => this.setState({ openConfirmPanel: true });
+
+	private _openMap = (): void => this.setState({ formTop: undefined, droppingMarker: true });
+
+	private _closeMap = (): void => this.setState({ formTop: 0, droppingMarker: false });
+
 	private _handleDatePicked = (date: Date): void => {
-		// this.setState({ })
+		this.setState({ leavingAt: date });
 		this._hideDateTimePicker();
 	}
 
 	public render(): ReactElement {
-		console.log(this.state.origin);
 		return (
 			<Container style={ styles.container }>
 				<MapView
@@ -168,12 +247,14 @@ export class NewJourney extends Component<Props, State> {
 					<Marker coordinate={ this.state.positionStart } />
 				</MapView>
 
-				<View style = { [ styles.form, { top: this.state.formTop } ]}>
+				<ScrollView style = { [ styles.form, { top: this.state.formTop } ] }>
 					{
 						!this.state.droppingMarker &&
 							<View>
-								{ !this.state.openLocationPanel && this._journeyForm() }
-								{ this.state.openLocationPanel && this._chooseLocationPanel(this.state.locationType === 'ORIGIN' ? 'Origin' : 'Destination') }
+								{ !this.state.openLocationPanel && !this.state.openConfirmPanel && this._journeyForm() }
+								{ this.state.openLocationPanel && !this.state.openConfirmPanel &&
+									this._chooseLocationPanel(this.state.locationType === 'ORIGIN' ? 'Origin' : 'Destination') }
+								{ this.state.openConfirmPanel && !this.state.openLocationPanel && this._confirmPanel() }
 							</View>
 					}
 
@@ -186,7 +267,28 @@ export class NewJourney extends Component<Props, State> {
 								</Button>
 							</View>
 					}
-				</View>
+				</ScrollView>
+
+				{
+					!this.state.droppingMarker && !this.state.openLocationPanel && !this.state.openConfirmPanel &&
+						<TouchableOpacity
+							style={ [ styles.continueButton, this._formValid() ? styles.buttonValid : styles.buttonInvalid ] }
+							onPress={ this._showConfirmPanel }
+							disabled={ !this._formValid() }
+						>
+							<Text>Continue</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					this.state.openConfirmPanel &&
+						<TouchableOpacity
+							style={ [ styles.continueButton, styles.buttonValid ] }
+							onPress={ this._createJourney }
+						>
+							<Text>Create Journey</Text>
+						</TouchableOpacity>
+				}
 			</Container>
 		);
 	}
@@ -196,4 +298,4 @@ const mapStateToProps = (state: AppState): HomeState => ({
 	...state.newJourneyReducer
 });
 
-export default connect(mapStateToProps, { googlePlacesSearch })(NewJourney);
+export default connect(mapStateToProps, { googlePlacesSearch, googlePlacesSearchClearResults })(NewJourney);

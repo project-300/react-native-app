@@ -37,16 +37,16 @@ const styles: Styles = StyleSheet.create<Styles>({
 		backgroundColor: '#FFFFFF',
 		position: 'absolute',
 		padding: 20,
-		flex: 0.9,
 		left: 0,
 		right: 0,
 		bottom: 0,
 		zIndex: 1,
+		flex: 1,
 
-		shadowColor: "#000",
+		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
-			height: 10,
+			height: 10
 		},
 		shadowOpacity: 0.18,
 		shadowRadius: 16,
@@ -56,10 +56,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 	input: {
 		borderRadius: 7,
 		backgroundColor: '#FFFFFF',
-		shadowColor: "#000",
+		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
-			height: 2,
+			height: 2
 		},
 		shadowOpacity: 0.25,
 		shadowRadius: 3.84,
@@ -102,6 +102,25 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	placeItem: {
 		marginVertical: 10
+	},
+
+	continueButton: {
+		position: 'absolute',
+		bottom: 0,
+		width: '100%',
+		elevation: 50,
+		backgroundColor: 'green',
+		padding: 20,
+		alignItems: 'center',
+		zIndex: 100
+	},
+
+	buttonValid: {
+		backgroundColor: 'green'
+	},
+
+	buttonInvalid: {
+		backgroundColor: 'grey'
 	}
 });
 
