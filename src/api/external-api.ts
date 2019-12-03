@@ -1,5 +1,7 @@
-import { GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../types/google';
+import { GoogleDirectionsResult, GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../types/google';
 import { GoogleMapsAPIKey } from '../../environment/env';
+import { Coords, GoogleDirectionsRoute } from '@project-300/common-types';
+import Polyline from '@mapbox/polyline';
 
 export default class ExternalApi {
 
@@ -27,6 +29,31 @@ export default class ExternalApi {
 
 		if (!ok) throw data.error || Error('Unknown Error');
 		return data;
+	}
+
+	public static GoogleDirectionsRoute = async (origin: Coords, destination: Coords): Promise<Coords[]> => {
+		console.log(origin, destination);
+		const o = `${origin.latitude},${origin.longitude}`;
+		const d = `${destination.latitude},${destination.longitude}`;
+
+		const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${o}&destination=${d}&key=${GoogleMapsAPIKey}`;
+
+		const res: Response = await fetch(url);
+
+		const ok: boolean = res.ok;
+		const data: GoogleDirectionsResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+
+		const route = ExternalApi._convertPointsToCoords(data.routes[0]);
+		if (!route) throw Error('No route found');
+
+		return route;
+	}
+
+	private static _convertPointsToCoords = (route: GoogleDirectionsRoute): Coords[] => {
+		const points = Polyline.decode(route.overview_polyline.points);
+		return points.map((point: number[]) => ({ latitude: point[0], longitude: point[1] }));
 	}
 
 }
