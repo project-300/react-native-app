@@ -12,7 +12,8 @@ import {
 	END_JOURNEY,
 	JOURNEY_DRIVER_MOVEMENT,
 	PASSENGER_JOURNEYS,
-	CANCEL_PASSENGER_ACCEPTED_JOURNEY
+	CANCEL_PASSENGER_ACCEPTED_JOURNEY,
+	CREATE_JOURNEY
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -46,6 +47,8 @@ export default class HttpAPI {
 	public static endJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, END_JOURNEY);
 
 	public static driverMovement = (data: object): Promise<HttpResponse> => HttpAPI.send(data, JOURNEY_DRIVER_MOVEMENT);
+
+	public static createJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, CREATE_JOURNEY);
 
 	private static send = async (req: object, path: string): Promise<HttpResponse> => {
 		const res: Response = await fetch(`${SERVER_HTTPS_URL}${path}`, {

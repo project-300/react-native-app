@@ -12,3 +12,4 @@ export const JOURNEY_DETAILS: string = '/journey/get-details';
 export const START_JOURNEY: string = '/journey/start';
 export const END_JOURNEY: string = '/journey/end';
 export const JOURNEY_DRIVER_MOVEMENT: string = '/journey/driver-movement';
+export const CREATE_JOURNEY: string = '/journey/create';

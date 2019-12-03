@@ -1,4 +1,4 @@
-import { GooglePlacesSearchResult } from '../types/google';
+import { GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../types/google';
 import { GoogleMapsAPIKey } from '../../environment/env';
 
 export default class ExternalApi {
@@ -12,6 +12,18 @@ export default class ExternalApi {
 
 		const ok: boolean = res.ok;
 		const data: GooglePlacesSearchResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
+
+	public static GooglePlaceDetails = async (placeId: string): Promise<GooglePlaceDetailsResult> => {
+		const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${GoogleMapsAPIKey}`; // &session=${session}
+
+		const res: Response = await fetch(url);
+
+		const ok: boolean = res.ok;
+		const data: GooglePlaceDetailsResult = await res.json();
 
 		if (!ok) throw data.error || Error('Unknown Error');
 		return data;

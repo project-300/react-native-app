@@ -43,9 +43,13 @@ import {
 	CANCEL_PASSENGER_JOURNEY_FAILURE,
 	GOOGLE_PLACES_SEARCH_REQUEST,
 	GOOGLE_PLACES_SEARCH_SUCCESS,
-	GOOGLE_PLACES_SEARCH_FAILURE
+	GOOGLE_PLACES_SEARCH_FAILURE,
+	GOOGLE_PLACES_SEARCH_CLEAR_RESULTS,
+	GOOGLE_PLACES_DETAILS_REQUEST,
+	GOOGLE_PLACES_DETAILS_SUCCESS,
+	GOOGLE_PLACES_DETAILS_FAILURE, SELECT_GOOGLE_PLACE
 } from '../constants/redux-actions';
-import { Journey, SubscriptionPayload } from '@project-300/common-types';
+import { GooglePlaceDetails, Journey, SubscriptionPayload } from '@project-300/common-types';
 import { GooglePlace } from './maps';
 
 export interface LoginRequest {
@@ -239,6 +243,30 @@ export interface GooglePlacesSearchFailure {
 	type: typeof GOOGLE_PLACES_SEARCH_FAILURE;
 }
 
+export interface GooglePlacesSearchClearResults {
+	type: typeof GOOGLE_PLACES_SEARCH_CLEAR_RESULTS;
+}
+
+export interface SelectGooglePlace {
+	type: typeof SELECT_GOOGLE_PLACE;
+	place: GooglePlace;
+	locationType: string;
+}
+
+export interface GooglePlacesDetailsRequest {
+	type: typeof GOOGLE_PLACES_DETAILS_REQUEST;
+}
+
+export interface GooglePlacesDetailsSuccess {
+	type: typeof GOOGLE_PLACES_DETAILS_SUCCESS;
+	placeDetails: GooglePlaceDetails;
+	locationType: string;
+}
+
+export interface GooglePlacesDetailsFailure {
+	type: typeof GOOGLE_PLACES_DETAILS_FAILURE;
+}
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
@@ -272,8 +300,13 @@ export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActi
 
 export type DriverTrackingActionTypes = PassengerJourneyDetailsActionTypes;
 
-export type GooglePlacesSearchActionTypes = GooglePlacesSearchRequest | GooglePlacesSearchSuccess | GooglePlacesSearchFailure;
+export type GooglePlacesSearchActionTypes = GooglePlacesSearchRequest | GooglePlacesSearchSuccess | GooglePlacesSearchFailure |
+	GooglePlacesSearchClearResults | SelectGooglePlace;
+
+export type GooglePlacesDetailsActionTypes = GooglePlacesDetailsRequest | GooglePlacesDetailsSuccess | GooglePlacesDetailsFailure;
+
+export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | GooglePlacesDetailsActionTypes;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
 	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |
-	DriverApplicationActionTypes | GooglePlacesSearchActionTypes;
+	DriverApplicationActionTypes | CreateNewJourneyActionTypes;

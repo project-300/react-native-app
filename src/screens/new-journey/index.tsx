@@ -8,16 +8,23 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { CreateJourney, Props, State } from './interfaces';
+import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import MapView, { PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps';
 import { Container, Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
-import { googlePlacesSearch, googlePlacesSearchClearResults } from '../../redux/actions';
+import {
+	googlePlacesSearch,
+	getGooglePlaceDetails,
+	googlePlacesSearchClearResults,
+	selectGooglePlace,
+	createJourney
+} from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import { CreateJourney, Place } from '@project-300/common-types';
 
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
@@ -49,16 +56,14 @@ export class NewJourney extends Component<Props, State> {
 				latitude: midLatitude,
 				longitude: midLongitude,
 				latitudeDelta: delta,
-					longitudeDelta: delta
+				longitudeDelta: delta
 			},
 			isDateTimePickerVisible: false,
 			isSearching: false,
 			openLocationPanel: false,
 			openConfirmPanel: false,
-			locationType: 'ORIGIN',
+			locationType: ORIGIN,
 			placesFieldText: '',
-			origin: null,
-			destination: null,
 			totalNoOfSeats: 1,
 			pricePerSeat: 0,
 			leavingAt: new Date()
@@ -70,8 +75,31 @@ export class NewJourney extends Component<Props, State> {
 		await this.props.googlePlacesSearch(query);
 	}
 
-	private _createJourney = (): void => {
-		const { origin, destination, totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
+	private _createJourney = async (): Promise<void> => {
+		const { totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
+		const { originPlace, destinationPlace, originPlaceDetails, destinationPlaceDetails } = this.props;
+
+		console.log(originPlace);
+		console.log(destinationPlace);
+		console.log(originPlaceDetails);
+		console.log(destinationPlaceDetails);
+
+		if (!originPlace || !originPlaceDetails) return console.log(1);
+		if (!destinationPlace || !destinationPlaceDetails) return console.log(2);
+		if (!originPlaceDetails.geometry || !originPlaceDetails.geometry.location) return console.log(3);
+
+		const origin: Place = {
+			latitude: originPlaceDetails.geometry.location.lat,
+			longitude: originPlaceDetails.geometry.location.lng,
+			name: originPlace.structured_formatting.main_text
+		};
+
+		const destination: Place = {
+			latitude: destinationPlaceDetails.geometry.location.lat,
+			longitude: destinationPlaceDetails.geometry.location.lng,
+			name: destinationPlace.structured_formatting.main_text
+		};
+
 		const journey: CreateJourney = {
 			origin,
 			destination,
@@ -83,19 +111,23 @@ export class NewJourney extends Component<Props, State> {
 		};
 
 		console.log(journey);
+
+		const created: boolean = await this.props.createJourney(journey);
+
+		if (created) this.props.navigation.navigate('Home');
 	}
 
 	private _journeyForm = (): ReactElement => {
 		return <Form>
 			<TouchableOpacity onPress={ this._chooseOrigin }>
-				<Text style={ { fontSize: 20 } }>{ this.state.origin && this.state.origin.structured_formatting.main_text || 'Choose Origin' }</Text>
+				<Text style={ { fontSize: 20 } }>{ this.props.originPlace && this.props.originPlace.structured_formatting.main_text || 'Choose Origin' }</Text>
 				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
 			</TouchableOpacity>
 
 			<View style={ styles.divider } />
 
 			<TouchableOpacity onPress={ this._chooseDestination }>
-				<Text style={ { fontSize: 20 } }>{ this.state.destination && this.state.destination.structured_formatting.main_text || 'Choose Destination' }</Text>
+				<Text style={ { fontSize: 20 } }>{ this.props.destinationPlace && this.props.destinationPlace.structured_formatting.main_text || 'Choose Destination' }</Text>
 				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
 			</TouchableOpacity>
 
@@ -192,36 +224,38 @@ export class NewJourney extends Component<Props, State> {
 	}
 
 	private _confirmPanel = (): ReactElement => {
-		if (!this.state.origin || !this.state.destination) return <View><Text>Origin or Destination is missing</Text></View>;
+		if (!this.props.originPlace || !this.props.destinationPlace) return <View><Text>Origin or Destination is missing</Text></View>;
 
 		return <View>
-			<Text>You are travelling from { this.state.origin.structured_formatting.main_text } to { this.state.destination.structured_formatting.main_text }.</Text>
+			<Text>You are travelling from { this.props.originPlace.structured_formatting.main_text } to { this.props.destinationPlace.structured_formatting.main_text }.</Text>
 			<Text>There are { this.state.totalNoOfSeats } seats available.</Text>
 			<Text>Price per seat: €{ this.state.pricePerSeat }</Text>
-			<Text>You will be departing from { this.state.origin.structured_formatting.main_text } at { DatesTimes.hoursMinutes(this.state.leavingAt) } on { DatesTimes.readableDate(this.state.leavingAt)  }</Text>
+			<Text>You will be departing from { this.props.originPlace.structured_formatting.main_text } at { DatesTimes.hoursMinutes(this.state.leavingAt) } on { DatesTimes.readableDate(this.state.leavingAt)  }</Text>
 		</View>;
 	}
 
 	private _renderPlaceRow = ({ item, index }: { item: GooglePlace; index: number }): ReactElement<TouchableOpacity> => {
 		return (
-			<TouchableOpacity style={ styles.placeItem } onPress={ (): void => this._selectPlace(item) }>
+			<TouchableOpacity style={ styles.placeItem } onPress={ async (): Promise<void> => await this._selectPlace(item) }>
 				<Text style={ { fontWeight: 'bold', fontSize: 16 } }>{ item.structured_formatting.main_text }</Text>
 				<Text style={ { fontSize: 14 } }>{ item.structured_formatting.secondary_text }</Text>
 			</TouchableOpacity>
 		);
 	}
 
-	private _selectPlace = (place: GooglePlace): void => {
-		if (this.state.locationType === ORIGIN) this.setState({ origin: place });
-		if (this.state.locationType === DESTINATION) this.setState({ destination: place });
+	private _selectPlace = async (place: GooglePlace): Promise<void> => {
 		this.setState({ isSearching: false, openLocationPanel: false, placesFieldText: '' });
 		this.props.googlePlacesSearchClearResults();
+		console.log(place, this.state.locationType);
+		await this.props.selectGooglePlace(place, this.state.locationType);
+		await this.props.getGooglePlaceDetails(place.place_id, this.state.locationType);
 	}
 
 	private _formValid = (): boolean => {
-		const { totalNoOfSeats, origin, destination } = this.state;
+		const { totalNoOfSeats } = this.state;
+		const { originPlace, destinationPlace } = this.props;
 
-		if (!totalNoOfSeats || !origin || !destination) return false;
+		if (!totalNoOfSeats || !originPlace || !destinationPlace) return false;
 		return true;
 	}
 
@@ -276,7 +310,7 @@ export class NewJourney extends Component<Props, State> {
 							<View>
 								{ !this.state.openLocationPanel && !this.state.openConfirmPanel && this._journeyForm() }
 								{ this.state.openLocationPanel && !this.state.openConfirmPanel &&
-									this._chooseLocationPanel(this.state.locationType === 'ORIGIN' ? 'Origin' : 'Destination') }
+									this._chooseLocationPanel(this.state.locationType === ORIGIN ? 'Origin' : 'Destination') }
 								{ this.state.openConfirmPanel && !this.state.openLocationPanel && this._confirmPanel() }
 							</View>
 					}
@@ -321,4 +355,10 @@ const mapStateToProps = (state: AppState): HomeState => ({
 	...state.newJourneyReducer
 });
 
-export default connect(mapStateToProps, { googlePlacesSearch, googlePlacesSearchClearResults })(NewJourney);
+export default connect(mapStateToProps, {
+	googlePlacesSearch,
+	getGooglePlaceDetails,
+	googlePlacesSearchClearResults,
+	selectGooglePlace,
+	createJourney
+})(NewJourney);

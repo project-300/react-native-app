@@ -66,5 +66,9 @@ export interface JourneyDetailsResult {
 	};
 }
 
+export interface CreateJourneyResult {
+	success: boolean;
+}
+
 export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult |
-	SecretKeyResult | JourneysResult | JourneyDetailsResult;
+	SecretKeyResult | JourneysResult | JourneyDetailsResult | CreateJourneyResult;

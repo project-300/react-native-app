@@ -2,6 +2,8 @@ import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Region, LatLng } from 'react-native-maps';
 import { GooglePlace } from '../../types/maps';
+import { CreateJourney, GooglePlaceDetails } from '@project-300/common-types';
+import { AppActions } from '../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -24,8 +26,15 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	places: GooglePlace[];
+	originPlace: GooglePlace | null;
+	originPlaceDetails: GooglePlaceDetails | null;
+	destinationPlace: GooglePlace | null;
+	destinationPlaceDetails: GooglePlaceDetails | null;
 	googlePlacesSearch(q: string): Promise<void>;
+	getGooglePlaceDetails(p: string, l: string): Promise<void>;
+	selectGooglePlace(p: GooglePlace, l: string): AppActions;
 	googlePlacesSearchClearResults(): void;
+	createJourney(j: CreateJourney): Promise<boolean>;
 }
 
 export interface State {
@@ -41,19 +50,7 @@ export interface State {
 	openConfirmPanel: boolean,
 	locationType: string;
 	placesFieldText: string;
-	origin: GooglePlace | null;
-	destination: GooglePlace | null;
 	totalNoOfSeats: number;
 	pricePerSeat: number;
 	leavingAt: Date;
-}
-
-export interface CreateJourney {
-	times: {
-		leavingAt: Date | string;
-	};
-	destination: GooglePlace;
-	origin: GooglePlace;
-	totalNoOfSeats: number;
-	pricePerSeat: number;
 }

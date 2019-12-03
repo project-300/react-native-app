@@ -9,7 +9,7 @@ import updatePasswordReducer from './user/update-password';
 import driverJourneysReducer from './driver/my-journeys';
 import journeyDetailsReducer from './driver/journey';
 import driverTrackingReducer from './passenger/driver-tracking';
-import newJourneyReducer from './driver/new-jouney';
+import newJourneyReducer from './driver/new-journey';
 
 export default combineReducers({
 	signUpReducer,
