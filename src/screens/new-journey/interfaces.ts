@@ -1,6 +1,7 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Region, LatLng } from 'react-native-maps';
+import { GooglePlace } from '../../types/maps';
 
 export interface Styles {
 	container: ViewStyle;
@@ -14,13 +15,18 @@ export interface Styles {
 	button: TextStyle;
 	buttonText: TextStyle;
 	divider: ViewStyle;
+	placesList: ViewStyle;
+	placeItem: ViewStyle;
 }
 
-export interface Props extends CommonProps { }
+export interface Props extends CommonProps {
+	places: GooglePlace[];
+	googlePlacesSearch(q: string): Promise<void>;
+}
 
 export interface State {
 	formTop?: number,
-	places: Place[];
+	places: GooglePlace[];
 	positionStart: LatLng;
 	positionEnd: LatLng;
 	journeyRegion: Region;
@@ -30,6 +36,8 @@ export interface State {
 	openLocationPanel: boolean,
 	locationType: string;
 	placesFieldText: string;
+	origin: GooglePlace | null;
+	destination: GooglePlace | null;
  }
 
 export interface Place {

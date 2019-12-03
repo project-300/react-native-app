@@ -8,3 +8,7 @@
 /// <reference types="@types/googlemaps" />
 
 export type Directions = google.maps.DirectionsResult;
+
+export interface GooglePlace extends google.maps.places.AutocompletePrediction {
+	id: string;
+}

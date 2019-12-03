@@ -24,5 +24,3 @@ export const S3_CONFIG: S3_CONFIG_TYPE_BRIEF = {
 };
 
 export const GoogleMapsAPIKey: string = '{{ API_KEY }}';
-
-export const MAPS_API_KEY: string = '{{ MAPS_API_KEY }}}'

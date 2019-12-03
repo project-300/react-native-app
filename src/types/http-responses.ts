@@ -1,4 +1,5 @@
 import { Journey } from '@project-300/common-types';
+import { GooglePlace } from './maps';
 
 export interface LoginResult {
 	success: boolean;

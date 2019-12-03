@@ -1,5 +1,6 @@
 import { Coords, Journey, User } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
+import { GooglePlace } from './maps';
 
 export interface LoginState {
 	isLoggingIn: boolean;
@@ -58,6 +59,10 @@ export interface DriverTrackingState {
 	passengerLocation?: Coords;
 	routeTravelled: Coords[],
 	direction: number;
+}
+
+export interface NewJourneyState {
+	places: GooglePlace[];
 }
 
 export interface HomeState { }

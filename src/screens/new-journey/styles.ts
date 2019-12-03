@@ -93,6 +93,15 @@ const styles: Styles = StyleSheet.create<Styles>({
 		borderWidth: 0.5,
 		borderColor: 'grey',
 		marginVertical: 20
+	},
+
+	placesList: {
+		marginTop: 20,
+		marginLeft: 5
+	},
+
+	placeItem: {
+		marginVertical: 10
 	}
 });
 

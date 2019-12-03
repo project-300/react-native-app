@@ -40,9 +40,13 @@ import {
 	UPDATE_DRIVER_LOCATION,
 	CANCEL_PASSENGER_JOURNEY_REQUEST,
 	CANCEL_PASSENGER_JOURNEY_SUCCESS,
-	CANCEL_PASSENGER_JOURNEY_FAILURE
+	CANCEL_PASSENGER_JOURNEY_FAILURE,
+	GOOGLE_PLACES_SEARCH_REQUEST,
+	GOOGLE_PLACES_SEARCH_SUCCESS,
+	GOOGLE_PLACES_SEARCH_FAILURE
 } from '../constants/redux-actions';
 import { Journey, SubscriptionPayload } from '@project-300/common-types';
+import { GooglePlace } from './maps';
 
 export interface LoginRequest {
 	type: typeof LOGIN_REQUEST;
@@ -222,6 +226,19 @@ export interface DriverMovementFailure {
 	type: typeof DRIVER_MOVEMENT_FAILURE;
 }
 
+export interface GooglePlacesSearchRequest {
+	type: typeof GOOGLE_PLACES_SEARCH_REQUEST;
+}
+
+export interface GooglePlacesSearchSuccess {
+	type: typeof GOOGLE_PLACES_SEARCH_SUCCESS;
+	places: GooglePlace[];
+}
+
+export interface GooglePlacesSearchFailure {
+	type: typeof GOOGLE_PLACES_SEARCH_FAILURE;
+}
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
@@ -255,5 +272,8 @@ export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActi
 
 export type DriverTrackingActionTypes = PassengerJourneyDetailsActionTypes;
 
+export type GooglePlacesSearchActionTypes = GooglePlacesSearchRequest | GooglePlacesSearchSuccess | GooglePlacesSearchFailure;
+
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes | DriverApplicationActionTypes;
+	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |
+	DriverApplicationActionTypes | GooglePlacesSearchActionTypes;

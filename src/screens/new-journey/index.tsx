@@ -1,16 +1,19 @@
 import React, { Component, ReactElement } from 'react';
 import {
-	Text,
+	FlatList,
+	Text, TouchableOpacity,
 	View
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { Props, State, Place } from './interfaces';
+import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import MapView, { PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps';
 import { Container, Form, Item, Input, H1, Label, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import { GooglePlace } from '../../types/maps';
+import { googlePlacesSearch } from '../../redux/actions';
 
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
@@ -44,13 +47,19 @@ export class NewJourney extends Component<Props, State> {
 				latitudeDelta: delta,
 					longitudeDelta: delta
 			},
-			places: [],
 			isDateTimePickerVisible: false,
 			isSearching: false,
 			openLocationPanel: false,
 			locationType: 'ORIGIN',
-			placesFieldText: ''
+			placesFieldText: '',
+			origin: null,
+			destination: null
 		};
+	}
+
+	private searchPlaces = async (query: string): Promise<void> => {
+		this.setState({ isSearching: true, placesFieldText: query });
+		await this.props.googlePlacesSearch(query);
 	}
 
 	private _openMap = (): void => this.setState({ formTop: undefined, droppingMarker: true });
@@ -59,13 +68,21 @@ export class NewJourney extends Component<Props, State> {
 
 	private _journeyForm = (): ReactElement => {
 		return <Form>
-			<Button block light onPress={ this._chooseOrigin }>
-				<Text>Choose Origin</Text>
-			</Button>
+			{ this.state.origin && <Text>{ this.state.origin.structured_formatting.main_text }</Text> }
+			{
+				!this.state.origin &&
+					<Button block light onPress={ this._chooseOrigin }>
+						<Text>Choose Origin</Text>
+					</Button>
+			}
 
-			<Button block light onPress={ this._chooseDestination }>
-				<Text>Choose Destination</Text>
-			</Button>
+			{ this.state.destination && <Text>{ this.state.destination.structured_formatting.main_text }</Text> }
+			{
+				!this.state.destination &&
+					<Button block light onPress={ this._chooseDestination }>
+						<Text>Choose Destination</Text>
+					</Button>
+			}
 
 			<View style={ styles.divider } />
 
@@ -89,7 +106,7 @@ export class NewJourney extends Component<Props, State> {
 			<H1 style={ { alignSelf: 'center' } }>{ locationType }</H1>
 			<Item floatingLabel>
 				<Label>{ locationType }</Label>
-				<Input onChangeText={ (query: string): Promise<void> => [ ] } />
+				<Input onChangeText={ (query: string): Promise<void> => this.searchPlaces(query) } />
 			</Item>
 			{
 				!this.state.placesFieldText &&
@@ -100,7 +117,30 @@ export class NewJourney extends Component<Props, State> {
 						</Button>
 					</View>
 			}
+
+			<FlatList
+				data={ this.props.places }
+				extraData={ this.state }
+				renderItem={ this._renderPlaceRow }
+				keyExtractor={ (item: GooglePlace): string => item.id }
+				style={ styles.placesList }
+			/>
 		</View>;
+	}
+
+	private _renderPlaceRow = ({ item, index }: { item: GooglePlace; index: number }): ReactElement<TouchableOpacity> => {
+		return (
+			<TouchableOpacity style={ styles.placeItem } onPress={ (): void => this._selectPlace(item) }>
+				<Text style={ { fontWeight: 'bold', fontSize: 16 } }>{ item.structured_formatting.main_text }</Text>
+				<Text style={ { fontSize: 14 } }>{ item.structured_formatting.secondary_text }</Text>
+			</TouchableOpacity>
+		);
+	}
+
+	private _selectPlace = (place: GooglePlace): void => {
+		if (this.state.locationType === ORIGIN) this.setState({ origin: place });
+		if (this.state.locationType === DESTINATION) this.setState({ destination: place });
+		this.setState({ isSearching: false, openLocationPanel: false, placesFieldText: '' });
 	}
 
 	private _chooseOrigin = (): void => this.setState({ openLocationPanel: true, locationType: ORIGIN });
@@ -117,6 +157,7 @@ export class NewJourney extends Component<Props, State> {
 	}
 
 	public render(): ReactElement {
+		console.log(this.state.origin);
 		return (
 			<Container style={ styles.container }>
 				<MapView
@@ -151,6 +192,8 @@ export class NewJourney extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): HomeState => ({ });
+const mapStateToProps = (state: AppState): HomeState => ({
+	...state.newJourneyReducer
+});
 
-export default connect(mapStateToProps, { })(NewJourney);
+export default connect(mapStateToProps, { googlePlacesSearch })(NewJourney);

@@ -7,4 +7,5 @@ export * from './user/update-user-field';
 export * from './user/update-password';
 export * from './driver/my-journeys';
 export * from './driver/journey';
+export * from './driver/new-journey';
 export * from './passenger/driver-tracking';
