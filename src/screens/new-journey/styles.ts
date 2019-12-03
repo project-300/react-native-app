@@ -91,7 +91,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		height: 0.5,
 		width: '100%',
 		borderWidth: 0.5,
-		borderColor: 'grey',
+		borderColor: '#CCC',
 		marginVertical: 20
 	},
 

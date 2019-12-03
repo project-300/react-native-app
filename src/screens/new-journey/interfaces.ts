@@ -46,10 +46,14 @@ export interface State {
 	totalNoOfSeats: number;
 	pricePerSeat: number;
 	leavingAt: Date;
- }
+}
 
-export interface Place {
-	formatted_address: string,
-	name: string,
-	location: LatLng
+export interface CreateJourney {
+	times: {
+		leavingAt: Date | string;
+	};
+	destination: GooglePlace;
+	origin: GooglePlace;
+	totalNoOfSeats: number;
+	pricePerSeat: number;
 }

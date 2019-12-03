@@ -142,7 +142,7 @@ export class MyJourneys extends Component<Props, State> {
 										style={ styles.button }
 										onPress={ (): Promise<void> => this.props.cancelPassengerAcceptedJourney(item.journeyId) }
 									>
-										<Text style={ styles.buttonText }>Cancel Journey { this.props.isCancelling && 'CANCELLING' }</Text>
+										<Text style={ styles.buttonText }>Cancel Journey</Text>
 									</TouchableOpacity>
 							}
 							{

@@ -8,28 +8,19 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { Props, State } from './interfaces';
+import { CreateJourney, Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import MapView, { PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps';
-import { Container, Form, Item, Input, H1, Label, Button, Icon } from 'native-base';
+import { Container, Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
 import { googlePlacesSearch, googlePlacesSearchClearResults } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
+import FAIcon from 'react-native-vector-icons/FontAwesome5';
 
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
-
-export interface CreateJourney {
-	times: {
-		leavingAt: Date | string;
-	};
-	destination: GooglePlace;
-	origin: GooglePlace;
-	totalNoOfSeats: number;
-	pricePerSeat: number;
-}
 
 export class NewJourney extends Component<Props, State> {
 
@@ -68,7 +59,7 @@ export class NewJourney extends Component<Props, State> {
 			placesFieldText: '',
 			origin: null,
 			destination: null,
-			totalNoOfSeats: 0,
+			totalNoOfSeats: 1,
 			pricePerSeat: 0,
 			leavingAt: new Date()
 		};
@@ -96,48 +87,68 @@ export class NewJourney extends Component<Props, State> {
 
 	private _journeyForm = (): ReactElement => {
 		return <Form>
-			{ this.state.origin && <Text>{ this.state.origin.structured_formatting.main_text }</Text> }
-			{
-				!this.state.origin &&
-					<Button block light onPress={ this._chooseOrigin }>
-						<Text>Choose Origin</Text>
-					</Button>
-			}
+			<TouchableOpacity onPress={ this._chooseOrigin }>
+				<Text style={ { fontSize: 20 } }>{ this.state.origin && this.state.origin.structured_formatting.main_text || 'Choose Origin' }</Text>
+				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
+			</TouchableOpacity>
 
 			<View style={ styles.divider } />
 
-			{ this.state.destination && <Text>{ this.state.destination.structured_formatting.main_text }</Text> }
-			{
-				!this.state.destination &&
-					<Button block light onPress={ this._chooseDestination }>
-						<Text>Choose Destination</Text>
-					</Button>
-			}
+			<TouchableOpacity onPress={ this._chooseDestination }>
+				<Text style={ { fontSize: 20 } }>{ this.state.destination && this.state.destination.structured_formatting.main_text || 'Choose Destination' }</Text>
+				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
+			</TouchableOpacity>
 
 			<View style={ styles.divider } />
 
-			<Text>What time are you leaving?</Text>
-			<Text onPress={ this._showDateTimePicker }>{ this._leavingAtString() }</Text>
+			<Text style={ { fontSize: 16, marginBottom: 20 } }>How many seats are available?</Text>
+			<Grid>
+				<Col>
+					<Button block light onPress={ (): void => this._updateNoOfSeats(-1) }>
+						<Text>
+							<FAIcon name={ 'minus' } />
+						</Text>
+					</Button>
+				</Col>
+				<Col style={ { alignItems: 'center' } }>
+					<Text style={ { fontSize: 20, fontWeight: 'bold', marginTop: 10 } }>{ this.state.totalNoOfSeats }</Text>
+				</Col>
+				<Col>
+					<Button block light onPress={ (): void => this._updateNoOfSeats(1) }>
+						<FAIcon name={ 'plus' } />
+					</Button>
+				</Col>
+			</Grid>
 
-			<Text>How many seats will be available?</Text>
-			<Item floatingLabel>
-				<Label>Seats</Label>
-				<Input
-					keyboardType={ 'numeric' }
-					value={ `${this.state.totalNoOfSeats}` }
-					onChangeText={ (val: string): void => this.setState({ totalNoOfSeats: val ? parseInt(val, 10) : 0 }) }
-				/>
-			</Item>
+			<View style={ styles.divider } />
 
-			<Text>Seat price?</Text>
-			<Item floatingLabel>
-				<Label>Price</Label>
-				<Input
-					keyboardType={ 'numeric' }
-					value={ `${this.state.pricePerSeat}` }
-					onChangeText={ (val: string): void => this.setState({ pricePerSeat: val ? parseInt(val, 10) : 0 }) }
-				/>
-			</Item>
+			<Text style={ { fontSize: 16, marginVertical: 20 } }>Cost per seat?</Text>
+			<Grid>
+				<Col>
+					<Button block light onPress={ (): void => this._updatePrice(-1) }>
+						<Text>
+							<FAIcon name={ 'minus' } />
+						</Text>
+					</Button>
+				</Col>
+				<Col style={ { alignItems: 'center' } }>
+					<Text style={ { fontSize: 20, fontWeight: 'bold', marginTop: 10 } }>{ this.state.pricePerSeat ? `€${this.state.pricePerSeat}` : 'Free' }</Text>
+				</Col>
+				<Col>
+					<Button block light onPress={ (): void => this._updatePrice(1) }>
+						<FAIcon name={ 'plus' } />
+					</Button>
+				</Col>
+			</Grid>
+
+			<View style={ styles.divider } />
+
+			<Text style={ { fontSize: 16, marginVertical: 20 } }>What time are you leaving?</Text>
+
+			<TouchableOpacity onPress={ this._showDateTimePicker }>
+				<Text style={ { fontSize: 20 } }>{ this._leavingAtString() }</Text>
+				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
+			</TouchableOpacity>
 
 			<DateTimePicker
 				mode={ 'datetime' }
@@ -145,6 +156,7 @@ export class NewJourney extends Component<Props, State> {
 				onConfirm={ this._handleDatePicked }
 				onCancel={ this._hideDateTimePicker }
 				minimumDate={ new Date() }
+				is24Hour={ true }
 			/>
 		</Form>;
 	}
@@ -230,6 +242,17 @@ export class NewJourney extends Component<Props, State> {
 	private _openMap = (): void => this.setState({ formTop: undefined, droppingMarker: true });
 
 	private _closeMap = (): void => this.setState({ formTop: 0, droppingMarker: false });
+
+	private _updateNoOfSeats = (count: number): void => {
+		const totalNoOfSeats: number = this.state.totalNoOfSeats + count;
+		if (totalNoOfSeats < 1 || totalNoOfSeats > 9) return;
+		this.setState({ totalNoOfSeats });
+	}
+
+	private _updatePrice = (count: number): void => {
+		if (this.state.pricePerSeat + count < 0) return;
+		this.setState({ pricePerSeat: this.state.pricePerSeat + count });
+	}
 
 	private _handleDatePicked = (date: Date): void => {
 		this.setState({ leavingAt: date });

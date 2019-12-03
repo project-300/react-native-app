@@ -102,7 +102,7 @@ export const driverMovement = (journeyId: string, coords: Coords): (dispatch: Di
 		dispatch(driverMovementRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.driverMovement({ journeyId, coords}) as JourneyDetailsResult;
+			const apiRes: JourneyDetailsResult = await HttpAPI.driverMovement({ journeyId, coords }) as JourneyDetailsResult;
 
 			console.log(apiRes);
 			if (apiRes.success && apiRes.journey) dispatch(driverMovementSuccess(apiRes.journey));
