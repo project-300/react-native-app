@@ -19,8 +19,15 @@ import DriverTracking from './screens/passenger/driver-tracking';
 import NewJourney from './screens/new-journey';
 import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
+import OpeningHome from './screens/opening-home';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
+	OpeningHome: {
+		screen: OpeningHome,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Home'
+		})
+	},
 	Login: {
 		screen: Login,
 		navigationOptions: (): NavigationStackScreenOptions => ({
@@ -47,7 +54,7 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 	Home: {
 		screen: Home,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Home'
+			title: 'Dashboard'
 		})
 	},
 	DriverApplication: {
