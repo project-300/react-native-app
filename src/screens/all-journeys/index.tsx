@@ -1,27 +1,13 @@
 import React, { Component, ReactElement } from 'react';
-import {
-  ScrollView,
-  FlatList,
-  Text,
-  View,
-  TouchableOpacity
-} from 'react-native';
+import { ScrollView, FlatList, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { AppState } from '../../store';
 import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import { Journey } from '@project-300/common-types';
-import { getAllJourneys, updateAddUserJourney } from '../../redux/actions';
-import {
-  Container,
-  Tab,
-  Tabs,
-  Content,
-  Card,
-  CardItem,
-  Body
-} from 'native-base';
+import { getAllJourneys } from '../../redux/actions';
+import { Container, Content, Card, CardItem, Body } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 class AllJourneys extends Component<Props, State> {
@@ -31,10 +17,6 @@ class AllJourneys extends Component<Props, State> {
 
   public async componentDidMount(): Promise<void> {
     await this.props.getAllJourneys();
-  }
-
-  private async _joinJourney(journey: Journey): Promise<void> {
-    await this.props.updateAddUserJourney(journey);
   }
 
   private _renderRow = ({
@@ -63,12 +45,6 @@ class AllJourneys extends Component<Props, State> {
           </Body>
         </CardItem>
         <CardItem footer bordered>
-          {/* <TouchableOpacity
-            style={styles.button}
-            onPress={() => this._joinJourney(journey)}
-          >
-            <Text style={styles.buttonText}>Join</Text>
-          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.button}
             onPress={(): void => {
@@ -105,6 +81,5 @@ const mapStateToProps = (state: AppState): AllJourneysListState => ({
 });
 
 export default connect(mapStateToProps, {
-  getAllJourneys,
-  updateAddUserJourney
+  getAllJourneys
 })(AllJourneys);

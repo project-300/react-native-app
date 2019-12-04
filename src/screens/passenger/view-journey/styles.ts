@@ -14,7 +14,7 @@ const styles: Styles = StyleSheet.create<Styles>({
   },
 
   button: {
-    backgroundColor: '#6c2bcc',
+    backgroundColor: '#02b2cc',
     paddingVertical: 14,
     width: '100%'
   },

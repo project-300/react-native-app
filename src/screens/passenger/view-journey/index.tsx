@@ -29,8 +29,8 @@ export class ViewJourney extends Component<Props, State> {
       mapRegion: {
         latitude: 54.2,
         longitude: -8.5,
-        latitudeDelta: 0.5,
-        longitudeDelta: 0.5
+        latitudeDelta: 1,
+        longitudeDelta: 1
       },
       route: []
     };
