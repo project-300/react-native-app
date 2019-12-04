@@ -10,13 +10,13 @@ import updatePasswordReducer from './user/update-password';
 import allJourneysReducer from './journey';
 
 export default combineReducers({
-  signUpReducer,
-  confirmReducer,
-  loginReducer,
-  driverApplicationReducer,
-  adminDriverApplicationsReducer,
-  userProfileReducer,
-  updateUserFieldReducer,
-  updatePasswordReducer,
-  allJourneysReducer
+	signUpReducer,
+	confirmReducer,
+	loginReducer,
+	driverApplicationReducer,
+	adminDriverApplicationsReducer,
+	userProfileReducer,
+	updateUserFieldReducer,
+	updatePasswordReducer,
+	allJourneysReducer
 });

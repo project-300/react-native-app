@@ -1,53 +1,53 @@
 import {
-  DriverApplicationObject,
-  User,
-  Journey
+	DriverApplicationObject,
+	User,
+	Journey
 } from '@project-300/common-types';
 
 export interface UpdateAddUserJourneyState {
-  isAdding: boolean;
+	isAdding: boolean;
 }
 
 export interface AllJourneysListState {
-  isFetching: boolean;
-  journeys: Journey[];
+	isFetching: boolean;
+	journeys: Journey[];
 }
 
 export interface LoginState {
-  isLoggingIn: boolean;
-  isLoggedIn: boolean;
+	isLoggingIn: boolean;
+	isLoggedIn: boolean;
 }
 
 export interface SignUpState {
-  isCreatingAccount: boolean;
-  payload?: object;
+	isCreatingAccount: boolean;
+	payload?: object;
 }
 
 export interface ConfirmState {
-  isConfirmingAccount: boolean;
+	isConfirmingAccount: boolean;
 }
 
 export interface DriverApplicationState {
-  isApplying: boolean;
+	isApplying: boolean;
 }
 
 export interface AdminDriverApplicationsState {
-  applications: DriverApplicationObject[];
+	applications: DriverApplicationObject[];
 }
 
 export interface UserProfileState {
-  subscribing: boolean;
-  receivedData: boolean;
-  user: User | null;
-  uploadingAvatar: boolean;
+	subscribing: boolean;
+	receivedData: boolean;
+	user: User | null;
+	uploadingAvatar: boolean;
 }
 
 export interface UpdateUserFieldState {
-  isUpdating: boolean;
+	isUpdating: boolean;
 }
 
 export interface UpdatePasswordState {
-  isUpdating: boolean;
+	isUpdating: boolean;
 }
 
-export interface HomeState {}
+export interface HomeState { }
