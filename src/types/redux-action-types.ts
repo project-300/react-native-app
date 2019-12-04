@@ -16,8 +16,43 @@ import {
 	USER_PROFILE_SUB_REQUEST,
 	USER_PROFILE_UNSUB,
 	USER_PROFILE_SUB_RECEIVED,
-	USER_PROFILE_SUB_FAILURE, UPDATE_EMAIL_REQUEST, UPDATE_EMAIL_SUCCESS, UPDATE_EMAIL_FAILURE
+	USER_PROFILE_SUB_FAILURE,
+	UPDATE_EMAIL_REQUEST,
+	UPDATE_EMAIL_SUCCESS,
+	UPDATE_EMAIL_FAILURE,
+	GET_ALL_JOURNEYS_FAILURE,
+	GET_ALL_JOURNEYS_REQUEST,
+	GET_ALL_JOURNEYS_SUCCESS,
+	UPDATE_ADD_USER_JOURNEY_REQUEST,
+	UPDATE_ADD_USER_JOURNEY_SUCCESS,
+	UPDATE_ADD_USER_JOURNEY_FAILURE
 } from '../constants/redux-actions';
+import { Journey } from '@project-300/common-types';
+
+export interface UpdateAddUserJourneyRequest {
+	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
+}
+
+export interface UpdateAddUserJourneySuccess {
+	type: typeof UPDATE_ADD_USER_JOURNEY_SUCCESS;
+}
+
+export interface UpdateAddUserJourneyFailure {
+	type: typeof UPDATE_ADD_USER_JOURNEY_FAILURE;
+}
+
+export interface GetAllJourneysRequest {
+	type: typeof GET_ALL_JOURNEYS_REQUEST;
+}
+
+export interface GetAllJourneysSuccess {
+	type: typeof GET_ALL_JOURNEYS_SUCCESS;
+	journeys: Journey[];
+}
+
+export interface GetAllJourneysFailure {
+	type: typeof GET_ALL_JOURNEYS_FAILURE;
+}
 
 export interface LoginRequest {
 	type: typeof LOGIN_REQUEST;
@@ -106,18 +141,47 @@ export interface UpdateEmailFailure {
 	type: typeof UPDATE_EMAIL_FAILURE;
 }
 
+export type JourneyActionTypes =
+	| GetAllJourneysRequest
+	| GetAllJourneysSuccess
+	| GetAllJourneysFailure
+	| UpdateAddUserJourneyRequest
+	| UpdateAddUserJourneySuccess
+	| UpdateAddUserJourneyFailure;
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
-export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
-	SignUpConfirmationRequired | SignUpConfirmationRequest | SignUpConfirmationSuccess | SignUpConfirmationFailure;
+export type SignUpActionTypes =
+	| SignUpRequest
+	| SignUpSuccess
+	| SignUpFailure
+	| SignUpConfirmationRequired
+	| SignUpConfirmationRequest
+	| SignUpConfirmationSuccess
+	| SignUpConfirmationFailure;
 
-export type DriverApplicationActionTypes = DriverApplicationRequest | DriverApplicationSuccess | DriverApplicationFailure;
+export type DriverApplicationActionTypes =
+	| DriverApplicationRequest
+	| DriverApplicationSuccess
+	| DriverApplicationFailure;
 
 export type AdminDriverApplicationsActionTypes = StoreApplicationsRequest;
 
-export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure;
+export type UserProfileActionTypes =
+	| UserProfileSubRequest
+	| UserProfileUnsub
+	| UserProfileSubReceived
+	| UserProfileSubFailure;
 
-export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
+export type UpdateEmailActionTypes =
+	| UpdateEmailRequest
+	| UpdateEmailSuccess
+	| UpdateEmailFailure;
 
-export type AppActions = LoginActionTypes | SignUpActionTypes | DriverApplicationActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes;
+export type AppActions =
+	| JourneyActionTypes
+	| LoginActionTypes
+	| SignUpActionTypes
+	| DriverApplicationActionTypes
+	| UserProfileActionTypes
+	| UpdateEmailActionTypes;

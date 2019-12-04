@@ -1,4 +1,17 @@
-import { DriverApplicationObject, User } from '@project-300/common-types';
+import {
+	DriverApplicationObject,
+	User,
+	Journey
+} from '@project-300/common-types';
+
+export interface UpdateAddUserJourneyState {
+	isAdding: boolean;
+}
+
+export interface AllJourneysListState {
+	isFetching: boolean;
+	journeys: Journey[];
+}
 
 export interface LoginState {
 	isLoggingIn: boolean;

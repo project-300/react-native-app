@@ -1,3 +1,22 @@
+import { Journey } from '@project-300/common-types';
+
+export interface UpdateAddUserJourneyResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
+export interface GetAllJourneysResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+	journeys?: Journey[];
+}
+
 export interface LoginResult {
 	success: boolean;
 	userId?: string;
@@ -36,4 +55,11 @@ export interface SecretKeyResult {
 	secretKey: string;
 }
 
-export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult | SecretKeyResult;
+export type HttpResponse =
+	| UpdateAddUserJourneyResult
+	| GetAllJourneysResult
+	| ConfirmationResult
+	| SignupResult
+	| LoginResult
+	| DriverApplicationResult
+	| SecretKeyResult;

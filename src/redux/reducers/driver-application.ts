@@ -10,7 +10,10 @@ const initialState: DriverApplicationState = {
 	isApplying: false
 };
 
-const driverApplicationReducer = (state: DriverApplicationState = initialState, action: DriverApplicationActionTypes): DriverApplicationState => {
+const driverApplicationReducer = (
+	state: DriverApplicationState = initialState,
+	action: DriverApplicationActionTypes
+): DriverApplicationState => {
 	switch (action.type) {
 		case DRIVER_APPLICATION_REQUEST:
 			return { ...state, isApplying: true };
