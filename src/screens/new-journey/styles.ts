@@ -132,6 +132,15 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 10,
 		alignItems: 'center',
 		zIndex: 100
+	},
+
+	confirmRow: {
+		marginBottom: 20,
+		fontSize: 16
+	},
+
+	bold: {
+		fontWeight: 'bold'
 	}
 });
 

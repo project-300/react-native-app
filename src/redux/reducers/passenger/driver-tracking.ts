@@ -18,7 +18,8 @@ const initialState: DriverTrackingState = {
 	isWaitingOnDriverCoords: true,
 	journey: undefined,
 	routeTravelled: [],
-	direction: 0
+	direction: 0,
+	driverLocation: undefined
 };
 
 const driverTrackingReducer = (state: DriverTrackingState = initialState, action: PassengerJourneyDetailsActionTypes):

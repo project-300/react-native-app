@@ -11,7 +11,7 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import MapView, { PROVIDER_GOOGLE, Marker, LatLng, MapEvent } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, LatLng, MapEvent, Polyline } from 'react-native-maps';
 import { Container, Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
@@ -22,7 +22,8 @@ import {
 	selectGooglePlace,
 	createJourney,
 	clearNewJourneyFormDetails,
-	getPlaceByMarker
+	getPlaceByMarker,
+	findRoute
 } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
@@ -83,7 +84,7 @@ export class NewJourney extends Component<Props, State> {
 
 	private _createJourney = async (): Promise<void> => {
 		const { totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
-		const { originPlaceDetails, destinationPlaceDetails } = this.props;
+		const { originPlaceDetails, destinationPlaceDetails, route } = this.props;
 
 		if (!originPlaceDetails) return console.log(1);
 		if (!destinationPlaceDetails) return console.log(2);
@@ -106,10 +107,13 @@ export class NewJourney extends Component<Props, State> {
 			destination,
 			totalNoOfSeats,
 			pricePerSeat,
+			plannedRoute: route,
 			times: {
 				leavingAt
 			}
 		};
+
+		console.log(journey);
 
 		const created: boolean = await this.props.createJourney(journey);
 		if (created) {
@@ -228,10 +232,10 @@ export class NewJourney extends Component<Props, State> {
 		if (!this.props.originPlaceDetails || !this.props.destinationPlaceDetails) return <View><Text>Origin or Destination is missing</Text></View>;
 
 		return <View>
-			<Text>You are travelling from { this.props.originPlaceDetails.name } to { this.props.destinationPlaceDetails.name }.</Text>
-			<Text>There are { this.state.totalNoOfSeats } seats available.</Text>
-			<Text>Price per seat: €{ this.state.pricePerSeat }</Text>
-			<Text>You will be departing from { this.props.originPlaceDetails.name } at { DatesTimes.hoursMinutes(this.state.leavingAt) } on { DatesTimes.readableDate(this.state.leavingAt)  }</Text>
+			<Text style={ styles.confirmRow }>You are travelling from <Text style={ styles.bold }>{ this.props.originPlaceDetails.name }</Text> to <Text style={ styles.bold }>{ this.props.destinationPlaceDetails.name }</Text>.</Text>
+			<Text style={ styles.confirmRow }>There are <Text style={ styles.bold }>{ this.state.totalNoOfSeats }</Text> seats available.</Text>
+			<Text style={ styles.confirmRow }>Price per seat: <Text style={ styles.bold }>{ this.state.pricePerSeat ? `€${this.state.pricePerSeat}` : 'Free' }</Text></Text>
+			<Text style={ styles.confirmRow }>You will be departing from <Text style={ styles.bold }>{ this.props.originPlaceDetails.name }</Text> at <Text style={ styles.bold }>{ DatesTimes.hoursMinutes(this.state.leavingAt) }</Text> on <Text style={ styles.bold }>{ DatesTimes.readableDate(this.state.leavingAt)  }</Text></Text>
 		</View>;
 	}
 
@@ -249,6 +253,7 @@ export class NewJourney extends Component<Props, State> {
 		this.props.googlePlacesSearchClearResults();
 		await this.props.selectGooglePlace(place, this.state.locationType);
 		await this.props.getGooglePlaceDetails(place.place_id, this.state.locationType);
+		this._plotRoute();
 	}
 
 	private _formValid = (): boolean => {
@@ -295,6 +300,12 @@ export class NewJourney extends Component<Props, State> {
 
 	private _dropMarker = async (coords: Coords): Promise<void> => {
 		await this.props.getPlaceByMarker(coords, this.state.locationType);
+		this._plotRoute();
+	}
+
+	private _plotRoute = async (): Promise<void> => {
+		if (!this.props.originMarkerCoords || !this.props.destinationMarkerCoords) return;
+		await this.props.findRoute(this.props.originMarkerCoords, this.props.destinationMarkerCoords);
 	}
 
 	private _confirmMarkerDrop = (): void => {
@@ -340,6 +351,12 @@ export class NewJourney extends Component<Props, State> {
 								draggable
 							/>
 					}
+
+					<Polyline
+						coordinates={ this.props.route }
+						strokeColor={ 'green' }
+						strokeWidth={ 4 }
+					/>
 				</MapView>
 
 				<ScrollView style = { [ styles.form, { top: this.state.formTop } ] }>
@@ -378,7 +395,7 @@ export class NewJourney extends Component<Props, State> {
 							onPress={ this._showConfirmPanel }
 							disabled={ !this._formValid() }
 						>
-							<Text>Continue</Text>
+							<Text style={ { color: 'white', fontWeight: 'bold' } }>Continue</Text>
 						</TouchableOpacity>
 				}
 
@@ -388,7 +405,7 @@ export class NewJourney extends Component<Props, State> {
 							style={ [ styles.continueButton, styles.buttonValid ] }
 							onPress={ this._createJourney }
 						>
-							<Text>Create Journey</Text>
+							<Text style={ { color: 'white', fontWeight: 'bold' } }>Create Journey</Text>
 						</TouchableOpacity>
 				}
 			</Container>
@@ -407,5 +424,6 @@ export default connect(mapStateToProps, {
 	selectGooglePlace,
 	createJourney,
 	clearNewJourneyFormDetails,
-	getPlaceByMarker
+	getPlaceByMarker,
+	findRoute
 })(NewJourney);

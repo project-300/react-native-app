@@ -74,7 +74,7 @@ export class DriverTracking extends Component<Props, State> {
 		return (
 			<Container>
 				<Spinner
-					visible={ this.props.isRequesting || this.props.isWaitingOnDriverCoords }
+					visible={ this.props.isRequesting }
 					textContent={ 'Waiting for driver location...' }
 					textStyle={ styles.spinnerTextStyle }
 				/>

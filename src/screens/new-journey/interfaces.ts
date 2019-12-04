@@ -23,6 +23,8 @@ export interface Styles {
 	buttonValid: ViewStyle;
 	buttonInvalid: ViewStyle;
 	locationNameHeader: ViewStyle;
+	confirmRow: TextStyle;
+	bold: TextStyle;
 }
 
 export interface Props extends CommonProps {
@@ -33,6 +35,7 @@ export interface Props extends CommonProps {
 	destinationPlaceDetails: GooglePlaceDetails | undefined;
 	destinationMarkerCoords: Coords | null;
 	originMarkerCoords: Coords | null;
+	route: Coords[];
 	googlePlacesSearch(q: string): Promise<void>;
 	getGooglePlaceDetails(p: string, l: string): Promise<void>;
 	selectGooglePlace(p: GooglePlace, l: string): AppActions;
@@ -40,6 +43,7 @@ export interface Props extends CommonProps {
 	createJourney(j: CreateJourney): Promise<boolean>;
 	clearNewJourneyFormDetails(): AppActions;
 	getPlaceByMarker(c: Coords, l: string): Promise<void>;
+	findRoute(o: Coords, d: Coords): Promise<void>;
 }
 
 export interface State {

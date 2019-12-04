@@ -9,6 +9,7 @@ import { Journey } from '@project-300/common-types';
 import { getAllJourneys } from '../../redux/actions';
 import { Container, Content, Card, CardItem, Body } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
+import DatesTimes from '../../services/dates-times';
 
 class AllJourneys extends Component<Props, State> {
 
@@ -33,11 +34,27 @@ class AllJourneys extends Component<Props, State> {
 				</CardItem>
 				<CardItem bordered>
 					<Body>
-						<Text>The journey begins at { journey.times.leavingAt }</Text>
-						<Text>
-							{ journey.seatsLeft } / { journey.totalNoOfSeats } seats left
+						<Text style={ styles.textRow }>The journey begins at <Text style={ styles.bold }>
+								{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
+							</Text> on <Text style={ styles.bold }>
+								{ DatesTimes.readableDate(journey.times.leavingAt) }
+							</Text>
 						</Text>
-						<Text>{ journey.pricePerSeat } euro per seat</Text>
+
+						<Text style={ styles.textRow }>
+							There are <Text style={ styles.bold }>{ journey.seatsLeft }
+						</Text> / <Text style={ styles.bold }>
+							{ journey.totalNoOfSeats }
+						</Text> seats left
+						</Text>
+
+						<Text style={ styles.textRow }>
+							<Text style={ styles.bold }> €{ journey.pricePerSeat }</Text> euro per seat
+						</Text>
+
+						<Text style={ styles.textRow }>
+							Driver Name: <Text style={ styles.bold }> { journey.driver.firstName } { journey.driver.lastName }</Text>
+						</Text>
 					</Body>
 				</CardItem>
 				<CardItem footer bordered>

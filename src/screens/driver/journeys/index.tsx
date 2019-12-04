@@ -108,6 +108,7 @@ export class MyJourneys extends Component<Props, State> {
 
 	private _renderPassengerJourneyRow = ({ item, index }: { item: Journey; index: number }): ReactElement => {
 		const journey: Journey = item;
+		const journeyStatus: string = journey.journeyStatus;
 
 		return (
 			<Card>
@@ -122,22 +123,36 @@ export class MyJourneys extends Component<Props, State> {
 				</CardItem>
 				<CardItem bordered>
 					<Body>
-						<Text style={ styles.textRow }>The journey begins at <Text style={ styles.bold }>
-								{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
-							</Text> on <Text style={ styles.bold }>
-								{ DatesTimes.readableDate(journey.times.leavingAt) }
-							</Text>
+						{
+							journeyStatus === 'FINISHED' ?
+								<Text style={ styles.textRow }>The journey began at <Text style={ styles.bold }>
+										{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
+									</Text> on <Text style={ styles.bold }>
+										{ DatesTimes.readableDate(journey.times.leavingAt) }
+									</Text> and ended at <Text style={ styles.bold }>
+										{ DatesTimes.hoursMinutes(journey.times.endedAt) }
+									</Text> on <Text style={ styles.bold }>
+										{ DatesTimes.readableDate(journey.times.endedAt) }
+									</Text>
+								</Text> :
+								<Text style={ styles.textRow }>The journey begins at <Text style={ styles.bold }>
+										{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
+									</Text> on <Text style={ styles.bold }>
+										{ DatesTimes.readableDate(journey.times.leavingAt) }
+									</Text>
+								</Text>
+						}
+
+						<Text style={ styles.textRow }>
+							Your driver is <Text style={ styles.bold }>{ journey.driver && journey.driver.firstName } { journey.driver && journey.driver.lastName }</Text>
 						</Text>
-							<Text style={ styles.textRow }>
-								Your driver is <Text style={ styles.bold }>{ journey.driver && journey.driver.firstName } { journey.driver && journey.driver.lastName }</Text>
-							</Text>
 					</Body>
 				</CardItem>
 				{
-					journey.journeyStatus !== 'FINISHED' &&
+					journeyStatus !== 'FINISHED' &&
 						<CardItem footer bordered>
 							{
-								journey.journeyStatus === 'NOT_STARTED' &&
+								journeyStatus === 'NOT_STARTED' &&
 									<TouchableOpacity
 										style={ styles.button }
 										onPress={ (): Promise<void> => this.props.cancelPassengerAcceptedJourney(item.journeyId) }
@@ -146,7 +161,7 @@ export class MyJourneys extends Component<Props, State> {
 									</TouchableOpacity>
 							}
 							{
-								journey.journeyStatus === 'STARTED' &&
+								journeyStatus === 'STARTED' &&
 									<TouchableOpacity
 										style={ styles.button }
 										onPress={ (): boolean => this.props.navigation.navigate('DriverTrackingMap', { journeyId: journey.journeyId }) }

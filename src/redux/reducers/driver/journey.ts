@@ -24,6 +24,7 @@ import {
 const initialState: JourneyMapState = {
 	status: 'NOT_STARTED',
 	isStarting: false,
+	isStarted: false,
 	isEnding: false,
 	isMoving: false,
 	isRequestingJourneyDetails: false,
@@ -47,7 +48,7 @@ const journeyDetailsReducer = (state: JourneyMapState = initialState, action: Jo
 		case START_JOURNEY_SUCCESS:
 			payload = action as StartJourneySuccess;
 
-			return { ...state, isStarting: false, journey: payload.journey };
+			return { ...state, isStarting: false, journey: payload.journey, isStarted: true };
 		case START_JOURNEY_FAILURE:
 			return { ...state, isStarting: false };
 		case END_JOURNEY_REQUEST:
@@ -59,7 +60,7 @@ const journeyDetailsReducer = (state: JourneyMapState = initialState, action: Jo
 		case END_JOURNEY_FAILURE:
 			return { ...state, isEnding: false };
 		case DRIVER_MOVEMENT_REQUEST:
-			return { ...state, isMoving: true };
+			return { ...state, isMoving: true, isStarted: true }; // Remove isStarted from here
 		case DRIVER_MOVEMENT_SUCCESS:
 			payload = action as DriverMovementSuccess;
 

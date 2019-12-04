@@ -15,6 +15,7 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	isStarting: boolean;
+	isStarted: boolean;
 	isEnding: boolean;
 	isMoving: boolean;
 	isRequestingJourneyDetails: boolean;

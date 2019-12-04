@@ -72,17 +72,18 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	public componentWillUnmount(): void {
-		this._stopTracking();
+		// this._stopTracking();
 	}
 
 	private _trackDriver = (): void => {
 		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
+			console.log('TRACK');
 			this.setState({ movementCount: this.state.movementCount + 1 });
 
 			const coords: Coords = {
 				latitude: location.coords.latitude,
 				longitude: location.coords.longitude
-			}
+			};
 			const region = {
 				...coords,
 				latitudeDelta: 0.015,
@@ -104,8 +105,7 @@ export class JourneyMap extends Component<Props, State> {
 			}
 		},
 	 (error: PositionError) => console.log(error.message),
-{ enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 }
-		);
+{ enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 });
 
 		console.log(tracker);
 		this.setState({ tracker });
@@ -114,9 +114,7 @@ export class JourneyMap extends Component<Props, State> {
 	private _stopTracking = (): void => {
 		const tracker: number = this.state.tracker as number;
 
-		console.log(tracker);
-
-		if (tracker) navigator.geolocation.clearWatch(tracker);
+		navigator.geolocation.clearWatch(tracker);
 
 		this.setState({ tracker: null });
 	}
@@ -207,12 +205,7 @@ export class JourneyMap extends Component<Props, State> {
 		/>;
 	}
 
-	private _getMapRegion = (): Region => ({
-		latitude: this.state.currentPosition.latitude,
-		longitude: this.state.currentPosition.longitude,
-		latitudeDelta: this.state.currentPosition.latitudeDelta,
-		longitudeDelta: this.state.currentPosition.longitudeDelta
-	})
+	private _getMapRegion = (): Region => this.state.currentPosition;
 
 	private _map: MapView = React.createRef<MapView>();
 
@@ -257,9 +250,12 @@ export class JourneyMap extends Component<Props, State> {
 								/>
 						}
 
-						<Marker
-							coordinate={ this.state.currentPosition }
-						/>
+						{
+							this.props.isStarted &&
+								<Marker
+									coordinate={ this.state.currentPosition }
+								/>
+						}
 					</MapView>
 				</View>
 

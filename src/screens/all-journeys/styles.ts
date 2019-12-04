@@ -42,6 +42,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	journeyHeading: {
 		fontSize: 16
+	},
+
+	textRow: {
+		marginBottom: 10
 	}
 });
 
