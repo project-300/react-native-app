@@ -10,18 +10,26 @@ import toastr from '../../helpers/toastr';
 import { AppActions } from '../../types/redux-action-types';
 import { setUserType, userId } from '../../auth';
 
-const driverApplicationRequest = (): AppActions => ({ type: DRIVER_APPLICATION_REQUEST });
+const driverApplicationRequest = (): AppActions => ({
+	type: DRIVER_APPLICATION_REQUEST
+});
 
-const driverApplicationSuccess = (): AppActions => ({ type: DRIVER_APPLICATION_SUCCESS });
+const driverApplicationSuccess = (): AppActions => ({
+	type: DRIVER_APPLICATION_SUCCESS
+});
 
-const driverApplicationFailure = (): AppActions => ({ type: DRIVER_APPLICATION_FAILURE });
+const driverApplicationFailure = (): AppActions => ({
+	type: DRIVER_APPLICATION_FAILURE
+});
 
-export const apply = (): (dispatch: Dispatch) => Promise<boolean> => {
-	return async (dispatch: Dispatch): Promise<boolean > => {
+export const apply = (): ((dispatch: Dispatch) => Promise<boolean>) => {
+	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(driverApplicationRequest());
 
 		try {
-			const apiRes: DriverApplicationResult = await HttpAPI.driverApplication({ userId: await userId() });
+			const apiRes: DriverApplicationResult = await HttpAPI.driverApplication({
+				userId: await userId()
+			});
 
 			if (apiRes.success) {
 				await setUserType('Driver'); // ********** Temporarily switch to Driver user type on auto approve

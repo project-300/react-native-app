@@ -46,7 +46,6 @@ export default class ExternalApi {
 	}
 
 	public static GoogleDirectionsRoute = async (origin: Coords, destination: Coords): Promise<Coords[]> => {
-		console.log(origin, destination);
 		const o = `${origin.latitude},${origin.longitude}`;
 		const d = `${destination.latitude},${destination.longitude}`;
 

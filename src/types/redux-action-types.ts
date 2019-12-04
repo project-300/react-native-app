@@ -55,10 +55,40 @@ import {
 	CREATE_JOURNEY_DROP_MARKER,
 	FIND_NEARBY_PLACE_REQUEST,
 	FIND_NEARBY_PLACE_SUCCESS,
-	FIND_NEARBY_PLACE_FAILURE
+	FIND_NEARBY_PLACE_FAILURE,
+	GET_ALL_JOURNEYS_FAILURE,
+	GET_ALL_JOURNEYS_REQUEST,
+	GET_ALL_JOURNEYS_SUCCESS,
+	UPDATE_ADD_USER_JOURNEY_REQUEST,
+	UPDATE_ADD_USER_JOURNEY_SUCCESS,
+	UPDATE_ADD_USER_JOURNEY_FAILURE
 } from '../constants/redux-actions';
-import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload } from '@project-300/common-types';
-import { GooglePlace } from './maps';
+import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload, GooglePlace } from '@project-300/common-types';
+
+export interface UpdateAddUserJourneyRequest {
+	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
+}
+
+export interface UpdateAddUserJourneySuccess {
+	type: typeof UPDATE_ADD_USER_JOURNEY_SUCCESS;
+}
+
+export interface UpdateAddUserJourneyFailure {
+	type: typeof UPDATE_ADD_USER_JOURNEY_FAILURE;
+}
+
+export interface GetAllJourneysRequest {
+	type: typeof GET_ALL_JOURNEYS_REQUEST;
+}
+
+export interface GetAllJourneysSuccess {
+	type: typeof GET_ALL_JOURNEYS_SUCCESS;
+	journeys: Journey[];
+}
+
+export interface GetAllJourneysFailure {
+	type: typeof GET_ALL_JOURNEYS_FAILURE;
+}
 
 export interface LoginRequest {
 	type: typeof LOGIN_REQUEST;
@@ -306,11 +336,24 @@ export interface FindNearbyPlaceSuccess {
 export interface FindNearbyPlaceFailure {
 	type: typeof FIND_NEARBY_PLACE_FAILURE;
 }
+export type JourneyActionTypes =
+	| GetAllJourneysRequest
+	| GetAllJourneysSuccess
+	| GetAllJourneysFailure
+	| UpdateAddUserJourneyRequest
+	| UpdateAddUserJourneySuccess
+	| UpdateAddUserJourneyFailure;
 
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
-export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
-	SignUpConfirmationRequired | SignUpConfirmationRequest | SignUpConfirmationSuccess | SignUpConfirmationFailure;
+export type SignUpActionTypes =
+	| SignUpRequest
+	| SignUpSuccess
+	| SignUpFailure
+	| SignUpConfirmationRequired
+	| SignUpConfirmationRequest
+	| SignUpConfirmationSuccess
+	| SignUpConfirmationFailure;
 
 export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure;
 
@@ -354,4 +397,4 @@ export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | Google
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
 	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |
-	DriverApplicationActionTypes | CreateNewJourneyActionTypes;
+	DriverApplicationActionTypes | CreateNewJourneyActionTypes | JourneyActionTypes;

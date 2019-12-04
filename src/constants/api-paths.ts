@@ -13,3 +13,5 @@ export const START_JOURNEY: string = '/journey/start';
 export const END_JOURNEY: string = '/journey/end';
 export const JOURNEY_DRIVER_MOVEMENT: string = '/journey/driver-movement';
 export const CREATE_JOURNEY: string = '/journey/create';
+export const GET_ALL_JOURNEYS: string = '/journeys/all';
+export const UPDATE_ADD_USER_JOURNEY: string = '/journeys/add-passenger';

@@ -1,5 +1,21 @@
 import { Journey } from '@project-300/common-types';
-import { GooglePlace } from './maps';
+
+export interface UpdateAddUserJourneyResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
+export interface GetAllJourneysResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+	journeys?: Journey[];
+}
 
 export interface LoginResult {
 	success: boolean;
@@ -70,5 +86,14 @@ export interface CreateJourneyResult {
 	success: boolean;
 }
 
-export type HttpResponse = ConfirmationResult | SignupResult | LoginResult | DriverApplicationResult |
-	SecretKeyResult | JourneysResult | JourneyDetailsResult | CreateJourneyResult;
+export type HttpResponse =
+	| UpdateAddUserJourneyResult
+	| GetAllJourneysResult
+	| ConfirmationResult
+	| SignupResult
+	| LoginResult
+	| DriverApplicationResult
+	| SecretKeyResult
+	| JourneysResult
+	| JourneyDetailsResult
+	| CreateJourneyResult;

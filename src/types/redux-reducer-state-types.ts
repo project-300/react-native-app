@@ -2,6 +2,15 @@ import { Coords, GooglePlaceDetails, Journey, User } from '@project-300/common-t
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
+export interface UpdateAddUserJourneyState {
+	isAdding: boolean;
+}
+
+export interface AllJourneysListState {
+	isFetching: boolean;
+	journeys: Journey[];
+}
+
 export interface LoginState {
 	isLoggingIn: boolean;
 	isLoggedIn: boolean;

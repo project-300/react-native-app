@@ -17,6 +17,8 @@ import MyJourneys from './screens/driver/journeys';
 import JourneyMap from './screens/driver/journey';
 import DriverTracking from './screens/passenger/driver-tracking';
 import NewJourney from './screens/new-journey';
+import AllJourneys from './screens/all-journeys';
+import ViewJourney from './screens/passenger/view-journey';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -100,6 +102,18 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'New Journey'
 		})
+	},
+	AllJourneys: {
+		screen: AllJourneys,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'All Journeys'
+		})
+	},
+	ViewJourney: {
+		screen: ViewJourney,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'View Journey'
+		})
 	}
 });
 
@@ -119,6 +133,7 @@ const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
 	);
 };
 
-const CreateNavigator = (signedIn: boolean = false): NavigationContainer => createAppContainer(SwitchNavigator(signedIn));
+const CreateNavigator = (signedIn: boolean = false): NavigationContainer =>
+	createAppContainer(SwitchNavigator(signedIn));
 
 export default CreateNavigator;

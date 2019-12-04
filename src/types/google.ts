@@ -1,5 +1,4 @@
-import { GooglePlace } from './maps';
-import { GoogleDirectionsRoute, GooglePlaceDetails } from '@project-300/common-types';
+import { GoogleDirectionsRoute, GooglePlace, GooglePlaceDetails } from '@project-300/common-types';
 
 export interface GooglePlacesSearchResult {
 	status: string;

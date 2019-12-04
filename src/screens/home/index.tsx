@@ -1,9 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import {
-	Text,
-	ScrollView,
-	TouchableOpacity
-} from 'react-native';
+import { Text, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { storeLogout, userType } from '../../auth';
 import styles from './styles';
@@ -15,7 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { ActionSheet } from 'native-base';
 
 export class Home extends Component<Props, State> {
-
 	public constructor(props: Props) {
 		super(props);
 
@@ -36,7 +31,11 @@ export class Home extends Component<Props, State> {
 				<TouchableOpacity
 					onPress={ (): boolean => navigation.navigate('Profile') }
 				>
-					<Icon name='user' size={ 22 } style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } } />
+					<Icon
+						name={ 'user' }
+						size={ 22 }
+						style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } }
+					/>
 				</TouchableOpacity>
 			)
 		};
@@ -87,6 +86,13 @@ export class Home extends Component<Props, State> {
 					} }
 					style={ styles.button }>
 					<Text style={ styles.buttonText }>My Journeys</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('AllJourneys') }
+					style={ styles.button }
+				>
+					<Text style={ styles.buttonText }>All Journeys</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity

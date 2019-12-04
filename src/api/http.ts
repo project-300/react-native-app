@@ -13,12 +13,18 @@ import {
 	JOURNEY_DRIVER_MOVEMENT,
 	PASSENGER_JOURNEYS,
 	CANCEL_PASSENGER_ACCEPTED_JOURNEY,
-	CREATE_JOURNEY
+	CREATE_JOURNEY,
+	GET_ALL_JOURNEYS,
+	UPDATE_ADD_USER_JOURNEY
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
 
 export default class HttpAPI {
+
+	public static updateUserJoinsJourney = (data: object): Promise<HttpResponse> => HttpAPI.patch(data, UPDATE_ADD_USER_JOURNEY);
+
+	public static getAllJourneys = (userId: string): Promise<HttpResponse> => HttpAPI.get(GET_ALL_JOURNEYS, userId);
 
 	public static confirmAccount = (userId: object): Promise<HttpResponse> => HttpAPI.send(userId, ACCOUNT_CONFIRM);
 
@@ -50,6 +56,24 @@ export default class HttpAPI {
 
 	public static createJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, CREATE_JOURNEY);
 
+	private static get = async (path: string, params?: string): Promise<HttpResponse> => {
+		// change this later...
+		let url = `${SERVER_HTTPS_URL}${path}`;
+		url = params ? `${url}/${params}` : url;
+
+		const res: Response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			}
+		});
+
+		const ok: boolean = res.ok;
+		const data: HttpResponse = await res.json();
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
+
 	private static send = async (req: object, path: string): Promise<HttpResponse> => {
 		const res: Response = await fetch(`${SERVER_HTTPS_URL}${path}`, {
 			method: 'POST',
@@ -61,7 +85,21 @@ export default class HttpAPI {
 
 		const ok: boolean = res.ok;
 		const data: HttpResponse = await res.json();
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
 
+	private static patch = async (req: object, path: string): Promise<HttpResponse> => {
+		const res: Response = await fetch(`${SERVER_HTTPS_URL}${path}`, {
+			method: 'PATCH',
+			body: JSON.stringify(req),
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			}
+		});
+
+		const ok: boolean = res.ok;
+		const data: HttpResponse = await res.json();
 		if (!ok) throw data.error || Error('Unknown Error');
 		return data;
 	}
