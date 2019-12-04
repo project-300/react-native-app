@@ -60,11 +60,14 @@ export class Home extends Component<Props, State> {
 						</TouchableOpacity>
 				}
 
-				<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
-					style={ styles.button }>
-					<Text style={ styles.buttonText }>New Journey</Text>
-				</TouchableOpacity>
+				{
+					this.state.driverView &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
+							style={ styles.button }>
+							<Text style={ styles.buttonText }>New Journey</Text>
+						</TouchableOpacity>
+				}
 
 				<TouchableOpacity
 					onPress={ (): void => {

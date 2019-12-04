@@ -324,8 +324,22 @@ export class NewJourney extends Component<Props, State> {
 					initialRegion = { this.state.journeyRegion }
 					onPress={ (e: MapEvent): Promise<void> => this._dropMarker(e.nativeEvent.coordinate) }
 				>
-					{ originMarkerCoords && <Marker coordinate={ originMarkerCoords } draggable title={ this.props.originPlaceDetails && this.props.originPlaceDetails.name } /> }
-					{ destinationMarkerCoords && <Marker coordinate={ destinationMarkerCoords } draggable title={ this.props.destinationPlaceDetails && this.props.destinationPlaceDetails.name } /> }
+					{
+						originMarkerCoords &&
+							<Marker
+								coordinate={ originMarkerCoords }
+								title={ originPlaceDetails && originPlaceDetails.name }
+								draggable
+							/>
+					}
+					{
+						destinationMarkerCoords &&
+							<Marker
+								coordinate={ destinationMarkerCoords }
+								title={ destinationPlaceDetails && destinationPlaceDetails.name }
+								draggable
+							/>
+					}
 				</MapView>
 
 				<ScrollView style = { [ styles.form, { top: this.state.formTop } ] }>

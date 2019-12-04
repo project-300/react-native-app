@@ -64,7 +64,7 @@ export class MyJourneys extends Component<Props, State> {
 
 						<Text style={ styles.textRow }>Your passengers:
 							{
-								journey.passengers.map((p: PassengerBrief) => {
+								journey.passengers.length ? journey.passengers.map((p: PassengerBrief) => {
 									return <Text>
 										<Text style={ styles.bold }> <Icon
 												name='user'
@@ -73,7 +73,7 @@ export class MyJourneys extends Component<Props, State> {
 												solid
 											/> { p.firstName } { p.lastName }</Text>
 									</Text>;
-								})
+								}) : ' None'
 							}
 						</Text>
 					</Body>
@@ -128,9 +128,9 @@ export class MyJourneys extends Component<Props, State> {
 								{ DatesTimes.readableDate(journey.times.leavingAt) }
 							</Text>
 						</Text>
-						<Text style={ styles.textRow }>
-							Your driver is <Text style={ styles.bold }>{ journey.driver.firstName } { journey.driver.lastName }</Text>
-						</Text>
+							<Text style={ styles.textRow }>
+								Your driver is <Text style={ styles.bold }>{ journey.driver && journey.driver.firstName } { journey.driver && journey.driver.lastName }</Text>
+							</Text>
 					</Body>
 				</CardItem>
 				{
