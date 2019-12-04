@@ -18,11 +18,11 @@ import {
   Tab,
   Tabs,
   Content,
-  Spinner,
   Card,
   CardItem,
   Body
 } from 'native-base';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 class AllJourneys extends Component<Props, State> {
   public constructor(props: Props) {
@@ -63,11 +63,19 @@ class AllJourneys extends Component<Props, State> {
           </Body>
         </CardItem>
         <CardItem footer bordered>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.button}
             onPress={() => this._joinJourney(journey)}
           >
             <Text style={styles.buttonText}>Join</Text>
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={(): void => {
+              this.props.navigation.navigate('ViewJourney', journey);
+            }}
+          >
+            <Text style={styles.buttonText}>View</Text>
           </TouchableOpacity>
         </CardItem>
       </Card>
@@ -78,6 +86,7 @@ class AllJourneys extends Component<Props, State> {
     return (
       <Container>
         <Content>
+          <Spinner visible={this.props.isFetching} />
           <ScrollView style={styles.container}>
             <FlatList
               data={this.props.journeys}
@@ -92,8 +101,7 @@ class AllJourneys extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): AllJourneysListState => ({
-  ...state.allJourneysReducer,
-  ...state.updateAddUserJourney
+  ...state.allJourneysReducer
 });
 
 export default connect(mapStateToProps, {

@@ -19,9 +19,9 @@ export interface Props extends CommonProps {
   //   approveApplication(userId: string): Promise<boolean>;
   //   deleteApplication(userId: string): Promise<boolean>;
   journeys: Journey[];
-  fetchingData: boolean;
-  getAllJourneys(): Promise<void>;
-  updateAddUserJourney(journey: Journey): Promise<void>;
+  isFetching: boolean;
+  getAllJourneys(): Promise<boolean>;
+  updateAddUserJourney(journey: Journey): Promise<boolean>;
 }
 
 export interface State {

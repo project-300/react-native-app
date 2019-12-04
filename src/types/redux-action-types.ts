@@ -27,6 +27,7 @@ import {
   UPDATE_ADD_USER_JOURNEY_SUCCESS,
   UPDATE_ADD_USER_JOURNEY_FAILURE
 } from '../constants/redux-actions';
+import { Journey } from '@project-300/common-types';
 
 export interface UpdateAddUserJourneyRequest {
   type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
@@ -46,7 +47,7 @@ export interface GetAllJourneysRequest {
 
 export interface GetAllJourneysSuccess {
   type: typeof GET_ALL_JOURNEYS_SUCCESS;
-  payload?: object;
+  journeys: Journey[];
 }
 
 export interface GetAllJourneysFailure {

@@ -21,9 +21,9 @@ const getAllJourneysRequest = (): AppActions => ({
   type: GET_ALL_JOURNEYS_REQUEST
 });
 
-const getAllJourneysSuccess = (journeys?: Journey[]): AppActions => ({
+const getAllJourneysSuccess = (journeys: Journey[]): AppActions => ({
   type: GET_ALL_JOURNEYS_SUCCESS,
-  payload: journeys
+  journeys
 });
 
 const getAllJourneysFailure = (): AppActions => ({
@@ -56,7 +56,7 @@ export const updateAddUserJourney = (
       );
 
       if (apiRes.success) {
-        dispatch(getAllJourneysSuccess());
+        dispatch(updateUserJoinsJourneySuccess());
         toastr.success('You are now added to the journey');
         return true;
       }

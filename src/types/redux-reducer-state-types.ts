@@ -9,7 +9,7 @@ export interface UpdateAddUserJourneyState {
 }
 
 export interface AllJourneysListState {
-  fetchingData: boolean;
+  isFetching: boolean;
   journeys: Journey[];
 }
 

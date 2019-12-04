@@ -6,52 +6,40 @@ import {
   UPDATE_ADD_USER_JOURNEY_REQUEST,
   UPDATE_ADD_USER_JOURNEY_FAILURE
 } from '../../constants/redux-actions';
+import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import {
-  AllJourneysListState,
-  UpdateAddUserJourneyState
-} from '../../types/redux-reducer-state-types';
-import { JourneyActionTypes } from '../../types/redux-action-types';
+  JourneyActionTypes,
+  GetAllJourneysSuccess
+} from '../../types/redux-action-types';
 //
 const initialState: AllJourneysListState = {
-  fetchingData: false,
+  isFetching: false,
   journeys: []
-};
-
-const initialUserJourneyState: UpdateAddUserJourneyState = {
-  isAdding: false
 };
 
 const allJourneysReducer = (
   state: AllJourneysListState = initialState,
   action: JourneyActionTypes
 ): AllJourneysListState => {
+  let payload;
+
   switch (action.type) {
     case GET_ALL_JOURNEYS_REQUEST:
-      return { ...state, fetchingData: true };
+      return { ...state, isFetching: true };
     case GET_ALL_JOURNEYS_SUCCESS:
-      return { ...state, journeys: action.payload, fetchingData: false };
+      payload = action as GetAllJourneysSuccess;
+      return { ...state, journeys: payload.journeys, isFetching: false };
     case GET_ALL_JOURNEYS_FAILURE:
-      return { ...state, fetchingData: false };
-    default:
-      return state;
-  }
-};
-
-const updateAddUserJourney = (
-  state: UpdateAddUserJourneyState = initialUserJourneyState,
-  action: JourneyActionTypes
-): UpdateAddUserJourneyState => {
-  switch (action.type) {
+      return { ...state, isFetching: false };
     case UPDATE_ADD_USER_JOURNEY_REQUEST:
-      return { ...state, isAdding: true };
+      return { ...state, isFetching: true };
     case UPDATE_ADD_USER_JOURNEY_SUCCESS:
-      return { ...state, isAdding: false };
+      return { ...state, isFetching: false };
     case UPDATE_ADD_USER_JOURNEY_FAILURE:
-      return { ...state, isAdding: false };
+      return { ...state, isFetching: false };
     default:
       return state;
   }
 };
 
 export default allJourneysReducer;
-export { updateAddUserJourney };
