@@ -16,6 +16,7 @@ export interface Styles {
 export interface Props extends CommonProps {
 	journey: Journey | undefined;
 	isRequesting: boolean;
+	isWaitingOnDriverCoords: boolean;
 	isComplete: boolean;
 	driverLocation: Coords | null;
 	passengerLocation: Coords | null;

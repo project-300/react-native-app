@@ -15,6 +15,7 @@ import MapUtils from '../../../services/map-utils';
 const initialState: DriverTrackingState = {
 	isRequesting: false,
 	isComplete: false,
+	isWaitingOnDriverCoords: true,
 	journey: undefined,
 	routeTravelled: [],
 	direction: 0
@@ -49,7 +50,7 @@ const driverTrackingReducer = (state: DriverTrackingState = initialState, action
 
 			const direction: number = MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude)
 
-			return { ...state, driverLocation: payload.data.location, routeTravelled, direction };
+			return { ...state, driverLocation: payload.data.location, routeTravelled, direction, isWaitingOnDriverCoords: false };
 		default:
 			return state;
 	}

@@ -62,6 +62,7 @@ export interface JourneyMapState {
 export interface DriverTrackingState {
 	isRequesting: boolean;
 	isComplete: boolean;
+	isWaitingOnDriverCoords: boolean;
 	mapRegion?: Region;
 	journey?: Journey;
 	driverLocation?: Coords;
@@ -78,6 +79,7 @@ export interface NewJourneyState {
 	destinationPlaceDetails: GooglePlaceDetails | undefined;
 	destinationMarkerCoords: Coords | null;
 	originMarkerCoords: Coords | null;
+	route: Coords[];
 }
 
 export interface HomeState { }

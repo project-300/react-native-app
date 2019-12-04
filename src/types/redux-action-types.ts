@@ -61,7 +61,7 @@ import {
 	GET_ALL_JOURNEYS_SUCCESS,
 	UPDATE_ADD_USER_JOURNEY_REQUEST,
 	UPDATE_ADD_USER_JOURNEY_SUCCESS,
-	UPDATE_ADD_USER_JOURNEY_FAILURE
+	UPDATE_ADD_USER_JOURNEY_FAILURE, CREATE_JOURNEY_FIND_ROUTE_REQUEST, CREATE_JOURNEY_FIND_ROUTE_SUCCESS, CREATE_JOURNEY_FIND_ROUTE_FAILURE
 } from '../constants/redux-actions';
 import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload, GooglePlace } from '@project-300/common-types';
 
@@ -336,6 +336,20 @@ export interface FindNearbyPlaceSuccess {
 export interface FindNearbyPlaceFailure {
 	type: typeof FIND_NEARBY_PLACE_FAILURE;
 }
+
+export interface CreateJourneyFindRouteRequest {
+	type: typeof CREATE_JOURNEY_FIND_ROUTE_REQUEST;
+}
+
+export interface CreateJourneyFindRouteSuccess {
+	type: typeof CREATE_JOURNEY_FIND_ROUTE_SUCCESS;
+	route: Coords[];
+}
+
+export interface CreateJourneyFindRouteFailure {
+	type: typeof CREATE_JOURNEY_FIND_ROUTE_FAILURE;
+}
+
 export type JourneyActionTypes =
 	| GetAllJourneysRequest
 	| GetAllJourneysSuccess
@@ -392,8 +406,11 @@ export type CreateJourneyActionTypes = CreateJourneyRequest | CreateJourneySucce
 
 export type FindNearbyPlaceActionTypes = FindNearbyPlaceRequest | FindNearbyPlaceSuccess | FindNearbyPlaceFailure;
 
+export type CreateJourneyFindRouteActionTypes = CreateJourneyFindRouteRequest | CreateJourneyFindRouteSuccess |
+	CreateJourneyFindRouteFailure;
+
 export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | GooglePlacesDetailsActionTypes | CreateJourneyActionTypes |
-	FindNearbyPlaceActionTypes;
+	FindNearbyPlaceActionTypes | CreateJourneyFindRouteActionTypes;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
 	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |

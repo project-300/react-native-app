@@ -12,7 +12,7 @@ import { DriverTrackingState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
 import { getPassengerJourneyDetails } from '../../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { Coords, Journey, Place } from '@project-300/common-types';
+import { Journey, Place } from '@project-300/common-types';
 import { Container } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import WS from '../../../api/websocket';
@@ -53,7 +53,7 @@ export class DriverTracking extends Component<Props, State> {
 			...this.props.driverLocation,
 			latitudeDelta: 0.015,
 			longitudeDelta: 0.0121
-		}) : undefined;
+		}) : this.state.mapRegion;
 	}
 
 	private _createMarker = (loc: Place, color?: string): ReactElement =>
@@ -65,8 +65,6 @@ export class DriverTracking extends Component<Props, State> {
 			title={ loc.name }
 			pinColor={ color || 'red' }
 		>
-			{ /*<Image source={ require('../../../assets/images/car.png') } */ }
-			{ /*	   style={ { transform: [{ rotate: `${this.props.direction}deg` }] } } />*/ }
 		</Marker>
 
 	public render(): ReactElement {
@@ -76,8 +74,8 @@ export class DriverTracking extends Component<Props, State> {
 		return (
 			<Container>
 				<Spinner
-					visible={ this.props.isRequesting }
-					textContent={ 'Gathering Information...' }
+					visible={ this.props.isRequesting || this.props.isWaitingOnDriverCoords }
+					textContent={ 'Waiting for driver location...' }
 					textStyle={ styles.spinnerTextStyle }
 				/>
 				<View style={ styles.mapContainer }>
@@ -100,7 +98,9 @@ export class DriverTracking extends Component<Props, State> {
 				</View>
 
 				<View style={ { ...styles.bottomPanel } }>
-					<TouchableOpacity style={ styles.button } onPress={ (): void => { } }>
+					<TouchableOpacity style={ styles.button } onPress={ (): void => {
+						this.props.navigation.goBack();
+					} }>
 						<Text style={ styles.buttonText }>Done</Text>
 					</TouchableOpacity>
 				</View>

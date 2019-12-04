@@ -14,7 +14,10 @@ import {
 	CLEAR_NEW_JOURNEY_FORM_DETAILS,
 	FIND_NEARBY_PLACE_REQUEST,
 	FIND_NEARBY_PLACE_SUCCESS,
-	FIND_NEARBY_PLACE_FAILURE
+	FIND_NEARBY_PLACE_FAILURE,
+	CREATE_JOURNEY_FIND_ROUTE_REQUEST,
+	CREATE_JOURNEY_FIND_ROUTE_SUCCESS,
+	CREATE_JOURNEY_FIND_ROUTE_FAILURE
 } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import toastr from '../../../helpers/toastr';
@@ -45,6 +48,12 @@ const createJourneyRequest = (): AppActions => ({ type: CREATE_JOURNEY_REQUEST }
 const createJourneySuccess = (): AppActions => ({ type: CREATE_JOURNEY_SUCCESS });
 
 const createJourneyFailure = (): AppActions => ({ type: CREATE_JOURNEY_FAILURE });
+
+const createJourneyFindRouteRequest = (): AppActions => ({ type: CREATE_JOURNEY_FIND_ROUTE_REQUEST });
+
+const createJourneyFindRouteSuccess = (route: Coords[]): AppActions => ({ type: CREATE_JOURNEY_FIND_ROUTE_SUCCESS, route });
+
+const createJourneyFindRouteFailure = (): AppActions => ({ type: CREATE_JOURNEY_FIND_ROUTE_FAILURE });
 
 export const googlePlacesSearchClearResults = (): AppActions => ({ type: GOOGLE_PLACES_SEARCH_CLEAR_RESULTS });
 
@@ -154,6 +163,29 @@ export const getPlaceByMarker = (coords: Coords, locationType: string): (dispatc
 			console.log(err);
 			dispatch(findNearbyPlaceFailure());
 			toastr.error(err.message || 'Unable to find nearby place');
+		}
+	};
+};
+
+export const findRoute = (origin: Coords, destination: Coords): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		dispatch(createJourneyFindRouteRequest());
+
+		try {
+			const route: Coords[] = await ExternalApi.GoogleDirectionsRoute(origin, destination);
+
+			console.log(route);
+
+			if (route.length) {
+				dispatch(createJourneyFindRouteSuccess(route));
+			} else {
+				dispatch(createJourneyFindRouteFailure());
+				toastr.error('Unable to find route');
+			}
+		} catch (err) {
+			console.log(err);
+			dispatch(createJourneyFindRouteFailure());
+			toastr.error(err.message || 'Unable to find route');
 		}
 	};
 };

@@ -14,11 +14,11 @@ import {
 	CLEAR_NEW_JOURNEY_FORM_DETAILS,
 	FIND_NEARBY_PLACE_REQUEST,
 	FIND_NEARBY_PLACE_SUCCESS,
-	FIND_NEARBY_PLACE_FAILURE
+	FIND_NEARBY_PLACE_FAILURE, CREATE_JOURNEY_FIND_ROUTE_REQUEST, CREATE_JOURNEY_FIND_ROUTE_SUCCESS, CREATE_JOURNEY_FIND_ROUTE_FAILURE
 } from '../../../constants/redux-actions';
 import { NewJourneyState } from '../../../types/redux-reducer-state-types';
 import {
-	CreateJourneyDropMarker, FindNearbyPlaceSuccess,
+	CreateJourneyDropMarker, CreateJourneyFindRouteSuccess, FindNearbyPlaceSuccess,
 	GooglePlacesDetailsSuccess,
 	GooglePlacesSearchActionTypes,
 	GooglePlacesSearchSuccess, SelectGooglePlace
@@ -32,7 +32,8 @@ const initialState: NewJourneyState = {
 	destinationPlace: null,
 	destinationPlaceDetails: undefined,
 	destinationMarkerCoords: null,
-	originMarkerCoords: null
+	originMarkerCoords: null,
+	route: []
 };
 
 const newJourneyReducer = (state: NewJourneyState = initialState, action: GooglePlacesSearchActionTypes): NewJourneyState => {
@@ -75,6 +76,14 @@ const newJourneyReducer = (state: NewJourneyState = initialState, action: Google
 		case CREATE_JOURNEY_SUCCESS:
 			return { ...state };
 		case CREATE_JOURNEY_FAILURE:
+			return { ...state };
+		case CREATE_JOURNEY_FIND_ROUTE_REQUEST:
+			return { ...state };
+		case CREATE_JOURNEY_FIND_ROUTE_SUCCESS:
+			payload = action as CreateJourneyFindRouteSuccess;
+
+			return { ...state, route: payload.route };
+		case CREATE_JOURNEY_FIND_ROUTE_FAILURE:
 			return { ...state };
 		case CLEAR_NEW_JOURNEY_FORM_DETAILS:
 			return { ...state, ...initialState };
