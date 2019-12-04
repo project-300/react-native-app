@@ -2,7 +2,7 @@ import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Region, LatLng } from 'react-native-maps';
 import { GooglePlace } from '../../types/maps';
-import { CreateJourney, GooglePlaceDetails } from '@project-300/common-types';
+import { Coords, CreateJourney, GooglePlaceDetails } from '@project-300/common-types';
 import { AppActions } from '../../types/redux-action-types';
 
 export interface Styles {
@@ -22,19 +22,24 @@ export interface Styles {
 	continueButton: ViewStyle;
 	buttonValid: ViewStyle;
 	buttonInvalid: ViewStyle;
+	locationNameHeader: ViewStyle;
 }
 
 export interface Props extends CommonProps {
 	places: GooglePlace[];
 	originPlace: GooglePlace | null;
-	originPlaceDetails: GooglePlaceDetails | null;
+	originPlaceDetails: GooglePlaceDetails | undefined;
 	destinationPlace: GooglePlace | null;
-	destinationPlaceDetails: GooglePlaceDetails | null;
+	destinationPlaceDetails: GooglePlaceDetails | undefined;
+	destinationMarkerCoords: Coords | null;
+	originMarkerCoords: Coords | null;
 	googlePlacesSearch(q: string): Promise<void>;
 	getGooglePlaceDetails(p: string, l: string): Promise<void>;
 	selectGooglePlace(p: GooglePlace, l: string): AppActions;
 	googlePlacesSearchClearResults(): void;
 	createJourney(j: CreateJourney): Promise<boolean>;
+	clearNewJourneyFormDetails(): AppActions;
+	getPlaceByMarker(c: Coords, l: string): Promise<void>;
 }
 
 export interface State {

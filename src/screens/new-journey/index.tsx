@@ -11,7 +11,7 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import MapView, { PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, LatLng, MapEvent } from 'react-native-maps';
 import { Container, Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
@@ -20,11 +20,13 @@ import {
 	getGooglePlaceDetails,
 	googlePlacesSearchClearResults,
 	selectGooglePlace,
-	createJourney
+	createJourney,
+	clearNewJourneyFormDetails,
+	getPlaceByMarker
 } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
-import { CreateJourney, Place } from '@project-300/common-types';
+import { Coords, CreateJourney, Place } from '@project-300/common-types';
 
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
@@ -70,6 +72,10 @@ export class NewJourney extends Component<Props, State> {
 		};
 	}
 
+	public componentWillUnmount(): void {
+		this.props.clearNewJourneyFormDetails();
+	}
+
 	private _searchPlaces = async (query: string): Promise<void> => {
 		this.setState({ isSearching: true, placesFieldText: query });
 		await this.props.googlePlacesSearch(query);
@@ -77,27 +83,22 @@ export class NewJourney extends Component<Props, State> {
 
 	private _createJourney = async (): Promise<void> => {
 		const { totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
-		const { originPlace, destinationPlace, originPlaceDetails, destinationPlaceDetails } = this.props;
+		const { originPlaceDetails, destinationPlaceDetails } = this.props;
 
-		console.log(originPlace);
-		console.log(destinationPlace);
-		console.log(originPlaceDetails);
-		console.log(destinationPlaceDetails);
-
-		if (!originPlace || !originPlaceDetails) return console.log(1);
-		if (!destinationPlace || !destinationPlaceDetails) return console.log(2);
+		if (!originPlaceDetails) return console.log(1);
+		if (!destinationPlaceDetails) return console.log(2);
 		if (!originPlaceDetails.geometry || !originPlaceDetails.geometry.location) return console.log(3);
 
 		const origin: Place = {
 			latitude: originPlaceDetails.geometry.location.lat,
 			longitude: originPlaceDetails.geometry.location.lng,
-			name: originPlace.structured_formatting.main_text
+			name: originPlaceDetails.name
 		};
 
 		const destination: Place = {
 			latitude: destinationPlaceDetails.geometry.location.lat,
 			longitude: destinationPlaceDetails.geometry.location.lng,
-			name: destinationPlace.structured_formatting.main_text
+			name: destinationPlaceDetails.name
 		};
 
 		const journey: CreateJourney = {
@@ -110,24 +111,24 @@ export class NewJourney extends Component<Props, State> {
 			}
 		};
 
-		console.log(journey);
-
 		const created: boolean = await this.props.createJourney(journey);
-
-		if (created) this.props.navigation.navigate('Home');
+		if (created) {
+			this.props.clearNewJourneyFormDetails();
+			this.props.navigation.navigate('Home');
+		}
 	}
 
 	private _journeyForm = (): ReactElement => {
 		return <Form>
 			<TouchableOpacity onPress={ this._chooseOrigin }>
-				<Text style={ { fontSize: 20 } }>{ this.props.originPlace && this.props.originPlace.structured_formatting.main_text || 'Choose Origin' }</Text>
+				<Text style={ { fontSize: 20 } }>{ this.props.originPlaceDetails && this.props.originPlaceDetails.name || 'Choose Origin' }</Text>
 				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
 			</TouchableOpacity>
 
 			<View style={ styles.divider } />
 
 			<TouchableOpacity onPress={ this._chooseDestination }>
-				<Text style={ { fontSize: 20 } }>{ this.props.destinationPlace && this.props.destinationPlace.structured_formatting.main_text || 'Choose Destination' }</Text>
+				<Text style={ { fontSize: 20 } }>{ this.props.destinationPlaceDetails && this.props.destinationPlaceDetails.name || 'Choose Destination' }</Text>
 				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
 			</TouchableOpacity>
 
@@ -201,12 +202,12 @@ export class NewJourney extends Component<Props, State> {
 			<H1 style={ { alignSelf: 'center' } }>{ locationType }</H1>
 			<Item floatingLabel>
 				<Label>{ locationType }</Label>
-				<Input onChangeText={ (query: string): Promise<void> => this._searchPlaces(query) } />
+				<Input onChangeText={ (query: string): Promise<void> => this._searchPlaces(query) } autoCorrect={ false } />
 			</Item>
 			{
 				!this.state.placesFieldText &&
 					<View style={ { alignItems: 'center' } }>
-						<Text style={ { marginVertical: 10 } }>OR</Text>
+						<Text style={ { marginVertical: 40, fontWeight: 'bold' } }>OR</Text>
 						<Button block light onPress={ this._openMap }>
 							<Text>Drop Marker</Text>
 						</Button>
@@ -224,13 +225,13 @@ export class NewJourney extends Component<Props, State> {
 	}
 
 	private _confirmPanel = (): ReactElement => {
-		if (!this.props.originPlace || !this.props.destinationPlace) return <View><Text>Origin or Destination is missing</Text></View>;
+		if (!this.props.originPlaceDetails || !this.props.destinationPlaceDetails) return <View><Text>Origin or Destination is missing</Text></View>;
 
 		return <View>
-			<Text>You are travelling from { this.props.originPlace.structured_formatting.main_text } to { this.props.destinationPlace.structured_formatting.main_text }.</Text>
+			<Text>You are travelling from { this.props.originPlaceDetails.name } to { this.props.destinationPlaceDetails.name }.</Text>
 			<Text>There are { this.state.totalNoOfSeats } seats available.</Text>
 			<Text>Price per seat: €{ this.state.pricePerSeat }</Text>
-			<Text>You will be departing from { this.props.originPlace.structured_formatting.main_text } at { DatesTimes.hoursMinutes(this.state.leavingAt) } on { DatesTimes.readableDate(this.state.leavingAt)  }</Text>
+			<Text>You will be departing from { this.props.originPlaceDetails.name } at { DatesTimes.hoursMinutes(this.state.leavingAt) } on { DatesTimes.readableDate(this.state.leavingAt)  }</Text>
 		</View>;
 	}
 
@@ -246,16 +247,15 @@ export class NewJourney extends Component<Props, State> {
 	private _selectPlace = async (place: GooglePlace): Promise<void> => {
 		this.setState({ isSearching: false, openLocationPanel: false, placesFieldText: '' });
 		this.props.googlePlacesSearchClearResults();
-		console.log(place, this.state.locationType);
 		await this.props.selectGooglePlace(place, this.state.locationType);
 		await this.props.getGooglePlaceDetails(place.place_id, this.state.locationType);
 	}
 
 	private _formValid = (): boolean => {
 		const { totalNoOfSeats } = this.state;
-		const { originPlace, destinationPlace } = this.props;
+		const { originPlaceDetails, destinationPlaceDetails } = this.props;
 
-		if (!totalNoOfSeats || !originPlace || !destinationPlace) return false;
+		if (!totalNoOfSeats || !originPlaceDetails || !destinationPlaceDetails) return false;
 		return true;
 	}
 
@@ -293,41 +293,72 @@ export class NewJourney extends Component<Props, State> {
 		this._hideDateTimePicker();
 	}
 
+	private _dropMarker = async (coords: Coords): Promise<void> => {
+		await this.props.getPlaceByMarker(coords, this.state.locationType);
+	}
+
+	private _confirmMarkerDrop = (): void => {
+		this._closeMap();
+		this._closeLocationPanel();
+	}
+
 	public render(): ReactElement {
+		const { openLocationPanel, openConfirmPanel, droppingMarker, locationType } = this.state;
+		const { originMarkerCoords, destinationMarkerCoords, originPlaceDetails, destinationPlaceDetails } = this.props;
+
 		return (
 			<Container style={ styles.container }>
+				{
+					droppingMarker &&
+						<View style={ styles.locationNameHeader }>
+							<Text style={ { fontWeight: 'bold', fontSize: 16, color: 'white' } }>{
+								(locationType === ORIGIN && originPlaceDetails && originPlaceDetails.name) ||
+								(locationType === DESTINATION && destinationPlaceDetails && destinationPlaceDetails.name)
+							}</Text>
+						</View>
+				}
+
 				<MapView
 					style = { styles.map }
 					provider = { PROVIDER_GOOGLE }
 					initialRegion = { this.state.journeyRegion }
+					onPress={ (e: MapEvent): Promise<void> => this._dropMarker(e.nativeEvent.coordinate) }
 				>
-					<Marker coordinate={ this.state.positionStart } />
+					{ originMarkerCoords && <Marker coordinate={ originMarkerCoords } draggable title={ this.props.originPlaceDetails && this.props.originPlaceDetails.name } /> }
+					{ destinationMarkerCoords && <Marker coordinate={ destinationMarkerCoords } draggable title={ this.props.destinationPlaceDetails && this.props.destinationPlaceDetails.name } /> }
 				</MapView>
 
 				<ScrollView style = { [ styles.form, { top: this.state.formTop } ] }>
 					{
-						!this.state.droppingMarker &&
+						!droppingMarker &&
 							<View>
-								{ !this.state.openLocationPanel && !this.state.openConfirmPanel && this._journeyForm() }
-								{ this.state.openLocationPanel && !this.state.openConfirmPanel &&
-									this._chooseLocationPanel(this.state.locationType === ORIGIN ? 'Origin' : 'Destination') }
-								{ this.state.openConfirmPanel && !this.state.openLocationPanel && this._confirmPanel() }
+								{ !openLocationPanel && !openConfirmPanel && this._journeyForm() }
+								{
+									openLocationPanel && !openConfirmPanel &&
+									this._chooseLocationPanel(locationType === ORIGIN ? 'Origin' : 'Destination')
+								}
+								{ openConfirmPanel && !openLocationPanel && this._confirmPanel() }
 							</View>
 					}
 
 					{
-						this.state.droppingMarker &&
+						droppingMarker &&
 							<View style={ { alignItems: 'center' } }>
-								<Text style={ { marginBottom: 10 } }>Click on the map to drop a marker</Text>
-								<Button light block onPress={ this._closeMap }>
-									<Text>Cancel</Text>
+								<Text style={ { marginBottom: 20 } }>Click on the map to drop a marker</Text>
+
+								<Button light block onPress={ this._confirmMarkerDrop }>
+									<Text>Confirm</Text>
 								</Button>
+
+								<Text style={ { alignSelf: 'center', marginTop: 20 } } onPress={ this._closeMap }>
+									<Text>Cancel</Text>
+								</Text>
 							</View>
 					}
 				</ScrollView>
 
 				{
-					!this.state.droppingMarker && !this.state.openLocationPanel && !this.state.openConfirmPanel &&
+					!droppingMarker && !openLocationPanel && !openConfirmPanel &&
 						<TouchableOpacity
 							style={ [ styles.continueButton, this._formValid() ? styles.buttonValid : styles.buttonInvalid ] }
 							onPress={ this._showConfirmPanel }
@@ -338,7 +369,7 @@ export class NewJourney extends Component<Props, State> {
 				}
 
 				{
-					this.state.openConfirmPanel &&
+					openConfirmPanel &&
 						<TouchableOpacity
 							style={ [ styles.continueButton, styles.buttonValid ] }
 							onPress={ this._createJourney }
@@ -360,5 +391,7 @@ export default connect(mapStateToProps, {
 	getGooglePlaceDetails,
 	googlePlacesSearchClearResults,
 	selectGooglePlace,
-	createJourney
+	createJourney,
+	clearNewJourneyFormDetails,
+	getPlaceByMarker
 })(NewJourney);

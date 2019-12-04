@@ -47,9 +47,17 @@ import {
 	GOOGLE_PLACES_SEARCH_CLEAR_RESULTS,
 	GOOGLE_PLACES_DETAILS_REQUEST,
 	GOOGLE_PLACES_DETAILS_SUCCESS,
-	GOOGLE_PLACES_DETAILS_FAILURE, SELECT_GOOGLE_PLACE
+	GOOGLE_PLACES_DETAILS_FAILURE,
+	SELECT_GOOGLE_PLACE,
+	CREATE_JOURNEY_REQUEST,
+	CREATE_JOURNEY_SUCCESS,
+	CREATE_JOURNEY_FAILURE,
+	CREATE_JOURNEY_DROP_MARKER,
+	FIND_NEARBY_PLACE_REQUEST,
+	FIND_NEARBY_PLACE_SUCCESS,
+	FIND_NEARBY_PLACE_FAILURE
 } from '../constants/redux-actions';
-import { GooglePlaceDetails, Journey, SubscriptionPayload } from '@project-300/common-types';
+import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload } from '@project-300/common-types';
 import { GooglePlace } from './maps';
 
 export interface LoginRequest {
@@ -267,6 +275,38 @@ export interface GooglePlacesDetailsFailure {
 	type: typeof GOOGLE_PLACES_DETAILS_FAILURE;
 }
 
+export interface CreateJourneyRequest {
+	type: typeof CREATE_JOURNEY_REQUEST;
+}
+
+export interface CreateJourneySuccess {
+	type: typeof CREATE_JOURNEY_SUCCESS;
+}
+
+export interface CreateJourneyFailure {
+	type: typeof CREATE_JOURNEY_FAILURE;
+}
+
+export interface CreateJourneyDropMarker {
+	type: typeof CREATE_JOURNEY_DROP_MARKER;
+	coords: Coords;
+	locationType: string;
+}
+
+export interface FindNearbyPlaceRequest {
+	type: typeof FIND_NEARBY_PLACE_REQUEST;
+}
+
+export interface FindNearbyPlaceSuccess {
+	type: typeof FIND_NEARBY_PLACE_SUCCESS;
+	place: GooglePlaceDetails;
+	locationType: string;
+}
+
+export interface FindNearbyPlaceFailure {
+	type: typeof FIND_NEARBY_PLACE_FAILURE;
+}
+
 export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
 
 export type SignUpActionTypes = SignUpRequest | SignUpSuccess | SignUpFailure |
@@ -305,7 +345,12 @@ export type GooglePlacesSearchActionTypes = GooglePlacesSearchRequest | GooglePl
 
 export type GooglePlacesDetailsActionTypes = GooglePlacesDetailsRequest | GooglePlacesDetailsSuccess | GooglePlacesDetailsFailure;
 
-export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | GooglePlacesDetailsActionTypes;
+export type CreateJourneyActionTypes = CreateJourneyRequest | CreateJourneySuccess | CreateJourneyFailure | CreateJourneyDropMarker;
+
+export type FindNearbyPlaceActionTypes = FindNearbyPlaceRequest | FindNearbyPlaceSuccess | FindNearbyPlaceFailure;
+
+export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | GooglePlacesDetailsActionTypes | CreateJourneyActionTypes |
+	FindNearbyPlaceActionTypes;
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
 	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |

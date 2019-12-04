@@ -1,4 +1,4 @@
-import { GoogleDirectionsResult, GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../types/google';
+import { GoogleDirectionsResult, GoogleNearbyPlaceResult, GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../types/google';
 import { GoogleMapsAPIKey } from '../../environment/env';
 import { Coords, GoogleDirectionsRoute } from '@project-300/common-types';
 import Polyline from '@mapbox/polyline';
@@ -26,6 +26,20 @@ export default class ExternalApi {
 
 		const ok: boolean = res.ok;
 		const data: GooglePlaceDetailsResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
+
+	public static GoogleNearbyPlaces = async (loc: Coords): Promise<GoogleNearbyPlaceResult> => {
+		const location = `${loc.latitude},${loc.longitude}`
+
+		const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=1000&key=${GoogleMapsAPIKey}`;
+
+		const res: Response = await fetch(url);
+
+		const ok: boolean = res.ok;
+		const data: GoogleNearbyPlaceResult = await res.json();
 
 		if (!ok) throw data.error || Error('Unknown Error');
 		return data;

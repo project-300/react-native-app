@@ -64,9 +64,11 @@ export interface DriverTrackingState {
 export interface NewJourneyState {
 	places: GooglePlace[];
 	originPlace: GooglePlace | null;
-	originPlaceDetails: GooglePlaceDetails | null;
+	originPlaceDetails: GooglePlaceDetails | undefined;
 	destinationPlace: GooglePlace | null;
-	destinationPlaceDetails: GooglePlaceDetails | null;
+	destinationPlaceDetails: GooglePlaceDetails | undefined;
+	destinationMarkerCoords: Coords | null;
+	originMarkerCoords: Coords | null;
 }
 
 export interface HomeState { }

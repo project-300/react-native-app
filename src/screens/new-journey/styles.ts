@@ -121,6 +121,17 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	buttonInvalid: {
 		backgroundColor: 'grey'
+	},
+
+	locationNameHeader: {
+		position: 'absolute',
+		top: 0,
+		width: '100%',
+		elevation: 50,
+		backgroundColor: '#555',
+		padding: 10,
+		alignItems: 'center',
+		zIndex: 100
 	}
 });
 

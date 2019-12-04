@@ -1,5 +1,5 @@
 import { GooglePlace } from './maps';
-import { GooglePlaceDetails } from '@project-300/common-types';
+import { GoogleDirectionsRoute, GooglePlaceDetails } from '@project-300/common-types';
 
 export interface GooglePlacesSearchResult {
 	status: string;
@@ -9,4 +9,14 @@ export interface GooglePlacesSearchResult {
 export interface GooglePlaceDetailsResult {
 	status: string;
 	result: GooglePlaceDetails;
+}
+
+export interface GoogleDirectionsResult {
+	status: string;
+	routes: GoogleDirectionsRoute[];
+}
+
+export interface GoogleNearbyPlaceResult {
+	status: string;
+	results: GooglePlaceDetails[];
 }
