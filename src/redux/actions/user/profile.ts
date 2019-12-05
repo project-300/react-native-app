@@ -13,11 +13,11 @@ import { Dispatch } from 'redux';
 import toastr from '../../../helpers/toastr';
 import { HttpResponse } from '../../../types/http-responses';
 import HttpAPI from '../../../api/http';
-import { Response as ResizedResponse } from "react-native-image-resizer";
+import { Response as ResizedResponse } from 'react-native-image-resizer';
 import { ReduceImage } from '../../../helpers/image-resizing';
 import { S3_CONFIG } from '../../../../environment/env';
 import { userId } from '../../../auth';
-import { Response as ImageResponse } from "react-native-image-picker";
+import { Response as ImageResponse } from 'react-native-image-picker';
 import { RNS3 } from 'react-native-aws3';
 import { S3_CONFIG_TYPE } from '../../../types/aws';
 

@@ -70,6 +70,7 @@ export interface DriverTrackingState {
 	passengerLocation?: Coords;
 	routeTravelled: Coords[],
 	direction: number;
+	ended: boolean;
 }
 
 export interface NewJourneyState {

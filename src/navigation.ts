@@ -113,13 +113,13 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 	AllJourneys: {
 		screen: AllJourneys,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'All Journeys'
+			title: 'Find A Lift'
 		})
 	},
 	ViewJourney: {
 		screen: ViewJourney,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'View Journey'
+			title: 'View Route'
 		})
 	}
 });

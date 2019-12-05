@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { ScrollView, FlatList, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
@@ -80,6 +80,13 @@ class AllJourneys extends Component<Props, State> {
 							renderItem={ this._renderRow }
 							keyExtractor={ (item: Journey): string => item.journeyId }
 						/>
+
+						{
+							!this.props.journeys.length &&
+								<View style={ { alignItems: 'center' } }>
+									<Text style={ { fontWeight: 'bold', fontSize: 20, marginTop: 20 } }>No lifts available</Text>
+								</View>
+						}
 					</ScrollView>
 				</Content>
 			</Container>

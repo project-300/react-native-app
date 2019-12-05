@@ -141,18 +141,16 @@ export class NewJourney extends Component<Props, State> {
 			<Text style={ { fontSize: 16, marginBottom: 20 } }>How many seats are available?</Text>
 			<Grid>
 				<Col>
-					<Button block light onPress={ (): void => this._updateNoOfSeats(-1) }>
-						<Text>
-							<FAIcon name={ 'minus' } />
-						</Text>
+					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updateNoOfSeats(-1) }>
+						<FAIcon name={ 'minus' } style={ { color: 'white' } } />
 					</Button>
 				</Col>
 				<Col style={ { alignItems: 'center' } }>
 					<Text style={ { fontSize: 20, fontWeight: 'bold', marginTop: 10 } }>{ this.state.totalNoOfSeats }</Text>
 				</Col>
 				<Col>
-					<Button block light onPress={ (): void => this._updateNoOfSeats(1) }>
-						<FAIcon name={ 'plus' } />
+					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updateNoOfSeats(1) }>
+						<FAIcon name={ 'plus' } style={ { color: 'white' } } />
 					</Button>
 				</Col>
 			</Grid>
@@ -162,18 +160,16 @@ export class NewJourney extends Component<Props, State> {
 			<Text style={ { fontSize: 16, marginVertical: 20 } }>Cost per seat?</Text>
 			<Grid>
 				<Col>
-					<Button block light onPress={ (): void => this._updatePrice(-1) }>
-						<Text>
-							<FAIcon name={ 'minus' } />
-						</Text>
+					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updatePrice(-1) }>
+						<FAIcon name={ 'minus' } style={ { color: 'white' } } />
 					</Button>
 				</Col>
 				<Col style={ { alignItems: 'center' } }>
 					<Text style={ { fontSize: 20, fontWeight: 'bold', marginTop: 10 } }>{ this.state.pricePerSeat ? `€${this.state.pricePerSeat}` : 'Free' }</Text>
 				</Col>
 				<Col>
-					<Button block light onPress={ (): void => this._updatePrice(1) }>
-						<FAIcon name={ 'plus' } />
+					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updatePrice(1) }>
+						<FAIcon name={ 'plus' } style={ { color: 'white' } } />
 					</Button>
 				</Col>
 			</Grid>

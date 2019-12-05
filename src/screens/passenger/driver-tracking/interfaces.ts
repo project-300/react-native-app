@@ -9,6 +9,7 @@ export interface Styles {
 	buttonText: TextStyle;
 	map: ViewStyle;
 	bottomPanel: ViewStyle;
+	topPanel: ViewStyle;
 	spinner: ViewStyle;
 	spinnerTextStyle: TextStyle;
 }
@@ -22,6 +23,7 @@ export interface Props extends CommonProps {
 	passengerLocation: Coords | null;
 	routeTravelled: Coords[];
 	direction: number;
+	ended: boolean;
 	getPassengerJourneyDetails(j: string): Promise<void>;
 }
 

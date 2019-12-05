@@ -1,8 +1,8 @@
 import { SERVER_WSS_URL } from '../../environment/env';
 import { store } from '../store';
-import { storeApplications, userProfileSubReceived, userProfileSubFailure, updateDriverLocation } from '../redux/actions';
+import { userProfileSubReceived, userProfileSubFailure, updateDriverLocation } from '../redux/actions';
 import { userId } from '../auth';
-import { ADMIN_DRIVER_APPLICATIONS, USER_PROFILE, JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
+import { USER_PROFILE, JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
 import { SubscriptionPayload } from '@project-300/common-types';
 
 class WebSocketAPI {
@@ -61,9 +61,6 @@ class WebSocketAPI {
 
 
 		switch (subscription) {
-			case ADMIN_DRIVER_APPLICATIONS:
-				store.dispatch(storeApplications(payload));
-				break;
 			case USER_PROFILE:
 				if (payload.error) store.dispatch(userProfileSubFailure(payload));
 				else store.dispatch(userProfileSubReceived(payload));

@@ -41,7 +41,7 @@ export class Home extends Component<Props, State> {
 		};
 	}
 
-	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
+	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('OpeningHome'));
 
 	public render(): ReactElement {
 		const BUTTONS = [ 'Driver', 'Passenger', 'Cancel' ];
@@ -64,7 +64,7 @@ export class Home extends Component<Props, State> {
 						<TouchableOpacity
 							onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
 							style={ styles.button }>
-							<Text style={ styles.buttonText }>New Journey</Text>
+							<Text style={ styles.buttonText }>Create A Journey</Text>
 						</TouchableOpacity>
 				}
 
@@ -92,7 +92,7 @@ export class Home extends Component<Props, State> {
 					onPress={ (): boolean => this.props.navigation.navigate('AllJourneys') }
 					style={ styles.button }
 				>
-					<Text style={ styles.buttonText }>All Journeys</Text>
+					<Text style={ styles.buttonText }>Find A Lift</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity

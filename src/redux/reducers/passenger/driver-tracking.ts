@@ -19,7 +19,8 @@ const initialState: DriverTrackingState = {
 	journey: undefined,
 	routeTravelled: [],
 	direction: 0,
-	driverLocation: undefined
+	driverLocation: undefined,
+	ended: false
 };
 
 const driverTrackingReducer = (state: DriverTrackingState = initialState, action: PassengerJourneyDetailsActionTypes):
@@ -39,6 +40,9 @@ const driverTrackingReducer = (state: DriverTrackingState = initialState, action
 			return { ...state, isRequesting: false };
 		case UPDATE_DRIVER_LOCATION:
 			payload = action.payload as SubscriptionPayload;
+
+			if (payload.data.ended) return { ...state, ended: payload.data.ended };
+
 			const routeTravelled = state.routeTravelled.concat(payload.data.location);
 
 			// const mapCenter = state.driverLocation ?
@@ -49,9 +53,9 @@ const driverTrackingReducer = (state: DriverTrackingState = initialState, action
 			const start: Coords = state.routeTravelled[length - 2];
 			const end: Coords = state.routeTravelled[length - 1];
 
-			const direction: number = MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude)
+			const direction: number = MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude);
 
-			return { ...state, driverLocation: payload.data.location, routeTravelled, direction, isWaitingOnDriverCoords: false };
+			return { ...state, driverLocation: payload.data.location, routeTravelled, direction, isWaitingOnDriverCoords: false, ended: (payload.data.ended || false) };
 		default:
 			return state;
 	}

@@ -72,7 +72,7 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	public componentWillUnmount(): void {
-		// this._stopTracking();
+		this._stopTracking();
 	}
 
 	private _trackDriver = (): void => {

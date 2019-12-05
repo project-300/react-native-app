@@ -203,7 +203,7 @@ export class MyJourneys extends Component<Props, State> {
 			<Container>
 				<NavigationEvents onDidFocus={ this._getJourneys } />
 				<Tabs>
-					<Tab heading='Current'>
+					<Tab heading='Current' textStyle={ { color: 'grey' } } tabStyle={ { backgroundColor: 'white' } } activeTabStyle={ { backgroundColor: '#eee' } } activeTextStyle={ { color: '#194781' } }>
 						<Content padder>
 							{
 								this.props.isRequesting && <Spinner />
@@ -223,7 +223,7 @@ export class MyJourneys extends Component<Props, State> {
 							}
 						</Content>
 					</Tab>
-					<Tab heading='Previous'>
+					<Tab heading='Previous' textStyle={ { color: 'grey' } } tabStyle={ { backgroundColor: 'white' } } activeTabStyle={ { backgroundColor: '#eee' } } activeTextStyle={ { color: '#194781' } }>
 						<Content padder>
 							{
 								this.props.journeys.previous.length ?

@@ -76,7 +76,9 @@ export class ViewJourney extends Component<Props, State> {
 		this.setState({
 			midpoint: {
 				latitude: (origin.latitude + destination.latitude) / 2,
-				longitude: (origin.longitude + destination.longitude) / 2
+				longitude: (origin.longitude + destination.longitude) / 2,
+				latitudeDelta: 1,
+				longitudeDelta: 1
 			}
 		});
 	}
@@ -99,6 +101,12 @@ export class ViewJourney extends Component<Props, State> {
 				Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
 			)
 		);
+
+		console.log({midpoint: {
+				...this.state.midpoint as Coords,
+				latitudeDelta,
+				longitudeDelta
+			}});
 
 		this.setState({
 			midpoint: {

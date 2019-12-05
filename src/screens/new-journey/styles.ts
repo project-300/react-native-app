@@ -116,7 +116,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	buttonValid: {
-		backgroundColor: 'green'
+		backgroundColor: '#38A073'
 	},
 
 	buttonInvalid: {

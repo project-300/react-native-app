@@ -97,13 +97,23 @@ export class DriverTracking extends Component<Props, State> {
 					</MapView>
 				</View>
 
-				<View style={ { ...styles.bottomPanel } }>
-					<TouchableOpacity style={ styles.button } onPress={ (): void => {
-						this.props.navigation.goBack();
-					} }>
-						<Text style={ styles.buttonText }>Done</Text>
-					</TouchableOpacity>
-				</View>
+				{
+					this.props.ended &&
+						<View style={ { ...styles.topPanel } }>
+							<Text style={ { color: 'white', fontWeight: 'bold', fontSize: 20 } }>The journey has ended</Text>
+						</View>
+				}
+
+				{
+					this.props.ended &&
+						<View style={ { ...styles.bottomPanel } }>
+							<TouchableOpacity style={ styles.button } onPress={ (): void => {
+								this.props.navigation.goBack();
+							} }>
+								<Text style={ styles.buttonText }>Done</Text>
+							</TouchableOpacity>
+						</View>
+				}
 			</Container>
 		);
 	}
