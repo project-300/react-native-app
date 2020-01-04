@@ -10,12 +10,13 @@ import MapView, {
 	PROVIDER_GOOGLE,
 	Region,
 } from 'react-native-maps';
-import { Journey, Place } from '@project-300/common-types';
+import { Coords, Journey, Place } from '@project-300/common-types';
 import { Container } from 'native-base';
 import { AllJourneysListState } from '../../../types/redux-reducer-state-types';
 import { updateAddUserJourney } from '../../../redux/actions/journey';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ExternalApi from '../../../api/external-api';
+import { getDistance } from 'geolib';
 
 export class ViewJourney extends Component<Props, State> {
 
@@ -32,7 +33,8 @@ export class ViewJourney extends Component<Props, State> {
 				latitudeDelta: 1,
 				longitudeDelta: 1
 			},
-			route: []
+			route: [],
+			midpoint: undefined
 		};
 	}
 
@@ -44,9 +46,12 @@ export class ViewJourney extends Component<Props, State> {
 			{ longitude: destination.longitude, latitude: destination.latitude }
 			)
 		});
+
+		this._setMidpoint();
+		this._zoomToMidpoint();
 	}
 
-	private _mapRegion = (): Region | undefined => this.state.mapRegion;
+	private _mapRegion = (): Region | undefined => this.state.midpoint as Region;
 
 	private _createMarker = (loc: Place, color?: string): ReactElement =>
 		<Marker
@@ -61,6 +66,55 @@ export class ViewJourney extends Component<Props, State> {
 	private _addPassengerToJourney = async (journeyId: string): Promise<void> => {
 		await this.props.updateAddUserJourney(journeyId);
 		this.props.navigation.navigate('Home');
+	}
+
+	private _setMidpoint = (): void => {
+		const { origin, destination } = this.state.journey as Journey;
+
+		console.log(origin, destination);
+
+		this.setState({
+			midpoint: {
+				latitude: (origin.latitude + destination.latitude) / 2,
+				longitude: (origin.longitude + destination.longitude) / 2,
+				latitudeDelta: 1,
+				longitudeDelta: 1
+			}
+		});
+	}
+
+	private _zoomToMidpoint = (): void => {
+		const journey: Journey = this.state.journey as Journey;
+		const { origin, destination } = journey;
+
+		const distance = getDistance(
+			{ latitude: origin.latitude, longitude: origin.longitude },
+			{ latitude: destination.latitude, longitude: destination.longitude }
+		) / 2;
+		const circumference = 40075;
+		const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
+		const angularDistance = distance / circumference;
+		const latitudeDelta = distance / oneDegreeOfLatitudeInMeters;
+		const longitudeDelta = Math.abs(
+			Math.atan2(
+				Math.sin(angularDistance) * Math.cos(this.state.midpoint.latitude),
+				Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
+			)
+		);
+
+		console.log({midpoint: {
+				...this.state.midpoint as Coords,
+				latitudeDelta,
+				longitudeDelta
+			}});
+
+		this.setState({
+			midpoint: {
+				...this.state.midpoint as Coords,
+				latitudeDelta,
+				longitudeDelta
+			}
+		});
 	}
 
 	public render(): ReactElement {

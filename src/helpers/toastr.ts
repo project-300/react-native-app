@@ -38,7 +38,8 @@ const showToast = (message: string, properties: ToastTypeProps): void => {
 		shadow: true,
 		animation: true,
 		hideOnPress: true,
-		delay: 0
+		delay: 0,
+		opacity: 1
 	});
 };
 

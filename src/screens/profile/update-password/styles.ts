@@ -19,7 +19,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		borderRadius: 4,
 		marginBottom: 10,
 		paddingVertical: 10,
-		paddingHorizontal: 12
+		paddingHorizontal: 12,
+		height: 50
 	},
 
 	showPasswordIconContainer: {
@@ -27,7 +28,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center',
 		right: 10,
 		top: 0,
-		height: 47.5,
+		height: 50,
 		width: 40,
 		paddingTop: 16,
 		marginRight: -10,
@@ -52,7 +53,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	button: {
-		backgroundColor: '#02b2cc',
+		backgroundColor: '#194781',
 		padding: 10,
 		borderRadius: 4,
 		width: '80%'

@@ -1,8 +1,4 @@
-import {
-	GoogleDirectionsResult,
-	GooglePlaceDetailsResult,
-	GooglePlacesSearchResult
-} from '../types/google';
+import { GoogleDirectionsResult, GoogleNearbyPlaceResult, GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../types/google';
 import { GoogleMapsAPIKey } from '../../environment/env';
 import { Coords, GoogleDirectionsRoute } from '@project-300/common-types';
 import Polyline from '@mapbox/polyline';
@@ -35,6 +31,20 @@ export default class ExternalApi {
 		return data;
 	}
 
+	public static GoogleNearbyPlaces = async (loc: Coords): Promise<GoogleNearbyPlaceResult> => {
+		const location = `${loc.latitude},${loc.longitude}`
+
+		const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=1000&key=${GoogleMapsAPIKey}`;
+
+		const res: Response = await fetch(url);
+
+		const ok: boolean = res.ok;
+		const data: GoogleNearbyPlaceResult = await res.json();
+
+		if (!ok) throw data.error || Error('Unknown Error');
+		return data;
+	}
+
 	public static GoogleDirectionsRoute = async (origin: Coords, destination: Coords): Promise<Coords[]> => {
 		const o = `${origin.latitude},${origin.longitude}`;
 		const d = `${destination.latitude},${destination.longitude}`;
@@ -45,19 +55,18 @@ export default class ExternalApi {
 
 		const ok: boolean = res.ok;
 		const data: GoogleDirectionsResult = await res.json();
+
 		if (!ok) throw data.error || Error('Unknown Error');
 
 		const route = ExternalApi._convertPointsToCoords(data.routes[0]);
 		if (!route) throw Error('No route found');
+
 		return route;
 	}
 
 	private static _convertPointsToCoords = (route: GoogleDirectionsRoute): Coords[] => {
 		const points = Polyline.decode(route.overview_polyline.points);
-		return points.map((point: number[]) => ({
-			latitude: point[0],
-			longitude: point[1]
-		}));
+		return points.map((point: number[]) => ({ latitude: point[0], longitude: point[1] }));
 	}
 
 }

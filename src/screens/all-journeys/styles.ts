@@ -3,12 +3,11 @@ import { Styles } from './interfaces';
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
-		flex: 1,
-		backgroundColor: '#F5FCFF'
+		flex: 1
 	},
 
 	button: {
-		backgroundColor: '#02b2cc',
+		backgroundColor: '#194781',
 		padding: 10,
 		borderRadius: 4,
 		width: '100%'
@@ -42,6 +41,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	journeyHeading: {
 		fontSize: 16
+	},
+
+	textRow: {
+		marginBottom: 10
 	}
 });
 

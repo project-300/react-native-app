@@ -10,14 +10,24 @@ import Login from './screens/login';
 import SignUp from './screens/signup';
 import Confirmation from './screens/signup/confirmation';
 import DriverApplication from './screens/driver-application';
-import Applications from './screens/applications';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
 import UpdatePassword from './screens/profile/update-password';
+import MyJourneys from './screens/driver/journeys';
+import JourneyMap from './screens/driver/journey';
+import DriverTracking from './screens/passenger/driver-tracking';
+import NewJourney from './screens/new-journey';
 import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
+import OpeningHome from './screens/opening-home';
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
+	OpeningHome: {
+		screen: OpeningHome,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Home'
+		})
+	},
 	Login: {
 		screen: Login,
 		navigationOptions: (): NavigationStackScreenOptions => ({
@@ -44,19 +54,13 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 	Home: {
 		screen: Home,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Home'
+			title: 'Dashboard'
 		})
 	},
 	DriverApplication: {
 		screen: DriverApplication,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			title: 'Driver Application'
-		})
-	},
-	Applications: {
-		screen: Applications,
-		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Applications'
 		})
 	},
 	Profile: {
@@ -82,16 +86,40 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 			title: 'Update Password'
 		})
 	},
+	MyJourneys: {
+		screen: MyJourneys,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'My Journeys'
+		})
+	},
+	JourneyMap: {
+		screen: JourneyMap,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Journey'
+		})
+	},
+	DriverTrackingMap: {
+		screen: DriverTracking,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'Driver Tracking'
+		})
+	},
+	NewJourney: {
+		screen: NewJourney,
+		navigationOptions: (): NavigationStackScreenOptions => ({
+			title: 'New Journey'
+		})
+	},
 	AllJourneys: {
 		screen: AllJourneys,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'All Journeys'
+			title: 'Find A Lift'
 		})
 	},
 	ViewJourney: {
 		screen: ViewJourney,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'View Journey'
+			title: 'View Route'
 		})
 	}
 });

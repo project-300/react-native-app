@@ -24,6 +24,7 @@ const userProfileReducer = (state: UserProfileState = initialState, action: User
 			return { ...state, subscribing: true, receivedData: false };
 		case USER_PROFILE_SUB_RECEIVED:
 			const payload: SubscriptionPayload = action.payload;
+			console.log(payload);
 			const user: User = payload.data as User;
 			return { ...state, subscribing: false, receivedData: true, user };
 		case USER_PROFILE_SUB_FAILURE:

@@ -104,6 +104,8 @@
     "no-magic-numbers": false,
     "no-require-imports": false,
     "class-name": false,
+    "no-return-await": false,
+    "align": false,
     "no-import-side-effect": [
       true,
       {

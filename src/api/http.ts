@@ -3,11 +3,17 @@ import {
 	LOGIN,
 	SIGNUP,
 	DRIVER_APPLICATION,
-	APPROVE_APPLICATION,
-	DELETE_APPLICATION,
 	UPDATE_USER_FIELD,
 	UPDATE_AVATAR,
 	S3_KEY_REQUEST,
+	DRIVER_JOURNEYS,
+	JOURNEY_DETAILS,
+	START_JOURNEY,
+	END_JOURNEY,
+	JOURNEY_DRIVER_MOVEMENT,
+	PASSENGER_JOURNEYS,
+	CANCEL_PASSENGER_ACCEPTED_JOURNEY,
+	CREATE_JOURNEY,
 	GET_ALL_JOURNEYS,
 	UPDATE_ADD_USER_JOURNEY
 } from '../constants/api-paths';
@@ -28,15 +34,27 @@ export default class HttpAPI {
 
 	public static driverApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_APPLICATION);
 
-	public static approveApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, APPROVE_APPLICATION);
-
-	public static deleteApplication = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DELETE_APPLICATION);
-
 	public static updateUserField = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_USER_FIELD);
 
 	public static updateAvatar = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_AVATAR);
 
 	public static getS3SecretKey = (): Promise<HttpResponse> => HttpAPI.send({ }, S3_KEY_REQUEST);
+
+	public static getDriverJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_JOURNEYS);
+
+	public static getPassengerJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, PASSENGER_JOURNEYS);
+
+	public static cancelPassengerAcceptedJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, CANCEL_PASSENGER_ACCEPTED_JOURNEY);
+
+	public static getJourneyDetails = (data: object): Promise<HttpResponse> => HttpAPI.send(data, JOURNEY_DETAILS);
+
+	public static startJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, START_JOURNEY);
+
+	public static endJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, END_JOURNEY);
+
+	public static driverMovement = (data: object): Promise<HttpResponse> => HttpAPI.send(data, JOURNEY_DRIVER_MOVEMENT);
+
+	public static createJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, CREATE_JOURNEY);
 
 	private static get = async (path: string, params?: string): Promise<HttpResponse> => {
 		// change this later...

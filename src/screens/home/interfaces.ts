@@ -7,8 +7,12 @@ export interface Styles {
 	text: TextStyle;
 	button: TextStyle;
 	buttonText: TextStyle;
+	logoutButton: ViewStyle;
+	logoutButtonText: TextStyle;
 }
 
 export interface Props extends CommonProps { }
 
-export interface State { }
+export interface State {
+	driverView: boolean;
+}
