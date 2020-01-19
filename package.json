@@ -38,6 +38,7 @@
     "react-native-modal-datetime-picker": "7.6.0",
     "react-native-root-toast": "3.1.2",
     "react-native-scripts": "2.0.1",
+    "react-native-svg": "11.0.1",
     "react-native-vector-icons": "6.6.0",
     "react-navigation": "3.11.0",
     "react-redux": "7.1.0",

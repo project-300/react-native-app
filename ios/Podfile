@@ -3,20 +3,27 @@
 
 target 'Project300' do
   # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
+  # use_frameworks!
+
+    pod 'React', :path => '../node_modules/react-native', :subspecs => [
+        'RCTImage'
+    ]
+    pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
   # Pods for Project300
 
   pod 'GoogleMaps'
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
-  target 'Project300-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
+end
+
+post_install do |installer|
+installer.pods_project.targets.each do |target|
+  if target.name == "React"
+    target.remove_from_project
   end
-
-  target 'Project300Tests' do
-    inherit! :search_paths
-    # Pods for testing
+  if target.name == "react-native-config"
+            target.remove_from_project
   end
-
+end
 end
