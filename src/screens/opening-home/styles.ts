@@ -4,16 +4,15 @@ import { Styles } from './interfaces';
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
-		justifyContent: 'center'
+		backgroundColor: '#F5FCFF'
 	},
 
 	title: {
 		fontSize: 40,
 		fontWeight: 'bold',
 		textAlign: 'center',
-		marginBottom: 80
+		marginVertical: 40,
+		color: 'black'
 	},
 
 	button: {
@@ -45,6 +44,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 		fontWeight: 'bold',
 		fontSize: 16,
 		color: 'white'
+	},
+
+	image: {
+		alignSelf: 'center'
 	}
 });
 

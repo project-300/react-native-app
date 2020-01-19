@@ -5,7 +5,8 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import { Container, H1 } from 'native-base';
+import { Container } from 'native-base';
+import Logo from '../../assets/svg/mini.svg';
 
 export class OpeningHome extends Component<Props, State> {
 	public constructor(props: Props) {
@@ -17,7 +18,10 @@ export class OpeningHome extends Component<Props, State> {
 
 		return (
 			<Container style={ styles.container }>
+				<Logo width={ '80%' } height={ '30%' } style={ styles.image } />
+
 				<Text style={ styles.title }>Project 300</Text>
+
 				<TouchableOpacity
 					onPress={ (): boolean => navigate('Login') }
 					style={ styles.button }

@@ -14,6 +14,8 @@ In order to run your own local version of the app, make sure to add the environm
 - Copy the `env.tpl.ts` template file
 - Name the new file `env.ts`
 - Fill in the URL and Config values
+- Run `npm i`
+- Run `npx jetify`
 
 ## MacOS
 
