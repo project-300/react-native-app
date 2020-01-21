@@ -18,7 +18,7 @@ export interface Props extends CommonProps {
 	login(u: string, p: string): Promise<boolean>;
 }
 
-export interface State {
+export interface CompState {
 	username: string;
 	password: string;
 	hidePassword: boolean;

@@ -47,7 +47,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	image: {
-		alignSelf: 'center'
+		alignSelf: 'center',
+		marginTop: 20
 	}
 });
 

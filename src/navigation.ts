@@ -31,7 +31,8 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
 		screen: Login,
 		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Login'
+			title: 'Login',
+			header: null
 		})
 	},
 	SignUp: {

@@ -13,6 +13,8 @@ PODS:
     - React/RCTNetwork
   - React/RCTNetwork (0.59.9):
     - React/Core
+  - RNReanimated (1.1.0):
+    - React
   - RNSVG (11.0.1):
     - React
   - yoga (0.59.9.React)
@@ -20,6 +22,7 @@ PODS:
 DEPENDENCIES:
   - GoogleMaps
   - React/RCTImage (from `../node_modules/react-native`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -30,6 +33,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   yoga:
@@ -38,9 +43,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   GoogleMaps: 82f8fe307193bb4de6ef6bf9e88f1d624b718f9d
   React: a86b92f00edbe1873a63e4a212c29b7a7ad5224f
+  RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   yoga: 03ff42a6f223fb88deeaed60249020d80c3091ee
 
-PODFILE CHECKSUM: da988a644f1faa8a6d6924351d9edf0440e9e38f
+PODFILE CHECKSUM: 2d773e2224d8d02be1fad1f4843d70c84cf39ce7
 
 COCOAPODS: 1.8.4
