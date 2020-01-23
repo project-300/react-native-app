@@ -15,7 +15,7 @@ export interface Styles {
 }
 
 export interface Props extends CommonProps {
-	usable: boolean;
+	keyboardOpen: boolean;
 	isLoggingIn: boolean;
 	isLoggedIn: boolean;
 	login(u: string, p: string): Promise<boolean>;

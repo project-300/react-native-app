@@ -34,6 +34,31 @@ const styles: Styles = StyleSheet.create<Styles>({
 		fontWeight: 'bold'
 	},
 
+	signUpLink: {
+		textDecorationLine: 'underline',
+		marginTop: 40
+	},
+
+	showPasswordIconContainer: {
+		position: 'absolute',
+		// alignItems: 'center',
+		right: 10,
+		// top: 0,
+		// height: 47.5,
+		width: 40,
+		// paddingTop: 16,
+		// marginRight: -10,
+		// borderTopRightRadius: 4,
+		// borderBottomRightRadius: 4,
+		backgroundColor: 'red',
+		zIndex: 10000
+	},
+
+	showPasswordIcon: {
+		color: 'black',
+		fontSize: 18
+	},
+
 	uiButton: {
 		backgroundColor: 'white',
 		height: 70,
@@ -70,7 +95,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'absolute',
-		top: -40,
+		top: -20,
 		left: (width / 2) - 20,
 		shadowOffset: {
 			width: 2,

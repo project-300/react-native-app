@@ -3,7 +3,7 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity, Platform
 } from 'react-native';
 import styles from './styles';
 import { State, Props } from './interfaces';
@@ -34,19 +34,28 @@ export class LoginForm extends Component<Props, State> {
 	}
 
 	public render(): ReactElement {
+		/*
+		 	Add bottom margin to form when on Android and keyboard open.
+		 	The sign up button is hidden behind keyboard otherwise.
+		*/
+
 		return (
-			<View>
+			<View style={ { marginBottom: Platform.OS === 'android' && this.props.keyboardOpen ? 80 : 0 } }>
 				<TextInput
 					placeholder='USERNAME'
 					placeholderTextColor='black'
 					onChangeText={ (username: string): void => this.setState({ username }) }
-					editable={ this.props.usable }
+					autoCorrect={ false }
+					autoCompleteType={ 'off' }
+					autoCapitalize='none'
+					keyboardType={ 'email-address' }
 					style={ styles.textInput } />
 
 				<TextInput
 					placeholder='PASSWORD'
 					placeholderTextColor='black'
-					secureTextEntry={ this.state.hidePassword }
+					secureTextEntry={ true }
+					autoCapitalize='none'
 					onChangeText={ (password: string): void => this.setState({ password })}
 					style={ styles.textInput } />
 
