@@ -22,20 +22,14 @@ import Animated, { Easing } from 'react-native-reanimated';
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { LoginForm } from '../../components/forms/login';
-import { runTiming } from '../../animations/animations';
+import formStyles from '../../styles/forms';
 
 const {
 	Value,
 	timing,
 	interpolate,
 	Extrapolate,
-	concat,
-	event,
-	block,
-	cond,
-	eq,
-	Clock,
-	set
+	concat
 } = Animated;
 
 const { width, height } = Dimensions.get('window');
@@ -145,22 +139,12 @@ export class Login extends Component<Props, CompState> {
 		});
 	}
 
-	// private openSignUp = (): void => {
-	// 	this.setState({ signUpOpen: true }); // Show login form just before opacity becomes visible
-	//
-	// 	timing(this.generalOpacity, {
-	// 		duration: 1000,
-	// 		toValue: 0,
-	// 		easing: Easing.inOut(Easing.ease)
-	// 	}).start();
-	// }
-
 	public componentDidMount(): void {
 		const platform = Platform.OS;
-		_keyboardWillShowSubscription = platform === 'ios' ? Keyboard.addListener('keyboardWillShow', this.keyboardWillShowEvent) : undefined;
-		_keyboardDidShowSubscription = platform === 'android' ? Keyboard.addListener('keyboardDidShow', this.keyboardDidShowEvent) : undefined;
-		_keyboardWillHideSubscription = platform === 'ios' ? Keyboard.addListener('keyboardWillHide', this.keyboardWillHideEvent) : undefined;
-		_keyboardDidHideSubscription = platform === 'android' ? Keyboard.addListener('keyboardDidHide', this.keyboardDidHideEvent) : undefined;
+		_keyboardWillShowSubscription = platform === 'ios' ? Keyboard.addListener('keyboardWillShow', this.keyboardShowEvent) : undefined;
+		_keyboardDidShowSubscription = platform === 'android' ? Keyboard.addListener('keyboardDidShow', this.keyboardShowEvent) : undefined;
+		_keyboardWillHideSubscription = platform === 'ios' ? Keyboard.addListener('keyboardWillHide', this.keyboardHideEvent) : undefined;
+		_keyboardDidHideSubscription = platform === 'android' ? Keyboard.addListener('keyboardDidHide', this.keyboardHideEvent) : undefined;
 	}
 
 	public componentWillUnmount(): void {
@@ -170,7 +154,7 @@ export class Login extends Component<Props, CompState> {
 		if (_keyboardDidHideSubscription) _keyboardDidHideSubscription.remove();
 	}
 
-	private keyboardWillShowEvent = (e: KeyboardEvent): void => {
+	private keyboardShowEvent = (e: KeyboardEvent): void => {
 		this.setState({ keyboardOpen: true });
 
 		timing(this.keyboardShowing, {
@@ -180,27 +164,7 @@ export class Login extends Component<Props, CompState> {
 		}).start();
 	}
 
-	private keyboardDidShowEvent = (e: KeyboardEvent): void => {
-		this.setState({ keyboardOpen: true });
-
-		timing(this.keyboardShowing, {
-			duration: 500,
-			toValue: 1,
-			easing: Easing.inOut(Easing.ease)
-		}).start();
-	}
-
-	private keyboardWillHideEvent = (e: KeyboardEvent): void => {
-		this.setState({ keyboardOpen: false });
-
-		timing(this.keyboardShowing, {
-			duration: 500,
-			toValue: 0,
-			easing: Easing.inOut(Easing.ease)
-		}).start();
-	}
-
-	private keyboardDidHideEvent = (e: KeyboardEvent): void => {
+	private keyboardHideEvent = (e: KeyboardEvent): void => {
 		this.setState({ keyboardOpen: false });
 
 		timing(this.keyboardShowing, {
@@ -257,15 +221,15 @@ export class Login extends Component<Props, CompState> {
 				</Animated.View>
 				<View style={ { height: height / 3 } }>
 					<TouchableOpacity onPress={ this.openForm }>
-						<Animated.View style={ [ styles.uiButton, { opacity: this.generalOpacity, transform: [ { translateY: this.buttonY } ] } ] }>
-							<Text style={ { fontSize: 20, fontWeight: 'bold' } }>
+						<Animated.View style={ [ formStyles.largeButton, { opacity: this.generalOpacity, transform: [ { translateY: this.buttonY } ] } ] }>
+							<Text style={ formStyles.buttonText }>
 								SIGN IN
 							</Text>
 						</Animated.View>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={ this.openForm }>
-						<Animated.View style={ [ styles.uiButton, { opacity: this.generalOpacity, transform: [ { translateY: this.buttonY } ] } ] }>
-							<Text style={ { fontSize: 20, fontWeight: 'bold' } }>
+					<TouchableOpacity onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
+						<Animated.View style={ [ formStyles.largeButton, { opacity: this.generalOpacity, transform: [ { translateY: this.buttonY } ] } ] }>
+							<Text style={ formStyles.buttonText }>
 								SIGN UP
 							</Text>
 						</Animated.View>
@@ -284,7 +248,7 @@ export class Login extends Component<Props, CompState> {
 							}
 						] }>
 
-						<TouchableOpacity onPress={ this.closeForm } style={ { position: 'relative', top: -15, backgroundColor: 'red' } }>
+						<TouchableOpacity onPress={ this.closeForm } style={ { position: 'relative', top: -15 } }>
 							<Animated.View style={ [ styles.closeButton, { opacity: this.closeButtonOpacity } ] }>
 								<Animated.Text style={ { fontSize: 15, transform: [ { rotate: concat(this.rotateCross, 'deg') } ] } }>
 									<Icon

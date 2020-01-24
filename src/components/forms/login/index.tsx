@@ -5,9 +5,9 @@ import {
 	TextInput,
 	TouchableOpacity, Platform
 } from 'react-native';
-import styles from './styles';
 import { State, Props } from './interfaces';
 import toastr from '../../../helpers/toastr';
+import formStyles from '../../../styles/forms';
 
 export class LoginForm extends Component<Props, State> {
 
@@ -49,7 +49,7 @@ export class LoginForm extends Component<Props, State> {
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
 					keyboardType={ 'email-address' }
-					style={ styles.textInput } />
+					style={ formStyles.input } />
 
 				<TextInput
 					placeholder='PASSWORD'
@@ -57,13 +57,13 @@ export class LoginForm extends Component<Props, State> {
 					secureTextEntry={ true }
 					autoCapitalize='none'
 					onChangeText={ (password: string): void => this.setState({ password })}
-					style={ styles.textInput } />
+					style={ formStyles.input } />
 
 				<TouchableOpacity
-					style={ styles.uiButton }
+					style={ formStyles.largeButton }
 					onPress={ this._loginAttempt }
 					disabled={ this.props.isLoggingIn || !this.state.username || !this.state.password }>
-					<Text style={ { fontSize: 20, fontWeight: 'bold' } }>
+					<Text style={ formStyles.buttonText }>
 						SIGN IN
 					</Text>
 				</TouchableOpacity>

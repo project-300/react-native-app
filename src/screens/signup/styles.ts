@@ -1,17 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import formStyles from '../../styles/forms';
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
 		justifyContent: 'center',
 		padding: 10
-	},
-
-	inputContainer: {
-		width: '80%'
 	},
 
 	input: {
@@ -37,21 +33,25 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	loginLink: {
-		textDecorationLine: 'underline',
-		marginTop: 40
+		marginTop: 40,
+		alignSelf: 'center',
+		color: 'white',
+		fontWeight: 'bold',
+		fontSize: 16
 	},
 
 	showPasswordIconContainer: {
 		position: 'absolute',
 		alignItems: 'center',
-		right: 10,
+		right: 0,
 		top: 0,
-		height: 47.5,
-		width: 40,
+		height: formStyles.input.height,
+		marginVertical: formStyles.input.marginVertical || 0,
+		marginHorizontal: formStyles.input.marginHorizontal || 0,
+		width: 50,
 		paddingTop: 16,
-		marginRight: -10,
-		borderTopRightRadius: 4,
-		borderBottomRightRadius: 4,
+		borderTopRightRadius: formStyles.input.borderRadius,
+		borderBottomRightRadius: formStyles.input.borderRadius,
 		backgroundColor: '#CCC'
 	},
 

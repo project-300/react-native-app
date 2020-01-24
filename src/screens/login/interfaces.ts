@@ -1,13 +1,7 @@
-import { TextStyle, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 
 export interface Styles {
-	container: ViewStyle;
-	input: TextStyle;
-	button: ViewStyle;
-	buttonText: TextStyle;
-	uiButton: ViewStyle;
-	textInput: ViewStyle;
 	closeButton: ViewStyle;
 }
 

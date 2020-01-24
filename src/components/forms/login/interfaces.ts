@@ -1,18 +1,6 @@
-import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../../types/common';
 
-export interface Styles {
-	container: ViewStyle;
-	input: TextStyle;
-	button: ViewStyle;
-	buttonText: TextStyle;
-	signUpLink: TextStyle;
-	showPasswordIconContainer: ViewStyle;
-	showPasswordIcon: TextStyle;
-	uiButton: ViewStyle;
-	textInput: ViewStyle;
-	closeButton: ViewStyle;
-}
+export interface Styles { }
 
 export interface Props extends CommonProps {
 	keyboardOpen: boolean;

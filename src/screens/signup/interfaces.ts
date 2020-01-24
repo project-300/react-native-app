@@ -4,7 +4,6 @@ import { CodeDeliveryDetails } from 'amazon-cognito-identity-js';
 
 export interface Styles {
 	container: ViewStyle;
-	inputContainer: ViewStyle;
 	input: TextStyle;
 	button: ViewStyle;
 	buttonText: TextStyle;
@@ -23,6 +22,7 @@ export interface State {
 	username: string;
 	password: string;
 	hidePassword: boolean;
+	keyboardOpen: boolean;
 }
 
 export interface SignUpActionResponse {
