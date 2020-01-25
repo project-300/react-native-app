@@ -13,7 +13,7 @@ import {
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
-import styles from './styles';
+import styles, { animatedOpacityStyle, animatedSpinTextStyle, animatedViewStyle, formContainerStyle } from './styles';
 import { CompState, Props } from './interfaces';
 import { login } from '../../redux/actions';
 import { LoginState } from '../../types/redux-reducer-state-types';
@@ -28,8 +28,7 @@ const {
 	Value,
 	timing,
 	interpolate,
-	Extrapolate,
-	concat
+	Extrapolate
 } = Animated;
 
 const { width, height } = Dimensions.get('window');
@@ -190,11 +189,10 @@ export class Login extends Component<Props, CompState> {
 		*/
 
 		return (
-			<KeyboardAvoidingView behavior={ keyboardAvoidingBehaviour } style={ { flex: 1, backgroundColor: 'white', justifyContent: 'flex-end' } }>
-				<StatusBar
-					barStyle='light-content'
-				/>
-				<Animated.View style={ [ StyleSheet.absoluteFill, { transform: [ { translateY: this.bgY } ], opacity: this.backgroundOpacity } ] }>
+			<KeyboardAvoidingView behavior={ keyboardAvoidingBehaviour } style={ styles.container }>
+				<StatusBar barStyle='light-content' />
+
+				<Animated.View style={ [ StyleSheet.absoluteFill, animatedViewStyle(this.backgroundOpacity, this.bgY) ]}>
 					<Svg
 						height={ height + 50 }
 						width={ width }
@@ -219,16 +217,16 @@ export class Login extends Component<Props, CompState> {
 						/>
 					</Svg>
 				</Animated.View>
-				<View style={ { height: height / 3 } }>
+				<View style={ styles.heightThird }>
 					<TouchableOpacity onPress={ this.openForm }>
-						<Animated.View style={ [ formStyles.largeButton, { opacity: this.generalOpacity, transform: [ { translateY: this.buttonY } ] } ] }>
+						<Animated.View style={ [ formStyles.largeButton, animatedViewStyle(this.generalOpacity, this.buttonY) ] }>
 							<Text style={ formStyles.buttonText }>
 								SIGN IN
 							</Text>
 						</Animated.View>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
-						<Animated.View style={ [ formStyles.largeButton, { opacity: this.generalOpacity, transform: [ { translateY: this.buttonY } ] } ] }>
+						<Animated.View style={ [ formStyles.largeButton, animatedViewStyle(this.generalOpacity, this.buttonY) ] }>
 							<Text style={ formStyles.buttonText }>
 								SIGN UP
 							</Text>
@@ -238,19 +236,14 @@ export class Login extends Component<Props, CompState> {
 					<Animated.View
 						style={ [
 							StyleSheet.absoluteFill,
-							{
-								height: height / 3,
-								top: null,
-								justifyContent: 'center',
-								zIndex: this.textInputZIndex,
-								opacity: this.textInputOpacity,
-								transform: [ { translateY: this.textInputY } ]
-							}
+							styles.heightThird,
+							formContainerStyle(this.textInputZIndex),
+							animatedViewStyle(this.textInputOpacity, this.textInputY)
 						] }>
 
-						<TouchableOpacity onPress={ this.closeForm } style={ { position: 'relative', top: -15 } }>
-							<Animated.View style={ [ styles.closeButton, { opacity: this.closeButtonOpacity } ] }>
-								<Animated.Text style={ { fontSize: 15, transform: [ { rotate: concat(this.rotateCross, 'deg') } ] } }>
+						<TouchableOpacity onPress={ this.closeForm } style={ styles.closeButtonContainer }>
+							<Animated.View style={ [ styles.closeButton, animatedOpacityStyle(this.closeButtonOpacity) ] }>
+								<Animated.Text style={ animatedSpinTextStyle(this.rotateCross) }>
 									<Icon
 										name={ 'times' }
 										size={ 22 }

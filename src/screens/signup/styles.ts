@@ -42,7 +42,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 export default styles;
 
-// tslint:disable-next-line:no-any
 export const imageStyle = (opacity: Animated.Node<number>): any => ({
 	marginBottom: 40,
 	width,

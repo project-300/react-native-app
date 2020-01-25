@@ -41,7 +41,7 @@ export class Home extends Component<Props, State> {
 		};
 	}
 
-	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('OpeningHome'));
+	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
 
 	public render(): ReactElement {
 		const BUTTONS = [ 'Driver', 'Passenger', 'Cancel' ];
