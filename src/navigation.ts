@@ -8,7 +8,6 @@ import {
 import Home from './screens/home';
 import Login from './screens/login';
 import SignUp from './screens/signup';
-import Confirmation from './screens/signup/confirmation';
 import DriverApplication from './screens/driver-application';
 import Profile from './screens/profile';
 import UpdateUserField from './screens/profile/update-user-field';
@@ -31,13 +30,6 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 		screen: SignUp,
 		navigationOptions: (): NavigationStackScreenOptions => ({
 			header: null
-		})
-	},
-	Confirmation: {
-		screen: Confirmation,
-		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Confirmation',
-			headerLeft: undefined
 		})
 	}
 });
@@ -64,13 +56,6 @@ const SignedInStack: NavigationContainer = createStackNavigator({
 	UpdateUserField: {
 		screen: UpdateUserField,
 		navigationOptions: (): NavigationStackScreenOptions => ({ })
-	},
-	Confirmation: {
-		screen: Confirmation,
-		navigationOptions: (): NavigationStackScreenOptions => ({
-			title: 'Confirmation',
-			headerLeft: undefined
-		})
 	},
 	UpdatePassword: {
 		screen: UpdatePassword,
