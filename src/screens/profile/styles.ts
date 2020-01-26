@@ -3,7 +3,8 @@ import { Styles } from './interfaces';
 
 const styles = StyleSheet.create<Styles>({
 	container: {
-		backgroundColor: '#FFF'
+		backgroundColor: '#FFF',
+		...StyleSheet.absoluteFill as object
 	},
 
 	text: {

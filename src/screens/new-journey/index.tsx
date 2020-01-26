@@ -1,7 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import {
-	FlatList,
-	ScrollView,
+	FlatList, KeyboardAvoidingView, SafeAreaView,
+	ScrollView, StatusBar,
 	Text,
 	TouchableOpacity,
 	View
@@ -314,7 +314,9 @@ export class NewJourney extends Component<Props, State> {
 		const { originMarkerCoords, destinationMarkerCoords, originPlaceDetails, destinationPlaceDetails } = this.props;
 
 		return (
-			<Container style={ styles.container }>
+			<SafeAreaView style={ styles.container }>
+				<StatusBar barStyle='dark-content' />
+
 				{
 					droppingMarker &&
 						<View style={ styles.locationNameHeader }>
@@ -355,7 +357,7 @@ export class NewJourney extends Component<Props, State> {
 					/>
 				</MapView>
 
-				<ScrollView style = { [ styles.form, { top: this.state.formTop } ] }>
+				<ScrollView style={ [ styles.form, { top: this.state.formTop } ] }>
 					{
 						!droppingMarker &&
 							<View>
@@ -404,7 +406,7 @@ export class NewJourney extends Component<Props, State> {
 							<Text style={ { color: 'white', fontWeight: 'bold' } }>Create Journey</Text>
 						</TouchableOpacity>
 				}
-			</Container>
+			</SafeAreaView>
 		);
 	}
 }

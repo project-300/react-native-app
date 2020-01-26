@@ -5,7 +5,7 @@ import {
 	View,
 	Image,
 	TouchableOpacity,
-	Dimensions
+	Dimensions, SafeAreaView
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -79,7 +79,7 @@ export class Profile extends Component<Props, State> {
 		const avatarCircle = { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2 };
 
 		return (
-			<View style={ styles.container }>
+			<SafeAreaView style={ styles.container }>
 				<ScrollView>
 					<TouchableOpacity
 						onPress={ this._changeImage }
@@ -132,7 +132,7 @@ export class Profile extends Component<Props, State> {
 						<Text style={ styles.editText }>******</Text>
 					</TouchableOpacity>
 				</ScrollView>
-			</View>
+			</SafeAreaView>
 		);
 	}
 }

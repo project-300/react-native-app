@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+
+const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -20,7 +22,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 10,
 		marginBottom: 10,
 		borderRadius: 4,
-		width: '80%'
+		width: width * 0.8
 	},
 
 	buttonText: {

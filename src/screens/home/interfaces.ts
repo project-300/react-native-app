@@ -1,4 +1,3 @@
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 

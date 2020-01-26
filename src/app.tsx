@@ -1,12 +1,13 @@
 import React, { Component, ReactElement } from 'react';
-import { Provider } from 'react-redux';
+import { Provider as StoreProvider } from 'react-redux';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
 import { isStoreLoggedIn } from './auth';
 import { AWS_COGNITO_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
-import { Root } from 'native-base';
+// import { Root } from 'native-base';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 Amplify.configure(AWS_COGNITO_CONFIG);
 
@@ -15,6 +16,15 @@ interface State {
 	loggedIn: boolean;
 	checkedLoggedIn: boolean;
 }
+
+const theme = {
+	...DefaultTheme,
+	colors: {
+		...DefaultTheme.colors,
+		primary: '#ff8c00',
+		accent: 'yellow'
+	}
+};
 
 export default class App extends Component<Props, State> {
 
@@ -44,11 +54,11 @@ export default class App extends Component<Props, State> {
 		const Layout = CreateNavigator(loggedIn);
 
 		return (
-			<Provider store={ store }>
-				<Root>
+			<StoreProvider store={ store }>
+				<PaperProvider theme={ theme }>
 					<Layout />
-				</Root>
-		  	</Provider>
+				</PaperProvider>
+		  	</StoreProvider>
 		);
 	}
 
