@@ -55,6 +55,8 @@ export class Profile extends Component<Props, State> {
 			if (img.error) {
 				toastr.error('An error occurred');
 			} else if (!img.didCancel) {
+				if (!img.data || !img.fileSize) return toastr.error('Error - Invalid image selected');
+
 				await this.props.uploadAvatar(img);
 			}
 		});
