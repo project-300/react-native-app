@@ -5,7 +5,6 @@ import {
 	NavigationContainer,
 	NavigationScreenConfig,
 	NavigationStackScreenOptions,
-	NavigationTabScreenOptions
 } from 'react-navigation';
 import Home from './screens/home';
 import Login from './screens/login';
@@ -22,11 +21,34 @@ import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import { createMaterialBottomTabNavigator, NavigationMaterialBottomTabOptions } from 'react-navigation-material-bottom-tabs';
+import HeaderBar from './headerbar';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
 });
+
+const navigationOptions = (title: string | undefined, subtitle: string | undefined, backButton: boolean): any => ({
+	navigationOptions: ({ navigation }: { navigation: NavigationScreenConfig<any> }): NavigationStackScreenOptions => ({
+		header: headerBar(navigation, title, subtitle, backButton)
+	})
+})
+
+const headerBar = (
+	navigation: NavigationScreenConfig<any>,
+	title: string | undefined,
+	subtitle: string | undefined,
+	backButton: boolean
+): React.ReactElement =>
+	<HeaderBar
+		title={ customValue(navigation, 'title') || title }
+		subtitle={ customValue(navigation, 'subtitle') || subtitle }
+		backButton={ backButton }
+		navigation={ navigation }
+	/>;
+
+const customValue = (navigation: NavigationScreenConfig<any>, value: string): string | undefined =>
+	navigation.state.params && navigation.state.params.headerDetails && navigation.state.params.headerDetails[value];
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -42,122 +64,95 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 const ProfileTab: NavigationContainer = createStackNavigator({
 	Profile: {
 		screen: Profile,
-		navigationOptions: headerHidden
+		...navigationOptions('My Profile', undefined, false)
 	},
 	UpdateUserField: {
 		screen: UpdateUserField,
-		navigationOptions: headerHidden
+		...navigationOptions('Update Field', undefined, true)
 	},
 	UpdatePassword: {
 		screen: UpdatePassword,
-		navigationOptions: headerHidden
+		...navigationOptions('Update Password', undefined, true)
 	}
 });
 
 const JourneysTab: NavigationContainer = createStackNavigator({
 	AllJourneys: {
 		screen: AllJourneys,
-		navigationOptions: headerHidden
+		...navigationOptions('View Journeys', undefined, false)
 	},
 	ViewJourney: {
 		screen: ViewJourney,
-		navigationOptions: headerHidden
+		...navigationOptions('Journey', undefined, true)
 	}
 });
 
 const HomeTab: NavigationContainer = createStackNavigator({
 	Home: {
 		screen: Home,
-		navigationOptions: headerHidden
+		...navigationOptions('Home', undefined, false)
 	},
 	DriverApplication: {
 		screen: DriverApplication,
-		navigationOptions: headerHidden
+		...navigationOptions('Driver Application', undefined, true)
 	},
 	MyJourneys: {
 		screen: MyJourneys,
-		navigationOptions: headerHidden
+		...navigationOptions('My Journeys', undefined, true)
 	},
 	JourneyMap: {
 		screen: JourneyMap,
-		navigationOptions: headerHidden
+		...navigationOptions('Your Journey', undefined, true)
 	},
 	DriverTrackingMap: {
 		screen: DriverTracking,
-		navigationOptions: headerHidden
+		...navigationOptions('Track Driver', undefined, true)
 	}
 });
 
 const NewJourneyTab: NavigationContainer = createStackNavigator({
 	NewJourney: {
 		screen: NewJourney,
-		navigationOptions: headerHidden
+		...navigationOptions('Create Journey', undefined, false)
 	}
 });
 
 const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 	HomeTab: {
 		screen: HomeTab,
-		navigationOptions: (): NavigationTabScreenOptions => ({
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Home',
+			tabBarColor: 'red',
 			tabBarIcon: <Icon name={ 'home' } size={ 22 } color={ 'white' } />
 		})
 	},
 	ProfileTab: {
 		screen: ProfileTab,
-		navigationOptions: (): NavigationTabScreenOptions => ({
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Profile',
+			tabBarColor: 'green',
 			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ 'white' } solid />
 		})
 	},
 	JourneysTab: {
 		screen: JourneysTab,
-		navigationOptions: (): NavigationTabScreenOptions => ({
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Journeys',
+			tabBarColor: 'purple',
 			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ 'white' } solid />
 		})
 	},
 	NewJourneyTab: {
 		screen: NewJourneyTab,
-		navigationOptions: (): NavigationTabScreenOptions => ({
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'New Journey',
+			tabBarColor: 'lightblue',
 			tabBarIcon: <Icon name={ 'plus' } size={ 22 } color={ 'white' } solid />
 		})
 	}
 },
-
 	{
 		initialRouteName: 'HomeTab',
-		navigationOptions: ({ navigation }: NavigationScreenConfig<any>): NavigationTabScreenOptions => {
-			const { routeName, routes } = navigation.state;
-			let params = routes && routes[1] && routes[1].params;
-			return {
-				tabBarIcon: ({ focused, tintColor }): React.ReactElement => {
-					// You can return any component that you like here! We usually use an
-					// icon component from react-native-vector-icons
-					return (<Text>Test</Text>);
-				},
-				tabBarVisible:
-					params && params.hideTabBar != null ? !params.hideTabBar : true,
-				swipeEnabled:
-					params && params.hideTabBar != null ? !params.hideTabBar : true
-			};
-		},
-		tabBarOptions: {
-			activeTintColor: '#6200EE',
-			inactiveTintColor: '#858585',
-			style: {
-				height: 60,
-				paddingVertical: 5,
-				backgroundColor: '#fff'
-			},
-			labelStyle: {
-				fontSize: 12,
-				lineHeight: 20,
-				// fontFamily: 'CircularStd-Book'
-			}
-		},
-		// tabBarComponent: BottomNavBar,
 		tabBarPosition: 'bottom',
 		animationEnabled: true,
 		swipeEnabled: true,

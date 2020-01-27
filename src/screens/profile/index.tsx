@@ -101,7 +101,7 @@ export class Profile extends Component<Props, State> {
 					<Text style={ styles.username }>{ user.username }</Text>
 
 					<TouchableOpacity
-						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.EMAIL, value: user.email }) }
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.EMAIL, value: user.email, headerDetails: { title: 'Update Email' } }) }
 						style={ { ...styles.editRow, ...styles.editRowFirstItem } }
 					>
 						<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>

@@ -6,7 +6,7 @@ import { isStoreLoggedIn } from './auth';
 import { AWS_COGNITO_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
-// import { Root } from 'native-base';
+import HeaderBar from './headerbar';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 Amplify.configure(AWS_COGNITO_CONFIG);
@@ -21,7 +21,7 @@ const theme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		primary: '#ff8c00',
+		primary: 'purple',
 		accent: 'yellow'
 	}
 };
@@ -56,6 +56,7 @@ export default class App extends Component<Props, State> {
 		return (
 			<StoreProvider store={ store }>
 				<PaperProvider theme={ theme }>
+					{/*<HeaderBar />*/}
 					<Layout />
 				</PaperProvider>
 		  	</StoreProvider>

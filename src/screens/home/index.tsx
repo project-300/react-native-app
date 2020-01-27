@@ -8,9 +8,9 @@ import { NavigationEvents, NavigationParams, NavigationScreenProp, NavigationSta
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { ActionSheet } from 'native-base';
 
 export class Home extends Component<Props, State> {
+
 	public constructor(props: Props) {
 		super(props);
 
@@ -25,21 +25,21 @@ export class Home extends Component<Props, State> {
 		this.setState({ driverView: uType === 'Driver' });
 	}
 
-	public static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationState, NavigationParams> }): { } => {
-		return {
-			headerRight: (
-				<TouchableOpacity
-					onPress={ (): boolean => navigation.navigate('Profile') }
-				>
-					<Icon
-						name={ 'user' }
-						size={ 22 }
-						style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } }
-					/>
-				</TouchableOpacity>
-			)
-		};
-	}
+	// public static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationState, NavigationParams> }): { } => {
+	// 	return {
+	// 		headerRight: (
+	// 			<TouchableOpacity
+	// 				onPress={ (): boolean => navigation.navigate('Profile') }
+	// 			>
+	// 				<Icon
+	// 					name={ 'user' }
+	// 					size={ 22 }
+	// 					style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } }
+	// 				/>
+	// 			</TouchableOpacity>
+	// 		)
+	// 	};
+	// }
 
 	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
 
@@ -48,61 +48,63 @@ export class Home extends Component<Props, State> {
 		const CANCEL_INDEX = 2;
 
 		return (
-			<SafeAreaView style={ styles.container }>
-				<View style={ { flex: 1 } }>
-					<NavigationEvents onDidFocus={ this._setUserType } />
-					{
-						!this.state.driverView &&
-							<TouchableOpacity
-								onPress={ (): boolean => this.props.navigation.navigate('DriverApplication') }
-								style={ styles.button }>
-								<Text style={ styles.buttonText }>Want to become a driver?</Text>
-							</TouchableOpacity>
-					}
+			<View style={ { flex: 1 } }>
+				<SafeAreaView style={ styles.container }>
+					<View style={ { flex: 1 } }>
+						<NavigationEvents onDidFocus={ this._setUserType } />
+						{
+							!this.state.driverView &&
+								<TouchableOpacity
+									onPress={ (): boolean => this.props.navigation.navigate('DriverApplication') }
+									style={ styles.button }>
+									<Text style={ styles.buttonText }>Want to become a driver?</Text>
+								</TouchableOpacity>
+						}
 
-					{
-						this.state.driverView &&
-							<TouchableOpacity
-								onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
-								style={ styles.button }>
-								<Text style={ styles.buttonText }>Create A Journey</Text>
-							</TouchableOpacity>
-					}
+						{
+							this.state.driverView &&
+								<TouchableOpacity
+									onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
+									style={ styles.button }>
+									<Text style={ styles.buttonText }>Create A Journey</Text>
+								</TouchableOpacity>
+						}
 
-					<TouchableOpacity
-						onPress={ (): void => {
-							this.state.driverView ?
-								ActionSheet.show(
-									{
-										options: BUTTONS,
-										cancelButtonIndex: CANCEL_INDEX,
-										title: 'View Journeys As'
-									},
-									(i: number) => {
-										if (BUTTONS[i] === 'Cancel') return;
-										this.props.navigation.navigate('MyJourneys', { driverView: BUTTONS[i] === 'Driver' });
-									}
-								) :
-								this.props.navigation.navigate('MyJourneys', { driverView: false });
-						} }
-						style={ styles.button }>
-						<Text style={ styles.buttonText }>My Journeys</Text>
-					</TouchableOpacity>
+						<TouchableOpacity
+							onPress={ (): void => {
+								// this.state.driverView ?
+								// 	ActionSheet.show(
+								// 		{
+								// 			options: BUTTONS,
+								// 			cancelButtonIndex: CANCEL_INDEX,
+								// 			title: 'View Journeys As'
+								// 		},
+								// 		(i: number) => {
+								// 			if (BUTTONS[i] === 'Cancel') return;
+								// 			this.props.navigation.navigate('MyJourneys', { driverView: BUTTONS[i] === 'Driver' });
+								// 		}
+								// 	) :
+									this.props.navigation.navigate('MyJourneys', { driverView: false });
+							} }
+							style={ styles.button }>
+							<Text style={ styles.buttonText }>My Journeys</Text>
+						</TouchableOpacity>
 
-					<TouchableOpacity
-						onPress={ (): boolean => this.props.navigation.navigate('AllJourneys') }
-						style={ styles.button }
-					>
-						<Text style={ styles.buttonText }>Find A Lift</Text>
-					</TouchableOpacity>
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('AllJourneys') }
+							style={ styles.button }
+						>
+							<Text style={ styles.buttonText }>Find A Lift</Text>
+						</TouchableOpacity>
 
-					<TouchableOpacity
-						onPress={ this._logout }
-						style={ styles.button }>
-						<Text style={ styles.buttonText }>Logout</Text>
-					</TouchableOpacity>
-				</View>
-			</SafeAreaView>
+						<TouchableOpacity
+							onPress={ this._logout }
+							style={ styles.button }>
+							<Text style={ styles.buttonText }>Logout</Text>
+						</TouchableOpacity>
+					</View>
+				</SafeAreaView>
+			</View>
 		);
 	}
 }
