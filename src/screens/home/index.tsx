@@ -1,13 +1,12 @@
 import React, { Component, ReactElement } from 'react';
 import { Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
-import { storeLogout, userType } from '../../auth';
+import { userType } from '../../auth';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { NavigationEvents, NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationEvents } from 'react-navigation';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export class Home extends Component<Props, State> {
 
@@ -15,7 +14,7 @@ export class Home extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			driverView: false,
+			driverView: false
 		};
 	}
 
@@ -24,24 +23,6 @@ export class Home extends Component<Props, State> {
 
 		this.setState({ driverView: uType === 'Driver' });
 	}
-
-	// public static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationState, NavigationParams> }): { } => {
-	// 	return {
-	// 		headerRight: (
-	// 			<TouchableOpacity
-	// 				onPress={ (): boolean => navigation.navigate('Profile') }
-	// 			>
-	// 				<Icon
-	// 					name={ 'user' }
-	// 					size={ 22 }
-	// 					style={ { paddingLeft: 10, color: 'grey', marginRight: 20 } }
-	// 				/>
-	// 			</TouchableOpacity>
-	// 		)
-	// 	};
-	// }
-
-	private _logout = (): Promise<boolean> => storeLogout().then(() => this.props.navigation.navigate('Login'));
 
 	public render(): ReactElement {
 		const BUTTONS = [ 'Driver', 'Passenger', 'Cancel' ];
@@ -52,24 +33,6 @@ export class Home extends Component<Props, State> {
 				<SafeAreaView style={ styles.container }>
 					<View style={ { flex: 1 } }>
 						<NavigationEvents onDidFocus={ this._setUserType } />
-						{
-							!this.state.driverView &&
-								<TouchableOpacity
-									onPress={ (): boolean => this.props.navigation.navigate('DriverApplication') }
-									style={ styles.button }>
-									<Text style={ styles.buttonText }>Want to become a driver?</Text>
-								</TouchableOpacity>
-						}
-
-						{
-							this.state.driverView &&
-								<TouchableOpacity
-									onPress={ (): boolean => this.props.navigation.navigate('NewJourney') }
-									style={ styles.button }>
-									<Text style={ styles.buttonText }>Create A Journey</Text>
-								</TouchableOpacity>
-						}
-
 						<TouchableOpacity
 							onPress={ (): void => {
 								// this.state.driverView ?
@@ -88,19 +51,6 @@ export class Home extends Component<Props, State> {
 							} }
 							style={ styles.button }>
 							<Text style={ styles.buttonText }>My Journeys</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={ (): boolean => this.props.navigation.navigate('AllJourneys') }
-							style={ styles.button }
-						>
-							<Text style={ styles.buttonText }>Find A Lift</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={ this._logout }
-							style={ styles.button }>
-							<Text style={ styles.buttonText }>Logout</Text>
 						</TouchableOpacity>
 					</View>
 				</SafeAreaView>

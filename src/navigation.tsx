@@ -45,6 +45,12 @@ const headerBar = (
 		subtitle={ customValue(navigation, 'subtitle') || subtitle }
 		backButton={ backButton }
 		navigation={ navigation }
+		options={ {
+			display: true,
+			logout: true,
+			settings: true,
+			becomeDriver: true
+		} }
 	/>;
 
 const customValue = (navigation: NavigationScreenConfig<any>, value: string): string | undefined =>
