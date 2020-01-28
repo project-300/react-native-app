@@ -101,7 +101,14 @@ export class Profile extends Component<Props, State> {
 					<Text style={ styles.username }>{ user.username }</Text>
 
 					<TouchableOpacity
-						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.EMAIL, value: user.email, headerDetails: { title: 'Update Email' } }) }
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', {
+							...EditFields.EMAIL,
+							value: user.email,
+							headerDetails: {
+								title: 'My Profile',
+								subtitle: 'Update Email'
+							}
+						}) }
 						style={ { ...styles.editRow, ...styles.editRowFirstItem } }
 					>
 						<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
@@ -109,7 +116,14 @@ export class Profile extends Component<Props, State> {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.FIRST_NAME, value: user.firstName }) }
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', {
+							...EditFields.FIRST_NAME,
+							value: user.firstName,
+							headerDetails: {
+								title: 'My Profile',
+								subtitle: 'Update First Name'
+							}
+						}) }
 						style={ styles.editRow }
 					>
 						<Text style={ styles.label }>{ EditFields.FIRST_NAME.type }</Text>
@@ -117,7 +131,14 @@ export class Profile extends Component<Props, State> {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						onPress={ (): boolean => navigation.navigate('UpdateUserField', { ...EditFields.LAST_NAME, value: user.lastName }) }
+						onPress={ (): boolean => navigation.navigate('UpdateUserField', {
+							...EditFields.LAST_NAME,
+							value: user.lastName,
+							headerDetails: {
+								title: 'My Profile',
+								subtitle: 'Update Last Name'
+							}
+						}) }
 						style={ styles.editRow }
 					>
 						<Text style={ styles.label }>{ EditFields.LAST_NAME.type }</Text>

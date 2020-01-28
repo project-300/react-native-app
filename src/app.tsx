@@ -21,7 +21,7 @@ const theme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		primary: 'purple',
+		primary: '#652263',
 		accent: 'yellow'
 	}
 };
@@ -56,7 +56,6 @@ export default class App extends Component<Props, State> {
 		return (
 			<StoreProvider store={ store }>
 				<PaperProvider theme={ theme }>
-					{/*<HeaderBar />*/}
 					<Layout />
 				</PaperProvider>
 		  	</StoreProvider>

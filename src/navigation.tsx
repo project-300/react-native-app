@@ -6,7 +6,10 @@ import {
 	NavigationScreenConfig,
 	NavigationStackScreenOptions,
 } from 'react-navigation';
-import Home from './screens/home';
+import {
+	createMaterialBottomTabNavigator,
+	NavigationMaterialBottomTabOptions
+} from 'react-navigation-material-bottom-tabs';
 import Login from './screens/login';
 import SignUp from './screens/signup';
 import DriverApplication from './screens/driver-application';
@@ -21,24 +24,29 @@ import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
-import { createMaterialBottomTabNavigator, NavigationMaterialBottomTabOptions } from 'react-navigation-material-bottom-tabs';
-import HeaderBar from './headerbar';
+import HeaderBar, { CustomOption } from './headerbar';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
 });
 
-const navigationOptions = (title: string | undefined, subtitle: string | undefined, backButton: boolean): any => ({
+const navigationOptions = (
+	title: string | undefined,
+	subtitle: string | undefined,
+	backButton: boolean,
+	customOptions?: CustomOption[]
+): any => ({
 	navigationOptions: ({ navigation }: { navigation: NavigationScreenConfig<any> }): NavigationStackScreenOptions => ({
-		header: headerBar(navigation, title, subtitle, backButton)
+		header: headerBar(navigation, title, subtitle, backButton, customOptions)
 	})
-})
+});
 
 const headerBar = (
 	navigation: NavigationScreenConfig<any>,
 	title: string | undefined,
 	subtitle: string | undefined,
-	backButton: boolean
+	backButton: boolean,
+	customOptions?: CustomOption[]
 ): React.ReactElement =>
 	<HeaderBar
 		title={ customValue(navigation, 'title') || title }
@@ -51,6 +59,7 @@ const headerBar = (
 			settings: true,
 			becomeDriver: true
 		} }
+		customOptions={ customOptions }
 	/>;
 
 const customValue = (navigation: NavigationScreenConfig<any>, value: string): string | undefined =>
@@ -79,13 +88,17 @@ const ProfileTab: NavigationContainer = createStackNavigator({
 	UpdatePassword: {
 		screen: UpdatePassword,
 		...navigationOptions('Update Password', undefined, true)
+	},
+	DriverApplication: {
+		screen: DriverApplication,
+		...navigationOptions('Driver Application', undefined, true)
 	}
 });
 
 const JourneysTab: NavigationContainer = createStackNavigator({
 	AllJourneys: {
 		screen: AllJourneys,
-		...navigationOptions('View Journeys', undefined, false)
+		...navigationOptions('Search Journeys', undefined, false)
 	},
 	ViewJourney: {
 		screen: ViewJourney,
@@ -93,15 +106,7 @@ const JourneysTab: NavigationContainer = createStackNavigator({
 	}
 });
 
-const HomeTab: NavigationContainer = createStackNavigator({
-	Home: {
-		screen: Home,
-		...navigationOptions('Home', undefined, false)
-	},
-	DriverApplication: {
-		screen: DriverApplication,
-		...navigationOptions('Driver Application', undefined, true)
-	},
+const MyJourneysTab: NavigationContainer = createStackNavigator({
 	MyJourneys: {
 		screen: MyJourneys,
 		...navigationOptions('My Journeys', undefined, true)
@@ -124,41 +129,37 @@ const NewJourneyTab: NavigationContainer = createStackNavigator({
 });
 
 const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
-	HomeTab: {
-		screen: HomeTab,
+	MyJourneysTab: {
+		screen: MyJourneysTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'Home',
-			tabBarColor: 'red',
-			tabBarIcon: <Icon name={ 'home' } size={ 22 } color={ 'white' } />
+			title: 'My Journeys',
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ 'white' } />
 		})
 	},
 	ProfileTab: {
 		screen: ProfileTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Profile',
-			tabBarColor: 'green',
 			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ 'white' } solid />
 		})
 	},
-	JourneysTab: {
+	SearchTab: {
 		screen: JourneysTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'Journeys',
-			tabBarColor: 'purple',
-			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ 'white' } solid />
+			title: 'Search',
+			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ 'white' } solid />
 		})
 	},
 	NewJourneyTab: {
 		screen: NewJourneyTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'New Journey',
-			tabBarColor: 'lightblue',
 			tabBarIcon: <Icon name={ 'plus' } size={ 22 } color={ 'white' } solid />
 		})
 	}
 },
 	{
-		initialRouteName: 'HomeTab',
+		initialRouteName: 'MyJourneysTab',
 		tabBarPosition: 'bottom',
 		animationEnabled: true,
 		swipeEnabled: true,

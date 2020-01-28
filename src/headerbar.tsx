@@ -14,11 +14,17 @@ interface Props extends CommonProps {
 		settings: boolean;
 		becomeDriver: boolean;
 	};
+	customOptions?: CustomOption[];
 }
 
 interface State {
 	optionsVisible: boolean;
 	driverView: boolean;
+}
+
+export interface CustomOption {
+	action: Function;
+	title: string;
 }
 
 export default class HeaderBar extends Component<Props, State> {
@@ -81,16 +87,21 @@ export default class HeaderBar extends Component<Props, State> {
 							onDismiss={ this._closeMenu }
 							anchor={ <Appbar.Action icon='dots-vertical' onPress={ this._openMenu } color='white' /> }
 						>
-							{ this.props.options.becomeDriver && this.state.driverView && <Menu.Item onPress={ this._becomeDriver } title='Become a Driver' /> }
+							{ this.props.options.becomeDriver && !this.state.driverView && <Menu.Item onPress={ this._becomeDriver } title='Become a Driver' /> }
 
 							{ this.props.options.settings && <Menu.Item onPress={ this._settings } title='Settings' /> }
 
 							{
+								this.props.customOptions &&
+									this.props.customOptions.map((op: CustomOption) => <Menu.Item onPress={ op.action } title={ op.title } />)
+							}
+
+							{
 								this.props.options.logout &&
-								<View>
-									<Divider />
-									<Menu.Item onPress={ this._logout } title='Logout' />
-								</View>
+									<View>
+										<Divider />
+										<Menu.Item onPress={ this._logout } title='Logout' />
+									</View>
 							}
 						</Menu>
 				}
