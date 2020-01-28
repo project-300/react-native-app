@@ -109,7 +109,7 @@ const JourneysTab: NavigationContainer = createStackNavigator({
 const MyJourneysTab: NavigationContainer = createStackNavigator({
 	MyJourneys: {
 		screen: MyJourneys,
-		...navigationOptions('My Journeys', undefined, true)
+		...navigationOptions('My Journeys', undefined, false)
 	},
 	JourneyMap: {
 		screen: JourneyMap,
