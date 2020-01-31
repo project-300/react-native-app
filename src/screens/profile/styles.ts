@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Theme } from '../../constants/theme';
 
 const styles = StyleSheet.create<Styles>({
 	container: {
@@ -11,20 +12,6 @@ const styles = StyleSheet.create<Styles>({
 		fontSize: 20,
 		textAlign: 'center',
 		margin: 10
-	},
-
-	button: {
-		backgroundColor: '#194781',
-		padding: 10,
-		marginBottom: 10,
-		borderRadius: 4,
-		width: '80%'
-	},
-
-	buttonText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold'
 	},
 
 	profileImageContainer: {
@@ -44,27 +31,28 @@ const styles = StyleSheet.create<Styles>({
 		position: 'absolute',
 		right: 10,
 		top: 10,
-		backgroundColor: 'grey',
+		backgroundColor: Theme.primary,
 		padding: 10,
 		borderRadius: 20,
 		elevation: 10
 	},
 
 	userTypeTag: {
-		backgroundColor: 'red',
-		width: 100,
+		backgroundColor: Theme.primary,
+		width: 140,
 		alignSelf: 'center',
 		borderRadius: 8,
 		marginTop: -20,
 		marginBottom: 20,
-		padding: 2,
+		padding: 5,
 		elevation: 10
 	},
 
 	userTypeTagText: {
 		alignSelf: 'center',
 		color: 'white',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		fontSize: 16
 	},
 
 	username: {
@@ -90,6 +78,10 @@ const styles = StyleSheet.create<Styles>({
 
 	editText: {
 		fontSize: 16
+	},
+
+	panel: {
+		backgroundColor: 'white'
 	}
 });
 

@@ -1,68 +1,46 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Theme } from '../../../constants/theme';
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
-		flex: 1,
-		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingTop: 20
+		alignItems: 'center'
+	},
+
+	firstContainer: {
+		marginTop: 60
 	},
 
 	inputContainer: {
-		width: '80%'
-	},
-
-	input: {
-		backgroundColor: '#DDD',
-		borderRadius: 4,
-		marginBottom: 10,
-		paddingVertical: 10,
-		paddingHorizontal: 12,
-		height: 50
+		width: '90%',
+		marginBottom: 20
 	},
 
 	showPasswordIconContainer: {
 		position: 'absolute',
 		alignItems: 'center',
-		right: 10,
-		top: 0,
-		height: 50,
-		width: 40,
-		paddingTop: 16,
+		right: 11,
+		top: 7,
+		height: 56,
+		width: 48,
+		paddingTop: 20,
 		marginRight: -10,
 		borderTopRightRadius: 4,
-		borderBottomRightRadius: 4,
-		backgroundColor: '#CCC'
+		borderBottomRightRadius: 4
 	},
 
 	showPasswordIcon: {
-		color: 'black',
+		color: Theme.primary,
 		fontSize: 18
 	},
 
-	text: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10
-	},
-
-	pushDown: {
-		marginBottom: 20
+	buttonContainer: {
+		width: '90%',
+		marginBottom: 10
 	},
 
 	button: {
-		backgroundColor: '#194781',
-		padding: 10,
-		borderRadius: 4,
-		width: '80%'
-	},
-
-	buttonText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold'
+		padding: 8
 	}
 });
 

@@ -1,22 +1,22 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { CommonProps, EditTypes } from '../../../types/common';
+import { EditTypes } from '../../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
 	input: TextStyle;
-	text: TextStyle;
-	pushDown: TextStyle;
 	button: ViewStyle;
-	buttonText: TextStyle;
+	buttonContainer: TextStyle;
 }
 
-export interface Props extends CommonProps {
-	isUpdating: boolean;
+export interface Props {
+	type: string;
+	field: EditTypes;
+	value: string;
+	close(): void;
 	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
 }
 
 export interface State {
-	type: string;
-	field: EditTypes;
 	value: string;
+	isUpdating: boolean;
 }

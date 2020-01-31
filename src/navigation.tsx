@@ -14,8 +14,6 @@ import Login from './screens/login';
 import SignUp from './screens/signup';
 import DriverApplication from './screens/driver-application';
 import Profile from './screens/profile';
-import UpdateUserField from './screens/profile/update-user-field';
-import UpdatePassword from './screens/profile/update-password';
 import MyJourneys from './screens/driver/journeys';
 import JourneyMap from './screens/driver/journey';
 import DriverTracking from './screens/passenger/driver-tracking';
@@ -80,14 +78,6 @@ const ProfileTab: NavigationContainer = createStackNavigator({
 	Profile: {
 		screen: Profile,
 		...navigationOptions('My Profile', undefined, false)
-	},
-	UpdateUserField: {
-		screen: UpdateUserField,
-		...navigationOptions('Update Field', undefined, true)
-	},
-	UpdatePassword: {
-		screen: UpdatePassword,
-		...navigationOptions('Update Password', undefined, true)
 	},
 	DriverApplication: {
 		screen: DriverApplication,

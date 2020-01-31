@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mapbox/polyline": "1.1.0",
-    "@project-300/common-types": "1.4.0",
+    "@project-300/common-types": "2.0.0",
     "@types/enzyme": "3.10.3",
     "@types/enzyme-adapter-react-16": "1.0.5",
     "@types/googlemaps": "3.38.1",
@@ -37,7 +37,7 @@
     "react-native-loading-spinner-overlay": "1.0.1",
     "react-native-maps": "0.24.2",
     "react-native-modal-datetime-picker": "7.6.0",
-    "react-native-paper": "^3.5.1",
+    "react-native-paper": "3.5.1",
     "react-native-reanimated": "1.1.0",
     "react-native-root-toast": "3.1.2",
     "react-native-scripts": "2.0.1",
@@ -45,8 +45,9 @@
     "react-native-svg-transformer": "0.14.3",
     "react-native-vector-icons": "6.6.0",
     "react-navigation": "3.11.0",
-    "react-navigation-material-bottom-tabs": "^2.1.5",
+    "react-navigation-material-bottom-tabs": "2.1.5",
     "react-redux": "7.1.0",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.18",
     "redux": "4.0.1",
     "redux-thunk": "2.3.0"
   },

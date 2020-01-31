@@ -3,42 +3,22 @@ import { Styles } from './interfaces';
 
 const styles = StyleSheet.create<Styles>({
 	container: {
-		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center',
-		paddingTop: 20
 	},
 
 	input: {
-		width: '80%',
-		backgroundColor: '#DDD',
-		borderRadius: 4,
-		marginBottom: 10,
-		paddingVertical: 10,
-		paddingHorizontal: 12
+		width: '90%',
+		marginBottom: 20,
+		marginTop: 60
 	},
 
-	text: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10
-	},
-
-	pushDown: {
-		marginBottom: 20
+	buttonContainer: {
+		width: '90%',
+		marginBottom: 10
 	},
 
 	button: {
-		backgroundColor: '#194781',
-		padding: 10,
-		borderRadius: 4,
-		width: '80%'
-	},
-
-	buttonText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold'
+		padding: 8
 	}
 });
 

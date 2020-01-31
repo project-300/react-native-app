@@ -1,39 +1,30 @@
 import React, { Component, ReactElement } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { connect } from 'react-redux';
+import { View } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { AppState } from '../../../store';
-import { UpdateUserFieldState } from '../../../types/redux-reducer-state-types';
-import { updateUserField } from '../../../redux/actions/user/update-user-field';
 import * as EmailValidator from 'email-validator';
 import toastr from '../../../helpers/toastr';
 import { EditTypes } from '../../../types/common';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
-import { userId } from '../../../auth';
+import { Button, TextInput } from 'react-native-paper';
 
-class UpdateUserField extends Component<Props, State> {
+export class UpdateUserField extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
 
-		const { getParam } = this.props.navigation;
-
 		this.state = {
-			type: getParam('type', ''),
-			field: getParam('field', ''),
-			value: getParam('value', '')
+			value: this.props.value,
+			isUpdating: false
 		};
 	}
 
-	public static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationState, NavigationParams> }): { } => ({
-		title: navigation.getParam('type')
-	})
-
 	private _updateValue = async (): Promise<void> => {
-		if (this.props.isUpdating || !this.state.value) return;
+		if (this.state.isUpdating || !this.state.value) return;
 
-		const { value, type, field } = this.state;
+		this.setState({ isUpdating: true });
+
+		const { value } = this.state;
+		const { type, field } = this.props;
 
 		if (field === EditTypes.EMAIL) {
 			const email = value.toLowerCase();
@@ -41,8 +32,11 @@ class UpdateUserField extends Component<Props, State> {
 		}
 
 		const res: boolean = await this.props.updateUserField(field, type, value);
-		if (res && field === EditTypes.EMAIL) this.props.navigation.navigate('Confirmation', { email: value, userId: await userId() });
-		else if (res) this.props.navigation.goBack();
+
+		if (res && field === EditTypes.EMAIL) console.log('Confirmation Required'); // To be done when auth flow is updated
+		else if (res) this.props.close();
+
+		this.setState({ isUpdating: false });
 	}
 
 	public render(): ReactElement {
@@ -51,24 +45,32 @@ class UpdateUserField extends Component<Props, State> {
 				<TextInput
 					value={ this.state.value }
 					style={ styles.input }
+					label={ this.props.type }
+					mode='outlined'
 					onChangeText={ (value: string): void => this.setState({ value })}
-					autoFocus
 				/>
-				<TouchableOpacity
-					onPress={ (): Promise<void> => this._updateValue() }
-					style={ styles.button }
-				>
-					<Text style={ styles.buttonText }>
-						Update { this.state.type }
-					</Text>
-				</TouchableOpacity>
+
+				<View style={ styles.buttonContainer }>
+					<Button
+						mode={ 'contained'}
+						style={ styles.button }
+						onPress={ this._updateValue }
+						disabled={ this.state.isUpdating || !this.state.value }
+					>
+						Update { this.props.type }
+					</Button>
+				</View>
+
+				<View style={ styles.buttonContainer }>
+					<Button
+						mode={ 'outlined'}
+						style={ styles.button }
+						onPress={ this.props.close }
+					>
+						Cancel
+					</Button>
+				</View>
 			</View>
 		);
 	}
 }
-
-const mapStateToProps = (state: AppState): UpdateUserFieldState => ({
-	...state.updateUserFieldReducer
-});
-
-export default connect(mapStateToProps, { updateUserField })(UpdateUserField);

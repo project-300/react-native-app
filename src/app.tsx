@@ -6,8 +6,8 @@ import { isStoreLoggedIn } from './auth';
 import { AWS_COGNITO_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
-import HeaderBar from './headerbar';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
+import { Theme } from './constants/theme';
 
 Amplify.configure(AWS_COGNITO_CONFIG);
 
@@ -17,12 +17,11 @@ interface State {
 	checkedLoggedIn: boolean;
 }
 
-const theme = {
+const theme: RNPTheme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		primary: '#652263',
-		accent: 'yellow'
+		...Theme
 	}
 };
 

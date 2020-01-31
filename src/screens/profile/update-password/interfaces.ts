@@ -1,26 +1,25 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { CommonProps } from '../../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
+	firstContainer: ViewStyle;
 	inputContainer: ViewStyle;
-	input: TextStyle;
 	showPasswordIconContainer: ViewStyle;
 	showPasswordIcon: TextStyle;
-	text: TextStyle;
-	pushDown: TextStyle;
 	button: ViewStyle;
-	buttonText: TextStyle;
+	buttonContainer: TextStyle;
 }
 
-export interface Props extends CommonProps {
-	isUpdating: boolean;
+export interface Props {
+	type: string;
+	close(): void;
 	updatePassword(cp: string, np: string): Promise<boolean>;
 }
 
 export interface State {
 	newPassword: string;
 	currentPassword: string;
-	hideNewPassword: boolean,
+	hideNewPassword: boolean;
 	hideCurrentPassword: boolean;
+	isUpdating: boolean;
 }
