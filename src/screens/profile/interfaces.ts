@@ -8,6 +8,7 @@ export interface Styles {
 	container: ViewStyle;
 	text: TextStyle;
 	profileImageContainer: ViewStyle;
+	avatarCircle: ViewStyle;
 	editIconContainer: ViewStyle;
 	userTypeTag: ViewStyle;
 	userTypeTagText: TextStyle;

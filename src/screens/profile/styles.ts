@@ -1,11 +1,14 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
-import { Theme } from '../../constants/theme';
+import { Theme, Colours } from '../../constants/theme';
+
+const { height, width } = Dimensions.get('window');
+const avatarSize = width / 2;
 
 const styles = StyleSheet.create<Styles>({
 	container: {
-		backgroundColor: '#FFF',
-		...StyleSheet.absoluteFill as object
+		...StyleSheet.absoluteFill as object,
+		backgroundColor: Colours.whiteGrey
 	},
 
 	text: {
@@ -15,16 +18,18 @@ const styles = StyleSheet.create<Styles>({
 	},
 
 	profileImageContainer: {
-		alignSelf: 'center',
-		marginTop: 20,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 4
-		},
-		shadowOpacity: 0.3,
-		shadowRadius: 4.65,
-		elevation: 8
+		width: '100%'
+	},
+
+	avatarCircle: {
+		width: avatarSize,
+		height: avatarSize,
+		borderRadius: avatarSize / 2
+	},
+
+	avatar: {
+		width,
+		height: height * 0.35
 	},
 
 	editIconContainer: {
@@ -38,50 +43,105 @@ const styles = StyleSheet.create<Styles>({
 	},
 
 	userTypeTag: {
-		backgroundColor: Theme.primary,
-		width: 140,
-		alignSelf: 'center',
-		borderRadius: 8,
-		marginTop: -20,
-		marginBottom: 20,
-		padding: 5,
-		elevation: 10
+		backgroundColor: Theme.accent,
+		width: 50,
+		height: 50,
+		borderRadius: 25,
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'absolute',
+		top: -25,
+		left: 20,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 12
 	},
 
 	userTypeTagText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold',
-		fontSize: 16
+		color: Colours.darkGrey
 	},
 
 	username: {
 		alignSelf: 'center',
-		fontSize: 24,
-		fontWeight: 'bold'
+		fontSize: 22,
+		fontWeight: 'bold',
+		marginBottom: 4
 	},
 
-	editRowFirstItem: {
-		borderTopWidth: 0.5,
-		marginTop: 40
+	name: {
+		alignSelf: 'center',
+		color: Colours.middleGrey,
+		fontSize: 16,
+		marginBottom: 20
 	},
 
 	editRow: {
-		borderBottomWidth: 0.5,
-		padding: 20
+		paddingVertical: 20
 	},
 
 	label: {
-		fontWeight: 'bold',
-		color: 'black'
+		color: Colours.middleGrey,
+		fontSize: 16,
+		marginBottom: 10
 	},
 
 	editText: {
-		fontSize: 16
+		color: Colours.black,
+		fontWeight: 'bold',
+		fontSize: 18
 	},
 
 	panel: {
-		backgroundColor: 'white'
+		backgroundColor: Colours.white
+	},
+
+	statsContainer: {
+		top: -30,
+		backgroundColor: Colours.white,
+		width: width * 0.92,
+		padding: 20,
+		paddingTop: 16,
+		alignSelf: 'center',
+		borderRadius: 10,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 12
+	},
+
+	statsItem: {
+		flexGrow: 1,
+		alignContent: 'center'
+	},
+
+	statsItemText: {
+		alignSelf: 'center',
+		fontWeight: 'bold',
+		paddingTop: 20,
+		fontSize: 18,
+		color: Colours.black
+	},
+
+	statsItemDesc: {
+		alignSelf: 'center',
+		marginTop: 6,
+		fontSize: 14,
+		color: Colours.middleGrey
+	},
+
+	fab: {
+		position: 'absolute',
+		margin: 16,
+		right: 0,
+		bottom: 0
 	}
 });
 

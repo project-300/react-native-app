@@ -3,10 +3,10 @@ import {
 	ScrollView,
 	Text,
 	View,
-	Image,
 	TouchableOpacity,
 	Dimensions,
-	SafeAreaView
+	SafeAreaView,
+	Image, TouchableWithoutFeedback
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -24,8 +24,10 @@ import { UserType } from '@project-300/common-types';
 import Animated, { Easing } from 'react-native-reanimated';
 import { UpdateUserField } from './update-user-field';
 import { UpdatePassword } from './update-password';
+import { Divider, FAB, TouchableRipple } from 'react-native-paper';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 const { timing, interpolate, Extrapolate } = Animated;
 
 export const EditFields =  {
@@ -54,7 +56,8 @@ export class Profile extends Component<Props, State> {
 		});
 
 		this.state = {
-			editType: null
+			editType: null,
+			editing: false
 		};
 	}
 
@@ -118,6 +121,10 @@ export class Profile extends Component<Props, State> {
 		});
 	}
 
+	private _handleFabPress = (): void => {
+		this.setState({ editing: !this.state.editing });
+	}
+
 	public render(): ReactElement {
 		if (!this.props.user || !this.props.user.email) { // Replace with loading spinner
 			return <View>
@@ -131,38 +138,69 @@ export class Profile extends Component<Props, State> {
 		}
 
 		const { user } = this.props;
-		const avatarSize = Dimensions.get('screen').width / 2;
-		const avatarCircle = { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2 };
 
 		return (
 			<SafeAreaView style={ styles.container }>
 				<ScrollView>
-					<TouchableOpacity
-						onPress={ this._changeImage }
-						style={ { ...styles.profileImageContainer, ...avatarCircle } }
-					>
-						<Image
-							source={ user.avatar ? { uri: user.avatar } : require('./../../assets/images/no-avatar.jpg') }
-							style={ avatarCircle }
-						/>
-						<View style={ styles.editIconContainer }>
-							<Icon name='pen' size={ 14 } style={ { color: 'white' } } />
+					<TouchableWithoutFeedback onPress={ this._changeImage }>
+						<View>
+							<Image
+								source={ user.avatar ? { uri: user.avatar } : require('./../../assets/images/no-avatar.jpg') }
+								style={ styles.avatar }
+							/>
 						</View>
-					</TouchableOpacity>
+					</TouchableWithoutFeedback>
 
-					<View style={ styles.userTypeTag }>
-						<Text style={ styles.userTypeTagText }>{ user.userType } <Icon name={ this._userTypeIcon() } size={ 16 } solid /></Text>
+					<View style={ styles.statsContainer }>
+						<View style={ styles.userTypeTag }>
+							<Icon style={ styles.userTypeTagText } name={ this._userTypeIcon() } size={ 20 } solid />
+						</View>
+						<Text style={ styles.username }>{ user.username }</Text>
+						<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
+
+						<Divider />
+
+						<View style={ {
+							flexDirection: 'row',
+							alignContent: 'stretch'
+						} }>
+							<View style={ styles.statsItem }>
+								<Text style={ styles.statsItemText }>
+									2,304
+								</Text>
+								<Text style={ styles.statsItemDesc }>
+									KM Travelled
+								</Text>
+							</View>
+							<View style={ styles.statsItem }>
+								<Text style={ styles.statsItemText }>
+									453
+								</Text>
+								<Text style={ styles.statsItemDesc }>
+									KG CO2 Saved
+								</Text>
+							</View>
+							<View style={ styles.statsItem }>
+								<Text style={ styles.statsItemText }>
+									41
+								</Text>
+								<Text style={ styles.statsItemDesc }>
+									Lifts Given
+								</Text>
+							</View>
+						</View>
 					</View>
 
-					<Text style={ styles.username }>{ user.username }</Text>
-
+					<View style={ [ styles.statsContainer, { marginTop: 20 } ] }>
 					<TouchableOpacity
 						onPress={ (): void => { this.openForm(EditTypes.EMAIL); } }
-						style={ { ...styles.editRow, ...styles.editRowFirstItem } }
+						style={ { ...styles.editRow } }
 					>
 						<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
 						<Text style={ styles.editText }>{ user.email }</Text>
 					</TouchableOpacity>
+
+					<Divider />
 
 					<TouchableOpacity
 						onPress={ (): void => { this.openForm(EditTypes.FIRST_NAME); } }
@@ -172,6 +210,8 @@ export class Profile extends Component<Props, State> {
 						<Text style={ styles.editText }>{ user.firstName || 'Add my first name' }</Text>
 					</TouchableOpacity>
 
+					<Divider />
+
 					<TouchableOpacity
 						onPress={ (): void => { this.openForm(EditTypes.LAST_NAME); } }
 						style={ styles.editRow }
@@ -180,6 +220,8 @@ export class Profile extends Component<Props, State> {
 						<Text style={ styles.editText }>{ user.lastName || 'Add my last name' }</Text>
 					</TouchableOpacity>
 
+					<Divider />
+
 					<TouchableOpacity
 						onPress={ (): void => { this.openForm(EditTypes.PASSWORD); } }
 						style={ styles.editRow }
@@ -187,7 +229,14 @@ export class Profile extends Component<Props, State> {
 						<Text style={ styles.label }>Password</Text>
 						<Text style={ styles.editText }>******</Text>
 					</TouchableOpacity>
+					</View>
 				</ScrollView>
+
+				<FAB
+					style={ styles.fab }
+					icon={ this.state.editing ? 'check-outline' : 'pencil-outline' }
+					onPress={ this._handleFabPress }
+				/>
 
 				<Animated.View style={ [ styles.panel, { height: this.panelHeight } ] }>
 					{

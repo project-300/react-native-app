@@ -18,8 +18,6 @@ export const updateUserField = (field: EditTypes, type: string, value: string): 
 	return async (dispatch: Dispatch): Promise<boolean > => {
 		dispatch(updateRequest());
 
-		console.log('1111');
-
 		try {
 			if (field === EditTypes.EMAIL) {
 				const user = await Auth.currentAuthenticatedUser();
