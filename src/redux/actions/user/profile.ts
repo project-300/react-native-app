@@ -5,7 +5,8 @@ import {
 	USER_PROFILE_UNSUB,
 	UPLOAD_AVATAR_REQUEST,
 	UPLOAD_AVATAR_SUCCESS,
-	UPLOAD_AVATAR_FAILURE
+	UPLOAD_AVATAR_FAILURE,
+	REMOVE_INTERESTS
 } from '../../../constants/redux-actions';
 import { AppActions } from '../../../types/redux-action-types';
 import { SubscriptionPayload } from '@project-300/common-types';
@@ -34,6 +35,8 @@ export const uploadAvatarRequest = (): AppActions => ({ type: UPLOAD_AVATAR_REQU
 export const uploadAvatarSuccess = (): AppActions => ({ type: UPLOAD_AVATAR_SUCCESS });
 
 export const uploadAvatarFailure = (): AppActions => ({ type: UPLOAD_AVATAR_FAILURE });
+
+export const removeInterests = (toRemove: string[]): AppActions => ({ type: REMOVE_INTERESTS, toRemove });
 
 export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promise<void | boolean> => {
 	return async (dispatch: Dispatch): Promise<void | boolean > => {

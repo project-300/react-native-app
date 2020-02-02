@@ -61,7 +61,11 @@ import {
 	GET_ALL_JOURNEYS_SUCCESS,
 	UPDATE_ADD_USER_JOURNEY_REQUEST,
 	UPDATE_ADD_USER_JOURNEY_SUCCESS,
-	UPDATE_ADD_USER_JOURNEY_FAILURE, CREATE_JOURNEY_FIND_ROUTE_REQUEST, CREATE_JOURNEY_FIND_ROUTE_SUCCESS, CREATE_JOURNEY_FIND_ROUTE_FAILURE
+	UPDATE_ADD_USER_JOURNEY_FAILURE,
+	CREATE_JOURNEY_FIND_ROUTE_REQUEST,
+	CREATE_JOURNEY_FIND_ROUTE_SUCCESS,
+	CREATE_JOURNEY_FIND_ROUTE_FAILURE,
+	REMOVE_INTERESTS
 } from '../constants/redux-actions';
 import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload, GooglePlace } from '@project-300/common-types';
 
@@ -158,6 +162,11 @@ export interface UpdateEmailSuccess {
 
 export interface UpdateEmailFailure {
 	type: typeof UPDATE_EMAIL_FAILURE;
+}
+
+export interface RemoveInterests {
+	type: typeof REMOVE_INTERESTS;
+	toRemove: string[];
 }
 
 export interface DriverApplicationRequest {
@@ -369,7 +378,8 @@ export type SignUpActionTypes =
 	| SignUpConfirmationSuccess
 	| SignUpConfirmationFailure;
 
-export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure;
+export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure
+	| RemoveInterests;
 
 export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
 

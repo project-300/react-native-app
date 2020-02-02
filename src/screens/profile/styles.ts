@@ -11,35 +11,9 @@ const styles = StyleSheet.create<Styles>({
 		backgroundColor: Colours.whiteGrey
 	},
 
-	text: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10
-	},
-
-	profileImageContainer: {
-		width: '100%'
-	},
-
-	avatarCircle: {
-		width: avatarSize,
-		height: avatarSize,
-		borderRadius: avatarSize / 2
-	},
-
 	avatar: {
 		width,
 		height: height * 0.35
-	},
-
-	editIconContainer: {
-		position: 'absolute',
-		right: 10,
-		top: 10,
-		backgroundColor: Theme.primary,
-		padding: 10,
-		borderRadius: 20,
-		elevation: 10
 	},
 
 	userTypeTag: {
@@ -69,7 +43,8 @@ const styles = StyleSheet.create<Styles>({
 		alignSelf: 'center',
 		fontSize: 22,
 		fontWeight: 'bold',
-		marginBottom: 4
+		marginBottom: 4,
+		color: Colours.black
 	},
 
 	name: {
@@ -114,7 +89,8 @@ const styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 6,
-		elevation: 12
+		elevation: 6,
+		marginBottom: 20
 	},
 
 	statsItem: {
@@ -142,6 +118,37 @@ const styles = StyleSheet.create<Styles>({
 		margin: 16,
 		right: 0,
 		bottom: 0
+	},
+
+	interestChip: {
+		margin: 4
+	},
+
+	editAvatarContainer: {
+		backgroundColor: 'white',
+		zIndex: 50,
+		alignSelf: 'center',
+		justifyContent: 'center',
+		position: 'absolute',
+		width: 100,
+		height: 100,
+		borderRadius: 50,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 12,
+		borderWidth: 0.5,
+		borderColor: Colours.lightGrey
+	},
+
+	editAvatarIcon: {
+		alignSelf: 'center',
+		left: 5,
+		top: -2
 	}
 });
 
