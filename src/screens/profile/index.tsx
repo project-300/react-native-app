@@ -12,20 +12,28 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import WS from '../../api/websocket';
-import { userProfileSubRequest, userProfileUnsub, updateUserField } from '../../redux/actions';
 import { UserProfileState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import ImagePicker, { Response as ImageResponse } from 'react-native-image-picker';
 import toastr from '../../helpers/toastr';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { EditTypes } from '../../types/common';
-import { uploadAvatar, updatePassword, removeInterests } from '../../redux/actions/';
 import { UserType } from '@project-300/common-types';
 import Animated, { Easing } from 'react-native-reanimated';
 import { UpdateUserField } from './update-user-field';
 import { UpdatePassword } from './update-password';
 import { Button, Divider, FAB, IconButton, Title } from 'react-native-paper';
 import { InterestChip } from '../../components/miscellaneous/interest-chip';
+import { UpdateInterests } from './interests';
+import {
+	userProfileSubRequest,
+	userProfileUnsub,
+	updateUserField,
+	getInterestsList,
+	uploadAvatar,
+	updatePassword,
+	updateInterests
+} from '../../redux/actions';
 
 const { height, width } = Dimensions.get('window');
 const { timing, interpolate, Extrapolate, set } = Animated;
@@ -34,7 +42,8 @@ export const EditFields =  {
 	EMAIL: { type: 'Email Address', field: EditTypes.EMAIL },
 	FIRST_NAME: { type: 'First Name', field: EditTypes.FIRST_NAME },
 	LAST_NAME: { type: 'Last Name', field: EditTypes.LAST_NAME },
-	PASSWORD: { type: 'Password', field: EditTypes.PASSWORD }
+	PASSWORD: { type: 'Password', field: EditTypes.PASSWORD },
+	INTERESTS: { type: 'Interests', field: EditTypes.INTERESTS }
 };
 
 export class Profile extends Component<Props, State> {
@@ -55,6 +64,7 @@ export class Profile extends Component<Props, State> {
 		editing: false,
 		readyToEdit: false,
 		isSwiping: false, // Screen is swiping between view and edit,
+		panelOpen: false,
 		selectedInterests: []
 	};
 
@@ -113,6 +123,8 @@ export class Profile extends Component<Props, State> {
 	public async componentDidMount(): Promise<void> {
 		this.props.userProfileSubRequest();
 		await WS.subscribe('user/profile');
+
+		await this.props.getInterestsList();
 	}
 
 	public async componentWillUnmount(): Promise<void> {
@@ -167,17 +179,17 @@ export class Profile extends Component<Props, State> {
 			duration: 1000,
 			toValue: 1,
 			easing: Easing.inOut(Easing.ease)
-		}).start();
+		}).start(() => this.setState({ panelOpen: true }));
 	}
 
 	private closeForm = (): void => {
+		this.setState({ panelOpen: false });
+
 		timing(this.panelOpen, {
 			duration: 500,
 			toValue: 0,
 			easing: Easing.inOut(Easing.ease)
-		}).start(() => {
-			this.setState({ editType: null });
-		});
+		}).start(() => this.setState({ editType: null }));
 	}
 
 	private _handleEditFabPress = (): void => {
@@ -219,16 +231,16 @@ export class Profile extends Component<Props, State> {
 	}
 
 	private _selectInterest = (interest: string): void => {
-		let curInterests = this.state.selectedInterests;
-		const curIndex = curInterests.indexOf(interest);
-		if (curIndex > -1) curInterests.splice(curIndex, 1);
-		else curInterests = curInterests.concat(interest);
-		this.setState({ selectedInterests: curInterests });
+		let interests = this.state.selectedInterests;
+		const curIndex = interests.indexOf(interest);
+		if (curIndex > -1) interests.splice(curIndex, 1);
+		else interests = interests.concat(interest);
+		this.setState({ selectedInterests: interests });
 	}
 
-	private _openInterestsSelection = (): void => {
-		console.log('Open interests');
-	}
+	// private _openInterestsSelection = (): void => {
+	// 	console.log('Open interests');
+	// }
 
 	private _renderInterests = (isEditing: boolean): ReactElement | undefined => {
 		const { user } = this.props;
@@ -243,7 +255,7 @@ export class Profile extends Component<Props, State> {
 					isEditing &&
 						<IconButton
 							icon='plus'
-							onPress={ this._openInterestsSelection }
+							onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
 							color='black'
 							size={ 26 }
 							style={ { position: 'absolute', top: 8, right: 6 } }
@@ -263,10 +275,12 @@ export class Profile extends Component<Props, State> {
 											text={ interest }
 											selected={ this.state.selectedInterests.indexOf(interest) > -1 }
 											onPress={ (): void => this._selectInterest(interest) }
+											key={ interest }
 										/>
 									) : (
 										<InterestChip
 											text={ interest }
+											key={ interest }
 										/>
 									);
 								}
@@ -477,6 +491,18 @@ export class Profile extends Component<Props, State> {
 								type={ EditTypes.PASSWORD }
 								close={ this.closeForm } />
 					}
+
+					{
+						this.state.editType === EditTypes.INTERESTS &&
+							<UpdateInterests
+								type={ EditTypes.INTERESTS }
+								close={ this.closeForm }
+								allInterests={ this.props.interests }
+								currentInterests={ this.props.user.interests }
+                                panelOpen={ this.state.panelOpen }
+                                updateInterests={ this.props.updateInterests }
+							/>
+					}
 				</Animated.View>
 			</SafeAreaView>
 		);
@@ -484,7 +510,7 @@ export class Profile extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): UserProfileState => ({
-	...state.userProfileReducer, ...state.updateUserFieldReducer
+	...state.userProfileReducer, ...state.updateUserFieldReducer, ...state.interestsListReducer
 });
 
 export default connect(mapStateToProps, {
@@ -493,5 +519,6 @@ export default connect(mapStateToProps, {
 	uploadAvatar,
 	updateUserField,
 	updatePassword,
-	removeInterests
+	updateInterests,
+	getInterestsList
 })(Profile);

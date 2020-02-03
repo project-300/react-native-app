@@ -15,7 +15,9 @@ import {
 	CANCEL_PASSENGER_ACCEPTED_JOURNEY,
 	CREATE_JOURNEY,
 	GET_ALL_JOURNEYS,
-	UPDATE_ADD_USER_JOURNEY
+	UPDATE_ADD_USER_JOURNEY,
+	GET_INTERESTS_LIST,
+	UPDATE_INTERESTS
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -38,6 +40,8 @@ export default class HttpAPI {
 
 	public static updateAvatar = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_AVATAR);
 
+	public static updateInterests = (data: object): Promise<HttpResponse> => HttpAPI.send(data, UPDATE_INTERESTS);
+
 	public static getS3SecretKey = (): Promise<HttpResponse> => HttpAPI.send({ }, S3_KEY_REQUEST);
 
 	public static getDriverJourneys = (data: object): Promise<HttpResponse> => HttpAPI.send(data, DRIVER_JOURNEYS);
@@ -55,6 +59,8 @@ export default class HttpAPI {
 	public static driverMovement = (data: object): Promise<HttpResponse> => HttpAPI.send(data, JOURNEY_DRIVER_MOVEMENT);
 
 	public static createJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, CREATE_JOURNEY);
+
+	public static getInterestsList = (): Promise<HttpResponse> => HttpAPI.get(GET_INTERESTS_LIST);
 
 	private static get = async (path: string, params?: string): Promise<HttpResponse> => {
 		// change this later...

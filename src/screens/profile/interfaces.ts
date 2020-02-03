@@ -32,10 +32,11 @@ export interface Props extends CommonProps {
 	uploadingAvatar: boolean;
 	userProfileSubRequest(): AppActions;
 	userProfileUnsub(): AppActions;
-	removeInterests(r: string[]): AppActions;
+	updateInterests(i: string[]): Promise<void | boolean>;
 	uploadAvatar(img: ImageResponse): Promise<void | boolean>;
 	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
 	updatePassword(cp: string, np: string): Promise<boolean>;
+	getInterestsList(): Promise<void | boolean>;
 }
 
 export interface State {

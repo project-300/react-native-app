@@ -65,9 +65,18 @@ import {
 	CREATE_JOURNEY_FIND_ROUTE_REQUEST,
 	CREATE_JOURNEY_FIND_ROUTE_SUCCESS,
 	CREATE_JOURNEY_FIND_ROUTE_FAILURE,
-	REMOVE_INTERESTS
+	UPDATE_INTERESTS,
+	INTERESTS_REQUEST,
+	INTERESTS_SUCCESS,
+	INTERESTS_FAILURE
 } from '../constants/redux-actions';
-import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload, GooglePlace } from '@project-300/common-types';
+import {
+	Coords,
+	GooglePlaceDetails,
+	Journey,
+	SubscriptionPayload,
+	GooglePlace
+} from '@project-300/common-types';
 
 export interface UpdateAddUserJourneyRequest {
 	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
@@ -164,9 +173,9 @@ export interface UpdateEmailFailure {
 	type: typeof UPDATE_EMAIL_FAILURE;
 }
 
-export interface RemoveInterests {
-	type: typeof REMOVE_INTERESTS;
-	toRemove: string[];
+export interface UpdateInterests {
+	type: typeof UPDATE_INTERESTS;
+	interests: string[];
 }
 
 export interface DriverApplicationRequest {
@@ -359,6 +368,19 @@ export interface CreateJourneyFindRouteFailure {
 	type: typeof CREATE_JOURNEY_FIND_ROUTE_FAILURE;
 }
 
+export interface InterestsRequest {
+	type: typeof INTERESTS_REQUEST;
+}
+
+export interface InterestsSuccess {
+	type: typeof INTERESTS_SUCCESS;
+	interests: string[];
+}
+
+export interface InterestsFailure {
+	type: typeof INTERESTS_FAILURE;
+}
+
 export type JourneyActionTypes =
 	| GetAllJourneysRequest
 	| GetAllJourneysSuccess
@@ -379,7 +401,9 @@ export type SignUpActionTypes =
 	| SignUpConfirmationFailure;
 
 export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure
-	| RemoveInterests;
+	| UpdateInterests;
+
+export type InterestsActionTypes = InterestsRequest | InterestsSuccess | InterestsFailure;
 
 export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
 
@@ -424,4 +448,4 @@ export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | Google
 
 export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
 	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |
-	DriverApplicationActionTypes | CreateNewJourneyActionTypes | JourneyActionTypes;
+	DriverApplicationActionTypes | CreateNewJourneyActionTypes | JourneyActionTypes | InterestsActionTypes;

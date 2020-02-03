@@ -1,6 +1,6 @@
 export const Theme = {
-	primary: '#652263',
-	accent: '#4DFF4D'
+	primary: '#3700B3',
+	accent: '#03DAC5'
 };
 
 export const Colours = {

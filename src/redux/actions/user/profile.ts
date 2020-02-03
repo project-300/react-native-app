@@ -6,7 +6,7 @@ import {
 	UPLOAD_AVATAR_REQUEST,
 	UPLOAD_AVATAR_SUCCESS,
 	UPLOAD_AVATAR_FAILURE,
-	REMOVE_INTERESTS
+	REMOVE_INTERESTS, UPDATE_INTERESTS, UPDATE_INTERESTS_FAILURE, UPDATE_INTERESTS_SUCCESS, UPDATE_INTERESTS_REQUEST
 } from '../../../constants/redux-actions';
 import { AppActions } from '../../../types/redux-action-types';
 import { SubscriptionPayload } from '@project-300/common-types';
@@ -36,7 +36,36 @@ export const uploadAvatarSuccess = (): AppActions => ({ type: UPLOAD_AVATAR_SUCC
 
 export const uploadAvatarFailure = (): AppActions => ({ type: UPLOAD_AVATAR_FAILURE });
 
-export const removeInterests = (toRemove: string[]): AppActions => ({ type: REMOVE_INTERESTS, toRemove });
+export const updateInterestsRequest = (): AppActions => ({ type: UPDATE_INTERESTS_REQUEST });
+
+export const updateInterestsSuccess = (interests: string[]): AppActions => ({ type: UPDATE_INTERESTS_SUCCESS, interests });
+
+export const updateInterestsFailure = (): AppActions => ({ type: UPDATE_INTERESTS_FAILURE });
+
+export const updateInterests = (interests: string[]): (dispatch: Dispatch) => Promise<void | boolean> => {
+	return async (dispatch: Dispatch): Promise<void | boolean > => {
+		dispatch(updateInterestsRequest());
+
+		try {
+			const saveRes = await HttpAPI.updateInterests({
+				interests,
+				userId: await userId()
+			});
+
+			if (saveRes.success) {
+				dispatch(updateInterestsSuccess(interests));
+				toastr.success(`Your interests has been successfully updated`);
+				return true;
+			}
+
+			throw Error('Unable to update interests');
+		} catch (err) {
+			dispatch(updateInterestsFailure());
+			toastr.error(err.message || err.description);
+			return false;
+		}
+	};
+};
 
 export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promise<void | boolean> => {
 	return async (dispatch: Dispatch): Promise<void | boolean > => {

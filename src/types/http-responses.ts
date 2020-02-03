@@ -86,6 +86,11 @@ export interface CreateJourneyResult {
 	success: boolean;
 }
 
+export interface InterestsListResult {
+	success: boolean;
+	interests: string[];
+}
+
 export type HttpResponse =
 	| UpdateAddUserJourneyResult
 	| GetAllJourneysResult
@@ -96,4 +101,5 @@ export type HttpResponse =
 	| SecretKeyResult
 	| JourneysResult
 	| JourneyDetailsResult
-	| CreateJourneyResult;
+	| CreateJourneyResult
+	| InterestsListResult;

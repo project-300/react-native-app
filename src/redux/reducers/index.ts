@@ -11,6 +11,7 @@ import journeyDetailsReducer from './driver/journey';
 import driverTrackingReducer from './passenger/driver-tracking';
 import newJourneyReducer from './driver/new-journey';
 import allJourneysReducer from './journey';
+import interestsListReducer from './data/interests';
 
 export default combineReducers({
 	signUpReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
 	journeyDetailsReducer,
 	driverTrackingReducer,
 	newJourneyReducer,
-	allJourneysReducer
+	allJourneysReducer,
+	interestsListReducer
 });

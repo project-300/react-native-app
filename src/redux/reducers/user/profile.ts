@@ -5,18 +5,21 @@ import {
 	USER_PROFILE_UNSUB,
 	UPLOAD_AVATAR_REQUEST,
 	UPLOAD_AVATAR_SUCCESS,
-	UPLOAD_AVATAR_FAILURE, REMOVE_INTERESTS
+	UPLOAD_AVATAR_FAILURE,
+	UPDATE_INTERESTS_REQUEST,
+	UPDATE_INTERESTS_SUCCESS,
+	UPDATE_INTERESTS_FAILURE
 } from '../../../constants/redux-actions';
 import { UserProfileState } from '../../../types/redux-reducer-state-types';
-import { RemoveInterests, UserProfileActionTypes } from '../../../types/redux-action-types';
+import { UpdateInterests, UserProfileActionTypes } from '../../../types/redux-action-types';
 import { User, SubscriptionPayload } from '@project-300/common-types';
-import _ from 'lodash';
 
 const initialState: UserProfileState = {
 	subscribing: false,
 	receivedData: false,
 	user: null,
-	uploadingAvatar: false
+	uploadingAvatar: false,
+	updatingInterests: false
 };
 
 const userProfileReducer = (state: UserProfileState = initialState, action: UserProfileActionTypes): UserProfileState => {
@@ -37,11 +40,15 @@ const userProfileReducer = (state: UserProfileState = initialState, action: User
 			return { ...state, uploadingAvatar: false };
 		case UPLOAD_AVATAR_FAILURE:
 			return { ...state, uploadingAvatar: false };
-		case REMOVE_INTERESTS:
-			const toRemove: string[] = (action as RemoveInterests).toRemove;
+		case UPDATE_INTERESTS_REQUEST:
+			return { ...state, updatingInterests: true };
+		case UPDATE_INTERESTS_SUCCESS:
+			const interests: string[] = (action as UpdateInterests).interests;
 			const currentUser = state.user as User;
-			currentUser.interests = _.difference(currentUser.interests, toRemove);
-			return { ...state, user: currentUser };
+			currentUser.interests = interests;
+			return { ...state, user: currentUser, updatingInterests: false };
+		case UPDATE_INTERESTS_FAILURE:
+			return { ...state, updatingInterests: false };
 		default:
 			return state;
 	}
