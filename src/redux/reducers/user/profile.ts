@@ -11,7 +11,7 @@ import {
 	UPDATE_INTERESTS_FAILURE
 } from '../../../constants/redux-actions';
 import { UserProfileState } from '../../../types/redux-reducer-state-types';
-import { UpdateInterests, UserProfileActionTypes } from '../../../types/redux-action-types';
+import { UpdateInterestsSuccess, UserProfileActionTypes, UserProfileSubReceived } from '../../../types/redux-action-types';
 import { User, SubscriptionPayload } from '@project-300/common-types';
 
 const initialState: UserProfileState = {
@@ -27,7 +27,7 @@ const userProfileReducer = (state: UserProfileState = initialState, action: User
 		case USER_PROFILE_SUB_REQUEST:
 			return { ...state, subscribing: true, receivedData: false };
 		case USER_PROFILE_SUB_RECEIVED:
-			const payload: SubscriptionPayload = action.payload;
+			const payload: SubscriptionPayload = (action as UserProfileSubReceived).payload;
 			const user: User = payload.data as User;
 			return { ...state, subscribing: false, receivedData: true, user };
 		case USER_PROFILE_SUB_FAILURE:
@@ -43,7 +43,7 @@ const userProfileReducer = (state: UserProfileState = initialState, action: User
 		case UPDATE_INTERESTS_REQUEST:
 			return { ...state, updatingInterests: true };
 		case UPDATE_INTERESTS_SUCCESS:
-			const interests: string[] = (action as UpdateInterests).interests;
+			const interests: string[] = (action as UpdateInterestsSuccess).interests;
 			const currentUser = state.user as User;
 			currentUser.interests = interests;
 			return { ...state, user: currentUser, updatingInterests: false };

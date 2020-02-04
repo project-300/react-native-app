@@ -1,15 +1,3 @@
-import {
-	createAppContainer,
-	createStackNavigator,
-	createSwitchNavigator,
-	NavigationContainer,
-	NavigationScreenConfig,
-	NavigationStackScreenOptions,
-} from 'react-navigation';
-import {
-	createMaterialBottomTabNavigator,
-	NavigationMaterialBottomTabOptions
-} from 'react-navigation-material-bottom-tabs';
 import Login from './screens/login';
 import SignUp from './screens/signup';
 import DriverApplication from './screens/driver-application';
@@ -23,6 +11,18 @@ import ViewJourney from './screens/passenger/view-journey';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
+import {
+	createAppContainer,
+	createStackNavigator,
+	createSwitchNavigator,
+	NavigationContainer,
+	NavigationScreenConfig,
+	NavigationStackScreenOptions,
+} from 'react-navigation';
+import {
+	createMaterialBottomTabNavigator,
+	NavigationMaterialBottomTabOptions
+} from 'react-navigation-material-bottom-tabs';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -61,7 +61,9 @@ const headerBar = (
 	/>;
 
 const customValue = (navigation: NavigationScreenConfig<any>, value: string): string | undefined =>
-	navigation.state.params && navigation.state.params.headerDetails && navigation.state.params.headerDetails[value];
+	navigation.state.params &&
+	navigation.state.params.headerDetails &&
+	navigation.state.params.headerDetails[value];
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -169,7 +171,10 @@ const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
 			}
 		},
 		{
-			initialRouteName: signedIn ? 'SignedInStack' : 'SignedOutStack'
+			initialRouteName:
+				signedIn ?
+					'SignedInStack' :
+					'SignedOutStack'
 		}
 	);
 };

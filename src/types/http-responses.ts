@@ -91,6 +91,11 @@ export interface InterestsListResult {
 	interests: string[];
 }
 
+export interface S3SecretKeyResult {
+	success: boolean;
+	secretKey: string;
+}
+
 export type HttpResponse =
 	| UpdateAddUserJourneyResult
 	| GetAllJourneysResult

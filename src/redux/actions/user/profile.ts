@@ -6,21 +6,23 @@ import {
 	UPLOAD_AVATAR_REQUEST,
 	UPLOAD_AVATAR_SUCCESS,
 	UPLOAD_AVATAR_FAILURE,
-	REMOVE_INTERESTS, UPDATE_INTERESTS, UPDATE_INTERESTS_FAILURE, UPDATE_INTERESTS_SUCCESS, UPDATE_INTERESTS_REQUEST
+	UPDATE_INTERESTS_FAILURE,
+	UPDATE_INTERESTS_SUCCESS,
+	UPDATE_INTERESTS_REQUEST
 } from '../../../constants/redux-actions';
 import { AppActions } from '../../../types/redux-action-types';
 import { SubscriptionPayload } from '@project-300/common-types';
 import { Dispatch } from 'redux';
 import toastr from '../../../helpers/toastr';
-import { HttpResponse } from '../../../types/http-responses';
+import { HttpResponse, S3SecretKeyResult } from '../../../types/http-responses';
 import HttpAPI from '../../../api/http';
 import { Response as ResizedResponse } from 'react-native-image-resizer';
 import { ReduceImage } from '../../../helpers/image-resizing';
 import { S3_CONFIG } from '../../../../environment/env';
 import { userId } from '../../../auth';
-import { Response as ImageResponse } from 'react-native-image-picker';
 import { RNS3 } from 'react-native-aws3';
 import { S3_CONFIG_TYPE } from '../../../types/aws';
+import { ImagePickerResponse } from '../../../types/images';
 
 export const userProfileSubRequest = (): AppActions => ({ type: USER_PROFILE_SUB_REQUEST });
 
@@ -67,7 +69,7 @@ export const updateInterests = (interests: string[]): (dispatch: Dispatch) => Pr
 	};
 };
 
-export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promise<void | boolean> => {
+export const uploadAvatar = (img: ImagePickerResponse): (dispatch: Dispatch) => Promise<void | boolean> => {
 	return async (dispatch: Dispatch): Promise<void | boolean > => {
 		dispatch(uploadAvatarRequest());
 
@@ -76,18 +78,19 @@ export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promis
 
 			if (!keyResponse.success) throw Error('Unable to upload avatar');
 
+			const secretKey: string = (keyResponse as S3SecretKeyResult).secretKey;
 			const rs: ResizedResponse = await ReduceImage(img, 500);
 
 			const file = {
 				uri: rs.uri,
-				name: img.fileName.toLowerCase(),
+				name: img.fileName && img.fileName.toLowerCase(),
 				type: img.type || 'image/jpeg'
 			};
 
 			const config: S3_CONFIG_TYPE = {
 				...S3_CONFIG,
 				keyPrefix: 'avatars/',
-				secretKey: keyResponse.secretKey,
+				secretKey,
 				successActionStatus: 201
 			};
 

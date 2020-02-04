@@ -3,7 +3,6 @@ import { Styles } from './interfaces';
 import { Theme, Colours } from '../../constants/theme';
 
 const { height, width } = Dimensions.get('window');
-const avatarSize = width / 2;
 
 const styles = StyleSheet.create<Styles>({
 	container: {
@@ -74,7 +73,7 @@ const styles = StyleSheet.create<Styles>({
 		backgroundColor: Colours.white
 	},
 
-	statsContainer: {
+	sectionContainer: {
 		top: -30,
 		backgroundColor: Colours.white,
 		width: width * 0.92,
@@ -149,6 +148,27 @@ const styles = StyleSheet.create<Styles>({
 		alignSelf: 'center',
 		left: 5,
 		top: -2
+	},
+
+	outerColumnContainer: {
+		flexDirection: 'row',
+		alignContent: 'stretch'
+	},
+
+	loadingText: {
+		alignSelf: 'center',
+		fontWeight: 'bold',
+		fontSize: 20,
+		marginTop: height / 3
+	},
+
+	halfWidth: {
+		width: '50%'
+	},
+
+	statsContainer: {
+		flexDirection: 'row',
+		alignContent: 'stretch'
 	}
 });
 

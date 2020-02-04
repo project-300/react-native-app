@@ -1,12 +1,12 @@
-import { TextStyle, ViewStyle } from 'react-native';
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { AppActions } from '../../types/redux-action-types';
 import { User } from '@project-300/common-types';
 import { CommonProps, EditTypes } from '../../types/common';
-import { Response as ImageResponse } from "react-native-image-picker";
+import { ImagePickerResponse } from '../../types/images';
 
 export interface Styles {
 	container: ViewStyle;
-	avatar: ViewStyle;
+	avatar: ImageStyle;
 	userTypeTag: ViewStyle;
 	userTypeTagText: TextStyle;
 	username: TextStyle;
@@ -15,14 +15,18 @@ export interface Styles {
 	label: TextStyle;
 	editText: TextStyle;
 	panel: TextStyle;
+	sectionContainer: TextStyle;
 	statsContainer: ViewStyle;
 	statsItem: ViewStyle;
 	statsItemText: TextStyle;
 	statsItemDesc: TextStyle;
+	loadingText: TextStyle;
 	fab: ViewStyle;
 	interestChip: ViewStyle;
 	editAvatarContainer: ViewStyle;
 	editAvatarIcon: ViewStyle;
+	outerColumnContainer: ViewStyle;
+	halfWidth: ViewStyle;
 }
 
 export interface Props extends CommonProps {
@@ -30,10 +34,11 @@ export interface Props extends CommonProps {
 	receivedData: boolean;
 	user: User | null
 	uploadingAvatar: boolean;
+	interests: string[];
 	userProfileSubRequest(): AppActions;
 	userProfileUnsub(): AppActions;
 	updateInterests(i: string[]): Promise<void | boolean>;
-	uploadAvatar(img: ImageResponse): Promise<void | boolean>;
+	uploadAvatar(img: ImagePickerResponse): Promise<void | boolean>;
 	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
 	updatePassword(cp: string, np: string): Promise<boolean>;
 	getInterestsList(): Promise<void | boolean>;
@@ -44,5 +49,5 @@ export interface State {
 	editing: boolean;
 	readyToEdit: boolean;
 	isSwiping: boolean;
-	selectedInterests: string[];
+	panelOpen: boolean;
 }

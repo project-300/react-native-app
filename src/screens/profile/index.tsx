@@ -6,7 +6,8 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	SafeAreaView,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -14,11 +15,11 @@ import { Props, State } from './interfaces';
 import WS from '../../api/websocket';
 import { UserProfileState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import ImagePicker, { Response as ImageResponse } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import toastr from '../../helpers/toastr';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { EditTypes } from '../../types/common';
-import { UserType } from '@project-300/common-types';
+import { User, UserType } from '@project-300/common-types';
 import Animated, { Easing } from 'react-native-reanimated';
 import { UpdateUserField } from './update-user-field';
 import { UpdatePassword } from './update-password';
@@ -34,6 +35,8 @@ import {
 	updatePassword,
 	updateInterests
 } from '../../redux/actions';
+import { AnimatedStyles } from '../../animations/styles';
+import { ImagePickerResponse } from '../../types/images';
 
 const { height, width } = Dimensions.get('window');
 const { timing, interpolate, Extrapolate, set } = Animated;
@@ -64,8 +67,7 @@ export class Profile extends Component<Props, State> {
 		editing: false,
 		readyToEdit: false,
 		isSwiping: false, // Screen is swiping between view and edit,
-		panelOpen: false,
-		selectedInterests: []
+		panelOpen: false
 	};
 
 	public constructor(props: Props) {
@@ -142,7 +144,7 @@ export class Profile extends Component<Props, State> {
 			}
 		};
 
-		ImagePicker.showImagePicker(options, async (img: ImageResponse) => {
+		ImagePicker.showImagePicker(options, async (img: ImagePickerResponse) => {
 			if (img.error) {
 				toastr.error('An error occurred');
 			} else if (!img.didCancel) {
@@ -151,15 +153,6 @@ export class Profile extends Component<Props, State> {
 				await this.props.uploadAvatar(img);
 			}
 		});
-	}
-
-	private _deleteInterests = (): void => {
-		// Call API
-		console.log('Delete: ', this.state.selectedInterests);
-
-		this.props.removeInterests(this.state.selectedInterests);
-
-		this.setState({ selectedInterests: [] });
 	}
 
 	private _userTypeIcon = (): string => {
@@ -176,7 +169,7 @@ export class Profile extends Component<Props, State> {
 		this.setState({ editType });
 
 		timing(this.panelOpen, {
-			duration: 1000,
+			duration: 500,
 			toValue: 1,
 			easing: Easing.inOut(Easing.ease)
 		}).start(() => this.setState({ panelOpen: true }));
@@ -230,37 +223,22 @@ export class Profile extends Component<Props, State> {
 		});
 	}
 
-	private _selectInterest = (interest: string): void => {
-		let interests = this.state.selectedInterests;
-		const curIndex = interests.indexOf(interest);
-		if (curIndex > -1) interests.splice(curIndex, 1);
-		else interests = interests.concat(interest);
-		this.setState({ selectedInterests: interests });
-	}
-
-	// private _openInterestsSelection = (): void => {
-	// 	console.log('Open interests');
-	// }
-
-	private _renderInterests = (isEditing: boolean): ReactElement | undefined => {
+	private _renderInterests = (): ReactElement | undefined => {
 		const { user } = this.props;
 
 		if (!user) return;
 
 		return (
-			<View style={ [ styles.statsContainer ] }>
+			<View style={ [ styles.sectionContainer ] }>
 				<Title style={ { marginBottom: 20 } }>Interests</Title>
 
-				{
-					isEditing &&
-						<IconButton
-							icon='plus'
-							onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
-							color='black'
-							size={ 26 }
-							style={ { position: 'absolute', top: 8, right: 6 } }
-						/>
-				}
+				<IconButton
+					icon={ user.interests && user.interests.length ? 'pencil' : 'plus' }
+					onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
+					color='black'
+					size={ 26 }
+					style={ { position: 'absolute', top: 8, right: 6 } }
+				/>
 
 				<View>
 					<View style={ {
@@ -270,14 +248,7 @@ export class Profile extends Component<Props, State> {
 						{
 							user.interests && user.interests.map(
 								(interest: string) => {
-									return isEditing ? (
-										<InterestChip
-											text={ interest }
-											selected={ this.state.selectedInterests.indexOf(interest) > -1 }
-											onPress={ (): void => this._selectInterest(interest) }
-											key={ interest }
-										/>
-									) : (
+									return (
 										<InterestChip
 											text={ interest }
 											key={ interest }
@@ -289,44 +260,66 @@ export class Profile extends Component<Props, State> {
 					</View>
 
 					{
-						!isEditing && !user.interests.length &&
+						!user.interests.length &&
 							<View>
 								<Text>
 									You currently don't have any interests selected
 								</Text>
 								<Button
 									mode='outlined'
-									onPress={ this._handleEditFabPress }
+									onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
 									style={ { marginTop: 20 } }
 								>
 									Add Interests
 								</Button>
 							</View>
 					}
-
-					{
-						isEditing && !!this.state.selectedInterests.length &&
-							<Button
-								mode={ 'outlined'}
-								onPress={ this._deleteInterests }
-							>
-								Remove
-							</Button>
-					}
 				</View>
 			</View>
+		);
+	}
+
+	private _renderAvatar = (user: User): ReactElement => {
+		return (
+			<TouchableWithoutFeedback onPress={ this.state.editing ? this._changeImage : undefined }>
+				<Animated.View
+					style={ [
+						{ justifyContent: 'center' },
+						AnimatedStyles.opacity(this.editImageOpacity)
+					] }
+				>
+					{
+						this.state.editing &&
+							<Animated.View
+								style={ [
+									styles.editAvatarContainer,
+									AnimatedStyles.opacity(this.editIconOpacity)
+								] }>
+								<Icon
+									name='edit'
+									size={ 60 }
+									color='black'
+									style={ styles.editAvatarIcon }
+								/>
+							</Animated.View>
+					}
+					<Image
+						source={
+							user.avatar ?
+								{ uri: user.avatar }
+								: require('./../../assets/images/no-avatar.jpg')
+						}
+						style={ styles.avatar }
+					/>
+				</Animated.View>
+			</TouchableWithoutFeedback>
 		);
 	}
 
 	public render(): ReactElement {
 		if (!this.props.user || !this.props.user.email) { // Replace with loading spinner
 			return <View>
-				<Text style={ {
-					alignSelf: 'center',
-					fontWeight: 'bold',
-					fontSize: 20,
-					marginTop: Dimensions.get('window').height / 3
-				} }>Loading...</Text>
+				<Text style={ styles.loadingText }>Loading...</Text>
 			</View>;
 		}
 
@@ -335,42 +328,29 @@ export class Profile extends Component<Props, State> {
 		return (
 			<SafeAreaView style={ styles.container }>
 				<ScrollView>
-					<TouchableWithoutFeedback onPress={ this.state.editing ? this._changeImage : undefined }>
-						<Animated.View
-							// style={ { height: this.imageHeight } }
-							style={ { justifyContent: 'center', opacity: this.editImageOpacity } }
-						>
-							{
-								this.state.editing &&
-									<Animated.View style={ [ styles.editAvatarContainer, { opacity: this.editIconOpacity } ] }>
-										<Icon name='edit' size={ 60 } color='black' style={ styles.editAvatarIcon }/>
-									</Animated.View>
-							}
-							<Animated.Image
-								source={ user.avatar ? { uri: user.avatar } : require('./../../assets/images/no-avatar.jpg') }
-								style={ styles.avatar }
-							/>
-						</Animated.View>
-					</TouchableWithoutFeedback>
+					{ this._renderAvatar(user) }
 
-					<View style={ {
-						flexDirection: 'row',
-						alignContent: 'stretch'
-					} }>
-						<Animated.View style={ { width: '50%', transform: [ { translateX: this.panelLeftX } ] } }>
-							<View style={ [ styles.statsContainer ] }>
+					<View style={ styles.outerColumnContainer }>
+						<Animated.View
+							style={ [
+								styles.halfWidth,
+								AnimatedStyles.translateX(this.panelLeftX)
+							] }>
+							<View style={ styles.sectionContainer }>
 								<View style={ styles.userTypeTag }>
-									<Icon style={ styles.userTypeTagText } name={ this._userTypeIcon() } size={ 20 } solid />
+									<Icon
+										style={ styles.userTypeTagText }
+										name={ this._userTypeIcon() }
+										size={ 20 }
+										solid
+									/>
 								</View>
 								<Text style={ styles.username }>{ user.username }</Text>
 								<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
 
 								<Divider />
 
-								<View style={ {
-									flexDirection: 'row',
-									alignContent: 'stretch'
-								} }>
+								<View style={ styles.statsContainer }>
 									<View style={ styles.statsItem }>
 										<Text style={ styles.statsItemText }>
 											2,304
@@ -398,14 +378,18 @@ export class Profile extends Component<Props, State> {
 								</View>
 							</View>
 
-							{ this._renderInterests(false) }
+							{ this._renderInterests() }
 						</Animated.View>
 
-						<Animated.View style={ { width: '50%', transform: [ { translateX: this.panelRightX } ] } }>
-							<View style={ [ styles.statsContainer ] }>
+						<Animated.View
+							style={ [
+								{ width: '50%' },
+								AnimatedStyles.translateX(this.panelRightX)
+							] }>
+							<View style={ styles.sectionContainer }>
 								<TouchableOpacity
 									onPress={ (): void => { this.openForm(EditTypes.EMAIL); } }
-									style={ { ...styles.editRow } }
+									style={ styles.editRow }
 								>
 									<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
 									<Text style={ styles.editText }>{ user.email }</Text>
@@ -441,19 +425,25 @@ export class Profile extends Component<Props, State> {
 									<Text style={ styles.editText }>******</Text>
 								</TouchableOpacity>
 							</View>
-
-							{ this._renderInterests(true) }
 						</Animated.View>
 					</View>
 				</ScrollView>
 
 				<FAB
 					style={ styles.fab }
-					icon={ this.state.editing ? 'check-outline' : 'pencil-outline' }
+					icon={
+						this.state.editing ?
+							'check-outline' :
+							'pencil-outline'
+					}
 					onPress={ this._handleEditFabPress }
 				/>
 
-				<Animated.View style={ [ styles.panel, { height: this.panelHeight } ] }>
+				<Animated.View
+					style={ [
+						styles.panel,
+						AnimatedStyles.height(this.panelHeight)
+					] }>
 					{
 						this.state.editType === EditTypes.EMAIL &&
 							<UpdateUserField
@@ -499,8 +489,8 @@ export class Profile extends Component<Props, State> {
 								close={ this.closeForm }
 								allInterests={ this.props.interests }
 								currentInterests={ this.props.user.interests }
-                                panelOpen={ this.state.panelOpen }
-                                updateInterests={ this.props.updateInterests }
+								panelOpen={ this.state.panelOpen }
+								updateInterests={ this.props.updateInterests }
 							/>
 					}
 				</Animated.View>
@@ -510,7 +500,9 @@ export class Profile extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): UserProfileState => ({
-	...state.userProfileReducer, ...state.updateUserFieldReducer, ...state.interestsListReducer
+	...state.userProfileReducer,
+	...state.updateUserFieldReducer,
+	...state.interestsListReducer
 });
 
 export default connect(mapStateToProps, {

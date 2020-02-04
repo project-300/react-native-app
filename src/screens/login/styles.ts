@@ -1,9 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
-import Animated from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window');
-const { concat } = Animated;
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -41,36 +39,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 		elevation: 3
 	},
 
-	formContainer: {
+	bottomForm: {
+		top: undefined,
+		justifyContent: 'center'
 	}
 });
 
 export default styles;
-
-// tslint:disable-next-line:no-any
-export const animatedViewStyle = (opacity: Animated.Node<number>, translateY: Animated.Node<number>): any => ({
-	transform: [ { translateY } ],
-	opacity
-});
-
-// tslint:disable-next-line:no-any
-export const animatedOpacityStyle = (opacity: Animated.Node<number>): any => ({
-	opacity
-});
-
-// tslint:disable-next-line:no-any
-export const formContainerStyle = (zIndex: Animated.Node<number>): any => ({
-	top: null,
-	justifyContent: 'center',
-	zIndex
-});
-
-// tslint:disable-next-line:no-any
-export const animatedSpinTextStyle = (rotateDeg: Animated.Node<number>): any => ({
-	fontSize: 15,
-	transform: [
-		{
-			rotate: concat(rotateDeg, 'deg')
-		}
-	]
-});
