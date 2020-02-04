@@ -3,6 +3,7 @@ import { AppActions } from '../../types/redux-action-types';
 import { User } from '@project-300/common-types';
 import { CommonProps, EditTypes } from '../../types/common';
 import { ImagePickerResponse } from '../../types/images';
+import Animated from "react-native-reanimated";
 
 export interface Styles {
 	container: ViewStyle;
@@ -50,4 +51,20 @@ export interface State {
 	readyToEdit: boolean;
 	isSwiping: boolean;
 	panelOpen: boolean;
+}
+
+export interface AnimationValues {
+	fall: Animated.Value<number>,
+	panelOpen: Animated.Value<number>,
+	beginEditing: Animated.Value<number>,
+}
+
+export interface AnimationStyles {
+	panelHeight: Animated.Node<number>,
+	editIconOpacity: Animated.Node<number>,
+	editImageOpacity: Animated.Node<number>,
+	editFieldsHeight: Animated.Node<number>,
+	panelLeftX: Animated.Node<number>,
+	panelRightX: Animated.Node<number>,
+	panelOpacity: Animated.Node<number>
 }

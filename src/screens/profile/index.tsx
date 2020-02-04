@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { Props, State } from './interfaces';
+import { Props, State, AnimationValues, AnimationStyles } from './interfaces';
 import WS from '../../api/websocket';
 import { UserProfileState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
@@ -37,6 +37,7 @@ import {
 } from '../../redux/actions';
 import { AnimatedStyles } from '../../animations/styles';
 import { ImagePickerResponse } from '../../types/images';
+import { NavigationEvents } from 'react-navigation';
 
 const { height, width } = Dimensions.get('window');
 const { timing, interpolate, Extrapolate, set } = Animated;
@@ -51,16 +52,21 @@ export const EditFields =  {
 
 export class Profile extends Component<Props, State> {
 
-	private readonly fall: Animated.Value<number>;
-	private readonly panelOpen: Animated.Value<number>;
-	private readonly beginEditing: Animated.Value<number>;
-	private readonly panelHeight: Animated.Node<number>;
-	private readonly editIconOpacity: Animated.Node<number>;
-	private readonly editImageOpacity: Animated.Node<number>;
-	private readonly editFieldsHeight: Animated.Node<number>;
-	private readonly panelLeftX: Animated.Node<number>;
-	private readonly panelRightX: Animated.Node<number>;
-	private readonly panelOpacity: Animated.Node<number>;
+	private animatedValues: AnimationValues = {
+		fall: new Animated.Value(1),
+		panelOpen: new Animated.Value(0),
+		beginEditing: new Animated.Value(0)
+	};
+
+	private animatedStyles: AnimationStyles = {
+		panelHeight: new Animated.Node({ }),
+		editIconOpacity: new Animated.Node({ }),
+		editImageOpacity: new Animated.Node({ }),
+		editFieldsHeight: new Animated.Node({ }),
+		panelLeftX: new Animated.Node({ }),
+		panelRightX: new Animated.Node({ }),
+		panelOpacity: new Animated.Node({ })
+	};
 
 	private initialState: State = {
 		editType: null,
@@ -73,66 +79,56 @@ export class Profile extends Component<Props, State> {
 	public constructor(props: Props) {
 		super(props);
 
-		this.fall = new Animated.Value(1);
-		this.panelOpen = new Animated.Value(0);
-		this.beginEditing = new Animated.Value(0);
-
-		this.panelHeight = interpolate(this.panelOpen, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ 0, height ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
-		this.editIconOpacity = interpolate(this.beginEditing, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ 0, 1 ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
-		this.editImageOpacity = interpolate(this.beginEditing, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ 1, 0.6 ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
-		this.editFieldsHeight = interpolate(this.beginEditing, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ 0, 200 ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
-		this.panelOpacity = interpolate(this.beginEditing, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ 1, 0 ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
-		this.panelLeftX = interpolate(this.beginEditing, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ width / 4, (-width / 2) - 150 ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
-		this.panelRightX = interpolate(this.beginEditing, {
-			inputRange: [ 0, 1 ],
-			outputRange: [ (width / 2) + 150, -width / 4 ],
-			extrapolate: Extrapolate.CLAMP
-		});
-
 		this.state = this.initialState;
 	}
 
-	public async componentDidMount(): Promise<void> {
+	private _mountScreen = async (): Promise<void> => {
+		console.log('mount');
+		this._setupAnimations();
+
 		this.props.userProfileSubRequest();
 		await WS.subscribe('user/profile');
 
 		await this.props.getInterestsList();
 	}
 
-	public async componentWillUnmount(): Promise<void> {
+	private _unmountScreen = async (): Promise<void> => {
+		console.log('unmount');
+
 		this.props.userProfileUnsub();
 		await WS.unsubscribe('user/profile');
 		this.setState(this.initialState);
+		this._setupAnimations();
+	}
+
+	private _setupAnimations = (): void => {
+		this.animatedValues = {
+			fall: new Animated.Value(1),
+			panelOpen: new Animated.Value(0),
+			beginEditing: new Animated.Value(0)
+		};
+
+		this.animatedStyles = {
+			panelHeight: this._interpolateAnimation(this.animatedValues.panelOpen, [ 0, 1 ], [ 0, height ]),
+			editIconOpacity: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 0, 1 ]),
+			editImageOpacity: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 1, 0.6 ]),
+			editFieldsHeight: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 0, 200 ]),
+			panelOpacity: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 1, 0 ]),
+			panelLeftX: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ width / 4, (-width / 2) - 150 ]),
+			panelRightX: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ (width / 2) + 150, -width / 4 ])
+		};
+	}
+
+	private _interpolateAnimation = (
+		animatedValue: Animated.Value<number>,
+		inputRange: Array<Animated.Adaptable<number>>,
+		outputRange: Array<Animated.Adaptable<number>>
+	): Animated.Node<number> => {
+		return interpolate(animatedValue, {
+			inputRange,
+			outputRange,
+			extrapolate: Extrapolate.CLAMP
+		});
 	}
 
 	private _changeImage = (): void => {
@@ -168,7 +164,7 @@ export class Profile extends Component<Props, State> {
 	private openForm = (editType: string): void => {
 		this.setState({ editType });
 
-		timing(this.panelOpen, {
+		timing(this.animatedValues.panelOpen, {
 			duration: 500,
 			toValue: 1,
 			easing: Easing.inOut(Easing.ease)
@@ -178,7 +174,7 @@ export class Profile extends Component<Props, State> {
 	private closeForm = (): void => {
 		this.setState({ panelOpen: false });
 
-		timing(this.panelOpen, {
+		timing(this.animatedValues.panelOpen, {
 			duration: 500,
 			toValue: 0,
 			easing: Easing.inOut(Easing.ease)
@@ -196,7 +192,7 @@ export class Profile extends Component<Props, State> {
 			this._setHeaderTitle(true);
 
 			this.setState({ editing: true }, () => {
-				timing(this.beginEditing, {
+				timing(this.animatedValues.beginEditing, {
 					duration: 600,
 					toValue: 1,
 					easing: Easing.inOut(Easing.ease)
@@ -206,7 +202,7 @@ export class Profile extends Component<Props, State> {
 			this._setHeaderTitle(false);
 
 			this.setState({ readyToEdit: false }, () => {
-				timing(this.beginEditing, {
+				timing(this.animatedValues.beginEditing, {
 					duration: 600,
 					toValue: 0,
 					easing: Easing.inOut(Easing.ease)
@@ -285,7 +281,7 @@ export class Profile extends Component<Props, State> {
 				<Animated.View
 					style={ [
 						{ justifyContent: 'center' },
-						AnimatedStyles.opacity(this.editImageOpacity)
+						AnimatedStyles.opacity(this.animatedStyles.editImageOpacity)
 					] }
 				>
 					{
@@ -293,7 +289,7 @@ export class Profile extends Component<Props, State> {
 							<Animated.View
 								style={ [
 									styles.editAvatarContainer,
-									AnimatedStyles.opacity(this.editIconOpacity)
+									AnimatedStyles.opacity(this.animatedStyles.editIconOpacity)
 								] }>
 								<Icon
 									name='edit'
@@ -316,9 +312,13 @@ export class Profile extends Component<Props, State> {
 		);
 	}
 
+	private _renderNavigationEvents = (): ReactElement =>
+		<NavigationEvents onWillFocus={ this._mountScreen } onDidBlur={ this._unmountScreen } />
+
 	public render(): ReactElement {
 		if (!this.props.user || !this.props.user.email) { // Replace with loading spinner
 			return <View>
+				{ this._renderNavigationEvents() }
 				<Text style={ styles.loadingText }>Loading...</Text>
 			</View>;
 		}
@@ -327,6 +327,8 @@ export class Profile extends Component<Props, State> {
 
 		return (
 			<SafeAreaView style={ styles.container }>
+				{ this._renderNavigationEvents() }
+
 				<ScrollView>
 					{ this._renderAvatar(user) }
 
@@ -334,7 +336,7 @@ export class Profile extends Component<Props, State> {
 						<Animated.View
 							style={ [
 								styles.halfWidth,
-								AnimatedStyles.translateX(this.panelLeftX)
+								AnimatedStyles.translateX(this.animatedStyles.panelLeftX)
 							] }>
 							<View style={ styles.sectionContainer }>
 								<View style={ styles.userTypeTag }>
@@ -384,7 +386,7 @@ export class Profile extends Component<Props, State> {
 						<Animated.View
 							style={ [
 								{ width: '50%' },
-								AnimatedStyles.translateX(this.panelRightX)
+								AnimatedStyles.translateX(this.animatedStyles.panelRightX)
 							] }>
 							<View style={ styles.sectionContainer }>
 								<TouchableOpacity
@@ -442,7 +444,7 @@ export class Profile extends Component<Props, State> {
 				<Animated.View
 					style={ [
 						styles.panel,
-						AnimatedStyles.height(this.panelHeight)
+						AnimatedStyles.height(this.animatedStyles.panelHeight)
 					] }>
 					{
 						this.state.editType === EditTypes.EMAIL &&
