@@ -2,12 +2,12 @@ import { TextStyle, ViewStyle } from 'react-native';
 
 export interface Styles {
 	container: ViewStyle;
-	firstContainer: ViewStyle;
 	inputContainer: ViewStyle;
 	showPasswordIconContainer: ViewStyle;
 	showPasswordIcon: TextStyle;
 	button: ViewStyle;
-	buttonContainer: TextStyle;
+	buttonContainer: ViewStyle;
+	spinner: ViewStyle;
 }
 
 export interface Props {

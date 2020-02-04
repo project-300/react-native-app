@@ -6,6 +6,7 @@ export interface Styles {
 	button: ViewStyle;
 	buttonContainer: ViewStyle;
 	buttonsContainer: ViewStyle;
+	spinner: ViewStyle;
 }
 
 export interface Props {

@@ -3,13 +3,12 @@ import { Styles } from './interfaces';
 
 const styles = StyleSheet.create<Styles>({
 	container: {
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 
 	input: {
 		width: '90%',
-		marginBottom: 20,
-		marginTop: 60
+		marginBottom: 20
 	},
 
 	buttonContainer: {
@@ -19,6 +18,10 @@ const styles = StyleSheet.create<Styles>({
 
 	button: {
 		padding: 8
+	},
+
+	spinner: {
+		marginVertical: 10
 	}
 });
 

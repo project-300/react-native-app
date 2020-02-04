@@ -25,6 +25,7 @@ const styles = StyleSheet.create<Styles>({
 		left: 0,
 		right: 0,
 		zIndex: 2,
+		height: '20%',
 		backgroundColor: 'white',
 		borderTopWidth: 0.2,
 		borderTopColor: Colours.lightGrey,
@@ -41,6 +42,10 @@ const styles = StyleSheet.create<Styles>({
 
 	button: {
 		padding: 8
+	},
+
+	spinner: {
+		marginTop: 30
 	}
 });
 

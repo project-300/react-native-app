@@ -23,7 +23,7 @@ import { User, UserType } from '@project-300/common-types';
 import Animated, { Easing } from 'react-native-reanimated';
 import { UpdateUserField } from './update-user-field';
 import { UpdatePassword } from './update-password';
-import { Button, Divider, FAB, IconButton, Title } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, FAB, IconButton, Title } from 'react-native-paper';
 import { InterestChip } from '../../components/miscellaneous/interest-chip';
 import { UpdateInterests } from './interests';
 import {
@@ -33,14 +33,17 @@ import {
 	getInterestsList,
 	uploadAvatar,
 	updatePassword,
-	updateInterests
+	updateInterests,
+	uploadAvatarRequest
 } from '../../redux/actions';
 import { AnimatedStyles } from '../../animations/styles';
 import { ImagePickerResponse } from '../../types/images';
 import { NavigationEvents } from 'react-navigation';
+import { interpolateAnimation } from '../../animations/animations';
+import { Theme } from '../../constants/theme';
 
 const { height, width } = Dimensions.get('window');
-const { timing, interpolate, Extrapolate, set } = Animated;
+const { timing } = Animated;
 
 export const EditFields =  {
 	EMAIL: { type: 'Email Address', field: EditTypes.EMAIL },
@@ -78,27 +81,20 @@ export class Profile extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
-
 		this.state = this.initialState;
 	}
 
-	private _mountScreen = async (): Promise<void> => {
-		console.log('mount');
+	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
 		this._setupAnimations();
-
 		this.props.userProfileSubRequest();
 		await WS.subscribe('user/profile');
-
 		await this.props.getInterestsList();
 	}
 
-	private _unmountScreen = async (): Promise<void> => {
-		console.log('unmount');
-
+	private _unmountScreen = async (): Promise<void> => { // Triggered when the screen is navigated away from
 		this.props.userProfileUnsub();
 		await WS.unsubscribe('user/profile');
-		this.setState(this.initialState);
-		this._setupAnimations();
+		this.setState(this.initialState); // Reset the state of the component for next mount
 	}
 
 	private _setupAnimations = (): void => {
@@ -109,29 +105,17 @@ export class Profile extends Component<Props, State> {
 		};
 
 		this.animatedStyles = {
-			panelHeight: this._interpolateAnimation(this.animatedValues.panelOpen, [ 0, 1 ], [ 0, height ]),
-			editIconOpacity: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 0, 1 ]),
-			editImageOpacity: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 1, 0.6 ]),
-			editFieldsHeight: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 0, 200 ]),
-			panelOpacity: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 1, 0 ]),
-			panelLeftX: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ width / 4, (-width / 2) - 150 ]),
-			panelRightX: this._interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ (width / 2) + 150, -width / 4 ])
+			panelHeight: interpolateAnimation(this.animatedValues.panelOpen, [ 0, 1 ], [ 0, height ]),
+			editIconOpacity: interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 0, 1 ]),
+			editImageOpacity: interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 1, 0.6 ]),
+			editFieldsHeight: interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 0, 200 ]),
+			panelOpacity: interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ 1, 0 ]),
+			panelLeftX: interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ width / 4, (-width / 2) - 150 ]),
+			panelRightX: interpolateAnimation(this.animatedValues.beginEditing, [ 0, 1 ], [ (width / 2) + 150, -width / 4 ])
 		};
 	}
 
-	private _interpolateAnimation = (
-		animatedValue: Animated.Value<number>,
-		inputRange: Array<Animated.Adaptable<number>>,
-		outputRange: Array<Animated.Adaptable<number>>
-	): Animated.Node<number> => {
-		return interpolate(animatedValue, {
-			inputRange,
-			outputRange,
-			extrapolate: Extrapolate.CLAMP
-		});
-	}
-
-	private _changeImage = (): void => {
+	private _changeImage = async (): Promise<void> => {
 		const options = {
 			title: 'Upload Avatar',
 			storageOptions: {
@@ -140,7 +124,8 @@ export class Profile extends Component<Props, State> {
 			}
 		};
 
-		ImagePicker.showImagePicker(options, async (img: ImagePickerResponse) => {
+		await ImagePicker.showImagePicker(options, async (img: ImagePickerResponse) => { // Native image picker pops up
+			console.log('PICKER');
 			if (img.error) {
 				toastr.error('An error occurred');
 			} else if (!img.didCancel) {
@@ -149,6 +134,8 @@ export class Profile extends Component<Props, State> {
 				await this.props.uploadAvatar(img);
 			}
 		});
+
+		console.log('PICKER DONE');
 	}
 
 	private _userTypeIcon = (): string => {
@@ -161,7 +148,7 @@ export class Profile extends Component<Props, State> {
 		return 'user';
 	}
 
-	private openForm = (editType: string): void => {
+	private openForm = (editType: string): void => { // Form will slide up from bottom
 		this.setState({ editType });
 
 		timing(this.animatedValues.panelOpen, {
@@ -171,7 +158,7 @@ export class Profile extends Component<Props, State> {
 		}).start(() => this.setState({ panelOpen: true }));
 	}
 
-	private closeForm = (): void => {
+	private closeForm = (): void => { // Form will slide back down
 		this.setState({ panelOpen: false });
 
 		timing(this.animatedValues.panelOpen, {
@@ -291,12 +278,16 @@ export class Profile extends Component<Props, State> {
 									styles.editAvatarContainer,
 									AnimatedStyles.opacity(this.animatedStyles.editIconOpacity)
 								] }>
-								<Icon
-									name='edit'
-									size={ 60 }
-									color='black'
-									style={ styles.editAvatarIcon }
-								/>
+								{
+									this.props.uploadingAvatar ?
+										<ActivityIndicator animating={ true } color={ Theme.primary } size='large' /> :
+										<Icon
+											name='edit'
+											size={ 60 }
+											color='black'
+											style={ styles.editAvatarIcon }
+										/>
+								}
 							</Animated.View>
 					}
 					<Image
@@ -309,6 +300,110 @@ export class Profile extends Component<Props, State> {
 					/>
 				</Animated.View>
 			</TouchableWithoutFeedback>
+		);
+	}
+
+	private _renderViewColumn = (user: User): ReactElement => {
+		return(
+			<Animated.View
+				style={ [
+					styles.halfWidth,
+					AnimatedStyles.translateX(this.animatedStyles.panelLeftX)
+				] }>
+				<View style={ styles.sectionContainer }>
+					<View style={ styles.userTypeTag }>
+						<Icon
+							style={ styles.userTypeTagText }
+							name={ this._userTypeIcon() }
+							size={ 20 }
+							solid
+						/>
+					</View>
+					<Text style={ styles.username }>{ user.username }</Text>
+					<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
+
+					<Divider />
+
+					<View style={ styles.statsContainer }>
+						<View style={ styles.statsItem }>
+							<Text style={ styles.statsItemText }>
+								2,304
+							</Text>
+							<Text style={ styles.statsItemDesc }>
+								KM Travelled
+							</Text>
+						</View>
+						<View style={ styles.statsItem }>
+							<Text style={ styles.statsItemText }>
+								453
+							</Text>
+							<Text style={ styles.statsItemDesc }>
+								KG CO2 Saved
+							</Text>
+						</View>
+						<View style={ styles.statsItem }>
+							<Text style={ styles.statsItemText }>
+								41
+							</Text>
+							<Text style={ styles.statsItemDesc }>
+								Lifts Given
+							</Text>
+						</View>
+					</View>
+				</View>
+
+				{ this._renderInterests() }
+			</Animated.View>
+		);
+	}
+
+	private _renderEditColumn = (user: User): ReactElement => {
+		return (
+			<Animated.View
+				style={ [
+					{ width: '50%' },
+					AnimatedStyles.translateX(this.animatedStyles.panelRightX)
+				] }>
+				<View style={ styles.sectionContainer }>
+					<TouchableOpacity
+						onPress={ (): void => { this.openForm(EditTypes.EMAIL); } }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
+						<Text style={ styles.editText }>{ user.email }</Text>
+					</TouchableOpacity>
+
+					<Divider />
+
+					<TouchableOpacity
+						onPress={ (): void => { this.openForm(EditTypes.FIRST_NAME); } }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.FIRST_NAME.type }</Text>
+						<Text style={ styles.editText }>{ user.firstName || 'Add my first name' }</Text>
+					</TouchableOpacity>
+
+					<Divider />
+
+					<TouchableOpacity
+						onPress={ (): void => { this.openForm(EditTypes.LAST_NAME); } }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.LAST_NAME.type }</Text>
+						<Text style={ styles.editText }>{ user.lastName || 'Add my last name' }</Text>
+					</TouchableOpacity>
+
+					<Divider />
+
+					<TouchableOpacity
+						onPress={ (): void => { this.openForm(EditTypes.PASSWORD); } }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>Password</Text>
+						<Text style={ styles.editText }>******</Text>
+					</TouchableOpacity>
+				</View>
+			</Animated.View>
 		);
 	}
 
@@ -333,101 +428,8 @@ export class Profile extends Component<Props, State> {
 					{ this._renderAvatar(user) }
 
 					<View style={ styles.outerColumnContainer }>
-						<Animated.View
-							style={ [
-								styles.halfWidth,
-								AnimatedStyles.translateX(this.animatedStyles.panelLeftX)
-							] }>
-							<View style={ styles.sectionContainer }>
-								<View style={ styles.userTypeTag }>
-									<Icon
-										style={ styles.userTypeTagText }
-										name={ this._userTypeIcon() }
-										size={ 20 }
-										solid
-									/>
-								</View>
-								<Text style={ styles.username }>{ user.username }</Text>
-								<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
-
-								<Divider />
-
-								<View style={ styles.statsContainer }>
-									<View style={ styles.statsItem }>
-										<Text style={ styles.statsItemText }>
-											2,304
-										</Text>
-										<Text style={ styles.statsItemDesc }>
-											KM Travelled
-										</Text>
-									</View>
-									<View style={ styles.statsItem }>
-										<Text style={ styles.statsItemText }>
-											453
-										</Text>
-										<Text style={ styles.statsItemDesc }>
-											KG CO2 Saved
-										</Text>
-									</View>
-									<View style={ styles.statsItem }>
-										<Text style={ styles.statsItemText }>
-											41
-										</Text>
-										<Text style={ styles.statsItemDesc }>
-											Lifts Given
-										</Text>
-									</View>
-								</View>
-							</View>
-
-							{ this._renderInterests() }
-						</Animated.View>
-
-						<Animated.View
-							style={ [
-								{ width: '50%' },
-								AnimatedStyles.translateX(this.animatedStyles.panelRightX)
-							] }>
-							<View style={ styles.sectionContainer }>
-								<TouchableOpacity
-									onPress={ (): void => { this.openForm(EditTypes.EMAIL); } }
-									style={ styles.editRow }
-								>
-									<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
-									<Text style={ styles.editText }>{ user.email }</Text>
-								</TouchableOpacity>
-
-								<Divider />
-
-								<TouchableOpacity
-									onPress={ (): void => { this.openForm(EditTypes.FIRST_NAME); } }
-									style={ styles.editRow }
-								>
-									<Text style={ styles.label }>{ EditFields.FIRST_NAME.type }</Text>
-									<Text style={ styles.editText }>{ user.firstName || 'Add my first name' }</Text>
-								</TouchableOpacity>
-
-								<Divider />
-
-								<TouchableOpacity
-									onPress={ (): void => { this.openForm(EditTypes.LAST_NAME); } }
-									style={ styles.editRow }
-								>
-									<Text style={ styles.label }>{ EditFields.LAST_NAME.type }</Text>
-									<Text style={ styles.editText }>{ user.lastName || 'Add my last name' }</Text>
-								</TouchableOpacity>
-
-								<Divider />
-
-								<TouchableOpacity
-									onPress={ (): void => { this.openForm(EditTypes.PASSWORD); } }
-									style={ styles.editRow }
-								>
-									<Text style={ styles.label }>Password</Text>
-									<Text style={ styles.editText }>******</Text>
-								</TouchableOpacity>
-							</View>
-						</Animated.View>
+						{ this._renderViewColumn(user) }
+						{ this._renderEditColumn(user) }
 					</View>
 				</ScrollView>
 
@@ -511,6 +513,7 @@ export default connect(mapStateToProps, {
 	userProfileSubRequest,
 	userProfileUnsub,
 	uploadAvatar,
+	uploadAvatarRequest,
 	updateUserField,
 	updatePassword,
 	updateInterests,

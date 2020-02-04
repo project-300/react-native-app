@@ -5,7 +5,8 @@ import { Props, State } from './interfaces';
 import * as EmailValidator from 'email-validator';
 import toastr from '../../../helpers/toastr';
 import { EditTypes } from '../../../types/common';
-import { Button, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { Theme } from '../../../constants/theme';
 
 export class UpdateUserField extends Component<Props, State> {
 
@@ -42,6 +43,13 @@ export class UpdateUserField extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
+				<ActivityIndicator
+					animating={ this.state.isUpdating }
+					color={ Theme.primary }
+					size='large'
+					style={ styles.spinner }
+				/>
+
 				<TextInput
 					value={ this.state.value }
 					style={ styles.input }
@@ -57,7 +65,7 @@ export class UpdateUserField extends Component<Props, State> {
 						onPress={ this._updateValue }
 						disabled={ this.state.isUpdating || !this.state.value }
 					>
-						Update { this.props.type }
+						UPDATE { this.props.type }
 					</Button>
 				</View>
 
@@ -67,7 +75,7 @@ export class UpdateUserField extends Component<Props, State> {
 						style={ styles.button }
 						onPress={ this.props.close }
 					>
-						Cancel
+						CANCEL
 					</Button>
 				</View>
 			</View>

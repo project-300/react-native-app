@@ -9,7 +9,9 @@ const {
 	stopClock,
 	debug,
 	timing,
-	clockRunning
+	clockRunning,
+	interpolate,
+	Extrapolate
 } = Animated;
 
 export const runTiming = (clock: Animated.Node<number>, value: number, dest: number): Animated.Node<number> => {
@@ -39,4 +41,16 @@ export const runTiming = (clock: Animated.Node<number>, value: number, dest: num
 		cond(state.finished, debug('stop clock', stopClock(clock))),
 		state.position
 	]);
+}
+
+export const interpolateAnimation = (
+	animatedValue: Animated.Value<number>,
+	inputRange: Array<Animated.Adaptable<number>>,
+	outputRange: Array<Animated.Adaptable<number>>
+): Animated.Node<number> => {
+	return interpolate(animatedValue, {
+		inputRange,
+		outputRange,
+		extrapolate: Extrapolate.CLAMP
+	});
 }

@@ -7,10 +7,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center'
 	},
 
-	firstContainer: {
-		marginTop: 60
-	},
-
 	inputContainer: {
 		width: '90%',
 		marginBottom: 20
@@ -41,6 +37,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	button: {
 		padding: 8
+	},
+
+	spinner: {
+		marginVertical: 10
 	}
 });
 

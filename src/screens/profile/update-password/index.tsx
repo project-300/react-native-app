@@ -3,7 +3,8 @@ import { TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Button, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { Theme } from '../../../constants/theme';
 
 export class UpdatePassword extends Component<Props, State> {
 
@@ -22,9 +23,13 @@ export class UpdatePassword extends Component<Props, State> {
 	}
 
 	private _updatePassword = async (): Promise<void> => {
+		this.setState({ isUpdating: true });
+
 		this._hidePasswords();
 		const { currentPassword, newPassword } = this.state;
 		const res = await this.props.updatePassword(currentPassword, newPassword);
+
+		this.setState({ isUpdating: false });
 
 		if (res) {
 			this.setState(this.initState);
@@ -39,7 +44,14 @@ export class UpdatePassword extends Component<Props, State> {
 
 		return (
 			<View style={ styles.container }>
-				<View style={ [ styles.firstContainer, styles.inputContainer ] }>
+				<ActivityIndicator
+					animating={ this.state.isUpdating }
+					color={ Theme.primary }
+					size='large'
+					style={ styles.spinner }
+				/>
+
+				<View style={ styles.inputContainer }>
 					<TextInput
 						secureTextEntry={ hideCurrentPassword }
 						placeholder={ 'Current Password' }
@@ -83,7 +95,7 @@ export class UpdatePassword extends Component<Props, State> {
 						onPress={ (): Promise<void> => this._updatePassword() }
 						style={ styles.button }
 					>
-						Update Password
+						UPDATE PASSWORD
 					</Button>
 				</View>
 
@@ -93,7 +105,7 @@ export class UpdatePassword extends Component<Props, State> {
 						style={ styles.button }
 						onPress={ this.props.close }
 					>
-						Cancel
+						CANCEL
 					</Button>
 				</View>
 			</View>

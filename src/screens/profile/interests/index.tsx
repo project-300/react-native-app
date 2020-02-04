@@ -2,7 +2,8 @@ import React, { Component, ReactElement } from 'react';
 import { ScrollView, View } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { Button, List } from 'react-native-paper';
+import { ActivityIndicator, Button, List } from 'react-native-paper';
+import { Theme } from '../../../constants/theme';
 
 export class UpdateInterests extends Component<Props, State> {
 
@@ -24,8 +25,10 @@ export class UpdateInterests extends Component<Props, State> {
 	}
 
 	private _updateInterests = async (): Promise<void> => {
+		this.setState({ isUpdating: true });
 		await this.props.updateInterests(this.state.interests);
 		this.props.close();
+		this.setState({ isUpdating: false });
 	}
 
 	private _interestIcon = (interest: string): string =>
@@ -72,26 +75,38 @@ export class UpdateInterests extends Component<Props, State> {
 				{
 					this.props.panelOpen &&
 						<View style={ styles.buttonsContainer }>
-							<View style={ styles.buttonContainer }>
-								<Button
-									mode='contained'
-									style={ styles.button }
-									disabled={ this.state.isUpdating }
-									onPress={ this._updateInterests }
-								>
-									UPDATE { this.props.type }
-								</Button>
-							</View>
+							{
+								this.state.isUpdating ?
+									<ActivityIndicator
+										animating={ this.state.isUpdating }
+										color={ Theme.primary }
+										size='large'
+										style={ styles.spinner }
+									/>
+									:
+									<View style={ { width: '100%', alignItems: 'center' } }>
+										<View style={ styles.buttonContainer }>
+											<Button
+												mode='contained'
+												style={ styles.button }
+												disabled={ this.state.isUpdating }
+												onPress={ this._updateInterests }
+											>
+												UPDATE { this.props.type }
+											</Button>
+										</View>
 
-							<View style={ styles.buttonContainer }>
-								<Button
-									mode='outlined'
-									style={ styles.button }
-									onPress={ this.props.close }
-								>
-									CANCEL
-								</Button>
-							</View>
+										<View style={ styles.buttonContainer }>
+											<Button
+												mode='outlined'
+												style={ styles.button }
+												onPress={ this.props.close }
+											>
+												CANCEL
+											</Button>
+										</View>
+									</View>
+							}
 						</View>
 				}
 			</View>

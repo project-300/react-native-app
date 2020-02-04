@@ -5,7 +5,8 @@ export interface Styles {
 	container: ViewStyle;
 	input: TextStyle;
 	button: ViewStyle;
-	buttonContainer: TextStyle;
+	buttonContainer: ViewStyle;
+	spinner: ViewStyle;
 }
 
 export interface Props {
