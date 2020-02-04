@@ -30,6 +30,11 @@ class WebSocketAPI {
 
 		this.WS.onclose = (ev: CloseEvent): void => {
 			console.log(ev.code, ev.reason);
+
+			if (ev.code === 1001) { // Connection dropped - Recreate connection
+				this.WS =  new WebSocket(SERVER_WSS_URL);
+				this._setup();
+			}
 		};
 	}
 
