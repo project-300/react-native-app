@@ -14,15 +14,12 @@ export class UpdateUserField extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			value: this.props.value,
-			isUpdating: false
+			value: this.props.value
 		};
 	}
 
 	private _updateValue = async (): Promise<void> => {
-		if (this.state.isUpdating || !this.state.value) return;
-
-		this.setState({ isUpdating: true });
+		if (this.props.isUpdating || !this.state.value) return;
 
 		const { value } = this.state;
 		const { type, field } = this.props;
@@ -35,16 +32,14 @@ export class UpdateUserField extends Component<Props, State> {
 		const res: boolean = await this.props.updateUserField(field, type, value);
 
 		if (res && field === EditTypes.EMAIL) console.log('Confirmation Required'); // To be done when auth flow is updated
-		else if (res) this.props.close();
-
-		this.setState({ isUpdating: false });
+		if (res) this.props.close();
 	}
 
 	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
 				<ActivityIndicator
-					animating={ this.state.isUpdating }
+					animating={ this.props.isUpdating }
 					color={ Theme.primary }
 					size='large'
 					style={ styles.spinner }
@@ -63,7 +58,7 @@ export class UpdateUserField extends Component<Props, State> {
 						mode={ 'contained'}
 						style={ styles.button }
 						onPress={ this._updateValue }
-						disabled={ this.state.isUpdating || !this.state.value }
+						disabled={ this.props.isUpdating || !this.state.value }
 					>
 						UPDATE { this.props.type }
 					</Button>

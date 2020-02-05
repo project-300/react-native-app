@@ -17,7 +17,7 @@ import {
 	GET_ALL_JOURNEYS,
 	UPDATE_ADD_USER_JOURNEY,
 	GET_INTERESTS_LIST,
-	UPDATE_INTERESTS
+	UPDATE_INTERESTS, GET_USER_PROFILE
 } from '../constants/api-paths';
 import { SERVER_HTTPS_URL } from '../../environment/env';
 import { HttpResponse } from '../types/http-responses';
@@ -61,6 +61,8 @@ export default class HttpAPI {
 	public static createJourney = (data: object): Promise<HttpResponse> => HttpAPI.send(data, CREATE_JOURNEY);
 
 	public static getInterestsList = (): Promise<HttpResponse> => HttpAPI.get(GET_INTERESTS_LIST);
+
+	public static getUserProfile = (data: object): Promise<HttpResponse> => HttpAPI.send(data, GET_USER_PROFILE);
 
 	private static get = async (path: string, params?: string): Promise<HttpResponse> => {
 		// change this later...

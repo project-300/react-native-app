@@ -17,3 +17,4 @@ export const CREATE_JOURNEY: string = '/journey/create';
 export const GET_ALL_JOURNEYS: string = '/journeys/all';
 export const UPDATE_ADD_USER_JOURNEY: string = '/journeys/add-passenger';
 export const GET_INTERESTS_LIST: string = '/data/interests-list';
+export const GET_USER_PROFILE: string = '/user/profile';

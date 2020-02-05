@@ -35,6 +35,7 @@ export interface Props extends CommonProps {
 	receivedData: boolean;
 	user: User | null
 	uploadingAvatar: boolean;
+	isUpdating: boolean;
 	interests: string[];
 	userProfileSubRequest(): AppActions;
 	userProfileUnsub(): AppActions;
@@ -43,6 +44,7 @@ export interface Props extends CommonProps {
 	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
 	updatePassword(cp: string, np: string): Promise<boolean>;
 	getInterestsList(): Promise<void | boolean>;
+	getUserProfile(u: string): Promise<void | boolean>;
 }
 
 export interface State {

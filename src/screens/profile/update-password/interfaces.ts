@@ -12,6 +12,7 @@ export interface Styles {
 
 export interface Props {
 	type: string;
+	isUpdating: boolean;
 	close(): void;
 	updatePassword(cp: string, np: string): Promise<boolean>;
 }
@@ -21,5 +22,4 @@ export interface State {
 	currentPassword: string;
 	hideNewPassword: boolean;
 	hideCurrentPassword: boolean;
-	isUpdating: boolean;
 }

@@ -66,10 +66,6 @@ class WebSocketAPI {
 
 
 		switch (subscription) {
-			case USER_PROFILE:
-				if (payload.error) store.dispatch(userProfileSubFailure(payload));
-				else store.dispatch(userProfileSubReceived(payload));
-				break;
 			case JOURNEY_DRIVER_LOCATION:
 				console.log(payload);
 				store.dispatch(updateDriverLocation(payload));

@@ -95,6 +95,10 @@ const JourneysTab: NavigationContainer = createStackNavigator({
 	ViewJourney: {
 		screen: ViewJourney,
 		...navigationOptions('Journey', undefined, true)
+	},
+	OtherProfile: {
+		screen: Profile,
+		...navigationOptions('Other Profile', undefined, false)
 	}
 });
 

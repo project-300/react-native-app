@@ -14,11 +14,11 @@ export interface Props {
 	allInterests: string[];
 	currentInterests: string[];
 	panelOpen: boolean;
+	isUpdating: boolean;
 	close(): void;
 	updateInterests(i: string[]): Promise<void | boolean>;
 }
 
 export interface State {
-	isUpdating: boolean;
 	interests: string[];
 }

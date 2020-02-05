@@ -12,8 +12,7 @@ export class UpdatePassword extends Component<Props, State> {
 		newPassword: '',
 		currentPassword: '',
 		hideNewPassword: true,
-		hideCurrentPassword: true,
-		isUpdating: false
+		hideCurrentPassword: true
 	};
 
 	public constructor(props: Props) {
@@ -23,13 +22,9 @@ export class UpdatePassword extends Component<Props, State> {
 	}
 
 	private _updatePassword = async (): Promise<void> => {
-		this.setState({ isUpdating: true });
-
 		this._hidePasswords();
 		const { currentPassword, newPassword } = this.state;
 		const res = await this.props.updatePassword(currentPassword, newPassword);
-
-		this.setState({ isUpdating: false });
 
 		if (res) {
 			this.setState(this.initState);
@@ -45,7 +40,7 @@ export class UpdatePassword extends Component<Props, State> {
 		return (
 			<View style={ styles.container }>
 				<ActivityIndicator
-					animating={ this.state.isUpdating }
+					animating={ this.props.isUpdating }
 					color={ Theme.primary }
 					size='large'
 					style={ styles.spinner }

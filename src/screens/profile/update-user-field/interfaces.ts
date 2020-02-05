@@ -13,11 +13,11 @@ export interface Props {
 	type: string;
 	field: EditTypes;
 	value: string;
+	isUpdating: boolean;
 	close(): void;
 	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
 }
 
 export interface State {
 	value: string;
-	isUpdating: boolean;
 }

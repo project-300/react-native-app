@@ -12,10 +12,9 @@ import {
 	DRIVER_APPLICATION_REQUEST,
 	DRIVER_APPLICATION_SUCCESS,
 	DRIVER_APPLICATION_FAILURE,
-	USER_PROFILE_SUB_REQUEST,
-	USER_PROFILE_UNSUB,
-	USER_PROFILE_SUB_RECEIVED,
-	USER_PROFILE_SUB_FAILURE,
+	USER_PROFILE_REQUEST,
+	USER_PROFILE_RECEIVED,
+	USER_PROFILE_FAILURE,
 	UPDATE_EMAIL_REQUEST,
 	UPDATE_EMAIL_SUCCESS,
 	UPDATE_EMAIL_FAILURE,
@@ -67,15 +66,21 @@ import {
 	CREATE_JOURNEY_FIND_ROUTE_FAILURE,
 	INTERESTS_REQUEST,
 	INTERESTS_SUCCESS,
-	INTERESTS_FAILURE, UPDATE_INTERESTS_SUCCESS, UPDATE_INTERESTS_REQUEST, UPDATE_INTERESTS_FAILURE
+	INTERESTS_FAILURE,
+	UPDATE_INTERESTS_SUCCESS,
+	UPDATE_INTERESTS_REQUEST,
+	UPDATE_INTERESTS_FAILURE,
+	UPDATE_USER_REQUEST,
+	UPDATE_USER_SUCCESS, UPDATE_USER_FAILURE, UPLOAD_AVATAR_REQUEST, UPLOAD_AVATAR_SUCCESS, UPLOAD_AVATAR_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace
+	GooglePlace, User
 } from '@project-300/common-types';
+import { EditTypes } from './common';
 
 export interface UpdateAddUserJourneyRequest {
 	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
@@ -144,20 +149,16 @@ export interface SignUpConfirmationFailure {
 }
 
 export interface UserProfileSubRequest {
-	type: typeof USER_PROFILE_SUB_REQUEST;
-}
-
-export interface UserProfileUnsub {
-	type: typeof USER_PROFILE_UNSUB;
+	type: typeof USER_PROFILE_REQUEST;
 }
 
 export interface UserProfileSubReceived {
-	type: typeof USER_PROFILE_SUB_RECEIVED;
-	payload: SubscriptionPayload;
+	type: typeof USER_PROFILE_RECEIVED;
+	user: User;
 }
 
 export interface UserProfileSubFailure {
-	type: typeof USER_PROFILE_SUB_FAILURE;
+	type: typeof USER_PROFILE_FAILURE;
 }
 
 export interface UpdateEmailRequest {
@@ -388,6 +389,33 @@ export interface InterestsFailure {
 	type: typeof INTERESTS_FAILURE;
 }
 
+export interface UpdateUserFieldRequest {
+	type: typeof UPDATE_USER_REQUEST;
+}
+
+export interface UpdateUserFieldSuccess {
+	type: typeof UPDATE_USER_SUCCESS;
+	field: EditTypes;
+	value: string;
+}
+
+export interface UpdateUserFieldFailure {
+	type: typeof UPDATE_USER_FAILURE;
+}
+
+export interface UpdateAvatarRequest {
+	type: typeof UPLOAD_AVATAR_REQUEST;
+}
+
+export interface UpdateAvatarSuccess {
+	type: typeof UPLOAD_AVATAR_SUCCESS;
+	avatarURL: string;
+}
+
+export interface UpdateAvatarFailure {
+	type: typeof UPLOAD_AVATAR_FAILURE;
+}
+
 export type JourneyActionTypes =
 	GetAllJourneysRequest |
 	GetAllJourneysSuccess |
@@ -412,12 +440,17 @@ export type SignUpActionTypes =
 
 export type UserProfileActionTypes =
 	UserProfileSubRequest |
-	UserProfileUnsub |
 	UserProfileSubReceived |
 	UserProfileSubFailure |
 	UpdateInterestsRequest |
 	UpdateInterestsSuccess |
-	UpdateInterestsFailure;
+	UpdateInterestsFailure |
+	UpdateUserFieldRequest |
+	UpdateUserFieldSuccess |
+	UpdateUserFieldFailure |
+	UpdateAvatarRequest |
+	UpdateAvatarSuccess |
+	UpdateAvatarFailure;
 
 export type InterestsActionTypes =
 	InterestsRequest |

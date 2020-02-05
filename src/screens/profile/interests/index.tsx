@@ -11,7 +11,6 @@ export class UpdateInterests extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			isUpdating: false,
 			interests: this.props.currentInterests
 		};
 	}
@@ -25,10 +24,8 @@ export class UpdateInterests extends Component<Props, State> {
 	}
 
 	private _updateInterests = async (): Promise<void> => {
-		this.setState({ isUpdating: true });
 		await this.props.updateInterests(this.state.interests);
 		this.props.close();
-		this.setState({ isUpdating: false });
 	}
 
 	private _interestIcon = (interest: string): string =>
@@ -76,9 +73,9 @@ export class UpdateInterests extends Component<Props, State> {
 					this.props.panelOpen &&
 						<View style={ styles.buttonsContainer }>
 							{
-								this.state.isUpdating ?
+								this.props.isUpdating ?
 									<ActivityIndicator
-										animating={ this.state.isUpdating }
+										animating={ this.props.isUpdating }
 										color={ Theme.primary }
 										size='large'
 										style={ styles.spinner }
@@ -89,7 +86,7 @@ export class UpdateInterests extends Component<Props, State> {
 											<Button
 												mode='contained'
 												style={ styles.button }
-												disabled={ this.state.isUpdating }
+												disabled={ this.props.isUpdating }
 												onPress={ this._updateInterests }
 											>
 												UPDATE { this.props.type }

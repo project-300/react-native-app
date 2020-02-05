@@ -12,7 +12,6 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State, AnimationValues, AnimationStyles } from './interfaces';
-import WS from '../../api/websocket';
 import { UserProfileState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import ImagePicker from 'react-native-image-picker';
@@ -27,20 +26,20 @@ import { ActivityIndicator, Button, Divider, FAB, IconButton, Title } from 'reac
 import { InterestChip } from '../../components/miscellaneous/interest-chip';
 import { UpdateInterests } from './interests';
 import {
-	userProfileSubRequest,
-	userProfileUnsub,
 	updateUserField,
 	getInterestsList,
 	uploadAvatar,
 	updatePassword,
 	updateInterests,
-	uploadAvatarRequest
+	uploadAvatarRequest,
+	getUserProfile
 } from '../../redux/actions';
 import { AnimatedStyles } from '../../animations/styles';
 import { ImagePickerResponse } from '../../types/images';
 import { NavigationEvents } from 'react-navigation';
 import { interpolateAnimation } from '../../animations/animations';
 import { Theme } from '../../constants/theme';
+import { userId } from '../../auth';
 
 const { height, width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -86,14 +85,12 @@ export class Profile extends Component<Props, State> {
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
 		this._setupAnimations();
-		this.props.userProfileSubRequest();
-		await WS.subscribe('user/profile');
+		await this.props.getUserProfile(await userId() as string);
 		await this.props.getInterestsList();
 	}
 
-	private _unmountScreen = async (): Promise<void> => { // Triggered when the screen is navigated away from
-		this.props.userProfileUnsub();
-		await WS.unsubscribe('user/profile');
+	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
+		// this.props.userProfileUnsub();
 		this.setState(this.initialState); // Reset the state of the component for next mount
 	}
 
@@ -125,7 +122,6 @@ export class Profile extends Component<Props, State> {
 		};
 
 		await ImagePicker.showImagePicker(options, async (img: ImagePickerResponse) => { // Native image picker pops up
-			console.log('PICKER');
 			if (img.error) {
 				toastr.error('An error occurred');
 			} else if (!img.didCancel) {
@@ -134,8 +130,6 @@ export class Profile extends Component<Props, State> {
 				await this.props.uploadAvatar(img);
 			}
 		});
-
-		console.log('PICKER DONE');
 	}
 
 	private _userTypeIcon = (): string => {
@@ -452,6 +446,7 @@ export class Profile extends Component<Props, State> {
 						this.state.editType === EditTypes.EMAIL &&
 							<UpdateUserField
 								updateUserField={ this.props.updateUserField }
+								isUpdating={ this.props.isUpdating }
 								type={ EditFields.EMAIL.type }
 								field={ EditFields.EMAIL.field }
 								close={ this.closeForm }
@@ -462,6 +457,7 @@ export class Profile extends Component<Props, State> {
 						this.state.editType === EditTypes.FIRST_NAME &&
 							<UpdateUserField
 								updateUserField={ this.props.updateUserField }
+								isUpdating={ this.props.isUpdating }
 								type={ EditFields.FIRST_NAME.type }
 								field={ EditFields.FIRST_NAME.field }
 								close={ this.closeForm }
@@ -472,6 +468,7 @@ export class Profile extends Component<Props, State> {
 						this.state.editType === EditTypes.LAST_NAME &&
 							<UpdateUserField
 								updateUserField={ this.props.updateUserField }
+								isUpdating={ this.props.isUpdating }
 								type={ EditFields.LAST_NAME.type }
 								field={ EditFields.LAST_NAME.field }
 								close={ this.closeForm }
@@ -482,6 +479,7 @@ export class Profile extends Component<Props, State> {
 						this.state.editType === EditTypes.PASSWORD &&
 							<UpdatePassword
 								updatePassword={ this.props.updatePassword }
+								isUpdating={ this.props.isUpdating }
 								type={ EditTypes.PASSWORD }
 								close={ this.closeForm } />
 					}
@@ -495,6 +493,7 @@ export class Profile extends Component<Props, State> {
 								currentInterests={ this.props.user.interests }
 								panelOpen={ this.state.panelOpen }
 								updateInterests={ this.props.updateInterests }
+								isUpdating={ this.props.isUpdating }
 							/>
 					}
 				</Animated.View>
@@ -505,17 +504,15 @@ export class Profile extends Component<Props, State> {
 
 const mapStateToProps = (state: AppState): UserProfileState => ({
 	...state.userProfileReducer,
-	...state.updateUserFieldReducer,
 	...state.interestsListReducer
 });
 
 export default connect(mapStateToProps, {
-	userProfileSubRequest,
-	userProfileUnsub,
 	uploadAvatar,
 	uploadAvatarRequest,
 	updateUserField,
 	updatePassword,
 	updateInterests,
-	getInterestsList
+	getInterestsList,
+	getUserProfile
 })(Profile);

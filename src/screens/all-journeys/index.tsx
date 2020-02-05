@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { ScrollView, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, FlatList, Text, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
@@ -52,9 +52,11 @@ class AllJourneys extends Component<Props, State> {
 							<Text style={ styles.bold }> €{ journey.pricePerSeat }</Text> euro per seat
 						</Text>
 
-						<Text style={ styles.textRow }>
-							Driver Name: <Text style={ styles.bold }> { journey.driver.firstName } { journey.driver.lastName }</Text>
-						</Text>
+						<TouchableWithoutFeedback onPress={ (): boolean => this.props.navigation.navigate('OtherProfile', { userId: journey.driver.userId }) }>
+							<Text style={ styles.textRow }>
+								Driver Name: <Text style={ styles.bold }> { journey.driver.firstName } { journey.driver.lastName }</Text>
+							</Text>
+						</TouchableWithoutFeedback>
 					</Body>
 				</CardItem>
 				<CardItem footer bordered>

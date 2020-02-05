@@ -10,7 +10,7 @@ import { EditTypes } from '../../../types/common';
 
 export const updateRequest = (): AppActions => ({ type: UPDATE_USER_REQUEST });
 
-export const updateSuccess = (): AppActions => ({ type: UPDATE_USER_SUCCESS });
+export const updateSuccess = (field: EditTypes, value: string): AppActions => ({ type: UPDATE_USER_SUCCESS, field, value });
 
 export const updateFailure = (): AppActions => ({ type: UPDATE_USER_FAILURE });
 
@@ -27,7 +27,7 @@ export const updateUserField = (field: EditTypes, type: string, value: string): 
 			const apiRes: LoginResult = await HttpAPI.updateUserField({ [field]: value, userId: await userId() });
 
 			if (apiRes.success) {
-				dispatch(updateSuccess());
+				dispatch(updateSuccess(field, value));
 				toastr.success(`Your ${type} has been updated`);
 
 				return true;
