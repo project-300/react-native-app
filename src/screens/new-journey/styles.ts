@@ -5,8 +5,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
-		paddingTop: 20
+		alignItems: 'center'
 	},
 
 	mapWrap: {

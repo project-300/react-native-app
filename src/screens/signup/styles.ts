@@ -1,17 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import Animated from 'react-native-reanimated';
+
+const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
-		alignItems: 'center',
 		justifyContent: 'center',
 		padding: 10
-	},
-
-	inputContainer: {
-		width: '80%'
 	},
 
 	input: {
@@ -36,29 +34,17 @@ const styles: Styles = StyleSheet.create<Styles>({
 		fontWeight: 'bold'
 	},
 
-	loginLink: {
-		textDecorationLine: 'underline',
-		marginTop: 40
-	},
-
-	showPasswordIconContainer: {
-		position: 'absolute',
-		alignItems: 'center',
-		right: 10,
-		top: 0,
-		height: 47.5,
-		width: 40,
-		paddingTop: 16,
-		marginRight: -10,
-		borderTopRightRadius: 4,
-		borderBottomRightRadius: 4,
-		backgroundColor: '#CCC'
-	},
-
-	showPasswordIcon: {
-		color: 'black',
-		fontSize: 18
+	logo: {
+		alignSelf: 'center',
+		width
 	}
 });
 
 export default styles;
+
+export const imageStyle = (opacity: Animated.Node<number>): any => ({
+	marginBottom: 40,
+	width,
+	alignSelf: 'center',
+	opacity
+});

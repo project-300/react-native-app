@@ -83,5 +83,3 @@ export interface NewJourneyState {
 	originMarkerCoords: Coords | null;
 	route: Coords[];
 }
-
-export interface HomeState { }

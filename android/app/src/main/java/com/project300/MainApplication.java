@@ -3,6 +3,7 @@ package com.project300;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.reanimated.ReanimatedPackage;
 import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReanimatedPackage(),
             new SvgPackage(),
             new VectorIconsPackage(),
             new ImageResizerPackage(),

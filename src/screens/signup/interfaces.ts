@@ -4,33 +4,38 @@ import { CodeDeliveryDetails } from 'amazon-cognito-identity-js';
 
 export interface Styles {
 	container: ViewStyle;
-	inputContainer: ViewStyle;
 	input: TextStyle;
 	button: ViewStyle;
 	buttonText: TextStyle;
-	loginLink: TextStyle;
-	showPasswordIconContainer: ViewStyle;
-	showPasswordIcon: TextStyle;
+	logo: ViewStyle;
 }
 
 export interface Props extends CommonProps {
 	isCreatingAccount: boolean;
-	signUp(e: string, u: string, p: string): Promise<SignUpActionResponse>;
+	isConfirmingAccount: boolean;
+	signUp(e: string, u: string, p: string): Promise<SignUpActionResponse | { ok: boolean }>;
+	confirmAccount(uId: string, c: string, iSU: boolean, u: string): Promise<boolean>;
 }
 
 export interface State {
-	email: string;
-	username: string;
-	password: string;
-	hidePassword: boolean;
+	keyboardOpen: boolean;
+	confirmationDetails: ConfirmSignUpDetails | null;
 }
 
 export interface SignUpActionResponse {
 	ok: boolean,
 	confirmationRequired?: boolean;
-	username?: string;
-	email?: string,
-	codeDeliveryDetails?: CodeDeliveryDetails,
-	userId?: string;
-	isSignUp?: boolean;
+	username: string;
+	email: string,
+	codeDeliveryDetails: CodeDeliveryDetails,
+	userId: string;
+	isSignUp: boolean;
+}
+
+interface ConfirmSignUpDetails {
+	username: string;
+	email: string;
+	codeDeliveryDetails: CodeDeliveryDetails;
+	userId: string;
+	isSignUp: boolean;
 }

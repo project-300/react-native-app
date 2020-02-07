@@ -18,8 +18,8 @@ const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
 
 export const signUp = (email: string, username: string, password: string):
-	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse> => {
-	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse> => {
+	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse | { ok: boolean }> => {
+	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse | { ok: boolean }> => {
 		dispatch(signUpRequest());
 
 		try {

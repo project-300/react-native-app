@@ -1,64 +1,76 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import Animated from 'react-native-reanimated';
+
+const { width, height } = Dimensions.get('window');
+const { concat } = Animated;
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
+		backgroundColor: 'white',
+		justifyContent: 'flex-end'
+	},
+
+	heightThird: {
+		height: height / 3
+	},
+
+	closeButtonContainer: {
+		position: 'relative',
+		top: -15,
+		zIndex: 50
+	},
+
+	closeButton: {
+		height: 40,
+		width: 40,
+		backgroundColor: 'white',
+		borderRadius: 20,
 		alignItems: 'center',
 		justifyContent: 'center',
-		padding: 10
-	},
-
-	inputContainer: {
-		width: '80%'
-	},
-
-	input: {
-		backgroundColor: '#DDD',
-		borderRadius: 4,
-		marginBottom: 10,
-		paddingVertical: 10,
-		paddingHorizontal: 12,
-		height: 47.5
-	},
-
-	button: {
-		backgroundColor: '#194781',
-		padding: 10,
-		borderRadius: 4,
-		width: '80%'
-	},
-
-	buttonText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold'
-	},
-
-	signUpLink: {
-		textDecorationLine: 'underline',
-		marginTop: 40
-	},
-
-	showPasswordIconContainer: {
 		position: 'absolute',
-		alignItems: 'center',
-		right: 10,
-		top: 0,
-		height: 47.5,
-		width: 40,
-		paddingTop: 16,
-		marginRight: -10,
-		borderTopRightRadius: 4,
-		borderBottomRightRadius: 4,
-		backgroundColor: '#CCC'
+		top: -40,
+		left: (width / 2) - 20,
+		shadowOffset: {
+			width: 2,
+			height: 2
+		},
+		shadowColor: 'black',
+		shadowOpacity: 0.2,
+		elevation: 3
 	},
 
-	showPasswordIcon: {
-		color: 'black',
-		fontSize: 18
+	formContainer: {
 	}
 });
 
 export default styles;
+
+// tslint:disable-next-line:no-any
+export const animatedViewStyle = (opacity: Animated.Node<number>, translateY: Animated.Node<number>): any => ({
+	transform: [ { translateY } ],
+	opacity
+});
+
+// tslint:disable-next-line:no-any
+export const animatedOpacityStyle = (opacity: Animated.Node<number>): any => ({
+	opacity
+});
+
+// tslint:disable-next-line:no-any
+export const formContainerStyle = (zIndex: Animated.Node<number>): any => ({
+	top: null,
+	justifyContent: 'center',
+	zIndex
+});
+
+// tslint:disable-next-line:no-any
+export const animatedSpinTextStyle = (rotateDeg: Animated.Node<number>): any => ({
+	fontSize: 15,
+	transform: [
+		{
+			rotate: concat(rotateDeg, 'deg')
+		}
+	]
+});

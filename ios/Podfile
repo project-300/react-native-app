@@ -15,6 +15,8 @@ target 'Project300' do
   pod 'GoogleMaps'
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
 end
 
 post_install do |installer|

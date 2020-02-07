@@ -16,6 +16,7 @@ import { NavigationEvents } from 'react-navigation';
 import { Container, Tab, Tabs, Content, Spinner, Card, CardItem, Body } from 'native-base';
 import DatesTimes from '../../../services/dates-times';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import HeaderBar from '../../../headerbar';
 
 export class MyJourneys extends Component<Props, State> {
 
@@ -66,12 +67,14 @@ export class MyJourneys extends Component<Props, State> {
 							{
 								journey.passengers.length ? journey.passengers.map((p: PassengerBrief) => {
 									return <Text>
-										<Text style={ styles.bold }> <Icon
+										<Text style={ styles.bold }>
+											<Icon
 												name='user'
 												size={ 14 }
 												style={ { marginLeft: 5, color: 'grey' } }
 												solid
-											/> { p.firstName } { p.lastName }</Text>
+											/> { p.firstName } { p.lastName }
+										</Text>
 									</Text>;
 								}) : ' None'
 							}
@@ -201,6 +204,7 @@ export class MyJourneys extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<Container>
+				{/*<HeaderBar navigation={ this.props.navigation } backButton={ true } />*/}
 				<NavigationEvents onDidFocus={ this._getJourneys } />
 				<Tabs>
 					<Tab heading='Current' textStyle={ { color: 'grey' } } tabStyle={ { backgroundColor: 'white' } } activeTabStyle={ { backgroundColor: '#eee' } } activeTextStyle={ { color: '#194781' } }>

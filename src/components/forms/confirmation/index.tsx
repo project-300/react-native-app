@@ -5,30 +5,33 @@ import {
 	TextInput,
 	TouchableOpacity
 } from 'react-native';
-import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
-import { confirmAccount } from '../../../redux/actions';
 import toastr from '../../../helpers/toastr';
-import { ConfirmState } from '../../../types/redux-reducer-state-types';
-import { AppState } from '../../../store';
+import formStyles from '../../../styles/forms';
 
-class Confirmation extends Component<Props, State> {
+export default class ConfirmationForm extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
 
-		const { getParam } = this.props.navigation;
+		const {
+			username,
+			email,
+			userId,
+			isSignUp,
+			codeDeliveryDetails
+		} = this.props;
 
 		this.state = {
 			code: '',
 			confirmationText: '',
-			username: getParam('username', ''),
-			email: getParam('email', ''),
-			codeDeliveryDetails: getParam('codeDeliveryDetails', { }),
-			userId: getParam('userId', ''),
-			isSignUp: getParam('isSignUp', false)
+			username,
+			email,
+			codeDeliveryDetails,
+			userId,
+			isSignUp
 		};
 	}
 
@@ -62,27 +65,26 @@ class Confirmation extends Component<Props, State> {
 
 	public render(): ReactElement {
 		return (
-			<View style={ styles.container }>
+			<View>
 				<Text style={ styles.text }>{ this.state.confirmationText }</Text>
+
 				<TextInput
-					placeholder={ 'Confirmation Code' }
+					placeholder={ 'CONFIRMATION CODE' }
+					placeholderTextColor='black'
 					onChangeText={ (code: string): void => this.setState({ code }) }
-					style={ styles.input } />
+					autoCorrect={ false }
+					autoCompleteType={ 'off' }
+					autoCapitalize='none'
+					keyboardType={ 'numeric' }
+					style={ formStyles.input } />
+
 				<TouchableOpacity
 					disabled={ this.props.isConfirmingAccount }
-					style={ styles.button }
+					style={ formStyles.largeButton }
 					onPress={ this._confirmSignUp }>
-					<Text
-						style={ styles.buttonText }
-					>Confirm</Text>
+					<Text style={ formStyles.buttonText }>CONFIRM</Text>
 				</TouchableOpacity>
 			</View>
 		);
 	}
 }
-
-const mapStateToProps = (state: AppState): ConfirmState => ({
-	...state.confirmReducer
-});
-
-export default connect(mapStateToProps, { confirmAccount })(Confirmation);

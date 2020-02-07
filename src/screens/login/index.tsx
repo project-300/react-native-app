@@ -1,87 +1,267 @@
 import React, { Component, ReactElement } from 'react';
 import {
+	Dimensions,
+	StatusBar,
+	StyleSheet,
 	Text,
 	View,
-	TextInput,
+	KeyboardAvoidingView,
+	Keyboard,
+	Platform,
+	EmitterSubscription,
+	KeyboardEvent,
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
-import styles from './styles';
-import { Props, State } from './interfaces';
+import styles, { animatedOpacityStyle, animatedSpinTextStyle, animatedViewStyle, formContainerStyle } from './styles';
+import { CompState, Props } from './interfaces';
 import { login } from '../../redux/actions';
-import toastr from '../../helpers/toastr';
 import { LoginState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
+import Animated, { Easing } from 'react-native-reanimated';
+import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { LoginForm } from '../../components/forms/login';
+import formStyles from '../../styles/forms';
 
-// Documentation: /docs/login.md
+const {
+	Value,
+	timing,
+	interpolate,
+	Extrapolate
+} = Animated;
 
-export class Login extends Component<Props, State> {
+const { width, height } = Dimensions.get('window');
+
+let _keyboardWillShowSubscription: EmitterSubscription | undefined;
+let _keyboardDidShowSubscription: EmitterSubscription | undefined;
+let _keyboardWillHideSubscription: EmitterSubscription | undefined;
+let _keyboardDidHideSubscription: EmitterSubscription | undefined;
+
+export class Login extends Component<Props, CompState> {
+
+	private readonly generalOpacity: Animated.Value<number>;
+	private readonly signInOpacity: Animated.Value<number>;
+	private readonly signUpOpacity: Animated.Value<number>;
+	private readonly keyboardShowing: Animated.Value<number>;
+
+	private readonly buttonY: Animated.Node<number>;
+	private readonly bgY: Animated.Node<number>;
+	private readonly textInputZIndex: Animated.Node<number>;
+	private readonly textInputY: Animated.Node<number>;
+	private readonly textInputOpacity: Animated.Node<number>;
+	private readonly rotateCross: Animated.Node<number>;
+	private readonly closeButtonOpacity: Animated.Node<number>;
+	private readonly backgroundOpacity: Animated.Node<number>;
 
 	public constructor(props: Props) {
 		super(props);
 
 		this.state = {
-			username: '',
-			password: '',
-			hidePassword: true
+			formOpen: false,
+			keyboardOpen: false
 		};
+
+		this.generalOpacity = new Value(1);
+		this.signInOpacity = new Value(1);
+		this.signUpOpacity = new Value(1);
+		this.keyboardShowing = new Value(0);
+
+		const heightDiff: number = Platform.OS === 'ios' ? 35 : 75;
+
+		this.buttonY = interpolate(this.generalOpacity, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 100, 0 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.bgY = interpolate(this.generalOpacity, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ (-height / 3) - heightDiff, 0 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.textInputZIndex = interpolate(this.generalOpacity, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 1, -1 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.textInputY = interpolate(this.generalOpacity, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 0, 100 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.textInputOpacity = interpolate(this.generalOpacity, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 1, 0 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.rotateCross = interpolate(this.generalOpacity, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 0, 360 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.closeButtonOpacity = interpolate(this.keyboardShowing, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 1, 0 ],
+			extrapolate: Extrapolate.CLAMP
+		});
+
+		this.backgroundOpacity = interpolate(this.keyboardShowing, {
+			inputRange: [ 0, 1 ],
+			outputRange: [ 1, 0.6 ],
+			extrapolate: Extrapolate.CLAMP
+		});
 	}
 
-	private _loginAttempt = async (): Promise<void> => {
-		this.setState({ hidePassword: true });
+	private openForm = (): void => {
+		this.setState({ formOpen: true }); // Show login form just before opacity becomes visible
 
-		const { username, password } = this.state;
+		timing(this.generalOpacity, {
+			duration: 1000,
+			toValue: 0,
+			easing: Easing.inOut(Easing.ease)
+		}).start();
+	}
 
-		if (!username) return toastr.error('Username is missing');
-		if (!password) return toastr.error('Password is missing');
+	private closeForm = (): void => {
+		timing(this.generalOpacity, {
+			duration: 1000,
+			toValue: 1,
+			easing: Easing.inOut(Easing.ease)
+		}).start(() => {
+			this.setState({ formOpen: false }); // Hide login form after opacity is invisible
+		});
+	}
 
-		const res: boolean = await this.props.login(username, password);
-		res && this.props.navigation.navigate('Home');
+	public componentDidMount(): void {
+		const platform = Platform.OS;
+		_keyboardWillShowSubscription = platform === 'ios' ? Keyboard.addListener('keyboardWillShow', this.keyboardShowEvent) : undefined;
+		_keyboardDidShowSubscription = platform === 'android' ? Keyboard.addListener('keyboardDidShow', this.keyboardShowEvent) : undefined;
+		_keyboardWillHideSubscription = platform === 'ios' ? Keyboard.addListener('keyboardWillHide', this.keyboardHideEvent) : undefined;
+		_keyboardDidHideSubscription = platform === 'android' ? Keyboard.addListener('keyboardDidHide', this.keyboardHideEvent) : undefined;
+	}
+
+	public componentWillUnmount(): void {
+		if (_keyboardWillShowSubscription) _keyboardWillShowSubscription.remove();
+		if (_keyboardDidShowSubscription) _keyboardDidShowSubscription.remove();
+		if (_keyboardWillHideSubscription) _keyboardWillHideSubscription.remove();
+		if (_keyboardDidHideSubscription) _keyboardDidHideSubscription.remove();
+	}
+
+	private keyboardShowEvent = (e: KeyboardEvent): void => {
+		this.setState({ keyboardOpen: true });
+
+		timing(this.keyboardShowing, {
+			duration: 500,
+			toValue: 1,
+			easing: Easing.inOut(Easing.ease)
+		}).start();
+	}
+
+	private keyboardHideEvent = (e: KeyboardEvent): void => {
+		this.setState({ keyboardOpen: false });
+
+		timing(this.keyboardShowing, {
+			duration: 500,
+			toValue: 0,
+			easing: Easing.inOut(Easing.ease)
+		}).start();
 	}
 
 	public render(): ReactElement {
-		return (
-			<View style={ styles.container }>
-				<View style={ styles.inputContainer }>
-					<TextInput
-						placeholder={ 'Username' }
-						onChangeText={ (username: string): void => this.setState({ username }) }
-						style={ styles.input } />
-				</View>
-				<View style={ styles.inputContainer }>
-					<TextInput
-						secureTextEntry={ this.state.hidePassword }
-						placeholder={ 'Password' }
-						style={ styles.input }
-						onChangeText={ (password: string): void => this.setState({ password })}
-					/>
-					<TouchableOpacity
-						style={ styles.showPasswordIconContainer }
-						onPress={ (): void => this.setState({ hidePassword: !this.state.hidePassword }) }
-					>
-						<Icon
-							name={ this.state.hidePassword ? 'eye' : 'eye-slash' }
-							style={ styles.showPasswordIcon }
-						/>
-					</TouchableOpacity>
-				</View>
+		/* 	Set behaviour to 'padding' for iOS and 'height' for Android.
+		 	The login form will act the same way using this method.
+		 	Using 'height' for iOS will cause the form to disappear when moving the focus from one input to another.
+		 	Using 'padding' for Android will cause the login form to be thrown to the top of the screen.
+	 	*/
+		const keyboardAvoidingBehaviour = Platform.OS === 'ios' ? 'padding' : 'height';
 
-				<TouchableOpacity
-					disabled={ this.props.isLoggingIn }
-					style={ styles.button }
-					onPress={ this._loginAttempt }>
-					<Text
-						style={ styles.buttonText }
-					>Login</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
-					<Text style={ styles.signUpLink }>
-						Not registered yet? Sign Up
-					</Text>
-				</TouchableOpacity>
-			</View>
+		/*
+			Keep login form contained in this render method.
+			Using a child component will cause the form to disappear
+			when moving from the password input to the username / email input on Android.
+			Seems to be an issue with KeyboardAvoidingView.
+		*/
+
+		return (
+			<KeyboardAvoidingView behavior={ keyboardAvoidingBehaviour } style={ styles.container }>
+				<StatusBar barStyle='light-content' />
+
+				<Animated.View style={ [ StyleSheet.absoluteFill, animatedViewStyle(this.backgroundOpacity, this.bgY) ]}>
+					<Svg
+						height={ height + 50 }
+						width={ width }
+						style={ {
+							shadowOffset: {
+								width: 2,
+								height: 2
+							},
+							shadowColor: 'black',
+							shadowOpacity: 0.4
+						} }
+					>
+						<ClipPath id='clip'>
+							<Circle r={ height + 50 } cx={ width / 2 } />
+						</ClipPath>
+						<Image
+							href={ require('../../assets/images/login-bg.jpg') }
+							width={ width }
+							height={ height + 50 }
+							preserveAspectRatio='xMinYMid slice'
+							clipPath='url(#clip)'
+						/>
+					</Svg>
+				</Animated.View>
+				<View style={ styles.heightThird }>
+					<TouchableOpacity onPress={ this.openForm }>
+						<Animated.View style={ [ formStyles.largeButton, animatedViewStyle(this.generalOpacity, this.buttonY) ] }>
+							<Text style={ formStyles.buttonText }>
+								SIGN IN
+							</Text>
+						</Animated.View>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
+						<Animated.View style={ [ formStyles.largeButton, animatedViewStyle(this.generalOpacity, this.buttonY) ] }>
+							<Text style={ formStyles.buttonText }>
+								SIGN UP
+							</Text>
+						</Animated.View>
+					</TouchableOpacity>
+
+					<Animated.View
+						style={ [
+							StyleSheet.absoluteFill,
+							styles.heightThird,
+							formContainerStyle(this.textInputZIndex),
+							animatedViewStyle(this.textInputOpacity, this.textInputY)
+						] }>
+
+						<TouchableOpacity onPress={ this.closeForm } style={ styles.closeButtonContainer }>
+							<Animated.View style={ [ styles.closeButton, animatedOpacityStyle(this.closeButtonOpacity) ] }>
+								<Animated.Text style={ animatedSpinTextStyle(this.rotateCross) }>
+									<Icon
+										name={ 'times' }
+										size={ 22 }
+									/>
+								</Animated.Text>
+							</Animated.View>
+						</TouchableOpacity>
+
+						<LoginForm
+							isLoggingIn={ this.props.isLoggingIn }
+							isLoggedIn={ this.props.isLoggedIn }
+							login={ this.props.login }
+							keyboardOpen={ this.state.keyboardOpen }
+							navigation={ this.props.navigation }
+						/>
+					</Animated.View>
+				</View>
+			</KeyboardAvoidingView>
 		);
 	}
 }

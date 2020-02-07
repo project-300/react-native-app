@@ -1,15 +1,12 @@
-import { TextStyle, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 
 export interface Styles {
 	container: ViewStyle;
-	input: TextStyle;
-	inputContainer: ViewStyle;
-	button: ViewStyle;
-	buttonText: TextStyle;
-	signUpLink: TextStyle;
-	showPasswordIconContainer: ViewStyle;
-	showPasswordIcon: TextStyle;
+	heightThird: ViewStyle;
+	closeButtonContainer: ViewStyle;
+	closeButton: ViewStyle;
+	formContainer: ViewStyle;
 }
 
 export interface Props extends CommonProps {
@@ -18,8 +15,7 @@ export interface Props extends CommonProps {
 	login(u: string, p: string): Promise<boolean>;
 }
 
-export interface State {
-	username: string;
-	password: string;
-	hidePassword: boolean;
+export interface CompState {
+	formOpen: boolean;
+	keyboardOpen: boolean;
 }

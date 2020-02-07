@@ -48,8 +48,8 @@ export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promis
 
 			const file = {
 				uri: rs.uri,
-				name: img.fileName,
-				type: img.type
+				name: img.fileName.toLowerCase(),
+				type: img.type || 'image/jpeg'
 			};
 
 			const config: S3_CONFIG_TYPE = {
@@ -61,6 +61,8 @@ export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promis
 
 			const uploadRes = await RNS3.put(file, config); // Upload to AWS S3 Bucket
 
+			if (uploadRes.status !== 201) return toastr.error('Unable to upload new avatar');
+
 			const saveRes = await HttpAPI.updateAvatar({
 				avatarURL: uploadRes.body.postResponse.location,
 				userId: await userId()
@@ -68,7 +70,7 @@ export const uploadAvatar = (img: ImageResponse): (dispatch: Dispatch) => Promis
 
 			if (saveRes.success) {
 				dispatch(uploadAvatarSuccess());
-				toastr.success(`Your avatar has been changed`);
+				toastr.success(`Your avatar has been successfully updated`);
 				return true;
 			}
 
