@@ -1,3 +1,16 @@
+import Login from './screens/login';
+import SignUp from './screens/signup';
+import DriverApplication from './screens/driver-application';
+import Profile from './screens/profile';
+import MyJourneys from './screens/driver/journeys';
+import JourneyMap from './screens/driver/journey';
+import DriverTracking from './screens/passenger/driver-tracking';
+import NewJourney from './screens/new-journey';
+import AllJourneys from './screens/all-journeys';
+import ViewJourney from './screens/passenger/view-journey';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import React from 'react';
+import HeaderBar, { CustomOption } from './headerbar';
 import {
 	createAppContainer,
 	createStackNavigator,
@@ -10,21 +23,6 @@ import {
 	createMaterialBottomTabNavigator,
 	NavigationMaterialBottomTabOptions
 } from 'react-navigation-material-bottom-tabs';
-import Login from './screens/login';
-import SignUp from './screens/signup';
-import DriverApplication from './screens/driver-application';
-import Profile from './screens/profile';
-import UpdateUserField from './screens/profile/update-user-field';
-import UpdatePassword from './screens/profile/update-password';
-import MyJourneys from './screens/driver/journeys';
-import JourneyMap from './screens/driver/journey';
-import DriverTracking from './screens/passenger/driver-tracking';
-import NewJourney from './screens/new-journey';
-import AllJourneys from './screens/all-journeys';
-import ViewJourney from './screens/passenger/view-journey';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import React from 'react';
-import HeaderBar, { CustomOption } from './headerbar';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -63,7 +61,9 @@ const headerBar = (
 	/>;
 
 const customValue = (navigation: NavigationScreenConfig<any>, value: string): string | undefined =>
-	navigation.state.params && navigation.state.params.headerDetails && navigation.state.params.headerDetails[value];
+	navigation.state.params &&
+	navigation.state.params.headerDetails &&
+	navigation.state.params.headerDetails[value];
 
 const SignedOutStack: NavigationContainer = createStackNavigator({
 	Login: {
@@ -81,14 +81,6 @@ const ProfileTab: NavigationContainer = createStackNavigator({
 		screen: Profile,
 		...navigationOptions('My Profile', undefined, false)
 	},
-	UpdateUserField: {
-		screen: UpdateUserField,
-		...navigationOptions('Update Field', undefined, true)
-	},
-	UpdatePassword: {
-		screen: UpdatePassword,
-		...navigationOptions('Update Password', undefined, true)
-	},
 	DriverApplication: {
 		screen: DriverApplication,
 		...navigationOptions('Driver Application', undefined, true)
@@ -103,6 +95,10 @@ const JourneysTab: NavigationContainer = createStackNavigator({
 	ViewJourney: {
 		screen: ViewJourney,
 		...navigationOptions('Journey', undefined, true)
+	},
+	OtherProfile: {
+		screen: Profile,
+		...navigationOptions('Other Profile', undefined, false)
 	}
 });
 
@@ -179,7 +175,10 @@ const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
 			}
 		},
 		{
-			initialRouteName: signedIn ? 'SignedInStack' : 'SignedOutStack'
+			initialRouteName:
+				signedIn ?
+					'SignedInStack' :
+					'SignedOutStack'
 		}
 	);
 };

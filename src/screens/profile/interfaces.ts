@@ -1,23 +1,33 @@
-import { TextStyle, ViewStyle } from 'react-native';
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { AppActions } from '../../types/redux-action-types';
 import { User } from '@project-300/common-types';
-import { CommonProps } from '../../types/common';
-import { Response as ImageResponse } from "react-native-image-picker";
+import { CommonProps, EditTypes } from '../../types/common';
+import { ImagePickerResponse } from '../../types/images';
+import Animated from "react-native-reanimated";
 
 export interface Styles {
 	container: ViewStyle;
-	text: TextStyle;
-	button: TextStyle;
-	buttonText: TextStyle;
-	profileImageContainer: ViewStyle;
-	editIconContainer: ViewStyle;
+	avatar: ImageStyle;
 	userTypeTag: ViewStyle;
 	userTypeTagText: TextStyle;
 	username: TextStyle;
-	editRowFirstItem: ViewStyle;
+	name: TextStyle;
 	editRow: ViewStyle;
 	label: TextStyle;
 	editText: TextStyle;
+	panel: TextStyle;
+	sectionContainer: TextStyle;
+	statsContainer: ViewStyle;
+	statsItem: ViewStyle;
+	statsItemText: TextStyle;
+	statsItemDesc: TextStyle;
+	loadingText: TextStyle;
+	fab: ViewStyle;
+	interestChip: ViewStyle;
+	editAvatarContainer: ViewStyle;
+	editAvatarIcon: ViewStyle;
+	outerColumnContainer: ViewStyle;
+	halfWidth: ViewStyle;
 }
 
 export interface Props extends CommonProps {
@@ -25,9 +35,38 @@ export interface Props extends CommonProps {
 	receivedData: boolean;
 	user: User | null
 	uploadingAvatar: boolean;
+	isUpdating: boolean;
+	interests: string[];
 	userProfileSubRequest(): AppActions;
 	userProfileUnsub(): AppActions;
-	uploadAvatar(img: ImageResponse): Promise<void | boolean>;
+	updateInterests(i: string[]): Promise<void | boolean>;
+	uploadAvatar(img: ImagePickerResponse): Promise<void | boolean>;
+	updateUserField(f: EditTypes, t: string, e: string): Promise<boolean>;
+	updatePassword(cp: string, np: string): Promise<boolean>;
+	getInterestsList(): Promise<void | boolean>;
+	getUserProfile(u: string): Promise<void | boolean>;
 }
 
-export interface State { }
+export interface State {
+	editType: string | null;
+	editing: boolean;
+	readyToEdit: boolean;
+	isSwiping: boolean;
+	panelOpen: boolean;
+}
+
+export interface AnimationValues {
+	fall: Animated.Value<number>,
+	panelOpen: Animated.Value<number>,
+	beginEditing: Animated.Value<number>,
+}
+
+export interface AnimationStyles {
+	panelHeight: Animated.Node<number>,
+	editIconOpacity: Animated.Node<number>,
+	editImageOpacity: Animated.Node<number>,
+	editFieldsHeight: Animated.Node<number>,
+	panelLeftX: Animated.Node<number>,
+	panelRightX: Animated.Node<number>,
+	panelOpacity: Animated.Node<number>
+}

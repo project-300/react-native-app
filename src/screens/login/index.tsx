@@ -13,7 +13,6 @@ import {
 	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
-import styles, { animatedOpacityStyle, animatedSpinTextStyle, animatedViewStyle, formContainerStyle } from './styles';
 import { CompState, Props } from './interfaces';
 import { login } from '../../redux/actions';
 import { LoginState } from '../../types/redux-reducer-state-types';
@@ -23,6 +22,8 @@ import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { LoginForm } from '../../components/forms/login';
 import formStyles from '../../styles/forms';
+import styles from './styles';
+import { AnimatedStyles } from '../../animations/styles';
 
 const {
 	Value,
@@ -192,7 +193,12 @@ export class Login extends Component<Props, CompState> {
 			<KeyboardAvoidingView behavior={ keyboardAvoidingBehaviour } style={ styles.container }>
 				<StatusBar barStyle='light-content' />
 
-				<Animated.View style={ [ StyleSheet.absoluteFill, animatedViewStyle(this.backgroundOpacity, this.bgY) ]}>
+				<Animated.View
+					style={ [
+						StyleSheet.absoluteFill,
+						AnimatedStyles.translateY(this.bgY),
+						AnimatedStyles.opacity(this.backgroundOpacity)
+					] }>
 					<Svg
 						height={ height + 50 }
 						width={ width }
@@ -219,14 +225,24 @@ export class Login extends Component<Props, CompState> {
 				</Animated.View>
 				<View style={ styles.heightThird }>
 					<TouchableOpacity onPress={ this.openForm }>
-						<Animated.View style={ [ formStyles.largeButton, animatedViewStyle(this.generalOpacity, this.buttonY) ] }>
+						<Animated.View
+							style={ [
+								formStyles.largeButton,
+								AnimatedStyles.translateY(this.buttonY),
+								AnimatedStyles.opacity(this.generalOpacity)
+							] }>
 							<Text style={ formStyles.buttonText }>
 								SIGN IN
 							</Text>
 						</Animated.View>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={ (): boolean => this.props.navigation.navigate('SignUp') }>
-						<Animated.View style={ [ formStyles.largeButton, animatedViewStyle(this.generalOpacity, this.buttonY) ] }>
+						<Animated.View
+							style={ [
+								formStyles.largeButton,
+								AnimatedStyles.translateY(this.buttonY),
+								AnimatedStyles.opacity(this.generalOpacity)
+							] }>
 							<Text style={ formStyles.buttonText }>
 								SIGN UP
 							</Text>
@@ -237,13 +253,25 @@ export class Login extends Component<Props, CompState> {
 						style={ [
 							StyleSheet.absoluteFill,
 							styles.heightThird,
-							formContainerStyle(this.textInputZIndex),
-							animatedViewStyle(this.textInputOpacity, this.textInputY)
+							styles.bottomForm,
+							AnimatedStyles.zIndex(this.textInputZIndex),
+							AnimatedStyles.translateY(this.textInputY),
+							AnimatedStyles.opacity(this.textInputOpacity),
 						] }>
 
-						<TouchableOpacity onPress={ this.closeForm } style={ styles.closeButtonContainer }>
-							<Animated.View style={ [ styles.closeButton, animatedOpacityStyle(this.closeButtonOpacity) ] }>
-								<Animated.Text style={ animatedSpinTextStyle(this.rotateCross) }>
+						<TouchableOpacity
+							onPress={ this.closeForm }
+							style={ styles.closeButtonContainer }>
+							<Animated.View
+								style={ [
+									styles.closeButton,
+									AnimatedStyles.opacity(this.closeButtonOpacity)
+								] }>
+								<Animated.Text
+									style={ [
+										AnimatedStyles.rotate(this.rotateCross),
+										{ fontSize: 15 }
+									] }>
 									<Icon
 										name={ 'times' }
 										size={ 22 }

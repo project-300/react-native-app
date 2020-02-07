@@ -24,7 +24,7 @@
       "tabs",
       4
     ],
-    "no-any": true,
+    "no-any": false,
     "whitespace": [
       true,
       "check-branch",
@@ -61,10 +61,7 @@
     ],
     "completed-docs": false,
     "file-name-casing": false,
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
+    "interface-name": false,
     "linebreak-style": false,
     "newline-before-return": false,
     "newline-per-chained-call": false,

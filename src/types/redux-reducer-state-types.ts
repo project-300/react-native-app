@@ -34,6 +34,12 @@ export interface UserProfileState {
 	receivedData: boolean;
 	user: User | null;
 	uploadingAvatar: boolean;
+	isUpdating: boolean;
+}
+
+export interface InterestsState {
+	requestingInterests: boolean;
+	interests: string[];
 }
 
 export interface UpdateUserFieldState {

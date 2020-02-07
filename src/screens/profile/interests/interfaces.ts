@@ -2,24 +2,23 @@ import { TextStyle, ViewStyle } from 'react-native';
 
 export interface Styles {
 	container: ViewStyle;
-	inputContainer: ViewStyle;
-	showPasswordIconContainer: ViewStyle;
-	showPasswordIcon: TextStyle;
+	input: TextStyle;
 	button: ViewStyle;
 	buttonContainer: ViewStyle;
+	buttonsContainer: ViewStyle;
 	spinner: ViewStyle;
 }
 
 export interface Props {
 	type: string;
+	allInterests: string[];
+	currentInterests: string[];
+	panelOpen: boolean;
 	isUpdating: boolean;
 	close(): void;
-	updatePassword(cp: string, np: string): Promise<boolean>;
+	updateInterests(i: string[]): Promise<void | boolean>;
 }
 
 export interface State {
-	newPassword: string;
-	currentPassword: string;
-	hideNewPassword: boolean;
-	hideCurrentPassword: boolean;
+	interests: string[];
 }

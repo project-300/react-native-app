@@ -1,4 +1,4 @@
-import Animated, { Easing, TimingConfig, TimingState } from 'react-native-reanimated';
+import Animated, { Easing } from 'react-native-reanimated';
 
 const {
 	Value,
@@ -10,17 +10,19 @@ const {
 	debug,
 	timing,
 	clockRunning,
+	interpolate,
+	Extrapolate
 } = Animated;
 
 export const runTiming = (clock: Animated.Node<number>, value: number, dest: number): Animated.Node<number> => {
-	const state: TimingState = {
+	const state: Animated.TimingState = {
 		finished: new Value(0),
 		position: new Value(0),
 		time: new Value(0),
 		frameTime: new Value(0)
 	};
 
-	const config: TimingConfig = {
+	const config: Animated.TimingConfig = {
 		duration: 1000,
 		toValue: new Value(0),
 		easing: Easing.inOut(Easing.ease)
@@ -32,11 +34,23 @@ export const runTiming = (clock: Animated.Node<number>, value: number, dest: num
 			set(state.time, 0),
 			set(state.position, value),
 			set(state.frameTime, 0),
-			set(config.toValue, dest),
+			set(config.toValue as Animated.Value<number>, dest),
 			startClock(clock)
 		]),
 		timing(clock, state, config),
 		cond(state.finished, debug('stop clock', stopClock(clock))),
 		state.position
 	]);
+}
+
+export const interpolateAnimation = (
+	animatedValue: Animated.Value<number>,
+	inputRange: Array<Animated.Adaptable<number>>,
+	outputRange: Array<Animated.Adaptable<number>>
+): Animated.Node<number> => {
+	return interpolate(animatedValue, {
+		inputRange,
+		outputRange,
+		extrapolate: Extrapolate.CLAMP
+	});
 }

@@ -1,4 +1,4 @@
-import { Journey } from '@project-300/common-types';
+import { Journey, User } from '@project-300/common-types';
 
 export interface UpdateAddUserJourneyResult {
 	success: boolean;
@@ -86,6 +86,21 @@ export interface CreateJourneyResult {
 	success: boolean;
 }
 
+export interface InterestsListResult {
+	success: boolean;
+	interests: string[];
+}
+
+export interface S3SecretKeyResult {
+	success: boolean;
+	secretKey: string;
+}
+
+export interface GetUserProfileResult {
+	success: boolean;
+	user: User;
+}
+
 export type HttpResponse =
 	| UpdateAddUserJourneyResult
 	| GetAllJourneysResult
@@ -96,4 +111,5 @@ export type HttpResponse =
 	| SecretKeyResult
 	| JourneysResult
 	| JourneyDetailsResult
-	| CreateJourneyResult;
+	| CreateJourneyResult
+	| InterestsListResult;

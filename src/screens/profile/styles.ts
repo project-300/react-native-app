@@ -1,95 +1,174 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Theme, Colours } from '../../constants/theme';
+
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create<Styles>({
 	container: {
-		backgroundColor: '#FFF',
-		...StyleSheet.absoluteFill as object
+		...StyleSheet.absoluteFill as object,
+		backgroundColor: Colours.whiteGrey
 	},
 
-	text: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10
-	},
-
-	button: {
-		backgroundColor: '#194781',
-		padding: 10,
-		marginBottom: 10,
-		borderRadius: 4,
-		width: '80%'
-	},
-
-	buttonText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold'
-	},
-
-	profileImageContainer: {
-		alignSelf: 'center',
-		marginTop: 20,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 4
-		},
-		shadowOpacity: 0.3,
-		shadowRadius: 4.65,
-		elevation: 8
-	},
-
-	editIconContainer: {
-		position: 'absolute',
-		right: 10,
-		top: 10,
-		backgroundColor: 'grey',
-		padding: 10,
-		borderRadius: 20,
-		elevation: 10
+	avatar: {
+		width,
+		height: height * 0.35
 	},
 
 	userTypeTag: {
-		backgroundColor: 'red',
-		width: 100,
-		alignSelf: 'center',
-		borderRadius: 8,
-		marginTop: -20,
-		marginBottom: 20,
-		padding: 2,
-		elevation: 10
+		backgroundColor: Theme.accent,
+		width: 50,
+		height: 50,
+		borderRadius: 25,
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'absolute',
+		top: -25,
+		left: 20,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 12
 	},
 
 	userTypeTagText: {
-		alignSelf: 'center',
-		color: 'white',
-		fontWeight: 'bold'
+		color: Colours.darkGrey
 	},
 
 	username: {
 		alignSelf: 'center',
-		fontSize: 24,
-		fontWeight: 'bold'
+		fontSize: 22,
+		fontWeight: 'bold',
+		marginBottom: 4,
+		color: Colours.black
 	},
 
-	editRowFirstItem: {
-		borderTopWidth: 0.5,
-		marginTop: 40
+	name: {
+		alignSelf: 'center',
+		color: Colours.middleGrey,
+		fontSize: 16,
+		marginBottom: 20
 	},
 
 	editRow: {
-		borderBottomWidth: 0.5,
-		padding: 20
+		paddingVertical: 20
 	},
 
 	label: {
-		fontWeight: 'bold',
-		color: 'black'
+		color: Colours.middleGrey,
+		fontSize: 16,
+		marginBottom: 10
 	},
 
 	editText: {
-		fontSize: 16
+		color: Colours.black,
+		fontWeight: 'bold',
+		fontSize: 18
+	},
+
+	panel: {
+		backgroundColor: Colours.white
+	},
+
+	sectionContainer: {
+		top: -30,
+		backgroundColor: Colours.white,
+		width: width * 0.92,
+		padding: 20,
+		paddingTop: 16,
+		alignSelf: 'center',
+		borderRadius: 10,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 6,
+		marginBottom: 20
+	},
+
+	statsItem: {
+		flexGrow: 1,
+		alignContent: 'center'
+	},
+
+	statsItemText: {
+		alignSelf: 'center',
+		fontWeight: 'bold',
+		paddingTop: 20,
+		fontSize: 18,
+		color: Colours.black
+	},
+
+	statsItemDesc: {
+		alignSelf: 'center',
+		marginTop: 6,
+		fontSize: 14,
+		color: Colours.middleGrey
+	},
+
+	fab: {
+		position: 'absolute',
+		margin: 16,
+		right: 0,
+		bottom: 0
+	},
+
+	interestChip: {
+		margin: 4
+	},
+
+	editAvatarContainer: {
+		backgroundColor: 'white',
+		zIndex: 50,
+		alignSelf: 'center',
+		justifyContent: 'center',
+		position: 'absolute',
+		width: 100,
+		height: 100,
+		borderRadius: 50,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 12,
+		borderWidth: 0.5,
+		borderColor: Colours.lightGrey
+	},
+
+	editAvatarIcon: {
+		alignSelf: 'center',
+		left: 5,
+		top: -2
+	},
+
+	outerColumnContainer: {
+		flexDirection: 'row',
+		alignContent: 'stretch'
+	},
+
+	loadingText: {
+		alignSelf: 'center',
+		fontWeight: 'bold',
+		fontSize: 20,
+		marginTop: height / 3
+	},
+
+	halfWidth: {
+		width: '50%'
+	},
+
+	statsContainer: {
+		flexDirection: 'row',
+		alignContent: 'stretch'
 	}
 });
 

@@ -6,7 +6,7 @@ export interface Styles {
 	heightThird: ViewStyle;
 	closeButtonContainer: ViewStyle;
 	closeButton: ViewStyle;
-	formContainer: ViewStyle;
+	bottomForm: ViewStyle;
 }
 
 export interface Props extends CommonProps {

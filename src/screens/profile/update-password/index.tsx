@@ -1,14 +1,12 @@
 import React, { Component, ReactElement } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { connect } from 'react-redux';
+import { TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { AppState } from '../../../store';
-import { UpdatePasswordState } from '../../../types/redux-reducer-state-types';
-import { updatePassword } from '../../../redux/actions/user/update-password';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { Theme } from '../../../constants/theme';
 
-class UpdatePassword extends Component<Props, State> {
+export class UpdatePassword extends Component<Props, State> {
 
 	private initState: State = {
 		newPassword: '',
@@ -30,7 +28,7 @@ class UpdatePassword extends Component<Props, State> {
 
 		if (res) {
 			this.setState(this.initState);
-			this.props.navigation.goBack();
+			this.props.close();
 		}
 	}
 
@@ -41,14 +39,20 @@ class UpdatePassword extends Component<Props, State> {
 
 		return (
 			<View style={ styles.container }>
+				<ActivityIndicator
+					animating={ this.props.isUpdating }
+					color={ Theme.primary }
+					size='large'
+					style={ styles.spinner }
+				/>
+
 				<View style={ styles.inputContainer }>
 					<TextInput
 						secureTextEntry={ hideCurrentPassword }
 						placeholder={ 'Current Password' }
 						value={ currentPassword }
-						style={ styles.input }
+						mode='outlined'
 						onChangeText={ (currentPassword: string): void => this.setState({ currentPassword })}
-						autoFocus
 					/>
 					<TouchableOpacity
 						style={ styles.showPasswordIconContainer }
@@ -60,12 +64,13 @@ class UpdatePassword extends Component<Props, State> {
 						/>
 					</TouchableOpacity>
 				</View>
+
 				<View style={ styles.inputContainer }>
 					<TextInput
 						secureTextEntry={ hideNewPassword }
 						placeholder={ 'New Password' }
 						value={ newPassword }
-						style={ styles.input }
+						mode='outlined'
 						onChangeText={ (newPassword: string): void => this.setState({ newPassword })}
 					/>
 					<TouchableOpacity
@@ -78,21 +83,27 @@ class UpdatePassword extends Component<Props, State> {
 						/>
 					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					onPress={ (): Promise<void> => this._updatePassword() }
-					style={ styles.button }
-				>
-					<Text style={ styles.buttonText }>
-						Update Password
-					</Text>
-				</TouchableOpacity>
+
+				<View style={ styles.buttonContainer }>
+					<Button
+						mode={ 'contained'}
+						onPress={ (): Promise<void> => this._updatePassword() }
+						style={ styles.button }
+					>
+						UPDATE PASSWORD
+					</Button>
+				</View>
+
+				<View style={ styles.buttonContainer }>
+					<Button
+						mode={ 'outlined'}
+						style={ styles.button }
+						onPress={ this.props.close }
+					>
+						CANCEL
+					</Button>
+				</View>
 			</View>
 		);
 	}
 }
-
-const mapStateToProps = (state: AppState): UpdatePasswordState => ({
-	...state.updateUserFieldReducer
-});
-
-export default connect(mapStateToProps, { updatePassword })(UpdatePassword);

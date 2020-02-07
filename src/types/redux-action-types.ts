@@ -12,10 +12,9 @@ import {
 	DRIVER_APPLICATION_REQUEST,
 	DRIVER_APPLICATION_SUCCESS,
 	DRIVER_APPLICATION_FAILURE,
-	USER_PROFILE_SUB_REQUEST,
-	USER_PROFILE_UNSUB,
-	USER_PROFILE_SUB_RECEIVED,
-	USER_PROFILE_SUB_FAILURE,
+	USER_PROFILE_REQUEST,
+	USER_PROFILE_RECEIVED,
+	USER_PROFILE_FAILURE,
 	UPDATE_EMAIL_REQUEST,
 	UPDATE_EMAIL_SUCCESS,
 	UPDATE_EMAIL_FAILURE,
@@ -61,9 +60,27 @@ import {
 	GET_ALL_JOURNEYS_SUCCESS,
 	UPDATE_ADD_USER_JOURNEY_REQUEST,
 	UPDATE_ADD_USER_JOURNEY_SUCCESS,
-	UPDATE_ADD_USER_JOURNEY_FAILURE, CREATE_JOURNEY_FIND_ROUTE_REQUEST, CREATE_JOURNEY_FIND_ROUTE_SUCCESS, CREATE_JOURNEY_FIND_ROUTE_FAILURE
+	UPDATE_ADD_USER_JOURNEY_FAILURE,
+	CREATE_JOURNEY_FIND_ROUTE_REQUEST,
+	CREATE_JOURNEY_FIND_ROUTE_SUCCESS,
+	CREATE_JOURNEY_FIND_ROUTE_FAILURE,
+	INTERESTS_REQUEST,
+	INTERESTS_SUCCESS,
+	INTERESTS_FAILURE,
+	UPDATE_INTERESTS_SUCCESS,
+	UPDATE_INTERESTS_REQUEST,
+	UPDATE_INTERESTS_FAILURE,
+	UPDATE_USER_REQUEST,
+	UPDATE_USER_SUCCESS, UPDATE_USER_FAILURE, UPLOAD_AVATAR_REQUEST, UPLOAD_AVATAR_SUCCESS, UPLOAD_AVATAR_FAILURE
 } from '../constants/redux-actions';
-import { Coords, GooglePlaceDetails, Journey, SubscriptionPayload, GooglePlace } from '@project-300/common-types';
+import {
+	Coords,
+	GooglePlaceDetails,
+	Journey,
+	SubscriptionPayload,
+	GooglePlace, User
+} from '@project-300/common-types';
+import { EditTypes } from './common';
 
 export interface UpdateAddUserJourneyRequest {
 	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
@@ -132,20 +149,16 @@ export interface SignUpConfirmationFailure {
 }
 
 export interface UserProfileSubRequest {
-	type: typeof USER_PROFILE_SUB_REQUEST;
-}
-
-export interface UserProfileUnsub {
-	type: typeof USER_PROFILE_UNSUB;
+	type: typeof USER_PROFILE_REQUEST;
 }
 
 export interface UserProfileSubReceived {
-	type: typeof USER_PROFILE_SUB_RECEIVED;
-	payload: object;
+	type: typeof USER_PROFILE_RECEIVED;
+	user: User;
 }
 
 export interface UserProfileSubFailure {
-	type: typeof USER_PROFILE_SUB_FAILURE;
+	type: typeof USER_PROFILE_FAILURE;
 }
 
 export interface UpdateEmailRequest {
@@ -158,6 +171,19 @@ export interface UpdateEmailSuccess {
 
 export interface UpdateEmailFailure {
 	type: typeof UPDATE_EMAIL_FAILURE;
+}
+
+export interface UpdateInterestsRequest {
+	type: typeof UPDATE_INTERESTS_REQUEST;
+}
+
+export interface UpdateInterestsSuccess {
+	type: typeof UPDATE_INTERESTS_SUCCESS;
+	interests: string[];
+}
+
+export interface UpdateInterestsFailure {
+	type: typeof UPDATE_INTERESTS_FAILURE;
 }
 
 export interface DriverApplicationRequest {
@@ -350,68 +376,190 @@ export interface CreateJourneyFindRouteFailure {
 	type: typeof CREATE_JOURNEY_FIND_ROUTE_FAILURE;
 }
 
-export type JourneyActionTypes =
-	| GetAllJourneysRequest
-	| GetAllJourneysSuccess
-	| GetAllJourneysFailure
-	| UpdateAddUserJourneyRequest
-	| UpdateAddUserJourneySuccess
-	| UpdateAddUserJourneyFailure;
+export interface InterestsRequest {
+	type: typeof INTERESTS_REQUEST;
+}
 
-export type LoginActionTypes = LoginRequest | LoginSuccess | LoginFailure;
+export interface InterestsSuccess {
+	type: typeof INTERESTS_SUCCESS;
+	interests: string[];
+}
+
+export interface InterestsFailure {
+	type: typeof INTERESTS_FAILURE;
+}
+
+export interface UpdateUserFieldRequest {
+	type: typeof UPDATE_USER_REQUEST;
+}
+
+export interface UpdateUserFieldSuccess {
+	type: typeof UPDATE_USER_SUCCESS;
+	field: EditTypes;
+	value: string;
+}
+
+export interface UpdateUserFieldFailure {
+	type: typeof UPDATE_USER_FAILURE;
+}
+
+export interface UpdateAvatarRequest {
+	type: typeof UPLOAD_AVATAR_REQUEST;
+}
+
+export interface UpdateAvatarSuccess {
+	type: typeof UPLOAD_AVATAR_SUCCESS;
+	avatarURL: string;
+}
+
+export interface UpdateAvatarFailure {
+	type: typeof UPLOAD_AVATAR_FAILURE;
+}
+
+export type JourneyActionTypes =
+	GetAllJourneysRequest |
+	GetAllJourneysSuccess |
+	GetAllJourneysFailure |
+	UpdateAddUserJourneyRequest |
+	UpdateAddUserJourneySuccess |
+	UpdateAddUserJourneyFailure;
+
+export type LoginActionTypes =
+	LoginRequest |
+	LoginSuccess |
+	LoginFailure;
 
 export type SignUpActionTypes =
-	| SignUpRequest
-	| SignUpSuccess
-	| SignUpFailure
-	| SignUpConfirmationRequired
-	| SignUpConfirmationRequest
-	| SignUpConfirmationSuccess
-	| SignUpConfirmationFailure;
+	SignUpRequest |
+	SignUpSuccess |
+	SignUpFailure |
+	SignUpConfirmationRequired |
+	SignUpConfirmationRequest |
+	SignUpConfirmationSuccess |
+	SignUpConfirmationFailure;
 
-export type UserProfileActionTypes = UserProfileSubRequest | UserProfileUnsub | UserProfileSubReceived | UserProfileSubFailure;
+export type UserProfileActionTypes =
+	UserProfileSubRequest |
+	UserProfileSubReceived |
+	UserProfileSubFailure |
+	UpdateInterestsRequest |
+	UpdateInterestsSuccess |
+	UpdateInterestsFailure |
+	UpdateUserFieldRequest |
+	UpdateUserFieldSuccess |
+	UpdateUserFieldFailure |
+	UpdateAvatarRequest |
+	UpdateAvatarSuccess |
+	UpdateAvatarFailure;
 
-export type UpdateEmailActionTypes = UpdateEmailRequest | UpdateEmailSuccess | UpdateEmailFailure;
+export type InterestsActionTypes =
+	InterestsRequest |
+	InterestsSuccess |
+	InterestsFailure;
 
-export type DriverApplicationActionTypes = DriverApplicationRequest | DriverApplicationSuccess | DriverApplicationFailure;
+export type UpdateEmailActionTypes =
+	UpdateEmailRequest |
+	UpdateEmailSuccess |
+	UpdateEmailFailure;
 
-export type DriverJourneysActionTypes = DriverJourneysRequest | DriverJourneysSuccess | DriverJourneysFailure;
+export type DriverApplicationActionTypes =
+	DriverApplicationRequest |
+	DriverApplicationSuccess |
+	DriverApplicationFailure;
 
-export type CancelPassengerAcceptedActionTypes = CancelPassengerAcceptedRequest | CancelPassengerAcceptedSuccess |
+export type DriverJourneysActionTypes =
+	DriverJourneysRequest |
+	DriverJourneysSuccess |
+	DriverJourneysFailure;
+
+export type CancelPassengerAcceptedActionTypes =
+	CancelPassengerAcceptedRequest |
+	CancelPassengerAcceptedSuccess |
 	CancelPassengerAcceptedFailure;
 
-export type JourneysActionTypes = DriverJourneysActionTypes | CancelPassengerAcceptedActionTypes;
+export type JourneysActionTypes =
+	DriverJourneysActionTypes |
+	CancelPassengerAcceptedActionTypes;
 
-export type JourneyDetailsActionTypes = JourneyDetailsRequest | JourneyDetailsSuccess | JourneyDetailsFailure;
+export type JourneyDetailsActionTypes =
+	JourneyDetailsRequest |
+	JourneyDetailsSuccess |
+	JourneyDetailsFailure;
 
-export type PassengerJourneyDetailsActionTypes = PassengerJourneyDetailsRequest | PassengerJourneyDetailsSuccess |
-	PassengerJourneyDetailsFailure | UpdateDriverLocation;
+export type PassengerJourneyDetailsActionTypes =
+	PassengerJourneyDetailsRequest |
+	PassengerJourneyDetailsSuccess |
+	PassengerJourneyDetailsFailure |
+	UpdateDriverLocation;
 
-export type StartJourneyActionTypes = StartJourneyRequest | StartJourneySuccess | StartJourneyFailure;
+export type StartJourneyActionTypes =
+	StartJourneyRequest |
+	StartJourneySuccess |
+	StartJourneyFailure;
 
-export type EndJourneyActionTypes = EndJourneyRequest | EndJourneySuccess | EndJourneyFailure;
+export type EndJourneyActionTypes =
+	EndJourneyRequest |
+	EndJourneySuccess |
+	EndJourneyFailure;
 
-export type DriverMovementActionTypes = DriverMovementRequest | DriverMovementSuccess | DriverMovementFailure;
+export type DriverMovementActionTypes =
+	DriverMovementRequest |
+	DriverMovementSuccess |
+	DriverMovementFailure;
 
-export type JourneyMapActionTypes = JourneyDetailsActionTypes | StartJourneyActionTypes | EndJourneyActionTypes | DriverMovementActionTypes;
+export type JourneyMapActionTypes =
+	JourneyDetailsActionTypes |
+	StartJourneyActionTypes |
+	EndJourneyActionTypes |
+	DriverMovementActionTypes;
 
-export type DriverTrackingActionTypes = PassengerJourneyDetailsActionTypes;
+export type DriverTrackingActionTypes =
+	PassengerJourneyDetailsActionTypes;
 
-export type GooglePlacesSearchActionTypes = GooglePlacesSearchRequest | GooglePlacesSearchSuccess | GooglePlacesSearchFailure |
-	GooglePlacesSearchClearResults | SelectGooglePlace;
+export type GooglePlacesSearchActionTypes =
+	GooglePlacesSearchRequest |
+	GooglePlacesSearchSuccess |
+	GooglePlacesSearchFailure |
+	GooglePlacesSearchClearResults |
+	SelectGooglePlace;
 
-export type GooglePlacesDetailsActionTypes = GooglePlacesDetailsRequest | GooglePlacesDetailsSuccess | GooglePlacesDetailsFailure;
+export type GooglePlacesDetailsActionTypes =
+	GooglePlacesDetailsRequest |
+	GooglePlacesDetailsSuccess |
+	GooglePlacesDetailsFailure;
 
-export type CreateJourneyActionTypes = CreateJourneyRequest | CreateJourneySuccess | CreateJourneyFailure | CreateJourneyDropMarker;
+export type CreateJourneyActionTypes =
+	CreateJourneyRequest |
+	CreateJourneySuccess |
+	CreateJourneyFailure |
+	CreateJourneyDropMarker;
 
-export type FindNearbyPlaceActionTypes = FindNearbyPlaceRequest | FindNearbyPlaceSuccess | FindNearbyPlaceFailure;
+export type FindNearbyPlaceActionTypes =
+	FindNearbyPlaceRequest |
+	FindNearbyPlaceSuccess |
+	FindNearbyPlaceFailure;
 
-export type CreateJourneyFindRouteActionTypes = CreateJourneyFindRouteRequest | CreateJourneyFindRouteSuccess |
+export type CreateJourneyFindRouteActionTypes =
+	CreateJourneyFindRouteRequest |
+	CreateJourneyFindRouteSuccess |
 	CreateJourneyFindRouteFailure;
 
-export type CreateNewJourneyActionTypes = GooglePlacesSearchActionTypes | GooglePlacesDetailsActionTypes | CreateJourneyActionTypes |
-	FindNearbyPlaceActionTypes | CreateJourneyFindRouteActionTypes;
+export type CreateNewJourneyActionTypes =
+	GooglePlacesSearchActionTypes |
+	GooglePlacesDetailsActionTypes |
+	CreateJourneyActionTypes |
+	FindNearbyPlaceActionTypes |
+	CreateJourneyFindRouteActionTypes;
 
-export type AppActions = LoginActionTypes | SignUpActionTypes | UserProfileActionTypes |
-	UpdateEmailActionTypes | JourneysActionTypes | JourneyMapActionTypes | DriverTrackingActionTypes |
-	DriverApplicationActionTypes | CreateNewJourneyActionTypes | JourneyActionTypes;
+export type AppActions =
+	LoginActionTypes |
+	SignUpActionTypes |
+	UserProfileActionTypes |
+	UpdateEmailActionTypes |
+	JourneysActionTypes |
+	JourneyMapActionTypes |
+	DriverTrackingActionTypes |
+	DriverApplicationActionTypes |
+	CreateNewJourneyActionTypes |
+	JourneyActionTypes |
+	InterestsActionTypes;

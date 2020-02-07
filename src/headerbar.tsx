@@ -23,7 +23,7 @@ interface State {
 }
 
 export interface CustomOption {
-	action: Function;
+	action(): any;
 	title: string;
 }
 
@@ -38,7 +38,7 @@ export default class HeaderBar extends Component<Props, State> {
 		};
 	}
 
-	private _goBack = (): boolean => this.props.navigation.goBack();
+	private _goBack = (): void => { this.props.navigation.goBack(); };
 
 	private _openMenu = (): void => this.setState({ optionsVisible: true });
 
