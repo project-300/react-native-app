@@ -99,14 +99,13 @@ export class SignUp extends Component<Props, State> {
 		}).start();
 	}
 
-	private _signUp = async (email: string, username: string, password: string): Promise<void | boolean> => {
+	private _signUp = async (username: string, password: string): Promise<void | boolean> => {
 		this.swipeBackground('LEFT');
 
-		if (!email) return toastr.error('Email is missing');
-		if (!username) return toastr.error('Username is missing');
+		if (!username) return toastr.error('Email is missing');
 		if (!password) return toastr.error('Password is missing');
 
-		const res: SignUpActionResponse = await this.props.signUp(email, username, password) as SignUpActionResponse;
+		const res: SignUpActionResponse = await this.props.signUp(username, password) as SignUpActionResponse;
 		console.log(res);
 		if (!res || !res.ok) return;
 
@@ -116,7 +115,6 @@ export class SignUp extends Component<Props, State> {
 			confirmationDetails: {
 				userId,
 				username,
-				email,
 				codeDeliveryDetails,
 				isSignUp
 			}

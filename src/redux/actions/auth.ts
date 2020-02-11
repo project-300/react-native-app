@@ -1,3 +1,4 @@
+import { UserService } from './../../services/user';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
@@ -19,15 +20,11 @@ export const login = (username: string, password: string): (dispatch: Dispatch) 
 
 		try {
 			const auth = await Auth.signIn(username, password);
-			const apiRes: LoginResult = await HttpAPI.login(auth);
+			const { userId, userType } = await UserService.getUser(auth.username);
+			await storeLogin(userId, userType);
 
-			if (apiRes.success && apiRes.userId && apiRes.userType) {
-				await storeLogin(apiRes.userId, apiRes.userType);
-				dispatch(loginSuccess());
-				return true;
-			}
-
-			return false;
+			dispatch(loginSuccess());
+			return true;
 		} catch (err) {
 			dispatch(loginFailure());
 			toastr.error(err.message);

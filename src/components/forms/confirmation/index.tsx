@@ -57,9 +57,10 @@ export default class ConfirmationForm extends Component<Props, State> {
 		if (!code) return toastr.error('Confirmation Code is missing');
 
 		const res = await this.props.confirmAccount(userId, code, isSignUp, username);
-		console.log(res);
-		if (res && isSignUp) this.props.navigation.navigate('Login');
-		else if (res) this.props.navigation.navigate('Profile');
+		if (res) this.props.navigation.navigate('Profile');
+		else {
+			toastr.error('Confirmation Code is incorrect');
+		}
 	}
 
 	public render(): ReactElement {

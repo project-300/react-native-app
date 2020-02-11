@@ -17,7 +17,7 @@ const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 
 const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
 
-export const signUp = (email: string, username: string, password: string):
+export const signUp = (username: string, password: string):
 	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse | { ok: boolean }> => {
 	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse | { ok: boolean }> => {
 		dispatch(signUpRequest());
@@ -26,25 +26,14 @@ export const signUp = (email: string, username: string, password: string):
 			const authRes = await Auth.signUp({
 				username,
 				password
-				// attributes: {
-				// 	email
-				// }
 			});
 
-			// const apiRes: SignupResult = await HttpAPI.signUp({ auth: authRes, email, username });
-
 			dispatch(signUpSuccess());
-
-			// if (authRes.userConfirmed && apiRes.success) return {
-			// 	ok: true,
-			// 	confirmationRequired: false
-			// };
 
 			return {
 				ok: true,
 				confirmationRequired: true,
 				username,
-				// email,
 				codeDeliveryDetails: authRes.codeDeliveryDetails,
 				userId: authRes.userSub,
 				isSignUp: true
