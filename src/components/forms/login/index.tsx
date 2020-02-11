@@ -29,8 +29,8 @@ export class LoginForm extends Component<Props, State> {
 		if (!username) return toastr.error('Username is missing');
 		if (!password) return toastr.error('Password is missing');
 
-
 		const res: boolean = await this.props.login(username, password);
+		console.log(res);
 		res && this.props.navigation.navigate('Home');
 	}
 

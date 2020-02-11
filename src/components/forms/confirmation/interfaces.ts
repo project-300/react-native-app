@@ -8,7 +8,6 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	username: string;
-	email: string;
 	codeDeliveryDetails: CodeDeliveryDetails;
 	userId: string;
 	isSignUp: boolean;
@@ -26,7 +25,6 @@ export interface State {
 	code: string;
 	confirmationText: string;
 	username: string;
-	email: string,
 	codeDeliveryDetails: CodeDeliveryDetails,
 	userId: string;
 	isSignUp: boolean;

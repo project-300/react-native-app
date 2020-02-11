@@ -22,7 +22,7 @@ const {
 	Value,
 	timing,
 	interpolate,
-	Extrapolate,
+	Extrapolate
 } = Animated;
 
 let _keyboardDidShowSubscription: EmitterSubscription | undefined;
@@ -107,6 +107,7 @@ export class SignUp extends Component<Props, State> {
 		if (!password) return toastr.error('Password is missing');
 
 		const res: SignUpActionResponse = await this.props.signUp(email, username, password) as SignUpActionResponse;
+		console.log(res);
 		if (!res || !res.ok) return;
 
 		const { userId, codeDeliveryDetails, isSignUp } = res;
@@ -151,7 +152,6 @@ export class SignUp extends Component<Props, State> {
 							navigation={ this.props.navigation }
 							confirmAccount={ this.props.confirmAccount }
 							username={ this.state.confirmationDetails.username }
-							email={ this.state.confirmationDetails.email }
 							userId={ this.state.confirmationDetails.userId }
 							codeDeliveryDetails={ this.state.confirmationDetails.codeDeliveryDetails }
 							isSignUp={ this.state.confirmationDetails.isSignUp }

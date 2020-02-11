@@ -25,26 +25,26 @@ export const signUp = (email: string, username: string, password: string):
 		try {
 			const authRes = await Auth.signUp({
 				username,
-				password,
-				attributes: {
-					email
-				}
+				password
+				// attributes: {
+				// 	email
+				// }
 			});
 
-			const apiRes: SignupResult = await HttpAPI.signUp({ auth: authRes, email, username });
+			// const apiRes: SignupResult = await HttpAPI.signUp({ auth: authRes, email, username });
 
 			dispatch(signUpSuccess());
 
-			if (authRes.userConfirmed && apiRes.success) return {
-				ok: true,
-				confirmationRequired: false
-			};
+			// if (authRes.userConfirmed && apiRes.success) return {
+			// 	ok: true,
+			// 	confirmationRequired: false
+			// };
 
 			return {
 				ok: true,
 				confirmationRequired: true,
 				username,
-				email,
+				// email,
 				codeDeliveryDetails: authRes.codeDeliveryDetails,
 				userId: authRes.userSub,
 				isSignUp: true
