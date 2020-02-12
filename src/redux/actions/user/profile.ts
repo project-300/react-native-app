@@ -18,10 +18,10 @@ import HttpAPI from '../../../api/http';
 import { Response as ResizedResponse } from 'react-native-image-resizer';
 import { ReduceImage } from '../../../helpers/image-resizing';
 import { S3_CONFIG } from '../../../../environment/env';
-import { userId } from '../../../auth';
 import { RNS3 } from 'react-native-aws3';
 import { S3_CONFIG_TYPE } from '../../../types/aws';
 import { ImagePickerResponse } from '../../../types/images';
+import { UserService } from '../../../services/user';
 
 export const userProfileRequest = (): AppActions => ({ type: USER_PROFILE_REQUEST });
 
@@ -46,12 +46,9 @@ export const updateInterests = (interests: string[]): (dispatch: Dispatch) => Pr
 		dispatch(updateInterestsRequest());
 
 		try {
-			const saveRes = await HttpAPI.updateInterests({
-				interests,
-				userId: await userId()
-			});
+			const res: { success: boolean } = await UserService.updateUser({ interests });
 
-			if (saveRes.success) {
+			if (res.success) {
 				dispatch(updateInterestsSuccess(interests));
 				toastr.success(`Your interests has been successfully updated`);
 				return true;
@@ -96,10 +93,7 @@ export const uploadAvatar = (img: ImagePickerResponse): (dispatch: Dispatch) => 
 			if (uploadRes.status !== 201) return toastr.error('Unable to upload new avatar');
 			const avatarURL: string = uploadRes.body.postResponse.location;
 
-			const saveRes = await HttpAPI.updateAvatar({
-				avatarURL,
-				userId: await userId()
-			});
+			const saveRes = await UserService.updateUser({ avatar: avatarURL });
 
 			if (saveRes.success) {
 				dispatch(uploadAvatarSuccess(avatarURL));
@@ -117,11 +111,11 @@ export const uploadAvatar = (img: ImagePickerResponse): (dispatch: Dispatch) => 
 };
 
 export const getUserProfile = (userId: string): (dispatch: Dispatch) => Promise<void | boolean> => {
-	return async (dispatch: Dispatch): Promise<void | boolean > => {
+	return async (dispatch: Dispatch): Promise<void | boolean> => {
 		dispatch(userProfileRequest());
 
 		try {
-			const profileRes: HttpResponse = await HttpAPI.getUserProfile({ userId });
+			const profileRes: { success: true; user: User } = await UserService.getUser(userId);
 			const user: User = (profileRes as GetUserProfileResult).user;
 
 			if (profileRes.success) {

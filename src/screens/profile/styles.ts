@@ -38,18 +38,12 @@ const styles = StyleSheet.create<Styles>({
 		color: Colours.darkGrey
 	},
 
-	username: {
+	name: {
 		alignSelf: 'center',
 		fontSize: 22,
 		fontWeight: 'bold',
 		marginBottom: 4,
-		color: Colours.black
-	},
-
-	name: {
-		alignSelf: 'center',
-		color: Colours.middleGrey,
-		fontSize: 16,
+		color: Colours.black,
 		marginBottom: 20
 	},
 

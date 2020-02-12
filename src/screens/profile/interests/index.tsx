@@ -11,7 +11,7 @@ export class UpdateInterests extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			interests: this.props.currentInterests
+			interests: this.props.currentInterests || []
 		};
 	}
 

@@ -5,7 +5,7 @@ export interface CommonProps {
 }
 
 export enum EditTypes {
-	EMAIL = 'email',
+	EMAIL = 'email', // Email to be removed
 	FIRST_NAME = 'firstName',
 	LAST_NAME = 'lastName',
 	PASSWORD = 'password',

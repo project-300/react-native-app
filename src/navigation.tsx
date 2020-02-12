@@ -23,6 +23,7 @@ import {
 	createMaterialBottomTabNavigator,
 	NavigationMaterialBottomTabOptions
 } from 'react-navigation-material-bottom-tabs';
+import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -87,7 +88,7 @@ const ProfileTab: NavigationContainer = createStackNavigator({
 	}
 });
 
-const JourneysTab: NavigationContainer = createStackNavigator({
+const SearchTab: NavigationContainer = createStackNavigator({
 	AllJourneys: {
 		screen: AllJourneys,
 		...navigationOptions('Search Journeys', undefined, false)
@@ -140,10 +141,13 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		})
 	},
 	SearchTab: {
-		screen: JourneysTab,
+		screen: SearchTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Search',
-			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ 'white' } solid />
+			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ 'white' } solid />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('AllJourneys');
+			}
 		})
 	},
 	NewJourneyTab: {

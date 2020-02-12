@@ -3,8 +3,6 @@ import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../../constants/red
 import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
 import { storeLogin } from '../../auth';
-import { LoginResult } from '../../types/http-responses';
-import HttpAPI from '../../api/http';
 import toastr from '../../helpers/toastr';
 import { AppActions } from '../../types/redux-action-types';
 
@@ -14,18 +12,25 @@ const loginSuccess = (): AppActions => ({ type: LOGIN_SUCCESS });
 
 const loginFailure = (): AppActions => ({ type: LOGIN_FAILURE });
 
-export const login = (username: string, password: string): (dispatch: Dispatch) => Promise<boolean> => {
+export const login = (email: string, password: string): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean > => {
 		dispatch(loginRequest());
 
 		try {
-			const auth = await Auth.signIn(username, password);
-			const { userId, userType } = await UserService.getUser(auth.username);
-			await storeLogin(userId, userType);
+			const auth = await Auth.signIn(email, password);
+			const { success, user } = await UserService.getUser(auth.attributes.sub);
 
-			dispatch(loginSuccess());
-			return true;
+			if (success) {
+				await storeLogin(user.userId, user.userType);
+
+				dispatch(loginSuccess());
+				return true;
+			}
+
+			dispatch(loginFailure());
+			return false;
 		} catch (err) {
+			console.log(err);
 			dispatch(loginFailure());
 			toastr.error(err.message);
 			return false;

@@ -12,7 +12,7 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	isCreatingAccount: boolean;
-	signUp(username: string, password: string): Promise<void | boolean>;
+	signUp(username: string, phoneNumber: string, password: string): Promise<void | boolean>;
 	keyboardOpen(): void;
 }
 
@@ -24,6 +24,7 @@ export interface CodeDeliveryDetails {
 
 export interface State {
 	username: string;
+	phoneNumber: string;
 	password: string;
 	hidePassword: boolean;
 }

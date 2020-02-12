@@ -17,28 +17,39 @@ const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 
 const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
 
-export const signUp = (username: string, password: string):
+export const signUp = (email: string, phoneNumber: string, password: string):
 	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse | { ok: boolean }> => {
 	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse | { ok: boolean }> => {
 		dispatch(signUpRequest());
 
+		const irishNumber: string = `+353${phoneNumber.substring(1)}`;
+
+		console.log(irishNumber);
+
 		try {
 			const authRes = await Auth.signUp({
-				username,
-				password
+				username: email,
+				password,
+				attributes: {
+					email,
+					phone_number: irishNumber
+				}
 			});
+
+			console.log(authRes);
 
 			dispatch(signUpSuccess());
 
 			return {
 				ok: true,
 				confirmationRequired: true,
-				username,
+				email,
 				codeDeliveryDetails: authRes.codeDeliveryDetails,
 				userId: authRes.userSub,
 				isSignUp: true
 			};
 		} catch (err) {
+			console.log(err);
 			dispatch(signUpFailure());
 			toastr.error(err.message);
 			return { ok: false };

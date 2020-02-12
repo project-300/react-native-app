@@ -3,14 +3,13 @@ import { AppActions } from '../../types/redux-action-types';
 import { User } from '@project-300/common-types';
 import { CommonProps, EditTypes } from '../../types/common';
 import { ImagePickerResponse } from '../../types/images';
-import Animated from "react-native-reanimated";
+import Animated from 'react-native-reanimated';
 
 export interface Styles {
 	container: ViewStyle;
 	avatar: ImageStyle;
 	userTypeTag: ViewStyle;
 	userTypeTagText: TextStyle;
-	username: TextStyle;
 	name: TextStyle;
 	editRow: ViewStyle;
 	label: TextStyle;
@@ -48,6 +47,7 @@ export interface Props extends CommonProps {
 }
 
 export interface State {
+	isOtherUser: boolean;
 	editType: string | null;
 	editing: boolean;
 	readyToEdit: boolean;
@@ -62,11 +62,11 @@ export interface AnimationValues {
 }
 
 export interface AnimationStyles {
-	panelHeight: Animated.Node<number>,
-	editIconOpacity: Animated.Node<number>,
-	editImageOpacity: Animated.Node<number>,
-	editFieldsHeight: Animated.Node<number>,
-	panelLeftX: Animated.Node<number>,
-	panelRightX: Animated.Node<number>,
-	panelOpacity: Animated.Node<number>
+	panelHeight: Animated.Node<number> | number,
+	editIconOpacity: Animated.Node<number> | number,
+	editImageOpacity: Animated.Node<number> | number,
+	editFieldsHeight: Animated.Node<number> | number,
+	panelLeftX: Animated.Node<number> | number,
+	panelRightX: Animated.Node<number> | number,
+	panelOpacity: Animated.Node<number> | number
 }

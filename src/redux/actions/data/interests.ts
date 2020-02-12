@@ -4,6 +4,7 @@ import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { INTERESTS_REQUEST, INTERESTS_SUCCESS, INTERESTS_FAILURE } from '../../../constants/redux-actions';
+import { InterestService } from '../../../services/interest';
 
 const interestsRequest = (): AppActions => ({ type: INTERESTS_REQUEST });
 
@@ -16,7 +17,8 @@ export const getInterestsList = (): (dispatch: Dispatch) => Promise<void | boole
 		dispatch(interestsRequest());
 
 		try {
-			const interestsRes: InterestsListResult = await HttpAPI.getInterestsList() as InterestsListResult;
+			const interestsRes: InterestsListResult = await InterestService.getInterestsList();
+			console.log(interestsRes);
 
 			if (interestsRes.success) {
 				dispatch(interestsSuccess(interestsRes.interests));

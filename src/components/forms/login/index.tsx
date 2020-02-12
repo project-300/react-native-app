@@ -15,7 +15,7 @@ export class LoginForm extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			username: '',
+			email: '',
 			password: '',
 			hidePassword: true
 		};
@@ -24,13 +24,12 @@ export class LoginForm extends Component<Props, State> {
 	private _loginAttempt = async (): Promise<void> => {
 		this.setState({ hidePassword: true });
 
-		const { username, password } = this.state;
+		const { email, password } = this.state;
 
-		if (!username) return toastr.error('Username is missing');
+		if (!email) return toastr.error('Username is missing');
 		if (!password) return toastr.error('Password is missing');
 
-		const res: boolean = await this.props.login(username, password);
-		console.log(res);
+		const res: boolean = await this.props.login(email, password);
 		res && this.props.navigation.navigate('Home');
 	}
 
@@ -43,9 +42,9 @@ export class LoginForm extends Component<Props, State> {
 		return (
 			<View style={ { marginBottom: Platform.OS === 'android' && this.props.keyboardOpen ? 80 : 0 } }>
 				<TextInput
-					placeholder='USERNAME'
+					placeholder='EMAIL ADDRESS'
 					placeholderTextColor='black'
-					onChangeText={ (username: string): void => this.setState({ username }) }
+					onChangeText={ (email: string): void => this.setState({ email }) }
 					autoCorrect={ false }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
@@ -63,7 +62,7 @@ export class LoginForm extends Component<Props, State> {
 				<TouchableOpacity
 					style={ formStyles.largeButton }
 					onPress={ this._loginAttempt }
-					disabled={ this.props.isLoggingIn || !this.state.username || !this.state.password }>
+					disabled={ this.props.isLoggingIn || !this.state.email || !this.state.password }>
 					<Text style={ formStyles.buttonText }>
 						SIGN IN
 					</Text>

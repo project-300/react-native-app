@@ -17,6 +17,7 @@ export default class SignUpForm extends Component<Props, State> {
 
 		this.state = {
 			username: '',
+			phoneNumber: '',
 			password: '',
 			hidePassword: true
 		};
@@ -30,6 +31,14 @@ export default class SignUpForm extends Component<Props, State> {
 					placeholderTextColor='black'
 					autoCapitalize='none'
 					onChangeText={ (username: string): void => this.setState({ username }) }
+					onFocus={ this.props.keyboardOpen }
+					style={ formStyles.input } />
+				<TextInput
+					placeholder={ 'PHONE NUMBER' }
+					placeholderTextColor='black'
+					autoCapitalize='none'
+					keyboardType={ 'phone-pad' }
+					onChangeText={ (phoneNumber: string): void => this.setState({ phoneNumber }) }
 					onFocus={ this.props.keyboardOpen }
 					style={ formStyles.input } />
 				<View>
@@ -58,7 +67,7 @@ export default class SignUpForm extends Component<Props, State> {
 				<TouchableOpacity
 					disabled={ !this.state.username || !this.state.password || this.props.isCreatingAccount }
 					style={ formStyles.largeButton }
-					onPress={ (): Promise<void | boolean> => this.props.signUp(this.state.username, this.state.password) }>
+					onPress={ (): Promise<void | boolean> => this.props.signUp(this.state.username, this.state.phoneNumber, this.state.password) }>
 					<Text style={ formStyles.buttonText }>SIGN UP</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
