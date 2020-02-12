@@ -9,5 +9,6 @@ export enum EditTypes {
 	FIRST_NAME = 'firstName',
 	LAST_NAME = 'lastName',
 	PASSWORD = 'password',
-	INTERESTS = 'interests'
+	INTERESTS = 'interests',
+	PHONE = 'phone'
 }

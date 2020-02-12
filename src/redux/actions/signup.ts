@@ -1,15 +1,14 @@
 import {
 	SIGNUP_REQUEST,
 	SIGNUP_SUCCESS,
-	SIGNUP_FAILURE, SIGNUP_CONFIRMATION_REQUIRED,
+	SIGNUP_FAILURE,
 } from '../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
-import HttpAPI from '../../api/http';
 import toastr from '../../helpers/toastr';
-import { SignupResult } from '../../types/http-responses';
 import { AppActions } from '../../types/redux-action-types';
 import { SignUpActionResponse } from '../../screens/signup/interfaces';
+import { MobileNumberWithExtension } from '@project-300/common-types';
 
 const signUpRequest = (): AppActions => ({ type: SIGNUP_REQUEST });
 
@@ -22,21 +21,15 @@ export const signUp = (email: string, phoneNumber: string, password: string):
 	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse | { ok: boolean }> => {
 		dispatch(signUpRequest());
 
-		const irishNumber: string = `+353${phoneNumber.substring(1)}`;
-
-		console.log(irishNumber);
-
 		try {
 			const authRes = await Auth.signUp({
 				username: email,
 				password,
 				attributes: {
 					email,
-					phone_number: irishNumber
+					phone_number: MobileNumberWithExtension(phoneNumber)
 				}
 			});
-
-			console.log(authRes);
 
 			dispatch(signUpSuccess());
 

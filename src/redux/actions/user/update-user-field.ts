@@ -5,6 +5,9 @@ import { LoginResult } from '../../../types/http-responses';
 import toastr from '../../../helpers/toastr';
 import { EditTypes } from '../../../types/common';
 import { UserService } from '../../../services/user';
+import { Auth } from 'aws-amplify';
+import { CognitoUser } from 'amazon-cognito-identity-js';
+import { MobileNumberWithExtension } from '@project-300/common-types/lib/functions/';
 
 export const updateRequest = (): AppActions => ({ type: UPDATE_USER_REQUEST });
 
@@ -17,6 +20,14 @@ export const updateUserField = (field: EditTypes, type: string, value: string): 
 		dispatch(updateRequest());
 
 		try {
+			if (field === EditTypes.PHONE) {
+				const user: CognitoUser = await Auth.currentAuthenticatedUser();
+
+				await Auth.updateUserAttributes(user, {
+					phone_number: MobileNumberWithExtension(value)
+				});
+			}
+
 			const apiRes: LoginResult = await UserService.updateUser({ [field]: value });
 
 			if (apiRes.success) {

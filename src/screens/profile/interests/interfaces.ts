@@ -12,7 +12,7 @@ export interface Styles {
 export interface Props {
 	type: string;
 	allInterests: string[];
-	currentInterests: string[];
+	currentInterests: string[] | undefined;
 	panelOpen: boolean;
 	isUpdating: boolean;
 	close(): void;

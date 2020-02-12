@@ -49,7 +49,8 @@ export const EditFields =  {
 	FIRST_NAME: { type: 'First Name', field: EditTypes.FIRST_NAME },
 	LAST_NAME: { type: 'Last Name', field: EditTypes.LAST_NAME },
 	PASSWORD: { type: 'Password', field: EditTypes.PASSWORD },
-	INTERESTS: { type: 'Interests', field: EditTypes.INTERESTS }
+	INTERESTS: { type: 'Interests', field: EditTypes.INTERESTS },
+	PHONE: { type: 'Phone Number', field: EditTypes.PHONE }
 };
 
 export class Profile extends Component<Props, State> {
@@ -388,6 +389,16 @@ export class Profile extends Component<Props, State> {
 					<Divider />
 
 					<TouchableOpacity
+						onPress={ (): void => { this.openForm(EditTypes.PHONE); } }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.PHONE.type }</Text>
+						<Text style={ styles.editText }>{ user.phone }</Text>
+					</TouchableOpacity>
+
+					<Divider />
+
+					<TouchableOpacity
 						onPress={ (): void => { this.openForm(EditTypes.PASSWORD); } }
 						style={ styles.editRow }
 					>
@@ -463,6 +474,17 @@ export class Profile extends Component<Props, State> {
 								field={ EditFields.LAST_NAME.field }
 								close={ this.closeForm }
 								value={ user.lastName } />
+					}
+
+					{
+						this.state.editType === EditTypes.PHONE &&
+							<UpdateUserField
+								updateUserField={ this.props.updateUserField }
+								isUpdating={ this.props.isUpdating }
+								type={ EditFields.PHONE.type }
+								field={ EditFields.PHONE.field }
+								close={ this.closeForm }
+								value={ user.phone } />
 					}
 
 					{
