@@ -3,13 +3,13 @@ import { Provider as StoreProvider } from 'react-redux';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
 import { isStoreLoggedIn } from './auth';
-import { AWS_COGNITO_CONFIG } from '../environment/env';
+import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
 import { Theme } from './constants/theme';
 
-Amplify.configure(AWS_COGNITO_CONFIG);
+Amplify.configure(AWS_CONFIG);
 
 interface Props { }
 interface State {

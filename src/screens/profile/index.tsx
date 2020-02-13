@@ -49,7 +49,8 @@ export const EditFields =  {
 	FIRST_NAME: { type: 'First Name', field: EditTypes.FIRST_NAME },
 	LAST_NAME: { type: 'Last Name', field: EditTypes.LAST_NAME },
 	PASSWORD: { type: 'Password', field: EditTypes.PASSWORD },
-	INTERESTS: { type: 'Interests', field: EditTypes.INTERESTS }
+	INTERESTS: { type: 'Interests', field: EditTypes.INTERESTS },
+	PHONE: { type: 'Phone Number', field: EditTypes.PHONE }
 };
 
 export class Profile extends Component<Props, State> {
@@ -61,16 +62,17 @@ export class Profile extends Component<Props, State> {
 	};
 
 	private animatedStyles: AnimationStyles = {
-		panelHeight: new Animated.Node({ }),
-		editIconOpacity: new Animated.Node({ }),
-		editImageOpacity: new Animated.Node({ }),
-		editFieldsHeight: new Animated.Node({ }),
-		panelLeftX: new Animated.Node({ }),
-		panelRightX: new Animated.Node({ }),
-		panelOpacity: new Animated.Node({ })
+		panelHeight: 0,
+		editIconOpacity: 0,
+		editImageOpacity: 0,
+		editFieldsHeight: 0,
+		panelLeftX: 0,
+		panelRightX: 0,
+		panelOpacity: 0
 	};
 
 	private initialState: State = {
+		isOtherUser: true,
 		editType: null,
 		editing: false,
 		readyToEdit: false,
@@ -84,13 +86,17 @@ export class Profile extends Component<Props, State> {
 	}
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
+		const uId: string = this.props.navigation.getParam('userId');
+
+		this.setState({ isOtherUser: !!uId });
+
 		this._setupAnimations();
-		await this.props.getUserProfile(await userId() as string);
+		await this.props.getUserProfile(uId || await userId() as string);
 		await this.props.getInterestsList();
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
-		// this.props.userProfileUnsub();
+		this._setHeaderTitle(false);
 		this.setState(this.initialState); // Reset the state of the component for next mount
 	}
 
@@ -209,13 +215,16 @@ export class Profile extends Component<Props, State> {
 			<View style={ [ styles.sectionContainer ] }>
 				<Title style={ { marginBottom: 20 } }>Interests</Title>
 
-				<IconButton
-					icon={ user.interests && user.interests.length ? 'pencil' : 'plus' }
-					onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
-					color='black'
-					size={ 26 }
-					style={ { position: 'absolute', top: 8, right: 6 } }
-				/>
+				{
+					!this.state.isOtherUser &&
+						<IconButton
+							icon={ user.interests && user.interests.length ? 'pencil' : 'plus' }
+							onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
+							color='black'
+							size={ 26 }
+							style={ { position: 'absolute', top: 8, right: 6 } }
+						/>
+				}
 
 				<View>
 					<View style={ {
@@ -237,7 +246,7 @@ export class Profile extends Component<Props, State> {
 					</View>
 
 					{
-						!user.interests.length &&
+						!user.interests || !user.interests.length &&
 							<View>
 								<Text>
 									You currently don't have any interests selected
@@ -313,7 +322,7 @@ export class Profile extends Component<Props, State> {
 							solid
 						/>
 					</View>
-					<Text style={ styles.username }>{ user.username }</Text>
+
 					<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
 
 					<Divider />
@@ -360,16 +369,6 @@ export class Profile extends Component<Props, State> {
 				] }>
 				<View style={ styles.sectionContainer }>
 					<TouchableOpacity
-						onPress={ (): void => { this.openForm(EditTypes.EMAIL); } }
-						style={ styles.editRow }
-					>
-						<Text style={ styles.label }>{ EditFields.EMAIL.type }</Text>
-						<Text style={ styles.editText }>{ user.email }</Text>
-					</TouchableOpacity>
-
-					<Divider />
-
-					<TouchableOpacity
 						onPress={ (): void => { this.openForm(EditTypes.FIRST_NAME); } }
 						style={ styles.editRow }
 					>
@@ -385,6 +384,16 @@ export class Profile extends Component<Props, State> {
 					>
 						<Text style={ styles.label }>{ EditFields.LAST_NAME.type }</Text>
 						<Text style={ styles.editText }>{ user.lastName || 'Add my last name' }</Text>
+					</TouchableOpacity>
+
+					<Divider />
+
+					<TouchableOpacity
+						onPress={ (): void => { this.openForm(EditTypes.PHONE); } }
+						style={ styles.editRow }
+					>
+						<Text style={ styles.label }>{ EditFields.PHONE.type }</Text>
+						<Text style={ styles.editText }>{ user.phone }</Text>
 					</TouchableOpacity>
 
 					<Divider />
@@ -423,36 +432,28 @@ export class Profile extends Component<Props, State> {
 
 					<View style={ styles.outerColumnContainer }>
 						{ this._renderViewColumn(user) }
-						{ this._renderEditColumn(user) }
+						{ !this.state.isOtherUser && this._renderEditColumn(user) }
 					</View>
 				</ScrollView>
 
-				<FAB
-					style={ styles.fab }
-					icon={
-						this.state.editing ?
-							'check-outline' :
-							'pencil-outline'
-					}
-					onPress={ this._handleEditFabPress }
-				/>
+				{
+					!this.state.isOtherUser &&
+						<FAB
+							style={ styles.fab }
+							icon={
+								this.state.editing ?
+									'check-outline' :
+									'pencil-outline'
+							}
+							onPress={ this._handleEditFabPress }
+						/>
+				}
 
 				<Animated.View
 					style={ [
 						styles.panel,
 						AnimatedStyles.height(this.animatedStyles.panelHeight)
 					] }>
-					{
-						this.state.editType === EditTypes.EMAIL &&
-							<UpdateUserField
-								updateUserField={ this.props.updateUserField }
-								isUpdating={ this.props.isUpdating }
-								type={ EditFields.EMAIL.type }
-								field={ EditFields.EMAIL.field }
-								close={ this.closeForm }
-								value={ user.email } />
-					}
-
 					{
 						this.state.editType === EditTypes.FIRST_NAME &&
 							<UpdateUserField
@@ -473,6 +474,17 @@ export class Profile extends Component<Props, State> {
 								field={ EditFields.LAST_NAME.field }
 								close={ this.closeForm }
 								value={ user.lastName } />
+					}
+
+					{
+						this.state.editType === EditTypes.PHONE &&
+							<UpdateUserField
+								updateUserField={ this.props.updateUserField }
+								isUpdating={ this.props.isUpdating }
+								type={ EditFields.PHONE.type }
+								field={ EditFields.PHONE.field }
+								close={ this.closeForm }
+								value={ user.phone } />
 					}
 
 					{

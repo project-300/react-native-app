@@ -18,7 +18,6 @@ export default class ConfirmationForm extends Component<Props, State> {
 
 		const {
 			username,
-			email,
 			userId,
 			isSignUp,
 			codeDeliveryDetails
@@ -28,7 +27,6 @@ export default class ConfirmationForm extends Component<Props, State> {
 			code: '',
 			confirmationText: '',
 			username,
-			email,
 			codeDeliveryDetails,
 			userId,
 			isSignUp
@@ -40,12 +38,12 @@ export default class ConfirmationForm extends Component<Props, State> {
 	}
 
 	private _setConfirmationText = (): void => {
-		const { email, codeDeliveryDetails } = this.state;
+		const { username, codeDeliveryDetails } = this.state;
 		const { DeliveryMedium } = codeDeliveryDetails;
 
 		if (DeliveryMedium === EMAIL)
 			this.setState({
-				confirmationText: `A confirmation code has been sent to ${ email }. Please enter it here to complete your signup.`
+				confirmationText: `A confirmation code has been sent to ${ username }. Please enter it here to complete your signup.`
 			});
 		if (DeliveryMedium === PHONE)
 			this.setState({
@@ -59,8 +57,10 @@ export default class ConfirmationForm extends Component<Props, State> {
 		if (!code) return toastr.error('Confirmation Code is missing');
 
 		const res = await this.props.confirmAccount(userId, code, isSignUp, username);
-		if (res && isSignUp) this.props.navigation.navigate('Login');
-		else if (res) this.props.navigation.navigate('Profile');
+		if (res) this.props.navigation.navigate('Profile');
+		else {
+			toastr.error('Confirmation Code is incorrect');
+		}
 	}
 
 	public render(): ReactElement {

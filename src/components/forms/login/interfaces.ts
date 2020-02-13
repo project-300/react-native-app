@@ -10,7 +10,7 @@ export interface Props extends CommonProps {
 }
 
 export interface State {
-	username: string;
+	email: string;
 	password: string;
 	hidePassword: boolean;
 }

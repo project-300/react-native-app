@@ -24,9 +24,8 @@ export class UpdateUserField extends Component<Props, State> {
 		const { value } = this.state;
 		const { type, field } = this.props;
 
-		if (field === EditTypes.EMAIL) {
-			const email = value.toLowerCase();
-			if (!EmailValidator.validate(email)) return toastr.error('Invalid Email Address');
+		if (field === EditTypes.PHONE) {
+			if (!new RegExp('08[35679]\\d{7}$').test(value)) return toastr.error('Phone number is not a valid Irish number');
 		}
 
 		const res: boolean = await this.props.updateUserField(field, type, value);

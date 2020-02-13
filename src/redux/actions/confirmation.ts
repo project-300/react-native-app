@@ -24,16 +24,9 @@ export const confirmAccount = (userId: string, code: string, isSignUp: boolean, 
 			if (isSignUp && username) await Auth.confirmSignUp(username, code);
 			else await Auth.verifyCurrentUserAttributeSubmit('email', code);
 
-			const apiRes: ConfirmationResult = await HttpAPI.confirmAccount({ userId });
+			dispatch(signUpConfirmationSuccess());
 
-			if (apiRes.success) {
-				dispatch(signUpConfirmationSuccess());
-				return true;
-			}
-
-			if (apiRes.error) throw Error(apiRes.error.description);
-
-			return false;
+			return true;
 		} catch (err) {
 			dispatch(signUpConfirmationFailure());
 			toastr.error(err.message || err.description);

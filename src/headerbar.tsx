@@ -19,7 +19,7 @@ interface Props extends CommonProps {
 
 interface State {
 	optionsVisible: boolean;
-	driverView: boolean;
+	driverUpgradeAvailable: boolean;
 }
 
 export interface CustomOption {
@@ -34,7 +34,7 @@ export default class HeaderBar extends Component<Props, State> {
 
 		this.state = {
 			optionsVisible: false,
-			driverView: false
+			driverUpgradeAvailable: false
 		};
 	}
 
@@ -62,7 +62,7 @@ export default class HeaderBar extends Component<Props, State> {
 	public componentDidMount = async (): Promise<void> => {
 		const uType: string = await userType() as string;
 
-		this.setState({ driverView: uType === 'Driver' });
+		this.setState({ driverUpgradeAvailable: uType === 'Passenger' }); // Only allow passenger to upgrade
 	}
 
 	public render(): React.ReactElement {
@@ -78,8 +78,6 @@ export default class HeaderBar extends Component<Props, State> {
 					subtitle={ this.props.subtitle }
 				/>
 
-				{ /*<Appbar.Action icon="magnify" onPress={ this._handleSearch } />*/ }
-
 				{
 					this.props.options && this.props.options.display &&
 						<Menu
@@ -87,13 +85,18 @@ export default class HeaderBar extends Component<Props, State> {
 							onDismiss={ this._closeMenu }
 							anchor={ <Appbar.Action icon='dots-vertical' onPress={ this._openMenu } color='white' /> }
 						>
-							{ this.props.options.becomeDriver && !this.state.driverView && <Menu.Item onPress={ this._becomeDriver } title='Become a Driver' /> }
+							{
+								this.props.options.becomeDriver && this.state.driverUpgradeAvailable &&
+									<Menu.Item onPress={ this._becomeDriver } title='Become a Driver' />
+							}
 
 							{ this.props.options.settings && <Menu.Item onPress={ this._settings } title='Settings' /> }
 
 							{
 								this.props.customOptions &&
-									this.props.customOptions.map((op: CustomOption) => <Menu.Item onPress={ op.action } title={ op.title } />)
+									this.props.customOptions.map(
+										(op: CustomOption) => <Menu.Item onPress={ op.action } title={ op.title } />
+									)
 							}
 
 							{
