@@ -21,4 +21,6 @@ export interface Props extends CommonProps {
 	updateAddUserJourney(journey: Journey): Promise<boolean>;
 }
 
-export interface State { }
+export interface State {
+	searchText: string;
+}
