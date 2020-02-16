@@ -18,6 +18,7 @@ export interface Props extends CommonProps {
 	journeys: Journey[];
 	isFetching: boolean;
 	getAllJourneys(): Promise<boolean>;
+	searchJourneys(query: string): Promise<boolean>;
 	updateAddUserJourney(journey: Journey): Promise<boolean>;
 }
 

@@ -10,12 +10,13 @@ import {
 import HttpAPI from '../../api/http';
 import { Dispatch } from 'redux';
 import {
-	GetAllJourneysResult,
+	GetAllJourneysResult, HttpResponse,
 	UpdateAddUserJourneyResult
 } from '../../types/http-responses';
 import toastr from '../../helpers/toastr';
 import { Journey } from '@project-300/common-types';
 import { Auth } from 'aws-amplify';
+import { JourneyService } from '../../services/journey';
 
 const getAllJourneysRequest = (): AppActions => ({
 	type: GET_ALL_JOURNEYS_REQUEST
@@ -47,9 +48,7 @@ export const updateAddUserJourney = (journeyId: string): ((dispatch: Dispatch) =
 		dispatch(updateUserJoinsJourneyRequest());
 
 		try {
-			const user = await Auth.currentAuthenticatedUser();
-			const userId: string = user.attributes.sub;
-			const apiRes: UpdateAddUserJourneyResult = await HttpAPI.updateUserJoinsJourney({ userId, journeyId });
+			const apiRes: UpdateAddUserJourneyResult = await JourneyService.addUserToJourney(journeyId);
 
 			if (apiRes.success) {
 				dispatch(updateUserJoinsJourneySuccess());
@@ -72,9 +71,32 @@ export const getAllJourneys = (): ((dispatch: Dispatch) => Promise<boolean>) => 
 		dispatch(getAllJourneysRequest());
 
 		try {
-			const user = await Auth.currentAuthenticatedUser();
-			const userId: string = user.attributes.sub;
-			const apiRes: GetAllJourneysResult = await HttpAPI.getAllJourneys(userId);
+			const apiRes: GetAllJourneysResult = await JourneyService.getAllJourneys();
+
+			console.log(apiRes);
+
+			if (apiRes.success && apiRes.journeys) {
+				dispatch(getAllJourneysSuccess(apiRes.journeys));
+				return true;
+			}
+
+			return false;
+		} catch (err) {
+			dispatch(getAllJourneysFailure());
+			toastr.error(err.message || err.description || 'Unknown Error');
+			return false;
+		}
+	};
+};
+
+export const searchJourneys = (query: string): ((dispatch: Dispatch) => Promise<boolean>) => {
+	return async (dispatch: Dispatch): Promise<boolean> => {
+		dispatch(getAllJourneysRequest());
+
+		try {
+			const apiRes: GetAllJourneysResult = await JourneyService.searchJourneys(query);
+
+			console.log(apiRes);
 
 			if (apiRes.success && apiRes.journeys) {
 				dispatch(getAllJourneysSuccess(apiRes.journeys));
