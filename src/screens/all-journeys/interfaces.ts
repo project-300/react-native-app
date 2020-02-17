@@ -1,6 +1,7 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
-import { Journey } from '@project-300/common-types';
+import { Journey, LastEvaluatedKey } from '@project-300/common-types';
+import { AppActions } from '../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -16,9 +17,14 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	journeys: Journey[];
+	lastEvaluatedKey?: LastEvaluatedKey;
 	isFetching: boolean;
-	getAllJourneys(): Promise<boolean>;
-	searchJourneys(query: string): Promise<boolean>;
+	isSearching: boolean;
+	showingSearchResults: boolean;
+	isFullList: boolean;
+	getAllJourneys(isFirstCall: boolean, lastEvaluatedKey?: LastEvaluatedKey): Promise<boolean>;
+	clearJourneys(): AppActions;
+	searchJourneys(query: string, isFirstCall: boolean, lastEvaluatedKey?: LastEvaluatedKey): Promise<boolean>;
 	updateAddUserJourney(journey: Journey): Promise<boolean>;
 }
 

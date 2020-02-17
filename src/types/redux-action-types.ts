@@ -78,7 +78,7 @@ import {
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, User
+	GooglePlace, User, LastEvaluatedKey
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -101,6 +101,8 @@ export interface GetAllJourneysRequest {
 export interface GetAllJourneysSuccess {
 	type: typeof GET_ALL_JOURNEYS_SUCCESS;
 	journeys: Journey[];
+	lastEvaluatedKey: LastEvaluatedKey;
+	isFirstCall: boolean;
 }
 
 export interface GetAllJourneysFailure {

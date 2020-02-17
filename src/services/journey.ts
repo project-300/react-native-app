@@ -1,12 +1,21 @@
-import { ApiName } from './../../environment/env';
+import { ApiName } from '../../environment/env';
 import { API } from 'aws-amplify';
-import { Journey } from '@project-300/common-types';
+import { Journey, LastEvaluatedKey } from '@project-300/common-types';
+import { GetAllJourneysResult } from '../types/http-responses';
 
 export class JourneyService {
 
-	public static getAllJourneys = async (): Promise<Journey[]> => API.get(ApiName, '/journeys', '').catch(JourneyService.handleError);
+	public static getAllJourneys = async (lastEvaluatedKey?: LastEvaluatedKey): Promise<GetAllJourneysResult> => {
+		let url: string = `/journeys`;
+		if (lastEvaluatedKey) url = `${url}?pk=${lastEvaluatedKey.pk}&sk=${lastEvaluatedKey.sk}`;
+		return API.get(ApiName, url, '').catch(JourneyService.handleError);
+	}
 
-	public static searchJourneys = async (query: string): Promise<Journey[]> => API.get(ApiName, `/journeys/search/${query}`, '').catch(JourneyService.handleError);
+	public static searchJourneys = async (query: string, lastEvaluatedKey?: { pk: string; sk: string }): Promise<GetAllJourneysResult> => {
+		let url: string = `/journeys/search/${query}`;
+		if (lastEvaluatedKey) url = `${url}?pk=${lastEvaluatedKey.pk}&sk=${lastEvaluatedKey.sk}`;
+		return API.get(ApiName, url, '').catch(JourneyService.handleError);
+	}
 
 	public static getJourneyById = async (journeyId: string): Promise<Journey> => API.get(ApiName, `/journeys/${journeyId}`, '').catch(JourneyService.handleError);
 

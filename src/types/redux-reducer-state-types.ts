@@ -1,4 +1,4 @@
-import { Coords, GooglePlaceDetails, Journey, User } from '@project-300/common-types';
+import { Coords, GooglePlaceDetails, Journey, LastEvaluatedKey, User } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
@@ -7,8 +7,12 @@ export interface UpdateAddUserJourneyState {
 }
 
 export interface AllJourneysListState {
+	isFullList: boolean;
 	isFetching: boolean;
+	isSearching: boolean;
+	showingSearchResults: boolean;
 	journeys: Journey[];
+	lastEvaluatedKey?: LastEvaluatedKey;
 }
 
 export interface LoginState {
