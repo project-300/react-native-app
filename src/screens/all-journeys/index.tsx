@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { ScrollView, FlatList, View, TouchableWithoutFeedback, NativeScrollEvent } from 'react-native';
+import { ScrollView, FlatList, View, NativeScrollEvent, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
@@ -7,13 +7,13 @@ import { AppState } from '../../store';
 import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import { Journey } from '@project-300/common-types';
 import { getAllJourneys, searchJourneys, clearJourneys } from '../../redux/actions';
-import Spinner from 'react-native-loading-spinner-overlay';
 import DatesTimes from '../../services/dates-times';
-import { ActivityIndicator, Avatar, Card, Searchbar, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Divider, Text, TextInput, Card } from 'react-native-paper';
 import { NavigationEvents } from 'react-navigation';
 import _ from 'lodash';
 import { Theme } from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { GoogleMapsAPIKey } from '../../../environment/env';
 
 class AllJourneys extends Component<Props, State> {
 
@@ -28,53 +28,84 @@ class AllJourneys extends Component<Props, State> {
 	};
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
-		await this.props.getAllJourneys(true, this.props.lastEvaluatedKey);
+		await this.props.getAllJourneys(true);
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
 		this.setState(this.initialState); // Reset the state of the component for next mount
 	}
 
-	// public async componentDidMount(): Promise<void> {
-	// 	await this.props.getAllJourneys(this.props.lastEvaluatedKey);
-	// }
+	private _priceFormat = (price: number): string => {
+		return price % 1 === 0 ? price.toString() : price.toFixed(2).toString();
+	}
+
+	private _getPriceFontSize = (price: number): number => {
+		const length: number = this._priceFormat(price).length;
+		if (length <= 2) return 18;
+		return 14;
+	}
 
 	private _renderRow = ({ item, index }: { item: Journey; index: number }): ReactElement => {
 		const journey: Journey = item;
 
 		return (
-			<Card onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', journey) }>
-				<Card.Title
-					title={ `${journey.origin.name} - ${journey.destination.name}` }
-					subtitle={ `${ DatesTimes.hoursMinutes(journey.times.leavingAt) } on ${ DatesTimes.readableDate(journey.times.leavingAt) }` }
-					left={ (props) => <Avatar.Icon { ...props } icon='map-marker' /> }
-				/>
-				<Card.Cover source={ { uri: 'https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=800x200&key=AIzaSyB76C0HSXw5v52cyaP-nToaJOtBSi2T_bM' } } />
-				<Card.Content style={ { paddingTop: 20 } }>
-					<Text>{ journey.times.createdAt }</Text>
-					<TouchableWithoutFeedback onPress={ (): boolean => this.props.navigation.navigate('OtherProfile', { userId: journey.driver.userId }) }>
-						<Text style={ styles.textRow }>
-							Driver Name: <Text style={ styles.bold }> { journey.driver.firstName } { journey.driver.lastName }</Text>
+			<View>
+				<TouchableOpacity
+					style={ { padding: 20, backgroundColor: 'white' } }
+					onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', journey) }
+				>
+					<View>
+						<Text style={ { fontSize: 22 } }>
+							{ journey.origin.name } - { journey.destination.name }
 						</Text>
-					</TouchableWithoutFeedback>
 
-					<Text style={ styles.textRow }>
-							There are <Text style={ styles.bold }>{ journey.seatsLeft }
-						</Text> / <Text style={ styles.bold }>
-							{ journey.totalNoOfSeats }
-						</Text> seats left
-					</Text>
+						<Text style={ { fontSize: 14, color: '#555' } }>
+							{ journey.seatsLeft } seats left
+						</Text>
+					</View>
 
-					<Text style={ styles.textRow }>
-						<Text style={ styles.bold }> €{ journey.pricePerSeat }</Text> euro per seat
-					</Text>
-				</Card.Content>
-				{/*<Card.Actions>*/}
-				{/*	<Button*/}
-				{/*		onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', journey) }*/}
-				{/*	>View</Button>*/}
-				{/*</Card.Actions>*/}
-			</Card>
+					<View style={ { paddingTop: 20 } }>
+						<Text>
+							{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
+						</Text>
+						<Text>
+							{ DatesTimes.readableDate(journey.times.leavingAt) }
+						</Text>
+
+						<View
+							style={ {
+								backgroundColor: Theme.accent,
+								padding: 5,
+								width: 64,
+								height: 64,
+								borderRadius: 32,
+								alignItems: 'center',
+								justifyContent: 'center',
+								position: 'absolute',
+								right: 0,
+								bottom: 0,
+								shadowOffset: {
+									width: 0,
+									height: 4
+								},
+								shadowOpacity: 0.4,
+								shadowRadius: 6,
+								elevation: 12
+							} }
+						>
+							<Text style={ {
+								color: '#333',
+								fontWeight: 'bold',
+								fontSize: journey.pricePerSeat ? this._getPriceFontSize(journey.pricePerSeat) : 16
+							} }>
+								{ journey.pricePerSeat ? `€${ this._priceFormat(journey.pricePerSeat) }` : 'Free' }
+							</Text>
+						</View>
+					</View>
+				</TouchableOpacity>
+
+				<Divider />
+			</View>
 		);
 	}
 
@@ -88,8 +119,11 @@ class AllJourneys extends Component<Props, State> {
 	}
 
 	private _scrollResultsEvent = async ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): Promise<void> => {
-		console.log('searching ', this.props.showingSearchResults);
-		if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 20 && !this.props.isFullList) { // Only query when list isn't full
+		if (
+			layoutMeasurement.height + contentOffset.y >= contentSize.height - 20
+			&& !this.props.isFetching
+			&& !this.props.isFullList // Only query when list isn't full
+		) {
 			this.props.showingSearchResults ?
 				await this.props.searchJourneys(this.state.searchText, false, this.props.lastEvaluatedKey) :
 				await this.props.getAllJourneys(false, this.props.lastEvaluatedKey);
@@ -107,15 +141,16 @@ class AllJourneys extends Component<Props, State> {
 				<View>
 					<TextInput
 						mode='outlined'
-						placeholder='Search'
+						placeholder='Quick Search'
 						onChangeText={ async (query: string): Promise<void> => {
-							await this.setState({ searchText: query });
+							await this.setState({ searchText: query.trim() });
 							this._searchJourneys();
 						}}
-						style={ { margin: 10 } }
+						style={ { margin: 10, backgroundColor: 'white' } }
 					/>
-					<Text>Last Key: { this.props.lastEvaluatedKey && this.props.lastEvaluatedKey.pk }</Text>
-					<Text>{ this.props.journeys.length } Journeys</Text>
+
+					{/*<Text>Last Key: { this.props.lastEvaluatedKey && this.props.lastEvaluatedKey.pk }</Text>*/}
+					{/*<Text>{ this.props.journeys.length } Journeys</Text>*/}
 
 					{
 						this.props.isSearching ?
@@ -128,7 +163,7 @@ class AllJourneys extends Component<Props, State> {
 							<Icon
 								name='search'
 								size={ 22 }
-								color='black'
+								color={ Theme.primary }
 								style={ { position: 'absolute', right: 25, top: 35 } }
 							/>
 					}
@@ -147,6 +182,26 @@ class AllJourneys extends Component<Props, State> {
 							<View style={ { alignItems: 'center' } }>
 								<Text style={ { fontWeight: 'bold', fontSize: 20, marginTop: 20 } }>No lifts available</Text>
 							</View>
+					}
+
+					{
+						!this.props.isFetching && !this.props.isFullList &&
+							<Icon
+								name='redo-alt'
+								size={ 34 }
+								color={ Theme.primary }
+								style={ { alignSelf: 'center', margin: 10 } }
+							/>
+					}
+
+					{
+						this.props.isFetching &&
+							<ActivityIndicator
+								animating={ true }
+								color={ Theme.primary }
+								size={ 34 }
+								style={ { margin: 10 } }
+							/>
 					}
 				</ScrollView>
 			</View>

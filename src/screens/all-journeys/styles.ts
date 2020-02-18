@@ -4,7 +4,7 @@ import { Styles } from './interfaces';
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#CCC'
+		backgroundColor: '#EEE'
 	},
 
 	button: {

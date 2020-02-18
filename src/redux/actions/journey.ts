@@ -63,12 +63,12 @@ export const clearJourneys = (): AppActions => ({
 	type: CLEAR_ALL_JOURNEYS
 });
 
-export const updateAddUserJourney = (journeyId: string): ((dispatch: Dispatch) => Promise<boolean>) => {
+export const updateAddUserJourney = (journeyId: string, createdAt: string): ((dispatch: Dispatch) => Promise<boolean>) => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(updateUserJoinsJourneyRequest());
 
 		try {
-			const apiRes: UpdateAddUserJourneyResult = await JourneyService.addUserToJourney(journeyId);
+			const apiRes: UpdateAddUserJourneyResult = await JourneyService.addUserToJourney(journeyId, createdAt);
 
 			if (apiRes.success) {
 				dispatch(updateUserJoinsJourneySuccess());
