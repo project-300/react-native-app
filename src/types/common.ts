@@ -2,6 +2,7 @@ import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-n
 
 export interface CommonProps {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+	DARK_MODE?: boolean;
 }
 
 export enum EditTypes {

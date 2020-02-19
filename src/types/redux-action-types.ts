@@ -71,7 +71,13 @@ import {
 	UPDATE_INTERESTS_REQUEST,
 	UPDATE_INTERESTS_FAILURE,
 	UPDATE_USER_REQUEST,
-	UPDATE_USER_SUCCESS, UPDATE_USER_FAILURE, UPLOAD_AVATAR_REQUEST, UPLOAD_AVATAR_SUCCESS, UPLOAD_AVATAR_FAILURE
+	UPDATE_USER_SUCCESS,
+	UPDATE_USER_FAILURE,
+	UPLOAD_AVATAR_REQUEST,
+	UPLOAD_AVATAR_SUCCESS,
+	UPLOAD_AVATAR_FAILURE,
+	TURN_ON_DARK_MODE,
+	TURN_OFF_DARK_MODE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -81,6 +87,14 @@ import {
 	GooglePlace, User, LastEvaluatedKey
 } from '@project-300/common-types';
 import { EditTypes } from './common';
+
+export interface DarkModeOn {
+	type: typeof TURN_ON_DARK_MODE;
+}
+
+export interface DarkModeOff {
+	type: typeof TURN_OFF_DARK_MODE;
+}
 
 export interface UpdateAddUserJourneyRequest {
 	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
@@ -418,6 +432,10 @@ export interface UpdateAvatarFailure {
 	type: typeof UPLOAD_AVATAR_FAILURE;
 }
 
+export type DarkModeActionTypes =
+	DarkModeOn |
+	DarkModeOff;
+
 export type JourneyActionTypes =
 	GetAllJourneysRequest |
 	GetAllJourneysSuccess |
@@ -554,6 +572,7 @@ export type CreateNewJourneyActionTypes =
 	CreateJourneyFindRouteActionTypes;
 
 export type AppActions =
+	DarkModeActionTypes |
 	LoginActionTypes |
 	SignUpActionTypes |
 	UserProfileActionTypes |

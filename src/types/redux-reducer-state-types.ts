@@ -2,6 +2,10 @@ import { Coords, GooglePlaceDetails, Journey, LastEvaluatedKey, User } from '@pr
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
+export interface DarkModeState {
+	DARK_MODE: boolean;
+}
+
 export interface UpdateAddUserJourneyState {
 	isAdding: boolean;
 }
