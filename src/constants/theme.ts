@@ -1,21 +1,17 @@
-// export const Theme = {
-// 	primary: '#3700B3',
-// 	accent: '#03DAC5'
-// };
-
 import { AsyncStorage } from 'react-native';
-import { AUTH_KEY } from './storage-keys';
 import { setDarkMode } from '../redux/actions';
 import { store } from '../store';
 
 export const Theme = {
 	primary: 'white',
-	accent: '#3700B3'
+	accent: '#00BCD4',
+	text: 'black'
 };
 
 export const DarkTheme = {
 	primary: 'black',
-	accent: 'white'
+	accent: 'white',
+	text: 'white'
 };
 
 export const Colours = {
@@ -33,8 +29,9 @@ export const Colours = {
 	The colours are also imported in other components to style certain elements not supplied by react-native-paper.
 */
 
-export const ToggleDarkMode = async (turnOn: boolean): Promise<void> => {
-	if (turnOn) await AsyncStorage.setItem('darkMode', 'true');
+export const ToggleDarkMode = async (): Promise<void> => {
+	const isDarkMode: boolean = await IsDarkMode();
+	if (!isDarkMode) await AsyncStorage.setItem('darkMode', 'true');
 	else await AsyncStorage.removeItem('darkMode');
 
 	store.dispatch(setDarkMode());

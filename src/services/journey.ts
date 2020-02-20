@@ -25,7 +25,7 @@ export class JourneyService {
 
 	public static deleteJourney = async (): Promise<void> => API.del(ApiName, '/journeys', '').catch(JourneyService.handleError);
 
-	public static addUserToJourney = async (journeyId: string, createdAt: string): Promise<void> => API.put(ApiName, '/journeys/add-user', { body: { journeyId, createdAt }}).catch(JourneyService.handleError);
+	public static addUserToJourney = async (journeyId: string, createdAt: string): Promise<void> => API.put(ApiName, '/journeys/add-user', { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
 
 	public static getDriverJourneys = async (userId: string): Promise<Journey[]> => API.get(ApiName, `/journeys/driver/${userId}`, '').catch(JourneyService.handleError);
 
@@ -35,8 +35,8 @@ export class JourneyService {
 
 	public static endJourney = async (journeyId: string): Promise<void> => API.put(ApiName, `/journeys/end/${journeyId}`, '').catch(JourneyService.handleError);
 
-	public static cancelPassengerAcceptedJourney = async (journeyId: string): Promise<void> =>
-		API.put(ApiName, `/journeys/passenger-cancel/${journeyId}`, '').catch(JourneyService.handleError);
+	public static cancelPassengerAcceptedJourney = async (journeyId: string, createdAt: string): Promise<void> =>
+		API.put(ApiName, `/journeys/passenger-cancel`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
 
 	private static handleError = (error: any): void => {
 		if (!error.response || !error.response.data || !error.response.data) throw { message: 'Unknown Error' };

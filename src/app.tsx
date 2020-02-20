@@ -7,7 +7,7 @@ import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
-import { Theme, DarkTheme } from './constants/theme';
+import { Theme, DarkTheme as Test } from './constants/theme';
 import { setDarkMode } from './redux/actions';
 
 Amplify.configure(AWS_CONFIG);
@@ -53,7 +53,7 @@ export default class App extends Component<Props, State> {
 			...DefaultTheme,
 			colors: store.getState().darkModeReducer.DARK_MODE ? {
 				...DefaultTheme.colors,
-				...DarkTheme
+				...Test
 			} : {
 				...DefaultTheme.colors,
 				...Theme

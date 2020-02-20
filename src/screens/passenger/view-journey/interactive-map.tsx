@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
@@ -7,9 +7,7 @@ import { AppState } from '../../../store';
 import { Coords, Journey, Place } from '@project-300/common-types';
 import { Container } from 'native-base';
 import { AllJourneysListState } from '../../../types/redux-reducer-state-types';
-import { updateAddUserJourney } from '../../../redux/actions';
 import Spinner from 'react-native-loading-spinner-overlay';
-import ExternalApi from '../../../api/external-api';
 import { getDistance } from 'geolib';
 import MapView, {
 	Marker,
@@ -18,7 +16,7 @@ import MapView, {
 	Region,
 } from 'react-native-maps';
 
-export class ViewJourney extends Component<Props, State> {
+export class InteractiveMap extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
@@ -39,15 +37,7 @@ export class ViewJourney extends Component<Props, State> {
 	}
 
 	public componentDidMount = async (): Promise<void> => {
-		const { origin, destination } = this.state.journey;
-		this.setState({
-			route: await ExternalApi.GoogleDirectionsRoute(
-			{ longitude: origin.longitude, latitude: origin.latitude },
-			{ longitude: destination.longitude, latitude: destination.latitude }
-			)
-		});
-
-		this._setMidpoint();
+		await this._setMidpoint();
 		this._zoomToMidpoint();
 	}
 
@@ -63,17 +53,10 @@ export class ViewJourney extends Component<Props, State> {
 			pinColor={ color || 'red' }
 		/>
 
-	private _addPassengerToJourney = async (journeyId: string): Promise<void> => {
-		await this.props.updateAddUserJourney(journeyId);
-		this.props.navigation.navigate('Home');
-	}
-
-	private _setMidpoint = (): void => {
+	private _setMidpoint = async (): Promise<void> => {
 		const { origin, destination } = this.state.journey as Journey;
 
-		console.log(origin, destination);
-
-		this.setState({
+		await this.setState({
 			midpoint: {
 				latitude: (origin.latitude + destination.latitude) / 2,
 				longitude: (origin.longitude + destination.longitude) / 2,
@@ -86,6 +69,8 @@ export class ViewJourney extends Component<Props, State> {
 	private _zoomToMidpoint = (): void => {
 		const journey: Journey = this.state.journey as Journey;
 		const { origin, destination } = journey;
+
+		console.log(journey);
 
 		const distance = getDistance(
 			{ latitude: origin.latitude, longitude: origin.longitude },
@@ -101,12 +86,6 @@ export class ViewJourney extends Component<Props, State> {
 				Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
 			)
 		);
-
-		console.log({midpoint: {
-				...this.state.midpoint as Coords,
-				latitudeDelta,
-				longitudeDelta
-			}});
 
 		this.setState({
 			midpoint: {
@@ -133,20 +112,11 @@ export class ViewJourney extends Component<Props, State> {
 						{ journey && this._createMarker(journey.destination) }
 
 						<Polyline
-							coordinates={ this.state.route }
+							coordinates={ this.state.journey.plannedRoute }
 							strokeColor={ 'blue' }
 							strokeWidth={ 4 }
 						/>
 					</MapView>
-				</View>
-
-				<View style={ styles.bottomPanel }>
-					<TouchableOpacity
-						style={ styles.button }
-						onPress={ (): Promise<void> => this._addPassengerToJourney(journey.journeyId) }
-					>
-						<Text style={ styles.buttonText }>Join</Text>
-					</TouchableOpacity>
 				</View>
 			</Container>
 		);
@@ -157,6 +127,4 @@ const mapStateToProps = (state: AppState): AllJourneysListState => ({
 	...state.allJourneysReducer
 });
 
-export default connect(mapStateToProps, {
-	updateAddUserJourney
-})(ViewJourney);
+export default connect(mapStateToProps, { })(InteractiveMap);

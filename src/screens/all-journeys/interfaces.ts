@@ -13,6 +13,20 @@ export interface Styles {
 	cardHeader: ViewStyle;
 	journeyHeading: TextStyle;
 	textRow: TextStyle;
+	centerSelf: ViewStyle;
+	centerItems: ViewStyle;
+	acceptedLiftNoticeContainer: ViewStyle;
+	generalInfoContainer: ViewStyle;
+	liftRowContainer: ViewStyle;
+	priceBadge: ViewStyle;
+	placeNames: TextStyle;
+	seatsLeft: TextStyle;
+	noLifts: TextStyle;
+	searchField: ViewStyle;
+	searchFieldSpinner: ViewStyle;
+	searchFieldIcon: ViewStyle;
+	reloadIcon: ViewStyle;
+	reloadSpinner: ViewStyle;
 }
 
 export interface Props extends CommonProps {

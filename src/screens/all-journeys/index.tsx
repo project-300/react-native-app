@@ -1,19 +1,18 @@
 import React, { Component, ReactElement } from 'react';
-import { ScrollView, FlatList, View, NativeScrollEvent, TouchableOpacity, Image } from 'react-native';
+import { ScrollView, FlatList, View, NativeScrollEvent, TouchableOpacity, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import styles from './styles';
+import styles, { priceBadgeText } from './styles';
 import { Props, State } from './interfaces';
 import { AppState } from '../../store';
 import { AllJourneysListState } from '../../types/redux-reducer-state-types';
-import { Journey } from '@project-300/common-types';
+import { Journey, FormatMoney } from '@project-300/common-types';
 import { getAllJourneys, searchJourneys, clearJourneys } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
-import { ActivityIndicator, Divider, Text, TextInput, Card } from 'react-native-paper';
+import { ActivityIndicator, Divider, Text, TextInput } from 'react-native-paper';
 import { NavigationEvents } from 'react-navigation';
 import _ from 'lodash';
 import { Theme } from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { GoogleMapsAPIKey } from '../../../environment/env';
 
 class AllJourneys extends Component<Props, State> {
 
@@ -35,36 +34,52 @@ class AllJourneys extends Component<Props, State> {
 		this.setState(this.initialState); // Reset the state of the component for next mount
 	}
 
-	private _priceFormat = (price: number): string => {
-		return price % 1 === 0 ? price.toString() : price.toFixed(2).toString();
-	}
-
 	private _getPriceFontSize = (price: number): number => {
-		const length: number = this._priceFormat(price).length;
+		const length: number = FormatMoney(price).length;
 		if (length <= 2) return 18;
 		return 14;
 	}
 
+	private _getBorderColour = (userJoined: boolean, isOwnedByUser: boolean): string => {
+		if (isOwnedByUser) return 'orange';
+		if (userJoined) return 'green';
+		return '#CCC';
+	}
+
 	private _renderRow = ({ item, index }: { item: Journey; index: number }): ReactElement => {
 		const journey: Journey = item;
+		const { userJoined, isOwnedByUser } = journey;
 
 		return (
 			<View>
 				<TouchableOpacity
-					style={ { padding: 20, backgroundColor: 'white' } }
+					style={ { ...styles.liftRowContainer, borderColor: this._getBorderColour(!!userJoined, !!isOwnedByUser) } }
 					onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', journey) }
 				>
+					{
+						journey.userJoined &&
+							<View style={ styles.acceptedLiftNoticeContainer }>
+								<Text style={ styles.centerSelf }>
+									<Icon
+										name='check'
+										size={ 16 }
+										color={ '#555' }
+									/> You have accepted this lift
+								</Text>
+							</View>
+					}
+
 					<View>
-						<Text style={ { fontSize: 22 } }>
+						<Text style={ styles.placeNames }>
 							{ journey.origin.name } - { journey.destination.name }
 						</Text>
 
-						<Text style={ { fontSize: 14, color: '#555' } }>
+						<Text style={ styles.seatsLeft }>
 							{ journey.seatsLeft } seats left
 						</Text>
 					</View>
 
-					<View style={ { paddingTop: 20 } }>
+					<View style={ styles.generalInfoContainer }>
 						<Text>
 							{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
 						</Text>
@@ -73,38 +88,14 @@ class AllJourneys extends Component<Props, State> {
 						</Text>
 
 						<View
-							style={ {
-								backgroundColor: Theme.accent,
-								padding: 5,
-								width: 64,
-								height: 64,
-								borderRadius: 32,
-								alignItems: 'center',
-								justifyContent: 'center',
-								position: 'absolute',
-								right: 0,
-								bottom: 0,
-								shadowOffset: {
-									width: 0,
-									height: 4
-								},
-								shadowOpacity: 0.4,
-								shadowRadius: 6,
-								elevation: 12
-							} }
+							style={ styles.priceBadge }
 						>
-							<Text style={ {
-								color: '#333',
-								fontWeight: 'bold',
-								fontSize: journey.pricePerSeat ? this._getPriceFontSize(journey.pricePerSeat) : 16
-							} }>
-								{ journey.pricePerSeat ? `€${ this._priceFormat(journey.pricePerSeat) }` : 'Free' }
+							<Text style={ priceBadgeText(journey.pricePerSeat ? this._getPriceFontSize(journey.pricePerSeat) : 16) }>
+								{ journey.pricePerSeat ? `€${ FormatMoney(journey.pricePerSeat) }` : 'Free' }
 							</Text>
 						</View>
 					</View>
 				</TouchableOpacity>
-
-				<Divider />
 			</View>
 		);
 	}
@@ -146,7 +137,7 @@ class AllJourneys extends Component<Props, State> {
 							await this.setState({ searchText: query.trim() });
 							this._searchJourneys();
 						}}
-						style={ { margin: 10, backgroundColor: 'white' } }
+						style={ styles.searchField }
 					/>
 
 					{/*<Text>Last Key: { this.props.lastEvaluatedKey && this.props.lastEvaluatedKey.pk }</Text>*/}
@@ -156,20 +147,28 @@ class AllJourneys extends Component<Props, State> {
 						this.props.isSearching ?
 							<ActivityIndicator
 								animating={ true }
-								color={ Theme.primary }
+								color={ Theme.accent }
 								size={ 34 }
-								style={ { position: 'absolute', right: 20, top: 28 } }
+								style={ styles.searchFieldSpinner }
 							/> :
 							<Icon
 								name='search'
 								size={ 22 }
-								color={ Theme.primary }
-								style={ { position: 'absolute', right: 25, top: 35 } }
+								color={ Theme.accent }
+								style={ styles.searchFieldIcon }
 							/>
 					}
 				</View>
 				<ScrollView
-					onScroll={ ({ nativeEvent }: { nativeEvent: NativeScrollEvent }): Promise<void> => this._scrollResultsEvent(nativeEvent) }
+					onScroll={
+						({ nativeEvent }: { nativeEvent: NativeScrollEvent }): Promise<void> =>
+							this._scrollResultsEvent(nativeEvent)
+					}
+					refreshControl={
+						<RefreshControl refreshing={ this.props.isFetching } onRefresh={ async (): Promise<void> => {
+							await this.props.getAllJourneys(true);
+						} } />
+					}
 				>
 					<FlatList
 						data={ this.props.journeys }
@@ -179,8 +178,8 @@ class AllJourneys extends Component<Props, State> {
 
 					{
 						!this.props.journeys.length &&
-							<View style={ { alignItems: 'center' } }>
-								<Text style={ { fontWeight: 'bold', fontSize: 20, marginTop: 20 } }>No lifts available</Text>
+							<View style={ styles.centerItems }>
+								<Text style={ styles.noLifts }>{ this.props.isFetching ? 'Fetching lifts..' : 'No lifts available' }</Text>
 							</View>
 					}
 
@@ -189,8 +188,8 @@ class AllJourneys extends Component<Props, State> {
 							<Icon
 								name='redo-alt'
 								size={ 34 }
-								color={ Theme.primary }
-								style={ { alignSelf: 'center', margin: 10 } }
+								color={ Theme.accent }
+								style={ styles.reloadIcon }
 							/>
 					}
 
@@ -198,9 +197,9 @@ class AllJourneys extends Component<Props, State> {
 						this.props.isFetching &&
 							<ActivityIndicator
 								animating={ true }
-								color={ Theme.primary }
+								color={ Theme.accent }
 								size={ 34 }
-								style={ { margin: 10 } }
+								style={ styles.reloadSpinner }
 							/>
 					}
 				</ScrollView>
