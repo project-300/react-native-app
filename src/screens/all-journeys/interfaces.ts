@@ -15,7 +15,6 @@ export interface Styles {
 	textRow: TextStyle;
 	centerSelf: ViewStyle;
 	centerItems: ViewStyle;
-	acceptedLiftNoticeContainer: ViewStyle;
 	generalInfoContainer: ViewStyle;
 	liftRowContainer: ViewStyle;
 	priceBadge: ViewStyle;

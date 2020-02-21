@@ -3,9 +3,6 @@ import {
 	GET_ALL_JOURNEYS_SUCCESS,
 	GET_ALL_JOURNEYS_FAILURE,
 	CLEAR_ALL_JOURNEYS,
-	UPDATE_ADD_USER_JOURNEY_SUCCESS,
-	UPDATE_ADD_USER_JOURNEY_REQUEST,
-	UPDATE_ADD_USER_JOURNEY_FAILURE,
 	SEARCH_JOURNEYS_REQUEST,
 	SEARCH_JOURNEYS_SUCCESS,
 	SEARCH_JOURNEYS_FAILURE
@@ -52,12 +49,6 @@ const allJourneysReducer = (state: AllJourneysListState = initialState, action: 
 			return { ...state, isFetching: false, isSearching: false, showingSearchResults: false };
 		case CLEAR_ALL_JOURNEYS:
 			return { ...state, journeys: [], lastEvaluatedKey: undefined, isFetching: false, isFullList: false };
-		case UPDATE_ADD_USER_JOURNEY_REQUEST:
-			return { ...state, isFetching: true };
-		case UPDATE_ADD_USER_JOURNEY_SUCCESS:
-			return { ...state, isFetching: false };
-		case UPDATE_ADD_USER_JOURNEY_FAILURE:
-			return { ...state, isFetching: false };
 		default:
 			return state;
 	}

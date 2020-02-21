@@ -8,11 +8,12 @@ import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import { Journey, FormatMoney } from '@project-300/common-types';
 import { getAllJourneys, searchJourneys, clearJourneys } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
-import { ActivityIndicator, Divider, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Text, TextInput } from 'react-native-paper';
 import { NavigationEvents } from 'react-navigation';
 import _ from 'lodash';
 import { Theme } from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { NoticeBanner } from '../../components/miscellaneous/notice-banner';
 
 class AllJourneys extends Component<Props, State> {
 
@@ -54,19 +55,16 @@ class AllJourneys extends Component<Props, State> {
 			<View>
 				<TouchableOpacity
 					style={ { ...styles.liftRowContainer, borderColor: this._getBorderColour(!!userJoined, !!isOwnedByUser) } }
-					onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', journey) }
+					onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', { journey }) }
 				>
 					{
 						journey.userJoined &&
-							<View style={ styles.acceptedLiftNoticeContainer }>
-								<Text style={ styles.centerSelf }>
-									<Icon
-										name='check'
-										size={ 16 }
-										color={ '#555' }
-									/> You have accepted this lift
-								</Text>
-							</View>
+							<NoticeBanner
+								icon='check'
+								text='You have accepted this lift'
+								backgroundColor='#69ff6b'
+								color='#555'
+							/>
 					}
 
 					<View>
@@ -138,10 +136,8 @@ class AllJourneys extends Component<Props, State> {
 							this._searchJourneys();
 						}}
 						style={ styles.searchField }
+						selectionColor={ Theme.accent }
 					/>
-
-					{/*<Text>Last Key: { this.props.lastEvaluatedKey && this.props.lastEvaluatedKey.pk }</Text>*/}
-					{/*<Text>{ this.props.journeys.length } Journeys</Text>*/}
 
 					{
 						this.props.isSearching ?

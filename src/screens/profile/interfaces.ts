@@ -22,7 +22,6 @@ export interface Styles {
 	statsItemDesc: TextStyle;
 	loadingText: TextStyle;
 	fab: ViewStyle;
-	interestChip: ViewStyle;
 	editAvatarContainer: ViewStyle;
 	editAvatarIcon: ViewStyle;
 	outerColumnContainer: ViewStyle;

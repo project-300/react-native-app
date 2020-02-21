@@ -19,6 +19,16 @@ export interface AllJourneysListState {
 	lastEvaluatedKey?: LastEvaluatedKey;
 }
 
+export interface ViewJourneyState {
+	isUpdating: boolean;
+	isReloading: boolean;
+	journey: Journey | undefined;
+}
+
+export interface ContentReloadingState {
+	contentReloading: boolean;
+}
+
 export interface LoginState {
 	isLoggingIn: boolean;
 	isLoggedIn: boolean;

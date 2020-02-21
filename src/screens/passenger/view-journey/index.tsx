@@ -1,11 +1,10 @@
 import React, { Component, ReactElement } from 'react';
-import { View, Dimensions, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, Dimensions, ScrollView, TouchableWithoutFeedback, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { Props, State, AnimationStyles, AnimationValues } from './interfaces';
 import { AppState } from '../../../store';
 import { Coords, Journey, Place, FormatMoney } from '@project-300/common-types';
-import { AllJourneysListState } from '../../../types/redux-reducer-state-types';
-import { updateAddUserJourney, cancelLiftAcceptance } from '../../../redux/actions';
+import { ViewJourneyState } from '../../../types/redux-reducer-state-types';
 import { GoogleMapsAPIKey } from '../../../../environment/env';
 import Animated, { Easing } from 'react-native-reanimated';
 import { interpolateAnimation } from '../../../animations/animations';
@@ -13,6 +12,16 @@ import { Button, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Theme } from '../../../constants/theme';
 import { NavigationEvents } from 'react-navigation';
+import {
+	getViewJourney,
+	updateAddUserJourney,
+	cancelLiftAcceptance,
+	contentReloadOff,
+	contentReloadOn,
+	clearJourneyInfo
+} from '../../../redux/actions';
+import moment, { Duration, Moment } from 'moment';
+import { NoticeBanner } from '../../../components/miscellaneous/notice-banner';
 
 const { width, height } = Dimensions.get('window');
 const { timing } = Animated;
@@ -37,7 +46,7 @@ export class ViewJourney extends Component<Props, State> {
 	public constructor(props: Props) {
 		super(props);
 
-		const journey: Journey = this.props.navigation.state.params as Journey;
+		const journey: Journey = this.props.navigation.getParam('journey');
 
 		this.state = {
 			journey,
@@ -51,7 +60,8 @@ export class ViewJourney extends Component<Props, State> {
 			midpoint: undefined,
 			mapImageExpanded: false,
 			mapToBeOpened: false,
-			prepping: false
+			prepping: false,
+			journeyLoaded: false
 	};
 
 		this.animatedValues = {
@@ -63,14 +73,14 @@ export class ViewJourney extends Component<Props, State> {
 			mapHeight: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ height / 6, height / 2 ]),
 			closeMapIconOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 1 ]),
 			expandMapIconOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 1, 0 ]),
-			overlayOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 0.9 ]),
+			overlayOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 0.8 ]),
 			overlayButtonOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 1 ]),
 			showClickMapMessageOpacity: interpolateAnimation(this.animatedValues.prepping, [ 0, 1 ], [ 0, 1 ]),
 			mapOpacity: interpolateAnimation(this.animatedValues.prepping, [ 0, 1 ], [ 1, 0.7 ])
 		};
 	}
 
-	private _mountScreen = (): void => { // Triggered when this screen renders (navigated to)
+	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
 		setTimeout(() => {
 			this._showClickMapMessage(true);
 		}, 500);
@@ -78,6 +88,9 @@ export class ViewJourney extends Component<Props, State> {
 		setTimeout(() => {
 			this._showClickMapMessage(false);
 		}, 2500);
+
+		await this._getJourney(false);
+		this.setState({ journeyLoaded: true });
 	}
 
 	private _showClickMapMessage = (prepping: boolean): void => {
@@ -89,7 +102,15 @@ export class ViewJourney extends Component<Props, State> {
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
+		console.log('unmount');
+		this.props.clearJourneyInfo();
 		// this.setState(this.initialState); // Reset the state of the component for next mount
+	}
+
+	private _getJourney = async (reload: boolean): Promise<void> => {
+		if (reload) this.props.contentReloadOn();
+		await this.props.getViewJourney(this.state.journey.journeyId, this.state.journey.times.createdAt as string);
+		this.props.contentReloadOff();
 	}
 
 	private _joinJourney = async (): Promise<void> => {
@@ -136,13 +157,21 @@ export class ViewJourney extends Component<Props, State> {
 		return url;
 	}
 
+	private _formatLeavingTime = (leavingAt: string): string => {
+		const date: Moment = moment(leavingAt);
+		const duration: Duration = moment.duration(moment(date).diff(moment()));
+
+		if (duration.asDays() > 6) return moment().format('dddd MMMM Do YYYY, h:mm A');
+		return moment(leavingAt).calendar();
+	}
+
 	private _renderNavigationEvents = (): ReactElement =>
 		<NavigationEvents onWillFocus={ this._mountScreen } onDidBlur={ this._unmountScreen } />
 
 	public render(): ReactElement {
-		const journey: Journey = this.state.journey;
+		const journey: Journey = this.props.journey || this.state.journey;
 
-		const { origin, destination, driver, plannedRoute, seatsLeft, pricePerSeat } = journey;
+		const { origin, destination, driver, plannedRoute, seatsLeft, pricePerSeat, userJoined } = journey;
 
 		const path: string = plannedRoute.map((c: Coords) => `|${c.latitude},${c.longitude}`).join('');
 
@@ -214,14 +243,30 @@ export class ViewJourney extends Component<Props, State> {
 						>Click To Expand</Animated.Text>
 					</Animated.View>
 				</TouchableWithoutFeedback>
-				<ScrollView style={ { height: '100%', padding: 20 } }>
+				<ScrollView
+					style={ { height: '100%', padding: 20 } }
+					refreshControl={
+						<RefreshControl refreshing={ this.props.contentReloading } onRefresh={ async (): Promise<void> => {
+							await this._getJourney(true);
+						} } />
+					}
+				>
+
+					{
+						userJoined &&
+							<NoticeBanner
+								icon='check'
+								text='You have accepted this lift'
+								backgroundColor='#69ff6b'
+								color='#555'
+							/>
+					}
+
 					<View style={ { padding: 20, backgroundColor: this.props.DARK_MODE ? '#333' : '#eee', borderRadius: 4, marginBottom: 10, alignItems: 'center' } }>
 						<View style={ { marginBottom: 20 } }>
-							{/*<Text style={ { fontSize: 16, color: '#555' } }>From</Text>*/}
 							<Text style={ { fontSize: 22, color: this.props.DARK_MODE ? 'white' : 'black' } }>From: { origin.name }</Text>
 						</View>
 						<View>
-							{/*<Text style={ { fontSize: 16, color: '#555' } }>To</Text>*/}
 							<Text style={ { fontSize: 22, color: this.props.DARK_MODE ? 'white' : 'black' } }>To: { destination.name }</Text>
 						</View>
 					</View>
@@ -231,7 +276,7 @@ export class ViewJourney extends Component<Props, State> {
 						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Cost: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>€{ FormatMoney(pricePerSeat) }</Text></Text>
 						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Driver: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ driver.firstName } { driver.lastName }</Text></Text>
 						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Posted: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ journey.readableDurations.createdAt }</Text></Text>
-						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Scheduled For: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ journey.readableDurations.leavingAt }</Text></Text>
+						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Scheduled For: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ this._formatLeavingTime(journey.times.leavingAt) }</Text></Text>
 					</View>
 
 					{
@@ -241,7 +286,9 @@ export class ViewJourney extends Component<Props, State> {
 								style={ { padding: 8, marginVertical: 10, backgroundColor: this.props.DARK_MODE ? 'white' : Theme.accent } }
 								onPress={ this._joinJourney }
 								color={ this.props.DARK_MODE ? 'black' : 'white' }
-							>Take Lift</Button>
+								loading={ this.state.journeyLoaded && this.props.isUpdating }
+                                disabled={ this.props.isUpdating }
+                            >Take Lift</Button>
 					}
 
 					{
@@ -251,7 +298,9 @@ export class ViewJourney extends Component<Props, State> {
 								style={ { padding: 8, marginVertical: 10, backgroundColor: this.props.DARK_MODE ? 'white' : Theme.accent } }
 								onPress={ this._cancelLiftAcceptance }
 								color={ this.props.DARK_MODE ? 'black' : 'white' }
-							>Cancel Lift</Button>
+                                loading={ this.state.journeyLoaded && this.props.isUpdating }
+								disabled={ this.props.isUpdating }
+                            >Cancel Lift</Button>
 					}
 
 					<Button
@@ -293,7 +342,10 @@ export class ViewJourney extends Component<Props, State> {
 									mode={ this.props.DARK_MODE ? 'contained' : 'outlined' }
 									style={ { padding: 8, backgroundColor: 'white' } }
                                     color={ this.props.DARK_MODE ? 'white' : Theme.accent }
-                                    onPress={ (): boolean => this.props.navigation.navigate('InteractiveMap', journey) }
+                                    onPress={ (): void => {
+                                    	this.props.navigation.navigate('InteractiveMap', journey);
+										this._toggleMap();
+									} }
 								>View Interactive Map</Button>
 							</Animated.View>
 					}
@@ -303,11 +355,17 @@ export class ViewJourney extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): AllJourneysListState => ({
-	...state.allJourneysReducer, ...state.darkModeReducer
+const mapStateToProps = (state: AppState): ViewJourneyState => ({
+	...state.viewJourneyReducer,
+	...state.darkModeReducer,
+	...state.contentReloadReducer
 });
 
 export default connect(mapStateToProps, {
 	updateAddUserJourney,
-	cancelLiftAcceptance
+	cancelLiftAcceptance,
+	getViewJourney,
+	contentReloadOn,
+	contentReloadOff,
+	clearJourneyInfo
 })(ViewJourney);

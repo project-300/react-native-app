@@ -1,8 +1,9 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { CommonProps } from '../../../types/common';
+import { CommonProps, ContentReloading } from '../../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import Animated from 'react-native-reanimated';
+import { AppActions } from '../../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -15,11 +16,13 @@ export interface Styles {
 	spinnerTextStyle: TextStyle;
 }
 
-export interface Props extends CommonProps {
-	journey: Journey;
+export interface Props extends CommonProps, ContentReloading {
+	isUpdating: boolean;
+	journey: Journey | undefined;
+	getViewJourney(journeyId: string, createdAt: string): Promise<boolean>;
 	updateAddUserJourney(journeyId: string, createdAt: string): Promise<boolean>;
 	cancelLiftAcceptance(journeyId: string, createdAt: string): Promise<boolean>;
-	isFetching: boolean;
+	clearJourneyInfo(): AppActions;
 }
 
 export interface State {
@@ -35,6 +38,7 @@ export interface State {
 	mapImageExpanded: boolean;
 	mapToBeOpened: boolean;
 	prepping: boolean;
+	journeyLoaded: boolean;
 }
 
 export interface AnimationValues {

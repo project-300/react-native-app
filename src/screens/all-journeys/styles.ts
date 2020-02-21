@@ -57,14 +57,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center'
 	},
 
-	acceptedLiftNoticeContainer: {
-		backgroundColor: '#69ff6b',
-		paddingVertical: 10,
-		paddingHorizontal: 20,
-		marginBottom: 20,
-		borderRadius: 4
-	},
-
 	placeNames: {
 		fontSize: 22
 	},

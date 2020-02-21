@@ -17,7 +17,7 @@ export class JourneyService {
 		return API.get(ApiName, url, '').catch(JourneyService.handleError);
 	}
 
-	public static getJourneyById = async (journeyId: string): Promise<Journey> => API.get(ApiName, `/journeys/${journeyId}`, '').catch(JourneyService.handleError);
+	public static getJourneyById = async (journeyId: string, createdAt: string): Promise<Journey> => API.get(ApiName, `/journeys/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
 	public static createJourney = async (journey: Partial<Journey>): Promise<void> => API.post(ApiName, '/journeys', { body: { journey } }).catch(JourneyService.handleError);
 
