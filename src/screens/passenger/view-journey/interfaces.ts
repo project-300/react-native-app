@@ -1,19 +1,28 @@
-import { TextStyle, ViewStyle } from 'react-native';
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { CommonProps, ContentReloading } from '../../../types/common';
-import { Coords, Journey } from '@project-300/common-types';
-import { Region } from 'react-native-maps';
+import { Journey } from '@project-300/common-types';
 import Animated from 'react-native-reanimated';
 import { AppActions } from '../../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;
-	mapContainer: ViewStyle;
-	button: TextStyle;
-	buttonText: TextStyle;
-	map: ViewStyle;
-	bottomPanel: ViewStyle;
-	spinner: ViewStyle;
-	spinnerTextStyle: TextStyle;
+	mapImageTouchable: ViewStyle;
+	mapImageContainer: ViewStyle;
+	mapImage: ImageStyle;
+	mapImageTopIcon: ViewStyle;
+	mapImageBottomIcon: ViewStyle;
+	clickToExpandText: TextStyle;
+	placeText: TextStyle;
+	content: ViewStyle;
+	places: ViewStyle;
+	origin: ViewStyle;
+	centerItems: ViewStyle;
+	actionButton: ViewStyle;
+	overlay: ViewStyle;
+	overlayButtonContainer: ViewStyle;
+	overlayButton: ViewStyle;
+	infoRow: TextStyle;
+	bold: TextStyle;
 }
 
 export interface Props extends CommonProps, ContentReloading {
@@ -27,14 +36,6 @@ export interface Props extends CommonProps, ContentReloading {
 
 export interface State {
 	journey: Journey;
-	mapRegion: {
-		latitude: number;
-		longitude: number;
-		latitudeDelta: number;
-		longitudeDelta: number;
-	};
-	route: Coords[];
-	midpoint: Region | Coords | undefined;
 	mapImageExpanded: boolean;
 	mapToBeOpened: boolean;
 	prepping: boolean;

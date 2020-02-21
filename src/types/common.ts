@@ -3,7 +3,7 @@ import { AppActions } from './redux-action-types';
 
 export interface CommonProps {
 	navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-	DARK_MODE?: boolean;
+	DARK_MODE: boolean;
 }
 
 export interface ContentReloading {

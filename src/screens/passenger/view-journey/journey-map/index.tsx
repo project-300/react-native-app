@@ -3,11 +3,9 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { AppState } from '../../../store';
+import { AppState } from '../../../../store';
 import { Coords, Journey, Place } from '@project-300/common-types';
-import { Container } from 'native-base';
-import { AllJourneysListState } from '../../../types/redux-reducer-state-types';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { AllJourneysListState } from '../../../../types/redux-reducer-state-types';
 import { getDistance } from 'geolib';
 import MapView, {
 	Marker,
@@ -70,8 +68,6 @@ export class InteractiveMap extends Component<Props, State> {
 		const journey: Journey = this.state.journey as Journey;
 		const { origin, destination } = journey;
 
-		console.log(journey);
-
 		const distance = getDistance(
 			{ latitude: origin.latitude, longitude: origin.longitude },
 			{ latitude: destination.latitude, longitude: destination.longitude }
@@ -100,8 +96,7 @@ export class InteractiveMap extends Component<Props, State> {
 		const journey: Journey = this.state.journey;
 
 		return (
-			<Container>
-				<Spinner visible={ this.props.isFetching } />
+			<View>
 				<View style={ styles.mapContainer }>
 					<MapView
 						provider={ PROVIDER_GOOGLE }
@@ -118,7 +113,7 @@ export class InteractiveMap extends Component<Props, State> {
 						/>
 					</MapView>
 				</View>
-			</Container>
+			</View>
 		);
 	}
 }

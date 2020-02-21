@@ -9,7 +9,7 @@ import {
 } from '../../constants/redux-actions';
 import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import {
-	JourneyActionTypes,
+	JourneysActionTypes,
 	GetAllJourneysSuccess
 } from '../../types/redux-action-types';
 import { Journey } from '@project-300/common-types';
@@ -22,7 +22,7 @@ const initialState: AllJourneysListState = {
 	journeys: []
 };
 
-const allJourneysReducer = (state: AllJourneysListState = initialState, action: JourneyActionTypes): AllJourneysListState => {
+const allJourneysReducer = (state: AllJourneysListState = initialState, action: JourneysActionTypes): AllJourneysListState => {
 	let payload;
 	let journeys: Journey[];
 

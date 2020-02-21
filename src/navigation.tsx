@@ -8,7 +8,7 @@ import DriverTracking from './screens/passenger/driver-tracking';
 import NewJourney from './screens/new-journey';
 import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
-import InteractiveMap from './screens/passenger/view-journey/interactive-map';
+import InteractiveMap from './screens/passenger/view-journey/journey-map';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';

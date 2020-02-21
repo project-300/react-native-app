@@ -22,6 +22,9 @@ import {
 } from '../../../redux/actions';
 import moment, { Duration, Moment } from 'moment';
 import { NoticeBanner } from '../../../components/miscellaneous/notice-banner';
+import styles from './styles';
+import { DarkMode } from '../../../helpers/dark-mode';
+import { AnimatedStyles } from '../../../animations/styles';
 
 const { width, height } = Dimensions.get('window');
 const { timing } = Animated;
@@ -50,14 +53,6 @@ export class ViewJourney extends Component<Props, State> {
 
 		this.state = {
 			journey,
-			mapRegion: {
-				latitude: 54.2,
-				longitude: -8.5,
-				latitudeDelta: 1,
-				longitudeDelta: 1
-			},
-			route: [],
-			midpoint: undefined,
 			mapImageExpanded: false,
 			mapToBeOpened: false,
 			prepping: false,
@@ -102,9 +97,7 @@ export class ViewJourney extends Component<Props, State> {
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
-		console.log('unmount');
 		this.props.clearJourneyInfo();
-		// this.setState(this.initialState); // Reset the state of the component for next mount
 	}
 
 	private _getJourney = async (reload: boolean): Promise<void> => {
@@ -146,9 +139,9 @@ export class ViewJourney extends Component<Props, State> {
 		}).start(() => this.setState({ mapImageExpanded: !this.state.mapImageExpanded, mapToBeOpened: false }));
 	}
 
-	private _constructImageURL = (width: number, height: number, path: string, origin: Place, destination: Place): string => {
+	private _constructImageURL = (path: string, origin: Place, destination: Place): string => {
 		let url = `https://maps.googleapis.com/maps/api/staticmap`;
-		url += `?size=${width}x${height}`;
+		url += `?size=${width}x${height / 2}`;
 		url += `&path=color:0x0000ff|weight:3${path}`;
 		url += `&markers=color:blue|label:O|${origin.latitude},${origin.longitude}`;
 		url += `&markers=color:green|label:D|${destination.latitude},${destination.longitude}`;
@@ -175,37 +168,35 @@ export class ViewJourney extends Component<Props, State> {
 
 		const path: string = plannedRoute.map((c: Coords) => `|${c.latitude},${c.longitude}`).join('');
 
-		const mapWidth = Math.floor(width);
-		const mapHeight = Math.floor(height / 2);
+		const { DARK_MODE } = this.props;
 
 		return (
-			<View style={ { backgroundColor: this.props.DARK_MODE ? '#222' : 'white' } }>
+			<View style={ DarkMode.bgColorSwitch(DARK_MODE, '#222', 'white') }>
 				{ this._renderNavigationEvents() }
 
 				<TouchableWithoutFeedback
 					onPress={ this._toggleMap }
-					style={ { width: mapWidth, height: mapHeight } }
+					style={ styles.mapImageTouchable }
 				>
 					<Animated.View
-						style={ {
-							width: mapWidth,
-							height: this.animatedStyles.mapHeight,
-							overflow: 'hidden',
-							justifyContent: 'center'
-						} }
+						style={ [
+							styles.mapImageContainer,
+							AnimatedStyles.height(this.animatedStyles.mapHeight)
+						] }
 					>
 						<Animated.Image
-							style={ {
-								width: mapWidth,
-								height: mapHeight,
-								opacity: this.animatedStyles.mapOpacity
-							} }
-							source={ {
-								uri: this._constructImageURL(mapWidth, mapHeight, path, origin, destination) } }
+							style={ [
+								styles.mapImage,
+								AnimatedStyles.opacity(this.animatedStyles.mapOpacity)
+							] }
+							source={ { uri: this._constructImageURL(path, origin, destination) } }
 						/>
 
 						{
-								<Animated.View style={ { position: 'absolute', top: 15, right: 15, opacity: this.animatedStyles.closeMapIconOpacity } }>
+								<Animated.View style={ [
+									styles.mapImageTopIcon,
+									AnimatedStyles.opacity(this.animatedStyles.closeMapIconOpacity)
+								] }>
 									<Icon
 										name='compress'
 										size={ 34 }
@@ -216,12 +207,10 @@ export class ViewJourney extends Component<Props, State> {
 						}
 
 						{
-                            <Animated.View style={ {
-                            	position: 'absolute',
-								bottom: 15,
-								right: 15,
-								opacity: this.animatedStyles.expandMapIconOpacity
-                            } }>
+							<Animated.View style={ [
+								styles.mapImageBottomIcon,
+								AnimatedStyles.opacity(this.animatedStyles.expandMapIconOpacity)
+							] }>
 								<Icon
 									name='expand'
 									size={ 30 }
@@ -232,19 +221,16 @@ export class ViewJourney extends Component<Props, State> {
 						}
 
 						<Animated.Text
-							style={ {
-								position: 'absolute',
-								alignSelf: 'center',
-								fontWeight: 'bold',
-								fontSize: 20,
-								color: '#222',
-								opacity: this.animatedStyles.showClickMapMessageOpacity
-							} }
+							style={ [
+								styles.clickToExpandText,
+								AnimatedStyles.opacity(this.animatedStyles.showClickMapMessageOpacity)
+							] }
 						>Click To Expand</Animated.Text>
 					</Animated.View>
 				</TouchableWithoutFeedback>
+
 				<ScrollView
-					style={ { height: '100%', padding: 20 } }
+					style={ styles.content }
 					refreshControl={
 						<RefreshControl refreshing={ this.props.contentReloading } onRefresh={ async (): Promise<void> => {
 							await this._getJourney(true);
@@ -262,88 +248,155 @@ export class ViewJourney extends Component<Props, State> {
 							/>
 					}
 
-					<View style={ { padding: 20, backgroundColor: this.props.DARK_MODE ? '#333' : '#eee', borderRadius: 4, marginBottom: 10, alignItems: 'center' } }>
-						<View style={ { marginBottom: 20 } }>
-							<Text style={ { fontSize: 22, color: this.props.DARK_MODE ? 'white' : 'black' } }>From: { origin.name }</Text>
+					<View style={ [
+						styles.places,
+						DarkMode.bgColorSwitch(DARK_MODE, '#333', '#EEE')
+					] }>
+						<View style={ styles.origin }>
+							<Text style={ [
+								styles.placeText,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>From: { origin.name }</Text>
 						</View>
 						<View>
-							<Text style={ { fontSize: 22, color: this.props.DARK_MODE ? 'white' : 'black' } }>To: { destination.name }</Text>
+							<Text style={ [
+								styles.placeText,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>To: { destination.name }</Text>
 						</View>
 					</View>
 
-					<View style={ { alignItems: 'center' } }>
-						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Seats Available: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ seatsLeft }</Text></Text>
-						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Cost: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>€{ FormatMoney(pricePerSeat) }</Text></Text>
-						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Driver: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ driver.firstName } { driver.lastName }</Text></Text>
-						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Posted: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ journey.readableDurations.createdAt }</Text></Text>
-						<Text style={ { fontSize: 18, marginVertical: 10, color: this.props.DARK_MODE ? 'white' : 'black' } }>Scheduled For: <Text style={ { fontWeight: 'bold', color: this.props.DARK_MODE ? 'white' : 'black' } }>{ this._formatLeavingTime(journey.times.leavingAt) }</Text></Text>
+					<View style={ styles.centerItems }>
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Seats Available:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ ` ${seatsLeft}` }
+							</Text>
+						</Text>
+
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Cost:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ ` €${FormatMoney(pricePerSeat)}` }
+							</Text>
+						</Text>
+
+						{
+							driver.firstName || driver.lastName &&
+								<Text style={ [
+									styles.infoRow,
+									DarkMode.bwTextColorSwitch(DARK_MODE)
+								] }>
+									Driver:
+									<Text style={ [
+										styles.bold,
+										DarkMode.bwTextColorSwitch(DARK_MODE)
+									] }>
+										{ ` ${driver.firstName} ${driver.lastName}` }
+									</Text>
+								</Text>
+						}
+
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Posted:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ `${journey.readableDurations.createdAt}` }
+							</Text>
+						</Text>
+
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Scheduled For:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ ` ${this._formatLeavingTime(journey.times.leavingAt)}` }
+							</Text>
+						</Text>
 					</View>
 
 					{
 						!journey.userJoined &&
 							<Button
-								mode={ this.props.DARK_MODE ? 'outlined' : 'contained' }
-								style={ { padding: 8, marginVertical: 10, backgroundColor: this.props.DARK_MODE ? 'white' : Theme.accent } }
+								mode={ DarkMode.buttonSwitch(DARK_MODE, 'outlined', 'contained') }
+								style={ [
+									styles.actionButton,
+									DarkMode.bgColorSwitch(DARK_MODE, 'white', Theme.accent)
+								] }
 								onPress={ this._joinJourney }
-								color={ this.props.DARK_MODE ? 'black' : 'white' }
+								color={ DarkMode.bwSwitch(DARK_MODE) }
 								loading={ this.state.journeyLoaded && this.props.isUpdating }
-                                disabled={ this.props.isUpdating }
-                            >Take Lift</Button>
+								disabled={ this.props.isUpdating }
+							>Take Lift</Button>
 					}
 
 					{
 						journey.userJoined &&
 							<Button
-								mode={ this.props.DARK_MODE ? 'outlined' : 'contained' }
-								style={ { padding: 8, marginVertical: 10, backgroundColor: this.props.DARK_MODE ? 'white' : Theme.accent } }
+								mode={ DarkMode.buttonSwitch(DARK_MODE, 'outlined', 'contained') }
+								style={ [
+									styles.actionButton,
+									DarkMode.bgColorSwitch(DARK_MODE, 'white', Theme.accent)
+								] }
 								onPress={ this._cancelLiftAcceptance }
-								color={ this.props.DARK_MODE ? 'black' : 'white' }
-                                loading={ this.state.journeyLoaded && this.props.isUpdating }
+								color={ DarkMode.bwSwitch(DARK_MODE) }
+								loading={ this.state.journeyLoaded && this.props.isUpdating }
 								disabled={ this.props.isUpdating }
-                            >Cancel Lift</Button>
+							>Cancel Lift</Button>
 					}
 
 					<Button
-						mode={ this.props.DARK_MODE ? 'contained' : 'outlined' }
-						style={ { padding: 8, marginVertical: 10, backgroundColor: this.props.DARK_MODE ? 'black' : 'white' } }
-						color={ this.props.DARK_MODE ? 'white' : Theme.accent }
+						mode={ DarkMode.buttonSwitch(DARK_MODE, 'contained', 'outlined') }
+						style={ [ styles.actionButton, DarkMode.bwBgColorSwitch(!DARK_MODE) ] }
+						color={ DarkMode.optionSwitch(DARK_MODE, 'white', Theme.accent) }
 						onPress={ (): boolean => this.props.navigation.navigate('OtherProfile', { userId: driver.userId }) }
 					>View Driver Profile</Button>
 
 					{
 						this.state.mapToBeOpened &&
 							<Animated.View
-								style={ {
-									position: 'absolute',
-									left: -20,
-									top: -20,
-									right: -20,
-									bottom: -height,
-									backgroundColor: 'black',
-									padding: 20,
-									opacity: this.animatedStyles.overlayOpacity
-								} }
-							>
-							</Animated.View>
+								style={ [
+									styles.overlay,
+									AnimatedStyles.opacity(this.animatedStyles.overlayOpacity)
+								] }
+							/>
 					}
 
 					{
 						this.state.mapToBeOpened &&
 							<Animated.View
-								style={ {
-									position: 'absolute',
-									left: 0,
-									right: 0,
-									top: height / 10,
-									opacity: this.animatedStyles.overlayButtonOpacity
-								} }
+								style={ [
+									styles.overlayButtonContainer,
+									AnimatedStyles.opacity(this.animatedStyles.overlayButtonOpacity)
+								] }
 							>
 								<Button
-									mode={ this.props.DARK_MODE ? 'contained' : 'outlined' }
-									style={ { padding: 8, backgroundColor: 'white' } }
-                                    color={ this.props.DARK_MODE ? 'white' : Theme.accent }
-                                    onPress={ (): void => {
-                                    	this.props.navigation.navigate('InteractiveMap', journey);
+									mode={ DarkMode.buttonSwitch(DARK_MODE, 'contained', 'outlined') }
+									style={ styles.overlayButton }
+									color={ DarkMode.optionSwitch(DARK_MODE, 'white', Theme.accent) }
+									onPress={ (): void => {
+										this.props.navigation.navigate('InteractiveMap', journey);
 										this._toggleMap();
 									} }
 								>View Interactive Map</Button>

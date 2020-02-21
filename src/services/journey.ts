@@ -11,7 +11,7 @@ export class JourneyService {
 		return API.get(ApiName, url, '').catch(JourneyService.handleError);
 	}
 
-	public static searchJourneys = async (query: string, lastEvaluatedKey?: { pk: string; sk: string }): Promise<GetAllJourneysResult> => {
+	public static searchJourneys = async (query: string, lastEvaluatedKey?: LastEvaluatedKey): Promise<GetAllJourneysResult> => {
 		let url: string = `/journeys/search/${query}`;
 		if (lastEvaluatedKey) url = `${url}?pk=${lastEvaluatedKey.pk}&sk=${lastEvaluatedKey.sk}`;
 		return API.get(ApiName, url, '').catch(JourneyService.handleError);

@@ -136,7 +136,6 @@ class AllJourneys extends Component<Props, State> {
 							this._searchJourneys();
 						}}
 						style={ styles.searchField }
-						selectionColor={ Theme.accent }
 					/>
 
 					{
@@ -161,7 +160,7 @@ class AllJourneys extends Component<Props, State> {
 							this._scrollResultsEvent(nativeEvent)
 					}
 					refreshControl={
-						<RefreshControl refreshing={ this.props.isFetching } onRefresh={ async (): Promise<void> => {
+						<RefreshControl refreshing={ this.props.isFetching && !this.props.isSearching } onRefresh={ async (): Promise<void> => {
 							await this.props.getAllJourneys(true);
 						} } />
 					}
@@ -190,7 +189,7 @@ class AllJourneys extends Component<Props, State> {
 					}
 
 					{
-						this.props.isFetching &&
+						this.props.isFetching && !this.props.isSearching &&
 							<ActivityIndicator
 								animating={ true }
 								color={ Theme.accent }
