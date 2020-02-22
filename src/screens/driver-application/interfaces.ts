@@ -11,7 +11,9 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	isApplying: boolean;
-	apply(): void;
+	apply(): Promise<void>;
+	checkIfApplied(): Promise<void>;
+	applied: boolean;
 }
 
 export interface State { }

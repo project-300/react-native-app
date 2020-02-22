@@ -26,7 +26,14 @@ export interface ConfirmState {
 }
 
 export interface DriverApplicationState {
-	isApplying: boolean;
+	isFetching: boolean;
+	applied?: boolean;
+}
+
+export interface VehicleMakesAndModelsState {
+	isFetching: boolean;
+	vehicleMakes?: object[];
+	vehicleModels?: object[];
 }
 
 export interface UserProfileState {

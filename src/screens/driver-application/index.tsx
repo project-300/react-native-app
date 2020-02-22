@@ -7,7 +7,7 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { apply } from '../../redux/actions';
+import { apply, checkIfApplied } from '../../redux/actions';
 import { AppState } from '../../store';
 import { DriverApplicationState } from '../../types/redux-reducer-state-types';
 
@@ -15,6 +15,15 @@ export class DriverApplication extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
+	}
+
+	public async componentDidMount(): Promise<void> {
+
+	}
+
+	public _checkIfApplied = async (): Promise<void> => {
+		await this.props.checkIfApplied();
+		console.log(this.props.applied);
 	}
 
 	private _apply = async (): Promise<void> => {
@@ -29,6 +38,11 @@ export class DriverApplication extends Component<Props, State> {
 					Want to become a driver? Apply below.
 				</Text>
 				<TouchableOpacity
+					onPress={ this._checkIfApplied }
+					style={ styles.button }>
+					<Text style={ styles.buttonText }>Check if applied</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
 					onPress={ this._apply }
 					style={ styles.button }>
 					<Text style={ styles.buttonText }>Apply</Text>
@@ -42,4 +56,4 @@ const mapStateToProps = (state: AppState): DriverApplicationState => ({
 	...state.driverApplicationReducer
 });
 
-export default connect(mapStateToProps, { apply })(DriverApplication);
+export default connect(mapStateToProps, { apply, checkIfApplied })(DriverApplication);

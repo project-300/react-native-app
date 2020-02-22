@@ -19,12 +19,14 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 10,
 		borderRadius: 4,
 		width: '80%',
+		alignItems: 'center'
 	},
 
 	buttonText: {
-		alignSelf: 'center',
+		alignSelf: 'stretch',
 		color: 'white',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		textAlign: 'center'
 	}
 });
 

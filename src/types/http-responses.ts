@@ -51,6 +51,15 @@ export interface DriverApplicationResult {
 	};
 }
 
+export interface DriverApplicationCheckResult {
+	success: boolean;
+	alreadyApplied: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
 export interface SecretKeyResult {
 	success: boolean;
 	secretKey: string;
