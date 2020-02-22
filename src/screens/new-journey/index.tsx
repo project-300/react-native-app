@@ -1,7 +1,9 @@
 import React, { Component, ReactElement } from 'react';
 import {
-	FlatList, KeyboardAvoidingView, SafeAreaView,
-	ScrollView, StatusBar,
+	FlatList,
+	SafeAreaView,
+	ScrollView,
+	StatusBar,
 	Text,
 	TouchableOpacity,
 	View
@@ -12,7 +14,7 @@ import { Props, State } from './interfaces';
 import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import MapView, { PROVIDER_GOOGLE, Marker, LatLng, MapEvent, Polyline } from 'react-native-maps';
-import { Container, Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
+import { Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
 import {

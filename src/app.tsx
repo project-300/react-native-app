@@ -7,7 +7,8 @@ import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
-import { Theme } from './constants/theme';
+import { Theme, DarkTheme as Test } from './constants/theme';
+import { setDarkMode } from './redux/actions';
 
 Amplify.configure(AWS_CONFIG);
 
@@ -15,15 +16,8 @@ interface Props { }
 interface State {
 	loggedIn: boolean;
 	checkedLoggedIn: boolean;
+	isDarkMode: boolean;
 }
-
-const theme: RNPTheme = {
-	...DefaultTheme,
-	colors: {
-		...DefaultTheme.colors,
-		...Theme
-	}
-};
 
 export default class App extends Component<Props, State> {
 
@@ -32,8 +26,11 @@ export default class App extends Component<Props, State> {
 
 		this.state = {
 			loggedIn: false,
-			checkedLoggedIn: false
+			checkedLoggedIn: false,
+			isDarkMode: false
 		};
+
+		store.dispatch(setDarkMode());
 	}
 
 	public async componentDidMount(): Promise<void> {
@@ -51,6 +48,17 @@ export default class App extends Component<Props, State> {
 		if (!checkedLoggedIn) return null; // Replace with Splash Screen
 
 		const Layout = CreateNavigator(loggedIn);
+
+		const theme: RNPTheme = {
+			...DefaultTheme,
+			colors: store.getState().darkModeReducer.DARK_MODE ? {
+				...DefaultTheme.colors,
+				...Test
+			} : {
+				...DefaultTheme.colors,
+				...Theme
+			}
+		};
 
 		return (
 			<StoreProvider store={ store }>

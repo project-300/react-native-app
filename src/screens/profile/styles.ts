@@ -113,10 +113,6 @@ const styles = StyleSheet.create<Styles>({
 		bottom: 0
 	},
 
-	interestChip: {
-		margin: 4
-	},
-
 	editAvatarContainer: {
 		backgroundColor: 'white',
 		zIndex: 50,

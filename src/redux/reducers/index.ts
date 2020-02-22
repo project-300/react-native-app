@@ -10,6 +10,9 @@ import driverTrackingReducer from './passenger/driver-tracking';
 import newJourneyReducer from './driver/new-journey';
 import allJourneysReducer from './journey';
 import interestsListReducer from './data/interests';
+import darkModeReducer from './theme/theme';
+import viewJourneyReducer from './passenger/view-journey';
+import contentReloadReducer from './content-reloading';
 
 export default combineReducers({
 	signUpReducer,
@@ -22,5 +25,8 @@ export default combineReducers({
 	driverTrackingReducer,
 	newJourneyReducer,
 	allJourneysReducer,
-	interestsListReducer
+	interestsListReducer,
+	darkModeReducer,
+	viewJourneyReducer,
+	contentReloadReducer
 });

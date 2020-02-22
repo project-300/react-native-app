@@ -1,6 +1,10 @@
 import React, { Component, ReactElement } from 'react';
 import { Chip } from 'react-native-paper';
-import styles from '../../screens/profile/styles';
+import { StyleSheet, ViewStyle } from 'react-native';
+
+interface Styles {
+	interestChip: ViewStyle;
+}
 
 interface Props {
 	text: string;
@@ -8,6 +12,12 @@ interface Props {
 	onPress?(): void;
 	onClose?(): void;
 }
+
+const styles = StyleSheet.create<Styles>({
+	interestChip: {
+		margin: 4
+	}
+});
 
 export class InterestChip extends Component<Props> {
 

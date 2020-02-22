@@ -71,16 +71,35 @@ import {
 	UPDATE_INTERESTS_REQUEST,
 	UPDATE_INTERESTS_FAILURE,
 	UPDATE_USER_REQUEST,
-	UPDATE_USER_SUCCESS, UPDATE_USER_FAILURE, UPLOAD_AVATAR_REQUEST, UPLOAD_AVATAR_SUCCESS, UPLOAD_AVATAR_FAILURE
+	UPDATE_USER_SUCCESS,
+	UPDATE_USER_FAILURE,
+	UPLOAD_AVATAR_REQUEST,
+	UPLOAD_AVATAR_SUCCESS,
+	UPLOAD_AVATAR_FAILURE,
+	TURN_ON_DARK_MODE,
+	TURN_OFF_DARK_MODE,
+	GET_VIEW_JOURNEY_REQUEST,
+	GET_VIEW_JOURNEY_SUCCESS,
+	GET_VIEW_JOURNEY_FAILURE,
+	CONTENT_RELOAD_ON,
+	CONTENT_RELOAD_OFF
 } from '../constants/redux-actions';
 import {
 	Coords,
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, User
+	GooglePlace, User, LastEvaluatedKey
 } from '@project-300/common-types';
 import { EditTypes } from './common';
+
+export interface DarkModeOn {
+	type: typeof TURN_ON_DARK_MODE;
+}
+
+export interface DarkModeOff {
+	type: typeof TURN_OFF_DARK_MODE;
+}
 
 export interface UpdateAddUserJourneyRequest {
 	type: typeof UPDATE_ADD_USER_JOURNEY_REQUEST;
@@ -94,6 +113,30 @@ export interface UpdateAddUserJourneyFailure {
 	type: typeof UPDATE_ADD_USER_JOURNEY_FAILURE;
 }
 
+export interface CancelPassengerAcceptanceRequest {
+	type: typeof CANCEL_PASSENGER_JOURNEY_REQUEST;
+}
+
+export interface CancelPassengerAcceptanceSuccess {
+	type: typeof CANCEL_PASSENGER_JOURNEY_SUCCESS;
+}
+
+export interface CancelPassengerAcceptanceFailure {
+	type: typeof CANCEL_PASSENGER_JOURNEY_FAILURE;
+}
+
+export interface GetViewJourneyRequest {
+	type: typeof GET_VIEW_JOURNEY_REQUEST;
+}
+
+export interface GetViewJourneySuccess {
+	type: typeof GET_VIEW_JOURNEY_SUCCESS;
+}
+
+export interface GetViewJourneyFailure {
+	type: typeof GET_VIEW_JOURNEY_FAILURE;
+}
+
 export interface GetAllJourneysRequest {
 	type: typeof GET_ALL_JOURNEYS_REQUEST;
 }
@@ -101,6 +144,8 @@ export interface GetAllJourneysRequest {
 export interface GetAllJourneysSuccess {
 	type: typeof GET_ALL_JOURNEYS_SUCCESS;
 	journeys: Journey[];
+	lastEvaluatedKey: LastEvaluatedKey;
+	isFirstCall: boolean;
 }
 
 export interface GetAllJourneysFailure {
@@ -416,13 +461,37 @@ export interface UpdateAvatarFailure {
 	type: typeof UPLOAD_AVATAR_FAILURE;
 }
 
-export type JourneyActionTypes =
+export interface ContentReloadOn {
+	type: typeof CONTENT_RELOAD_ON;
+}
+
+export interface ContentReloadOff {
+	type: typeof CONTENT_RELOAD_OFF;
+}
+
+export type ContentReloadActionTypes =
+	ContentReloadOn |
+	ContentReloadOff;
+
+export type DarkModeActionTypes =
+	DarkModeOn |
+	DarkModeOff;
+
+export type SearchJourneysActionTypes =
 	GetAllJourneysRequest |
 	GetAllJourneysSuccess |
-	GetAllJourneysFailure |
+	GetAllJourneysFailure;
+
+export type ViewJourneyActionTypes =
+	GetViewJourneyRequest |
+	GetViewJourneySuccess |
+	GetViewJourneyFailure |
 	UpdateAddUserJourneyRequest |
 	UpdateAddUserJourneySuccess |
-	UpdateAddUserJourneyFailure;
+	UpdateAddUserJourneyFailure |
+	CancelPassengerAcceptanceRequest |
+	CancelPassengerAcceptanceSuccess |
+	CancelPassengerAcceptanceFailure;
 
 export type LoginActionTypes =
 	LoginRequest |
@@ -552,6 +621,8 @@ export type CreateNewJourneyActionTypes =
 	CreateJourneyFindRouteActionTypes;
 
 export type AppActions =
+	ContentReloadActionTypes |
+	DarkModeActionTypes |
 	LoginActionTypes |
 	SignUpActionTypes |
 	UserProfileActionTypes |
@@ -561,5 +632,6 @@ export type AppActions =
 	DriverTrackingActionTypes |
 	DriverApplicationActionTypes |
 	CreateNewJourneyActionTypes |
-	JourneyActionTypes |
+	SearchJourneysActionTypes |
+	ViewJourneyActionTypes |
 	InterestsActionTypes;

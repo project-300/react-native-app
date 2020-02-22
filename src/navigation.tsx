@@ -8,6 +8,7 @@ import DriverTracking from './screens/passenger/driver-tracking';
 import NewJourney from './screens/new-journey';
 import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
+import InteractiveMap from './screens/passenger/view-journey/journey-map';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
@@ -24,6 +25,7 @@ import {
 	NavigationMaterialBottomTabOptions
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
+import { Theme } from './constants/theme';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -56,7 +58,8 @@ const headerBar = (
 			display: true,
 			logout: true,
 			settings: true,
-			becomeDriver: true
+			becomeDriver: true,
+			darkMode: true
 		} }
 		customOptions={ customOptions }
 	/>;
@@ -97,9 +100,13 @@ const SearchTab: NavigationContainer = createStackNavigator({
 		screen: ViewJourney,
 		...navigationOptions('Journey', undefined, true)
 	},
+	InteractiveMap: {
+		screen: InteractiveMap,
+		...navigationOptions('Interactive Map', undefined, true)
+	},
 	OtherProfile: {
 		screen: Profile,
-		...navigationOptions('Other Profile', undefined, false)
+		...navigationOptions('Other Profile', undefined, true)
 	}
 });
 
@@ -130,21 +137,21 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		screen: MyJourneysTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'My Journeys',
-			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ 'white' } />
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />
 		})
 	},
 	ProfileTab: {
 		screen: ProfileTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Profile',
-			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ 'white' } solid />
+			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
 		})
 	},
 	SearchTab: {
 		screen: SearchTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Search',
-			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ 'white' } solid />,
+			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ Theme.accent } solid />,
 			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
 				if (navigation.isFocused) navigation.navigate('AllJourneys');
 			}
@@ -154,7 +161,7 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		screen: NewJourneyTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'New Journey',
-			tabBarIcon: <Icon name={ 'plus' } size={ 22 } color={ 'white' } solid />
+			tabBarIcon: <Icon name={ 'plus' } size={ 22 } color={ Theme.accent } solid />
 		})
 	}
 },
@@ -164,7 +171,7 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		animationEnabled: true,
 		swipeEnabled: true,
 		shifting: true,
-		activeColor: 'white'
+		activeColor: Theme.accent
 	}
 );
 

@@ -11,3 +11,6 @@ export * from './driver/new-journey';
 export * from './passenger/driver-tracking';
 export * from './journey';
 export * from './data/interests';
+export * from './theme/theme';
+export * from './passenger/view-journey';
+export * from './content-reloading';

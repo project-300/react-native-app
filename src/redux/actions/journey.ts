@@ -3,87 +3,91 @@ import {
 	GET_ALL_JOURNEYS_REQUEST,
 	GET_ALL_JOURNEYS_SUCCESS,
 	GET_ALL_JOURNEYS_FAILURE,
-	UPDATE_ADD_USER_JOURNEY_REQUEST,
-	UPDATE_ADD_USER_JOURNEY_SUCCESS,
-	UPDATE_ADD_USER_JOURNEY_FAILURE
+	CLEAR_ALL_JOURNEYS,
+	SEARCH_JOURNEYS_REQUEST,
+	SEARCH_JOURNEYS_SUCCESS,
+	SEARCH_JOURNEYS_FAILURE,
 } from '../../constants/redux-actions';
-import HttpAPI from '../../api/http';
 import { Dispatch } from 'redux';
-import {
-	GetAllJourneysResult,
-	UpdateAddUserJourneyResult
-} from '../../types/http-responses';
+import { GetAllJourneysResult } from '../../types/http-responses';
 import toastr from '../../helpers/toastr';
-import { Journey } from '@project-300/common-types';
-import { Auth } from 'aws-amplify';
+import { Journey, LastEvaluatedKey } from '@project-300/common-types';
+import { JourneyService } from '../../services/journey';
 
 const getAllJourneysRequest = (): AppActions => ({
 	type: GET_ALL_JOURNEYS_REQUEST
 });
 
-const getAllJourneysSuccess = (journeys: Journey[]): AppActions => ({
+const getAllJourneysSuccess = (journeys: Journey[], isFirstCall: boolean, lastEvaluatedKey?: LastEvaluatedKey): AppActions => ({
 	type: GET_ALL_JOURNEYS_SUCCESS,
-	journeys
+	journeys,
+	lastEvaluatedKey,
+	isFirstCall
 });
 
 const getAllJourneysFailure = (): AppActions => ({
 	type: GET_ALL_JOURNEYS_FAILURE
 });
 
-const updateUserJoinsJourneyRequest = (): AppActions => ({
-	type: UPDATE_ADD_USER_JOURNEY_REQUEST
+const searchJourneysRequest = (): AppActions => ({
+	type: SEARCH_JOURNEYS_REQUEST
 });
 
-const updateUserJoinsJourneySuccess = (): AppActions => ({
-	type: UPDATE_ADD_USER_JOURNEY_SUCCESS
+const searchJourneysSuccess = (journeys: Journey[], isFirstCall: boolean, lastEvaluatedKey?: LastEvaluatedKey): AppActions => ({
+	type: SEARCH_JOURNEYS_SUCCESS,
+	journeys,
+	lastEvaluatedKey,
+	isFirstCall
 });
 
-const updateUserJoinsJourneyFailure = (): AppActions => ({
-	type: UPDATE_ADD_USER_JOURNEY_FAILURE
+const searchJourneysFailure = (): AppActions => ({
+	type: SEARCH_JOURNEYS_FAILURE
 });
 
-export const updateAddUserJourney = (journeyId: string): ((dispatch: Dispatch) => Promise<boolean>) => {
+export const clearJourneys = (): AppActions => ({
+	type: CLEAR_ALL_JOURNEYS
+});
+
+export const getAllJourneys = (isFirstCall: boolean, lastEvaluatedKey?: LastEvaluatedKey): ((dispatch: Dispatch) => Promise<boolean>) => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
-		dispatch(updateUserJoinsJourneyRequest());
+		dispatch(getAllJourneysRequest());
 
 		try {
-			const user = await Auth.currentAuthenticatedUser();
-			const userId: string = user.attributes.sub;
-			const apiRes: UpdateAddUserJourneyResult = await HttpAPI.updateUserJoinsJourney({ userId, journeyId });
+			const result: GetAllJourneysResult = await JourneyService.getAllJourneys(lastEvaluatedKey);
 
-			if (apiRes.success) {
-				dispatch(updateUserJoinsJourneySuccess());
-				toastr.success('You are now added to the journey');
+			console.log(result);
+
+			if (result.success && result.journeys) {
+				dispatch(getAllJourneysSuccess(result.journeys, isFirstCall, result.lastEvaluatedKey));
 				return true;
 			}
 
 			return false;
 		} catch (err) {
 			console.log(err);
-			dispatch(updateUserJoinsJourneyFailure());
+			dispatch(getAllJourneysFailure());
 			toastr.error(err.message || err.description || 'Unknown Error');
 			return false;
 		}
 	};
 };
 
-export const getAllJourneys = (): ((dispatch: Dispatch) => Promise<boolean>) => {
+export const searchJourneys = (query: string, isFirstCall: boolean, lastEvaluatedKey?: LastEvaluatedKey): ((dispatch: Dispatch) => Promise<boolean>) => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
-		dispatch(getAllJourneysRequest());
+		dispatch(searchJourneysRequest());
 
 		try {
-			const user = await Auth.currentAuthenticatedUser();
-			const userId: string = user.attributes.sub;
-			const apiRes: GetAllJourneysResult = await HttpAPI.getAllJourneys(userId);
+			const result: GetAllJourneysResult = await JourneyService.searchJourneys(query, lastEvaluatedKey);
 
-			if (apiRes.success && apiRes.journeys) {
-				dispatch(getAllJourneysSuccess(apiRes.journeys));
+			if (result.success && result.journeys) {
+				dispatch(searchJourneysSuccess(result.journeys, isFirstCall, result.lastEvaluatedKey));
 				return true;
 			}
 
 			return false;
 		} catch (err) {
-			dispatch(getAllJourneysFailure());
+			console.log(err);
+			dispatch(searchJourneysFailure());
 			toastr.error(err.message || err.description || 'Unknown Error');
 			return false;
 		}

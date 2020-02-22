@@ -25,10 +25,11 @@ import { AppActions } from '../../../types/redux-action-types';
 import { GooglePlace } from '../../../types/maps';
 import { GoogleNearbyPlaceResult, GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../../../types/google';
 import ExternalApi from '../../../api/external-api';
-import { Coords, CreateJourney, GooglePlaceDetails } from '@project-300/common-types';
+import { Coords, CreateJourney, GooglePlaceDetails, Journey } from '@project-300/common-types';
 import HttpAPI from '../../../api/http';
 import { userId } from '../../../auth';
 import { CreateJourneyResult } from '../../../types/http-responses';
+import { JourneyService } from '../../../services/journey';
 
 const googlePlacesSearchRequest = (): AppActions => ({ type: GOOGLE_PLACES_SEARCH_REQUEST });
 
@@ -105,14 +106,12 @@ export const getGooglePlaceDetails = (placeId: string, locationType: string): (d
 	};
 };
 
-export const createJourney = (journey: CreateJourney): (dispatch: Dispatch) => Promise<boolean> => {
+export const createJourney = (journey: Partial<Journey>): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(createJourneyRequest());
 
-		const uId: string = await userId() as string;
-
 		try {
-			const apiRes: CreateJourneyResult = await HttpAPI.createJourney({ journey, userId: uId });
+			const apiRes: CreateJourneyResult = await JourneyService.createJourney(journey);
 
 			console.log(apiRes);
 

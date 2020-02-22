@@ -16,7 +16,6 @@ import { NavigationEvents } from 'react-navigation';
 import { Container, Tab, Tabs, Content, Spinner, Card, CardItem, Body } from 'native-base';
 import DatesTimes from '../../../services/dates-times';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import HeaderBar from '../../../headerbar';
 
 export class MyJourneys extends Component<Props, State> {
 

@@ -3,6 +3,7 @@ import { Appbar, Divider, Menu } from 'react-native-paper';
 import { CommonProps } from './types/common';
 import { storeLogout, userType } from './auth';
 import { View } from 'react-native';
+import { Theme, ToggleDarkMode } from './constants/theme';
 
 interface Props extends CommonProps {
 	title?: string;
@@ -13,6 +14,7 @@ interface Props extends CommonProps {
 		logout: boolean;
 		settings: boolean;
 		becomeDriver: boolean;
+		darkMode: boolean;
 	};
 	customOptions?: CustomOption[];
 }
@@ -70,12 +72,17 @@ export default class HeaderBar extends Component<Props, State> {
 			<Appbar.Header>
 				{
 					this.props.backButton &&
-						<Appbar.BackAction onPress={ this._goBack } />
+						<Appbar.BackAction
+							onPress={ this._goBack }
+							color={ Theme.accent }
+						/>
 				}
 
 				<Appbar.Content
 					title={ this.props.title }
 					subtitle={ this.props.subtitle }
+					color={ Theme.accent }
+					titleStyle={ { fontWeight: 'bold' } }
 				/>
 
 				{
@@ -83,19 +90,45 @@ export default class HeaderBar extends Component<Props, State> {
 						<Menu
 							visible={ this.state.optionsVisible }
 							onDismiss={ this._closeMenu }
-							anchor={ <Appbar.Action icon='dots-vertical' onPress={ this._openMenu } color='white' /> }
+							anchor={
+								<Appbar.Action
+									icon='dots-vertical'
+									onPress={ this._openMenu }
+									color={ Theme.accent }
+								/>
+							}
 						>
 							{
 								this.props.options.becomeDriver && this.state.driverUpgradeAvailable &&
-									<Menu.Item onPress={ this._becomeDriver } title='Become a Driver' />
+									<Menu.Item
+										onPress={ this._becomeDriver }
+										title='Become a Driver'
+									/>
 							}
 
-							{ this.props.options.settings && <Menu.Item onPress={ this._settings } title='Settings' /> }
+							{
+								this.props.options.settings &&
+									<Menu.Item
+										onPress={ this._settings }
+										title='Settings'
+									/>
+							}
+
+							{
+								this.props.options.darkMode &&
+									<Menu.Item
+										onPress={ ToggleDarkMode }
+										title='Dark Mode'
+									/>
+							}
 
 							{
 								this.props.customOptions &&
 									this.props.customOptions.map(
-										(op: CustomOption) => <Menu.Item onPress={ op.action } title={ op.title } />
+										(op: CustomOption) => <Menu.Item
+											onPress={ op.action }
+											title={ op.title }
+										/>
 									)
 							}
 
@@ -103,7 +136,10 @@ export default class HeaderBar extends Component<Props, State> {
 								this.props.options.logout &&
 									<View>
 										<Divider />
-										<Menu.Item onPress={ this._logout } title='Logout' />
+										<Menu.Item
+											onPress={ this._logout }
+											title='Logout'
+										/>
 									</View>
 							}
 						</Menu>
