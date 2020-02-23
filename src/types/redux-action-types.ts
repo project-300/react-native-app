@@ -82,14 +82,14 @@ import {
 	GET_VIEW_JOURNEY_SUCCESS,
 	GET_VIEW_JOURNEY_FAILURE,
 	CONTENT_RELOAD_ON,
-	CONTENT_RELOAD_OFF
+	CONTENT_RELOAD_OFF, GET_CHAT_REQUEST, GET_CHAT_SUCCESS, GET_CHAT_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, User, LastEvaluatedKey
+	GooglePlace, User, LastEvaluatedKey, Chat
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -434,6 +434,19 @@ export interface InterestsFailure {
 	type: typeof INTERESTS_FAILURE;
 }
 
+export interface GetChatRequest {
+	type: typeof GET_CHAT_REQUEST;
+}
+
+export interface GetChatSuccess {
+	type: typeof GET_CHAT_SUCCESS;
+	chat: Chat;
+}
+
+export interface GetChatFailure {
+	type: typeof GET_CHAT_FAILURE;
+}
+
 export interface UpdateUserFieldRequest {
 	type: typeof UPDATE_USER_REQUEST;
 }
@@ -525,6 +538,11 @@ export type InterestsActionTypes =
 	InterestsRequest |
 	InterestsSuccess |
 	InterestsFailure;
+
+export type ChatActionTypes =
+	GetChatRequest |
+	GetChatSuccess |
+	GetChatFailure;
 
 export type UpdateEmailActionTypes =
 	UpdateEmailRequest |
@@ -634,4 +652,5 @@ export type AppActions =
 	CreateNewJourneyActionTypes |
 	SearchJourneysActionTypes |
 	ViewJourneyActionTypes |
-	InterestsActionTypes;
+	InterestsActionTypes |
+	ChatActionTypes;

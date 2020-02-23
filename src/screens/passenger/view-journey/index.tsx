@@ -294,7 +294,7 @@ export class ViewJourney extends Component<Props, State> {
 						</Text>
 
 						{
-							driver.firstName || driver.lastName &&
+							!!driver.firstName || !!driver.lastName &&
 								<Text style={ [
 									styles.infoRow,
 									DarkMode.bwTextColorSwitch(DARK_MODE)
@@ -318,7 +318,7 @@ export class ViewJourney extends Component<Props, State> {
 								styles.bold,
 								DarkMode.bwTextColorSwitch(DARK_MODE)
 							] }>
-								{ `${journey.readableDurations.createdAt}` }
+								{ ` ${journey.readableDurations.createdAt}` }
 							</Text>
 						</Text>
 

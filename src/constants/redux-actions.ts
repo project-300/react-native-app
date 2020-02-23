@@ -57,6 +57,11 @@ export const INTERESTS_REQUEST: string = 'INTERESTS_REQUEST';
 export const INTERESTS_SUCCESS: string = 'INTERESTS_SUCCESS';
 export const INTERESTS_FAILURE: string = 'INTERESTS_FAILURE';
 
+// Interests
+export const GET_CHAT_REQUEST: string = 'GET_CHAT_REQUEST';
+export const GET_CHAT_SUCCESS: string = 'GET_CHAT_SUCCESS';
+export const GET_CHAT_FAILURE: string = 'GET_CHAT_FAILURE';
+
 // Driver Applications
 export const DRIVER_APPLICATION_REQUEST: string = 'DRIVER_APPLICATION_REQUEST';
 export const DRIVER_APPLICATION_SUCCESS: string = 'DRIVER_APPLICATION_SUCCESS';

@@ -9,6 +9,7 @@ import NewJourney from './screens/new-journey';
 import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
 import InteractiveMap from './screens/passenger/view-journey/journey-map';
+import Chat from './screens/chat';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
@@ -132,6 +133,13 @@ const NewJourneyTab: NavigationContainer = createStackNavigator({
 	}
 });
 
+const ChatTab: NavigationContainer = createStackNavigator({
+	Chat: {
+		screen: Chat,
+		...navigationOptions('Chat', undefined, false)
+	}
+});
+
 const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 	MyJourneysTab: {
 		screen: MyJourneysTab,
@@ -162,6 +170,13 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'New Journey',
 			tabBarIcon: <Icon name={ 'plus' } size={ 22 } color={ Theme.accent } solid />
+		})
+	},
+	ChatTab: {
+		screen: ChatTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Chat',
+			tabBarIcon: <Icon name={ 'comments' } size={ 22 } color={ Theme.accent } solid />
 		})
 	}
 },

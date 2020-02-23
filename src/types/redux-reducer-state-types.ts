@@ -1,4 +1,4 @@
-import { Coords, GooglePlaceDetails, Journey, LastEvaluatedKey, User } from '@project-300/common-types';
+import { Chat, Coords, GooglePlaceDetails, Journey, LastEvaluatedKey, User } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
@@ -58,6 +58,11 @@ export interface UserProfileState {
 export interface InterestsState {
 	requestingInterests: boolean;
 	interests: string[];
+}
+
+export interface ChatState {
+	fetchingChat: boolean;
+	chat: Chat | undefined;
 }
 
 export interface UpdateUserFieldState {
