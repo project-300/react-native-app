@@ -61,11 +61,9 @@ export const checkIfApplied = (): ((dispatch: Dispatch) => Promise<boolean>) => 
 			const apiRes: DriverApplicationCheckResult = await DriverApplicationService.checkIfUserHasApplied(id);
 
 			if (apiRes.success && apiRes.alreadyApplied) {
-				console.log('here');
 				dispatch(applicationAlreadyApplied(true));
 				return true;
 			}
-			console.log('ere');
 			dispatch(applicationAlreadyApplied(false));
 			return true;
 		} catch (err) {

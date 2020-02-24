@@ -1,4 +1,4 @@
-import { DriverApplicationCheckResult, DriverApplicationResult } from './../types/http-responses';
+import { DriverApplicationCheckResult, DriverApplicationResult, VehicleMakesResult, VehicleModelsResult } from './../types/http-responses';
 import { ApiName } from './../../environment/env';
 import { API } from 'aws-amplify';
 import { DriverApplicationObject } from '@project-300/common-types';
@@ -15,8 +15,8 @@ export class DriverApplicationService {
 			body: application
 		})
 
-	public static getAllVehicleMakes = async (): Promise<object[]> => API.get(ApiName, '/driver-applications/vehicle-makes', '');
+	public static getAllVehicleMakes = async (): Promise<VehicleMakesResult> => API.get(ApiName, '/driver-applications/vehicle-makes', '');
 
-	public static getVehicleModels = async (makeId: string, year: string): Promise<object[]> => API.get(ApiName,
-		'/driver-applications/vehicle-models', '')
+	public static getVehicleModels = async (makeId: string, year: string): Promise<VehicleModelsResult> => API.get(ApiName,
+		`/driver-applications/vehicle-models?makeId=${makeId}&year=${year}`, '')
 }

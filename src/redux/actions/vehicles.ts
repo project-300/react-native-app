@@ -1,3 +1,5 @@
+import { VehicleMakesResult, VehicleModelsResult } from './../../types/http-responses';
+import { DriverApplicationService } from './../../services/driver-application';
 import {
 	VEHICLE_MAKES_REQUEST,
 	VEHICLE_MAKES_SUCCESS,
@@ -7,15 +9,15 @@ import {
 	VEHICLE_MODELS_FAILURE
 } from '../../constants/redux-actions';
 import { Dispatch } from 'redux';
-import { DriverApplicationResult } from '../../types/http-responses';
 import toastr from '../../helpers/toastr';
 import { AppActions } from '../../types/redux-action-types';
+import { VehicleMake, VehicleModel } from '@project-300/common-types';
 
 const vehicleMakesRequest = (): AppActions => ({
 	type: VEHICLE_MAKES_REQUEST
 });
 
-const vehiclesMakesSuccess = (vehicleMakes: object[]): AppActions => ({
+const vehiclesMakesSuccess = (vehicleMakes: VehicleMake[]): AppActions => ({
 	type: VEHICLE_MAKES_SUCCESS,
 	vehicleMakes
 });
@@ -28,7 +30,7 @@ const vehicleModelsRequest = (): AppActions => ({
 	type: VEHICLE_MODELS_REQUEST
 });
 
-const vehiclesModelsSuccess = (vehicleModels: object[]): AppActions => ({
+const vehiclesModelsSuccess = (vehicleModels: VehicleModel[]): AppActions => ({
 	type: VEHICLE_MODELS_SUCCESS,
 	vehicleModels
 });
@@ -37,48 +39,45 @@ const vehiclesModelsFailure = (): AppActions => ({
 	type: VEHICLE_MODELS_FAILURE
 });
 
-// export const apply = (): ((dispatch: Dispatch) => Promise<boolean>) => {
-// 	return async (dispatch: Dispatch): Promise<boolean> => {
-// 		dispatch(driverApplicationRequest());
+export const getVehicleMakes = (): ((dispatch: Dispatch) => Promise<boolean>) => {
+	return async (dispatch: Dispatch): Promise<boolean> => {
+		dispatch(vehicleMakesRequest());
 
-// 		try {
-// 			const apiRes: DriverApplicationResult = await DriverApplicationService.applyForApplication({ userId: await userId() as string });
+		try {
+			const apiRes: VehicleMakesResult = await DriverApplicationService.getAllVehicleMakes();
 
-// 			if (apiRes.success) {
-// 				// await setUserType('Driver'); // ********** Temporarily switch to Driver user type on auto approve
-// 				dispatch(driverApplicationSuccess());
-// 				toastr.success('You have successfully submitted your application');
-// 				return true;
-// 			}
+			if (apiRes.success) {
+				dispatch(vehiclesMakesSuccess(apiRes.vehicleMakes));
+				return true;
+			}
 
-// 			return false;
-// 		} catch (err) {
-// 			dispatch(driverApplicationFailure());
-// 			toastr.error(err.message || err.description || 'Unknown Error');
-// 			return false;
-// 		}
-// 	};
-// };
+			return false;
+		} catch (err) {
+			dispatch(vehiclesMakesFailure());
+			toastr.error(err.message || err.description || 'Unknown Error');
+			return false;
+		}
+	};
+};
 
-// export const checkIfApplied = (): ((dispatch: Dispatch) => Promise<boolean>) => {
-// 	return async (dispatch: Dispatch): Promise<boolean> => {
-// 		dispatch(driverApplicationRequest());
+export const getVehicleModels = (makeId: string, year: string): ((dispatch: Dispatch) => Promise<boolean>) => {
+	return async (dispatch: Dispatch): Promise<boolean> => {
+		dispatch(vehicleModelsRequest());
 
-// 		try {
-// 			const id: string = await userId() as string;
-// 			const apiRes: DriverApplicationCheckResult = await DriverApplicationService.checkIfUserHasApplied(id);
+		try {
+			const apiRes: VehicleModelsResult = await DriverApplicationService.getVehicleModels(makeId, year);
+			console.log(apiRes);
 
-// 			if (apiRes.success && apiRes.alreadyApplied) {
-// 				dispatch(applicationAlreadyApplied(true));
-// 				return true;
-// 			}
+			if (apiRes.success) {
+				dispatch(vehiclesModelsSuccess(apiRes.vehicleModels));
+				return true;
+			}
 
-// 			dispatch(applicationAlreadyApplied(false));
-// 			return true;
-// 		} catch (err) {
-// 			dispatch(driverApplicationFailure());
-// 			toastr.error(err.message || err.description || 'Unknown Error');
-// 			return false;
-// 		}
-// 	};
-// };
+			return false;
+		} catch (err) {
+			dispatch(vehiclesModelsFailure());
+			toastr.error(err.message || err.description || 'Unknown Error');
+			return false;
+		}
+	};
+};

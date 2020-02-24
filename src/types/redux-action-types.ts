@@ -79,7 +79,7 @@ import {
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, User
+	GooglePlace, User, VehicleModel, VehicleMake
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -210,7 +210,7 @@ export interface VehicleMakesRequest {
 
 export interface VehicleMakesSuccess {
 	type: typeof VEHICLE_MAKES_SUCCESS;
-	vehicleMakes: object[];
+	vehicleMakes: VehicleMake[];
 }
 
 export interface VehicleMakesFailure {
@@ -223,7 +223,7 @@ export interface VehicleModelsRequest {
 
 export interface VehicleModelsSuccess {
 	type: typeof VEHICLE_MODELS_SUCCESS;
-	vehicleModels: object[];
+	vehicleModels: VehicleModel[];
 }
 
 export interface VehicleModelsFailure {

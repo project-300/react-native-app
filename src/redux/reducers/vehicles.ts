@@ -7,7 +7,7 @@ import {
 	VEHICLE_MAKES_FAILURE
 } from '../../constants/redux-actions';
 import { VehicleMakesAndModelsState } from '../../types/redux-reducer-state-types';
-import { VehicleMakesAndModelsTypes } from '../../types/redux-action-types';
+import { VehicleMakesAndModelsTypes, VehicleModelsSuccess, VehicleMakesSuccess } from '../../types/redux-action-types';
 
 const initialState: VehicleMakesAndModelsState = {
 	isFetching: false,
@@ -23,13 +23,16 @@ const vehicleMakesAndModelsReducer = (
 		case VEHICLE_MODELS_REQUEST:
 			return { ...state, isFetching: true };
 		case VEHICLE_MODELS_SUCCESS:
-			return { ...state, isFetching: false };
+			const { vehicleModels } = action as VehicleModelsSuccess;
+			return { ...state, vehicleModels, isFetching: false };
 		case VEHICLE_MODELS_FAILURE:
 			return { ...state, isFetching: false };
 		case VEHICLE_MAKES_REQUEST:
-			return { ...state, isFetching: true };
+			return { ...state,  isFetching: true };
 		case VEHICLE_MAKES_SUCCESS:
-			return { ...state, isFetching: false };
+			const { vehicleMakes } = action as VehicleMakesSuccess;
+			// console.log(vehicleMakes)
+			return { ...state, vehicleMakes, isFetching: false };
 		case VEHICLE_MAKES_FAILURE:
 			return { ...state, isFetching: false };
 		default:
