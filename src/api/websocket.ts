@@ -1,9 +1,18 @@
 import { SERVER_WSS_URL } from '../../environment/env';
 import { store } from '../store';
-import { userProfileSubReceived, userProfileSubFailure, updateDriverLocation } from '../redux/actions';
+import { updateDriverLocation, newChatMessages } from '../redux/actions';
 import { userId } from '../auth';
-import { USER_PROFILE, JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
+import { JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
 import { SubscriptionPayload } from '@project-300/common-types';
+import { Auth } from 'aws-amplify';
+import { AsyncStorage } from 'react-native';
+import { deviceId } from '../app';
+
+export const updateConnectionId = async (connectionId: string): Promise<void> => {
+	await AsyncStorage.setItem('Websocket-Connection-ID', connectionId);
+};
+
+export const connectionId = async (): Promise<string | null> => AsyncStorage.getItem('Websocket-Connection-ID');
 
 class WebSocketAPI {
 
@@ -13,15 +22,17 @@ class WebSocketAPI {
 		this._setup();
 	}
 
-	private _setup = (): void => {
-		this.WS.onopen = (): void => {
+	public _setup = (reconnect?: boolean): void => {
+		this.WS.onopen = async (): Promise<void> => {
 			console.log('Connected');
+
+			await this.updateConnection(!!reconnect);
 		};
 
-		this.WS.onmessage = (ev: MessageEvent): void => {
+		this.WS.onmessage = async (ev: MessageEvent): Promise<void> => {
 			console.log(ev);
 			const data: SubscriptionPayload = JSON.parse(ev.data);
-			if (data && data.subscription) this._dispatchSubscriptionData(data);
+			if (data && data.subscription) await this._dispatchSubscriptionData(data);
 		};
 
 		this.WS.onerror = (ev: Event): void => {
@@ -33,7 +44,7 @@ class WebSocketAPI {
 
 			if (ev.code === 1001) { // Connection dropped - Recreate connection
 				this.WS =  new WebSocket(SERVER_WSS_URL);
-				this._setup();
+				this._setup(true);
 			}
 		};
 	}
@@ -57,18 +68,35 @@ class WebSocketAPI {
 		}));
 	}
 
-	private _dispatchSubscriptionData = (payload: SubscriptionPayload): void => {
-		let { subscription }  = payload;
+	public updateConnection = async (reconnect: boolean): Promise<void> => {
+		const user: any = await Auth.currentUserInfo();
+		if (!user) return;
+
+		this.WS.send(JSON.stringify({
+			action: 'updateConnection',
+			userId: user.attributes.sub,
+			deviceId: await deviceId(),
+			oldConnection: reconnect ? await connectionId() : undefined
+		}));
+	}
+
+	private _dispatchSubscriptionData = async (payload: SubscriptionPayload): Promise<void> => {
+		let { subscription } = payload;
+
+		if (payload.subscription === 'connectionUpdated') await updateConnectionId(payload.connectionId);
 
 		console.log(subscription);
 		if (subscription && subscription.indexOf('/#')) subscription = subscription.split('/#')[0];
 		console.log(subscription);
 
-
 		switch (subscription) {
 			case JOURNEY_DRIVER_LOCATION:
 				console.log(payload);
 				store.dispatch(updateDriverLocation(payload));
+				break;
+			case 'chat/messages':
+				console.log(payload);
+				store.dispatch(newChatMessages(payload));
 				break;
 			default:
 				return;

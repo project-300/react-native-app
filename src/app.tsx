@@ -9,6 +9,9 @@ import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
 import { Theme, DarkTheme as Test } from './constants/theme';
 import { setDarkMode } from './redux/actions';
+import WS from './api/websocket';
+import { v4 as uuid } from 'uuid';
+import { AsyncStorage } from 'react-native';
 
 Amplify.configure(AWS_CONFIG);
 
@@ -18,6 +21,18 @@ interface State {
 	checkedLoggedIn: boolean;
 	isDarkMode: boolean;
 }
+
+/*
+	Used for identifying what device a user is making API / websocket calls from.
+	It will improve websocket subscription handling on the backend.
+	This will allow the user to use more than 1 device at the same time
+*/
+export const setDeviceId = async (): Promise<void> => {
+	const currentDeviceId = await deviceId();
+	if (!currentDeviceId) await AsyncStorage.setItem('Device-ID', uuid());
+};
+
+export const deviceId = async (): Promise<string | null> => AsyncStorage.getItem('Device-ID');
 
 export default class App extends Component<Props, State> {
 
@@ -37,6 +52,10 @@ export default class App extends Component<Props, State> {
 		try {
 			const loggedIn = await isStoreLoggedIn();
 			this.setState({ loggedIn, checkedLoggedIn: true });
+
+			await setDeviceId();
+			console.log(await deviceId());
+			WS._setup();
 		} catch (err) {
 			toastr.error('Unable to authenticate');
 		}
