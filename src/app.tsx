@@ -34,6 +34,8 @@ export const setDeviceId = async (): Promise<void> => {
 
 export const deviceId = async (): Promise<string | null> => AsyncStorage.getItem('Device-ID');
 
+export const clearDeviceId = async (): Promise<void> => AsyncStorage.removeItem('Device-ID')
+
 export default class App extends Component<Props, State> {
 
 	public constructor(props: object) {
@@ -52,6 +54,8 @@ export default class App extends Component<Props, State> {
 		try {
 			const loggedIn = await isStoreLoggedIn();
 			this.setState({ loggedIn, checkedLoggedIn: true });
+
+			console.log(await deviceId());
 
 			await setDeviceId();
 			console.log(await deviceId());

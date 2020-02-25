@@ -3,17 +3,20 @@ import {
 	Text,
 	ScrollView,
 	View,
-	TextInput
+	TextInput, TouchableHighlight, Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { getChat } from '../../redux/actions';
+import { chatSubscribe, chatUnsubscribe, getChatMessages } from '../../redux/actions';
 import { AppState } from '../../store';
 import { ChatState } from '../../types/redux-reducer-state-types';
 import { NavigationEvents } from 'react-navigation';
 import { Message } from '@project-300/common-types';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { MessageService } from '../../services/message';
+import moment from 'moment';
+import DatesTimes from '../../services/dates-times';
 
 export class Chat extends Component<Props, State> {
 
@@ -21,76 +24,25 @@ export class Chat extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			messages: [
-				{
-					messageId: 'messageid123',
-					chatId: 'cc19ccbb-43a0-45d4-9850-91b877004ce8',
-					text: 'Hello',
-					createdBy: {
-						userId: '00c35391-2b2e-4155-b90d-47d6d922a245',
-						firstName: 'Charles',
-						lastName: 'McCarthy',
-						avatar: 'https://react-native-test-upload.s3.amazonaws.com/avatars%2Fimg_0010.jpg',
-						userType: 'Passenger'
-					},
-					readByRecipient: false,
-					userOwnMessage: true,
-					times: {
-						createdAt: '2020-02-20T13:45:10.285Z'
-					}
-				},
-				{
-					messageId: 'messageid543',
-					chatId: 'cc19ccbb-43a0-45d4-9850-91b877004ce8',
-					text: 'This is a test message',
-					createdBy: {
-						userId: 'cfa18855-2eb3-479b-9120-6ca3bef23fda',
-						firstName: 'John',
-						lastName: 'Doe',
-						avatar: 'https://react-native-test-upload.s3.amazonaws.com/avatars%2Fimg_0010.jpg',
-						userType: 'Driver'
-					},
-					readByRecipient: false,
-					userOwnMessage: false,
-					times: {
-						createdAt: '2020-02-20T13:49:42.285Z'
-					}
-				}
-			]
+			messageText: ''
 		};
 	}
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
-		await this._getChat();
+		// await this._getChat();
+		// await this.props.chatSubscribe(this.props.otherUserId);
+		await this.props.chatSubscribe('cfa18855-2eb3-479b-9120-6ca3bef23fda');
 	}
 
-	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
-		// this.setState(this.initialState); // Reset the state of the component for next mount
+	private _unmountScreen = async (): Promise<void> => { // Triggered when the screen is navigated away from
+		await this.props.chatUnsubscribe('cfa18855-2eb3-479b-9120-6ca3bef23fda');
 	}
 
-	private _getChat = async (): Promise<void> => {
-		const chatRetrieved: boolean = await this.props.getChat('cfa18855-2eb3-479b-9120-6ca3bef23fda');
-		if (chatRetrieved) console.log('done'); // subscribe to messages
-	}
-
-	private _sendMessage = (): void => {
-		this.setState({ messages: [ ...this.state.messages, {
-			messageId: 'messageid' + new Date().toISOString(),
-			chatId: 'cc19ccbb-43a0-45d4-9850-91b877004ce8',
+	private _sendMessage = async (): Promise<void> => {
+		await MessageService.sendMessage({
 			text: this.state.messageText,
-			createdBy: {
-				userId: '00c35391-2b2e-4155-b90d-47d6d922a245',
-				firstName: 'Charles',
-				lastName: 'McCarthy',
-				avatar: 'https://react-native-test-upload.s3.amazonaws.com/avatars%2Fimg_0010.jpg',
-				userType: 'Passenger'
-			},
-			readByRecipient: false,
-			userOwnMessage: true,
-			times: {
-				createdAt: new Date().toISOString()
-			}
-		} ]});
+			chatId: '29845242-8684-40d1-9e2f-b7d93dbaa2d7'
+		}, 'cfa18855-2eb3-479b-9120-6ca3bef23fda');
 	}
 
 	private _renderMessage = (message: Message): ReactElement => {
@@ -106,15 +58,38 @@ export class Chat extends Component<Props, State> {
 		/>
 
 	public render(): ReactElement {
+		console.log(this.props.messages);
 		return (
 			<View style={ styles.container }>
 				<ScrollView style={ styles.chatWindow }>
 					{ this._renderNavigationEvents() }
 
 					{
-						this.state.messages.map((message: Message) => {
-							return <View style={ [ styles.messageBubble, message.userOwnMessage ? styles.ownUserMessage : { } ] }>
-								<Text style={ styles.messageText }>{ message.text }</Text>
+						this.props.messages.map((message: Message) => {
+							return <View style={ [
+								styles.messageContainer,
+								message.userOwnMessage ? { alignSelf: 'flex-end' } : { }
+							] } key={ message.sk }>
+								{
+									!message.userOwnMessage &&
+										<Image style={ [ styles.avatar, styles.senderAvatar ] } source={ { uri: message.createdBy.avatar } } />
+								}
+								<View
+									style={ [
+										styles.messageBubble,
+										message.userOwnMessage ? styles.userOwnMessageBubble : { }
+									] }
+								>
+									<Text style={ [
+										styles.messageText,
+										message.userOwnMessage ? { } : styles.userOwnMessageText
+									] }>{ message.text }</Text>
+									<Text style={ [ styles.messageTime ] }>{ DatesTimes.dayAndTime(message.times.createdAt) }</Text>
+								</View>
+								{
+									message.userOwnMessage &&
+										<Image style={ [ styles.avatar, styles.ownAvatar ] } source={ { uri: message.createdBy.avatar } } />
+								}
 							</View>;
 						})
 					}
@@ -139,9 +114,12 @@ export class Chat extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): ChatState => ({
-	...state.chatReducer
+	...state.chatReducer,
+	...state.chatMessagesReducer
 });
 
 export default connect(mapStateToProps, {
-	getChat
+	chatSubscribe,
+	chatUnsubscribe,
+	getChatMessages
 })(Chat);

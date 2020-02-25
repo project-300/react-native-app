@@ -4,6 +4,8 @@ import { CommonProps } from './types/common';
 import { storeLogout, userType } from './auth';
 import { View } from 'react-native';
 import { Theme, ToggleDarkMode } from './constants/theme';
+import { Auth } from 'aws-amplify';
+import { clearDeviceId } from './app';
 
 interface Props extends CommonProps {
 	title?: string;
@@ -48,7 +50,9 @@ export default class HeaderBar extends Component<Props, State> {
 
 	private _logout = async (): Promise<void> => {
 		this._closeMenu();
-		await storeLogout().then(() => this.props.navigation.navigate('Login'));
+		await Auth.signOut(); // Sign out from Cognito
+		await storeLogout().then(() => this.props.navigation.navigate('Login')); // Sign out from local storage
+		await clearDeviceId(); // Remove DeviceId (used for websockets)
 	}
 
 	private _becomeDriver = (): void => {

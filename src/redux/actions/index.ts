@@ -15,3 +15,4 @@ export * from './theme/theme';
 export * from './passenger/view-journey';
 export * from './content-reloading';
 export * from './chat/chat';
+export * from './chat/message';

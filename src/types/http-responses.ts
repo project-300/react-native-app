@@ -1,4 +1,4 @@
-import { Journey, LastEvaluatedKey, User } from '@project-300/common-types';
+import { Journey, LastEvaluatedKey, Message, User } from '@project-300/common-types';
 
 export interface UpdateAddUserJourneyResult {
 	success: boolean;
@@ -11,6 +11,12 @@ export interface UpdateAddUserJourneyResult {
 export interface GetAllJourneysResult {
 	success: boolean;
 	journeys: Journey[];
+	lastEvaluatedKey: LastEvaluatedKey;
+}
+
+export interface GetChatMessagesResult {
+	success: boolean;
+	messages: Message[];
 	lastEvaluatedKey: LastEvaluatedKey;
 }
 

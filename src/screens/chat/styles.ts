@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -12,12 +12,17 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 20
 	},
 
+	messageContainer: {
+		width: width * 0.9,
+		flexDirection: 'row'
+	},
+
 	messageBubble: {
-		backgroundColor: '#555',
-		padding: 20,
+		backgroundColor: '#CCC',
+		padding: 12,
 		marginVertical: 10,
 		borderRadius: 16,
-		width: width * 0.9 - 40
+		width: width * 0.8
 	},
 
 	messageText: {
@@ -25,10 +30,35 @@ const styles: Styles = StyleSheet.create<Styles>({
 		fontSize: 16
 	},
 
-	ownUserMessage: {
+	messageTime: {
+		fontSize: 12,
 		alignSelf: 'flex-end',
-		alignItems: 'flex-end',
-		backgroundColor: '#999'
+		marginTop: 10
+	},
+
+	avatar: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		alignSelf: 'flex-end',
+		bottom: 10
+	},
+
+	senderAvatar: {
+		right: 10
+	},
+
+	ownAvatar: {
+		right: -10
+	},
+
+	userOwnMessageBubble: {
+		alignSelf: 'flex-end',
+		backgroundColor: '#148fcc'
+	},
+
+	userOwnMessageText: {
+		color: 'black'
 	},
 
 	sendButton: {

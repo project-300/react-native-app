@@ -57,10 +57,16 @@ export const INTERESTS_REQUEST: string = 'INTERESTS_REQUEST';
 export const INTERESTS_SUCCESS: string = 'INTERESTS_SUCCESS';
 export const INTERESTS_FAILURE: string = 'INTERESTS_FAILURE';
 
-// Interests
+// Chats
 export const GET_CHAT_REQUEST: string = 'GET_CHAT_REQUEST';
 export const GET_CHAT_SUCCESS: string = 'GET_CHAT_SUCCESS';
 export const GET_CHAT_FAILURE: string = 'GET_CHAT_FAILURE';
+
+// Messages
+export const GET_CHAT_MESSAGES_REQUEST: string = 'GET_CHAT_MESSAGES_REQUEST';
+export const GET_CHAT_MESSAGES_SUCCESS: string = 'GET_CHAT_MESSAGES_SUCCESS';
+export const GET_CHAT_MESSAGES_FAILURE: string = 'GET_CHAT_MESSAGES_FAILURE';
+export const NEW_CHAT_SUB_MESSAGES: string = 'NEW_CHAT_SUB_MESSAGES';
 
 // Driver Applications
 export const DRIVER_APPLICATION_REQUEST: string = 'DRIVER_APPLICATION_REQUEST';

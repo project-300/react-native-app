@@ -11,12 +11,12 @@ const getChatSuccess = (chat: Chat): AppActions => ({ type: GET_CHAT_SUCCESS, ch
 
 const getChatFailure = (): AppActions => ({ type: GET_CHAT_FAILURE });
 
-export const getChat = (userId: string): (dispatch: Dispatch) => Promise<boolean> => {
+export const chatSubscribe = (userId: string): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean > => {
 		dispatch(getChatRequest());
 
 		try {
-			const result: { success: boolean; chat: Chat } = await ChatService.getChatWithUser(userId);
+			const result: { success: boolean; chat: Chat } = await ChatService.chatSubscribe(userId);
 			console.log(result);
 
 			if (result.success) {
@@ -26,8 +26,31 @@ export const getChat = (userId: string): (dispatch: Dispatch) => Promise<boolean
 
 			throw Error('Unable to retrieve chat');
 		} catch (err) {
+			console.log(err);
 			dispatch(getChatFailure());
-			toastr.error(`Unable to retrieve chat`);
+			toastr.error(err.message || err.description || `Unable to retrieve chat`);
+			return false;
+		}
+	};
+};
+
+export const chatUnsubscribe = (userId: string): (dispatch: Dispatch) => Promise<boolean> => {
+	return async (dispatch: Dispatch): Promise<boolean > => {
+		// dispatch(getChatRequest());
+
+		try {
+			const result: { success: boolean } = await ChatService.chatUnsubscribe(userId);
+			console.log(result);
+
+			if (result.success) {
+				// dispatch(getChatSuccess(result.chat));
+				return true;
+			}
+
+			throw Error('Unable to unsubscribe from Chat');
+		} catch (err) {
+			console.log(err);
+			// dispatch(getChatFailure());
 			return false;
 		}
 	};

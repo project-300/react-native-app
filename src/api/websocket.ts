@@ -88,15 +88,16 @@ class WebSocketAPI {
 		console.log(subscription);
 		if (subscription && subscription.indexOf('/#')) subscription = subscription.split('/#')[0];
 		console.log(subscription);
+		console.log(payload);
 
 		switch (subscription) {
 			case JOURNEY_DRIVER_LOCATION:
-				console.log(payload);
 				store.dispatch(updateDriverLocation(payload));
 				break;
 			case 'chat/messages':
-				console.log(payload);
-				store.dispatch(newChatMessages(payload));
+				const userId: string = (await Auth.currentUserInfo()).attributes.sub;
+
+				store.dispatch(newChatMessages(payload, userId));
 				break;
 			default:
 				return;
