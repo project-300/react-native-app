@@ -1,14 +1,32 @@
-import { Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel } from '@project-300/common-types';
+import { Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
+
+export interface DarkModeState {
+	DARK_MODE: boolean;
+}
 
 export interface UpdateAddUserJourneyState {
 	isAdding: boolean;
 }
 
 export interface AllJourneysListState {
+	isFullList: boolean;
 	isFetching: boolean;
+	isSearching: boolean;
+	showingSearchResults: boolean;
 	journeys: Journey[];
+	lastEvaluatedKey?: LastEvaluatedKey;
+}
+
+export interface ViewJourneyState {
+	isUpdating: boolean;
+	isReloading: boolean;
+	journey: Journey | undefined;
+}
+
+export interface ContentReloadingState {
+	contentReloading: boolean;
 }
 
 export interface LoginState {

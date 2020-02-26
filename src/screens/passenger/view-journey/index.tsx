@@ -1,162 +1,424 @@
 import React, { Component, ReactElement } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, Dimensions, ScrollView, TouchableWithoutFeedback, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import styles from './styles';
-import { Props, State } from './interfaces';
+import { Props, State, AnimationStyles, AnimationValues } from './interfaces';
 import { AppState } from '../../../store';
-import MapView, {
-	Marker,
-	Polyline,
-	PROVIDER_GOOGLE,
-	Region,
-} from 'react-native-maps';
-import { Coords, Journey, Place } from '@project-300/common-types';
-import { Container } from 'native-base';
-import { AllJourneysListState } from '../../../types/redux-reducer-state-types';
-import { updateAddUserJourney } from '../../../redux/actions/journey';
-import Spinner from 'react-native-loading-spinner-overlay';
-import ExternalApi from '../../../api/external-api';
-import { getDistance } from 'geolib';
+import { Coords, Journey, Place, FormatMoney } from '@project-300/common-types';
+import { ViewJourneyState } from '../../../types/redux-reducer-state-types';
+import { GoogleMapsAPIKey } from '../../../../environment/env';
+import Animated, { Easing } from 'react-native-reanimated';
+import { interpolateAnimation } from '../../../animations/animations';
+import { Button, Text } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Theme } from '../../../constants/theme';
+import { NavigationEvents } from 'react-navigation';
+import {
+	getViewJourney,
+	updateAddUserJourney,
+	cancelLiftAcceptance,
+	contentReloadOff,
+	contentReloadOn,
+	clearJourneyInfo
+} from '../../../redux/actions';
+import moment, { Duration, Moment } from 'moment';
+import { NoticeBanner } from '../../../components/miscellaneous/notice-banner';
+import styles from './styles';
+import { DarkMode } from '../../../helpers/dark-mode';
+import { AnimatedStyles } from '../../../animations/styles';
+
+const { width, height } = Dimensions.get('window');
+const { timing } = Animated;
 
 export class ViewJourney extends Component<Props, State> {
+
+	private animatedValues: AnimationValues = {
+		map: new Animated.Value(0),
+		prepping: new Animated.Value(0)
+	};
+
+	private animatedStyles: AnimationStyles = {
+		mapHeight: 0,
+		closeMapIconOpacity: 0,
+		expandMapIconOpacity: 0,
+		overlayOpacity: 0,
+		overlayButtonOpacity: 0,
+		showClickMapMessageOpacity: 0,
+		mapOpacity: 0
+	};
 
 	public constructor(props: Props) {
 		super(props);
 
-		const journey: Journey = this.props.navigation.state.params as Journey;
+		const journey: Journey = this.props.navigation.getParam('journey');
 
 		this.state = {
 			journey,
-			mapRegion: {
-				latitude: 54.2,
-				longitude: -8.5,
-				latitudeDelta: 1,
-				longitudeDelta: 1
-			},
-			route: [],
-			midpoint: undefined
+			mapImageExpanded: false,
+			mapToBeOpened: false,
+			prepping: false,
+			journeyLoaded: false
+	};
+
+		this.animatedValues = {
+			map: new Animated.Value(0),
+			prepping: new Animated.Value(0)
+		};
+
+		this.animatedStyles = {
+			mapHeight: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ height / 6, height / 2 ]),
+			closeMapIconOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 1 ]),
+			expandMapIconOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 1, 0 ]),
+			overlayOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 0.8 ]),
+			overlayButtonOpacity: interpolateAnimation(this.animatedValues.map, [ 0, 1 ], [ 0, 1 ]),
+			showClickMapMessageOpacity: interpolateAnimation(this.animatedValues.prepping, [ 0, 1 ], [ 0, 1 ]),
+			mapOpacity: interpolateAnimation(this.animatedValues.prepping, [ 0, 1 ], [ 1, 0.7 ])
 		};
 	}
 
-	public componentDidMount = async (): Promise<void> => {
-		const { origin, destination } = this.state.journey;
-		this.setState({
-			route: await ExternalApi.GoogleDirectionsRoute(
-			{ longitude: origin.longitude, latitude: origin.latitude },
-			{ longitude: destination.longitude, latitude: destination.latitude }
-			)
-		});
+	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
+		setTimeout(() => {
+			this._showClickMapMessage(true);
+		}, 500);
 
-		this._setMidpoint();
-		this._zoomToMidpoint();
+		setTimeout(() => {
+			this._showClickMapMessage(false);
+		}, 2500);
+
+		await this._getJourney(false);
+		this.setState({ journeyLoaded: true });
 	}
 
-	private _mapRegion = (): Region | undefined => this.state.midpoint as Region;
-
-	private _createMarker = (loc: Place, color?: string): ReactElement =>
-		<Marker
-			coordinate={ {
-				latitude: loc.latitude,
-				longitude: loc.longitude
-			} }
-			title={ loc.name }
-			pinColor={ color || 'red' }
-		/>
-
-	private _addPassengerToJourney = async (journeyId: string): Promise<void> => {
-		await this.props.updateAddUserJourney(journeyId);
-		this.props.navigation.navigate('Home');
+	private _showClickMapMessage = (prepping: boolean): void => {
+		timing(this.animatedValues.prepping, {
+			duration: 500,
+			toValue: prepping ? 1 : 0,
+			easing: Easing.inOut(Easing.ease)
+		}).start();
 	}
 
-	private _setMidpoint = (): void => {
-		const { origin, destination } = this.state.journey as Journey;
-
-		console.log(origin, destination);
-
-		this.setState({
-			midpoint: {
-				latitude: (origin.latitude + destination.latitude) / 2,
-				longitude: (origin.longitude + destination.longitude) / 2,
-				latitudeDelta: 1,
-				longitudeDelta: 1
-			}
-		});
+	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
+		this.props.clearJourneyInfo();
 	}
 
-	private _zoomToMidpoint = (): void => {
-		const journey: Journey = this.state.journey as Journey;
-		const { origin, destination } = journey;
-
-		const distance = getDistance(
-			{ latitude: origin.latitude, longitude: origin.longitude },
-			{ latitude: destination.latitude, longitude: destination.longitude }
-		) / 2;
-		const circumference = 40075;
-		const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
-		const angularDistance = distance / circumference;
-		const latitudeDelta = distance / oneDegreeOfLatitudeInMeters;
-		const longitudeDelta = Math.abs(
-			Math.atan2(
-				Math.sin(angularDistance) * Math.cos(this.state.midpoint.latitude),
-				Math.cos(angularDistance) - Math.sin(this.state.midpoint.latitude) * Math.sin(this.state.midpoint.latitude)
-			)
-		);
-
-		console.log({midpoint: {
-				...this.state.midpoint as Coords,
-				latitudeDelta,
-				longitudeDelta
-			}});
-
-		this.setState({
-			midpoint: {
-				...this.state.midpoint as Coords,
-				latitudeDelta,
-				longitudeDelta
-			}
-		});
+	private _getJourney = async (reload: boolean): Promise<void> => {
+		if (reload) this.props.contentReloadOn();
+		await this.props.getViewJourney(this.state.journey.journeyId, this.state.journey.times.createdAt as string);
+		this.props.contentReloadOff();
 	}
+
+	private _joinJourney = async (): Promise<void> => {
+		const { journey } = this.state;
+		await this.props.updateAddUserJourney(journey.journeyId, journey.times.createdAt as string);
+	}
+
+	private _cancelLiftAcceptance = async (): Promise<void> => {
+		const { journey } = this.state;
+		await this.props.cancelLiftAcceptance(journey.journeyId, journey.times.createdAt as string);
+	}
+
+	private _toggleMap = (): void => {
+		if (this.state.mapImageExpanded) this._collapseMap();
+		else this._expandMap();
+	}
+
+	private _expandMap = (): void => {
+		this.setState({ mapToBeOpened: true });
+
+		timing(this.animatedValues.map, {
+			duration: 500,
+			toValue: 1,
+			easing: Easing.inOut(Easing.ease)
+		}).start(() => this.setState({ mapImageExpanded: !this.state.mapImageExpanded }));
+	}
+
+	private _collapseMap = (): void => {
+		timing(this.animatedValues.map, {
+			duration: 500,
+			toValue: 0,
+			easing: Easing.inOut(Easing.ease)
+		}).start(() => this.setState({ mapImageExpanded: !this.state.mapImageExpanded, mapToBeOpened: false }));
+	}
+
+	private _constructImageURL = (path: string, origin: Place, destination: Place): string => {
+		let url = `https://maps.googleapis.com/maps/api/staticmap`;
+		url += `?size=${width}x${height / 2}`;
+		url += `&path=color:0x0000ff|weight:3${path}`;
+		url += `&markers=color:blue|label:O|${origin.latitude},${origin.longitude}`;
+		url += `&markers=color:green|label:D|${destination.latitude},${destination.longitude}`;
+		url += `&maptype=roadmap&key=${GoogleMapsAPIKey}`;
+
+		return url;
+	}
+
+	private _formatLeavingTime = (leavingAt: string): string => {
+		const date: Moment = moment(leavingAt);
+		const duration: Duration = moment.duration(moment(date).diff(moment()));
+
+		if (duration.asDays() > 6) return moment().format('dddd MMMM Do YYYY, h:mm A');
+		return moment(leavingAt).calendar();
+	}
+
+	private _renderNavigationEvents = (): ReactElement =>
+		<NavigationEvents onWillFocus={ this._mountScreen } onDidBlur={ this._unmountScreen } />
 
 	public render(): ReactElement {
-		const journey: Journey = this.state.journey;
+		const journey: Journey = this.props.journey || this.state.journey;
+
+		const { origin, destination, driver, plannedRoute, seatsLeft, pricePerSeat, userJoined } = journey;
+
+		const path: string = plannedRoute.map((c: Coords) => `|${c.latitude},${c.longitude}`).join('');
+
+		const { DARK_MODE } = this.props;
 
 		return (
-			<Container>
-				<Spinner visible={ this.props.isFetching } />
-				<View style={ styles.mapContainer }>
-					<MapView
-						provider={ PROVIDER_GOOGLE }
-						style={ styles.map}
-						region={ this._mapRegion() }
-					>
-						{ journey && this._createMarker(journey.origin) }
-						{ journey && this._createMarker(journey.destination) }
+			<View style={ DarkMode.bgColorSwitch(DARK_MODE, '#222', 'white') }>
+				{ this._renderNavigationEvents() }
 
-						<Polyline
-							coordinates={ this.state.route }
-							strokeColor={ 'blue' }
-							strokeWidth={ 4 }
+				<TouchableWithoutFeedback
+					onPress={ this._toggleMap }
+					style={ styles.mapImageTouchable }
+				>
+					<Animated.View
+						style={ [
+							styles.mapImageContainer,
+							AnimatedStyles.height(this.animatedStyles.mapHeight)
+						] }
+					>
+						<Animated.Image
+							style={ [
+								styles.mapImage,
+								AnimatedStyles.opacity(this.animatedStyles.mapOpacity)
+							] }
+							source={ { uri: this._constructImageURL(path, origin, destination) } }
 						/>
-					</MapView>
-				</View>
 
-				<View style={ styles.bottomPanel }>
-					<TouchableOpacity
-						style={ styles.button }
-						onPress={ (): Promise<void> => this._addPassengerToJourney(journey.journeyId) }
-					>
-						<Text style={ styles.buttonText }>Join</Text>
-					</TouchableOpacity>
-				</View>
-			</Container>
+						{
+								<Animated.View style={ [
+									styles.mapImageTopIcon,
+									AnimatedStyles.opacity(this.animatedStyles.closeMapIconOpacity)
+								] }>
+									<Icon
+										name='compress'
+										size={ 34 }
+										color={ Theme.primary }
+										onPress={ this._toggleMap }
+									/>
+								</Animated.View>
+						}
+
+						{
+							<Animated.View style={ [
+								styles.mapImageBottomIcon,
+								AnimatedStyles.opacity(this.animatedStyles.expandMapIconOpacity)
+							] }>
+								<Icon
+									name='expand'
+									size={ 30 }
+									color={ Theme.primary }
+									onPress={ this._toggleMap }
+								/>
+							</Animated.View>
+						}
+
+						<Animated.Text
+							style={ [
+								styles.clickToExpandText,
+								AnimatedStyles.opacity(this.animatedStyles.showClickMapMessageOpacity)
+							] }
+						>Click To Expand</Animated.Text>
+					</Animated.View>
+				</TouchableWithoutFeedback>
+
+				<ScrollView
+					style={ styles.content }
+					refreshControl={
+						<RefreshControl refreshing={ this.props.contentReloading } onRefresh={ async (): Promise<void> => {
+							await this._getJourney(true);
+						} } />
+					}
+				>
+
+					{
+						userJoined &&
+							<NoticeBanner
+								icon='check'
+								text='You have accepted this lift'
+								backgroundColor='#69ff6b'
+								color='#555'
+							/>
+					}
+
+					<View style={ [
+						styles.places,
+						DarkMode.bgColorSwitch(DARK_MODE, '#333', '#EEE')
+					] }>
+						<View style={ styles.origin }>
+							<Text style={ [
+								styles.placeText,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>From: { origin.name }</Text>
+						</View>
+						<View>
+							<Text style={ [
+								styles.placeText,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>To: { destination.name }</Text>
+						</View>
+					</View>
+
+					<View style={ styles.centerItems }>
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Seats Available:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ ` ${seatsLeft}` }
+							</Text>
+						</Text>
+
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Cost:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ ` €${FormatMoney(pricePerSeat)}` }
+							</Text>
+						</Text>
+
+						{
+							driver.firstName || driver.lastName &&
+								<Text style={ [
+									styles.infoRow,
+									DarkMode.bwTextColorSwitch(DARK_MODE)
+								] }>
+									Driver:
+									<Text style={ [
+										styles.bold,
+										DarkMode.bwTextColorSwitch(DARK_MODE)
+									] }>
+										{ ` ${driver.firstName} ${driver.lastName}` }
+									</Text>
+								</Text>
+						}
+
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Posted:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ `${journey.readableDurations.createdAt}` }
+							</Text>
+						</Text>
+
+						<Text style={ [
+							styles.infoRow,
+							DarkMode.bwTextColorSwitch(DARK_MODE)
+						] }>
+							Scheduled For:
+							<Text style={ [
+								styles.bold,
+								DarkMode.bwTextColorSwitch(DARK_MODE)
+							] }>
+								{ ` ${this._formatLeavingTime(journey.times.leavingAt)}` }
+							</Text>
+						</Text>
+					</View>
+
+					{
+						!journey.userJoined &&
+							<Button
+								mode={ DarkMode.buttonSwitch(DARK_MODE, 'outlined', 'contained') }
+								style={ [
+									styles.actionButton,
+									DarkMode.bgColorSwitch(DARK_MODE, 'white', Theme.accent)
+								] }
+								onPress={ this._joinJourney }
+								color={ DarkMode.bwSwitch(DARK_MODE) }
+								loading={ this.state.journeyLoaded && this.props.isUpdating }
+								disabled={ this.props.isUpdating }
+							>Take Lift</Button>
+					}
+
+					{
+						journey.userJoined &&
+							<Button
+								mode={ DarkMode.buttonSwitch(DARK_MODE, 'outlined', 'contained') }
+								style={ [
+									styles.actionButton,
+									DarkMode.bgColorSwitch(DARK_MODE, 'white', Theme.accent)
+								] }
+								onPress={ this._cancelLiftAcceptance }
+								color={ DarkMode.bwSwitch(DARK_MODE) }
+								loading={ this.state.journeyLoaded && this.props.isUpdating }
+								disabled={ this.props.isUpdating }
+							>Cancel Lift</Button>
+					}
+
+					<Button
+						mode={ DarkMode.buttonSwitch(DARK_MODE, 'contained', 'outlined') }
+						style={ [ styles.actionButton, DarkMode.bwBgColorSwitch(!DARK_MODE) ] }
+						color={ DarkMode.optionSwitch(DARK_MODE, 'white', Theme.accent) }
+						onPress={ (): boolean => this.props.navigation.navigate('OtherProfile', { userId: driver.userId }) }
+					>View Driver Profile</Button>
+
+					{
+						this.state.mapToBeOpened &&
+							<Animated.View
+								style={ [
+									styles.overlay,
+									AnimatedStyles.opacity(this.animatedStyles.overlayOpacity)
+								] }
+							/>
+					}
+
+					{
+						this.state.mapToBeOpened &&
+							<Animated.View
+								style={ [
+									styles.overlayButtonContainer,
+									AnimatedStyles.opacity(this.animatedStyles.overlayButtonOpacity)
+								] }
+							>
+								<Button
+									mode={ DarkMode.buttonSwitch(DARK_MODE, 'contained', 'outlined') }
+									style={ styles.overlayButton }
+									color={ DarkMode.optionSwitch(DARK_MODE, 'white', Theme.accent) }
+									onPress={ (): void => {
+										this.props.navigation.navigate('InteractiveMap', journey);
+										this._toggleMap();
+									} }
+								>View Interactive Map</Button>
+							</Animated.View>
+					}
+				</ScrollView>
+			</View>
 		);
 	}
 }
 
-const mapStateToProps = (state: AppState): AllJourneysListState => ({
-	...state.allJourneysReducer
+const mapStateToProps = (state: AppState): ViewJourneyState => ({
+	...state.viewJourneyReducer,
+	...state.darkModeReducer,
+	...state.contentReloadReducer
 });
 
 export default connect(mapStateToProps, {
-	updateAddUserJourney
+	updateAddUserJourney,
+	cancelLiftAcceptance,
+	getViewJourney,
+	contentReloadOn,
+	contentReloadOff,
+	clearJourneyInfo
 })(ViewJourney);
