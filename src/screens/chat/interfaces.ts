@@ -1,12 +1,14 @@
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Chat, Message } from '@project-300/common-types';
+import Animated from 'react-native-reanimated';
 
 export interface Styles {
 	container: ViewStyle;
 	chatWindow: ViewStyle;
 	messageBubble: ViewStyle;
-	sendButton: ViewStyle;
+	sendButton: TextStyle;
+	messagesContainer: ViewStyle;
 	messageContainer: ViewStyle;
 	messageInput: ViewStyle;
 	avatar: ImageStyle;
@@ -28,4 +30,14 @@ export interface Props extends CommonProps {
 
 export interface State {
 	messageText: string;
+	scrolledOffBottom: boolean;
+	newMessageCount: number;
+}
+
+export interface AnimationValues {
+	newMessages: Animated.Value<number>,
+}
+
+export interface AnimationStyles {
+	newMessagesButtonOpacity: Animated.Node<number> | number,
 }

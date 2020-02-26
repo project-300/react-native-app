@@ -20,7 +20,6 @@ import {
 	contentReloadOn,
 	clearJourneyInfo
 } from '../../../redux/actions';
-import moment, { Duration, Moment } from 'moment';
 import { NoticeBanner } from '../../../components/miscellaneous/notice-banner';
 import styles from './styles';
 import { DarkMode } from '../../../helpers/dark-mode';

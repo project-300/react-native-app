@@ -112,13 +112,13 @@ const SearchTab: NavigationContainer = createStackNavigator({
 });
 
 const MyJourneysTab: NavigationContainer = createStackNavigator({
-	MyJourneys: {
-		screen: MyJourneys,
-		...navigationOptions('My Journeys', undefined, false)
-	},
 	JourneyMap: {
 		screen: JourneyMap,
 		...navigationOptions('Your Journey', undefined, true)
+	},
+	MyJourneys: {
+		screen: MyJourneys,
+		...navigationOptions('My Journeys', undefined, false)
 	},
 	DriverTrackingMap: {
 		screen: DriverTracking,

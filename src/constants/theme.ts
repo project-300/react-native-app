@@ -4,7 +4,7 @@ import { store } from '../store';
 
 export const Theme = {
 	primary: 'white',
-	accent: '#00BCD4',
+	accent: '#177cd4',
 	text: 'black'
 };
 

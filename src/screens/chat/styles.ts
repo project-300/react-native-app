@@ -12,6 +12,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 20
 	},
 
+	messagesContainer: {
+		marginBottom: 30
+	},
+
 	messageContainer: {
 		width: width * 0.9,
 		flexDirection: 'row'
@@ -54,7 +58,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	userOwnMessageBubble: {
 		alignSelf: 'flex-end',
-		backgroundColor: '#148fcc'
+		backgroundColor: '#177cd4'
 	},
 
 	userOwnMessageText: {
@@ -64,7 +68,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 	sendButton: {
 		position: 'absolute',
 		right: 20,
-		top: 16
+		top: 16,
+		color: '#177cd4'
 	},
 
 	messageInput: {
