@@ -1,4 +1,5 @@
-import { Journey, LastEvaluatedKey, User } from '@project-300/common-types';
+import { Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey } from '@project-300/common-types';
+
 
 export interface UpdateAddUserJourneyResult {
 	success: boolean;
@@ -41,6 +42,33 @@ export interface ConfirmationResult {
 }
 
 export interface DriverApplicationResult {
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
+export interface DriverApplicationCheckResult {
+	success: boolean;
+	alreadyApplied: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
+export interface VehicleMakesResult {
+	vehicleMakes: VehicleMake[];
+	success: boolean;
+	error?: {
+		code: string;
+		description: string;
+	};
+}
+
+export interface VehicleModelsResult {
+	vehicleModels: VehicleModel[];
 	success: boolean;
 	error?: {
 		code: string;

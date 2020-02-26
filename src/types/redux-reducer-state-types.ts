@@ -1,4 +1,4 @@
-import { Coords, GooglePlaceDetails, Journey, LastEvaluatedKey, User } from '@project-300/common-types';
+import { Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
@@ -44,7 +44,15 @@ export interface ConfirmState {
 }
 
 export interface DriverApplicationState {
-	isApplying: boolean;
+	isFetching: boolean;
+	applied?: boolean;
+}
+
+export interface VehicleMakesAndModelsState {
+	isFetching: boolean;
+	vehicleMakes: VehicleMake[];
+	vehicleModels: VehicleModel[];
+	errMessage: string;
 }
 
 export interface UserProfileState {
