@@ -18,17 +18,13 @@ export const login = (email: string, password: string): (dispatch: Dispatch) => 
 
 		try {
 			const auth = await Auth.signIn(email, password);
-			// const { success, user } = await UserService.getUser(auth.attributes.sub);
 			const user = await UserService.getUser(auth.attributes.sub);
-			console.log(user);
-
-			if (user) {
-				await storeLogin(user.userId, user.userType);
+			await storeLogin(user.userId, user.userType);
+			if (success) {
 
 				dispatch(loginSuccess());
 				return true;
 			}
-			console.log('here');
 
 			dispatch(loginFailure());
 			return false;

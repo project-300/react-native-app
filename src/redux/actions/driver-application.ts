@@ -1,3 +1,4 @@
+import { Vehicle } from '@project-300/common-types';
 import { DriverApplicationService } from './../../services/driver-application';
 import { DriverApplicationCheckResult } from './../../types/http-responses';
 import { APPLICATION_ALREADY_APPLIED } from './../../constants/redux-actions';
@@ -29,15 +30,13 @@ const applicationAlreadyApplied = (applied: boolean): AppActions => ({
 	applied
 });
 
-export const apply = (): ((dispatch: Dispatch) => Promise<boolean>) => {
+export const apply = (vehicle: Vehicle): ((dispatch: Dispatch) => Promise<boolean>) => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(driverApplicationRequest());
 
 		try {
-			const apiRes: DriverApplicationResult = await DriverApplicationService.applyForApplication({ userId: await userId() as string });
-
+			const apiRes: DriverApplicationResult = await DriverApplicationService.applyForApplication(vehicle);
 			if (apiRes.success) {
-				// await setUserType('Driver'); // ********** Temporarily switch to Driver user type on auto approve
 				dispatch(driverApplicationSuccess());
 				toastr.success('You have successfully submitted your application');
 				return true;

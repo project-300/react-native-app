@@ -214,7 +214,8 @@ export interface VehicleMakesSuccess {
 }
 
 export interface VehicleMakesFailure {
-	type: typeof VEHICLE_MAKES_FAILURE
+	type: typeof VEHICLE_MAKES_FAILURE;
+	errMessage: string;
 }
 
 export interface VehicleModelsRequest {

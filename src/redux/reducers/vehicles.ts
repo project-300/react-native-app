@@ -1,3 +1,4 @@
+import { VehicleMakesFailure } from './../../types/redux-action-types';
 import {
 	VEHICLE_MODELS_REQUEST,
 	VEHICLE_MODELS_SUCCESS,
@@ -12,7 +13,8 @@ import { VehicleMakesAndModelsTypes, VehicleModelsSuccess, VehicleMakesSuccess }
 const initialState: VehicleMakesAndModelsState = {
 	isFetching: false,
 	vehicleMakes: [],
-	vehicleModels: []
+	vehicleModels: [],
+	errMessage: ''
 };
 
 const vehicleMakesAndModelsReducer = (
@@ -31,10 +33,10 @@ const vehicleMakesAndModelsReducer = (
 			return { ...state,  isFetching: true };
 		case VEHICLE_MAKES_SUCCESS:
 			const { vehicleMakes } = action as VehicleMakesSuccess;
-			// console.log(vehicleMakes)
 			return { ...state, vehicleMakes, isFetching: false };
 		case VEHICLE_MAKES_FAILURE:
-			return { ...state, isFetching: false };
+			const { errMessage } = action as VehicleMakesFailure;
+			return { ...state, errMessage, isFetching: false };
 		default:
 			return state;
 	}

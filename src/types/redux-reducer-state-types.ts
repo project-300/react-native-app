@@ -34,6 +34,7 @@ export interface VehicleMakesAndModelsState {
 	isFetching: boolean;
 	vehicleMakes: VehicleMake[];
 	vehicleModels: VehicleModel[];
+	errMessage: string;
 }
 
 export interface UserProfileState {

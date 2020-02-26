@@ -22,8 +22,9 @@ const vehiclesMakesSuccess = (vehicleMakes: VehicleMake[]): AppActions => ({
 	vehicleMakes
 });
 
-const vehiclesMakesFailure = (): AppActions => ({
-	type: VEHICLE_MAKES_FAILURE
+const vehiclesMakesFailure = (errMessage: string): AppActions => ({
+	type: VEHICLE_MAKES_FAILURE,
+	errMessage
 });
 
 const vehicleModelsRequest = (): AppActions => ({
@@ -45,6 +46,7 @@ export const getVehicleMakes = (): ((dispatch: Dispatch) => Promise<boolean>) =>
 
 		try {
 			const apiRes: VehicleMakesResult = await DriverApplicationService.getAllVehicleMakes();
+			console.log(apiRes);
 
 			if (apiRes.success) {
 				dispatch(vehiclesMakesSuccess(apiRes.vehicleMakes));
@@ -53,7 +55,7 @@ export const getVehicleMakes = (): ((dispatch: Dispatch) => Promise<boolean>) =>
 
 			return false;
 		} catch (err) {
-			dispatch(vehiclesMakesFailure());
+			dispatch(vehiclesMakesFailure(err));
 			toastr.error(err.message || err.description || 'Unknown Error');
 			return false;
 		}

@@ -1,28 +1,51 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { CommonProps } from '../../types/common';
-import { VehicleMake, VehicleModel } from '@project-300/common-types';
+import { VehicleMake, VehicleModel, Vehicle } from '@project-300/common-types';
 
 export interface Styles {
 	container: ViewStyle;
 	text: TextStyle;
 	button: TextStyle;
 	buttonText: TextStyle;
+	listItem: ViewStyle;
+	formView: ViewStyle;
+	errText: TextStyle;
 }
 
 export interface Props extends CommonProps {
 	isFetching: boolean;
-	apply(): Promise<boolean>;
+	apply(vehicle: Vehicle): Promise<boolean>;
 	checkIfApplied(): Promise<boolean>;
 	applied?: boolean;
 	getVehicleMakes(): Promise<boolean>;
 	vehicleMakes: VehicleMake[];
 	getVehicleModels(makeId: string, year: string): Promise<boolean>;
 	vehicleModels: VehicleModel[];
+	errMessage: string;
 }
 
 export interface State {
+	loading: boolean;
 	modelPickerVisible: boolean;
 	makePickerVisible: boolean;
+	yearPickerVisible: boolean;
+	fuelTypePickerVisible: boolean;
+	selectedYear: string;
+	selectedFuelType: string;
+	selectedVehicleMake: SelectedVehicleMake | null;
+	selectedVehicleModel: SelectedVehicleModel | null;
 	modelPickerItems: VehicleModel[];
+	modelsLoading: boolean;
+	displayErrorMessage: boolean;
+}
+
+export interface SelectedVehicleMake {
+	Make_ID: string;
+	Make_Name: string;
+}
+
+export interface SelectedVehicleModel {
+	Model_ID: string;
+	Model_Name: string;
 }
