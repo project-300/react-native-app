@@ -4,7 +4,7 @@ import {
 	ScrollView,
 	View,
 	TextInput,
-	Image, NativeScrollEvent, Dimensions, TouchableOpacity
+	Image, NativeScrollEvent, Dimensions, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -29,10 +29,12 @@ export class Chat extends Component<Props, State> {
 
 	private animatedValues: AnimationValues = {
 		newMessages: new Animated.Value(0),
+		loadOldMessage: new Animated.Value(0)
 	};
 
 	private animatedStyles: AnimationStyles = {
-		newMessagesButtonOpacity: 0
+		newMessagesButtonOpacity: 0,
+		loadingBarWidth: 0
 	};
 
 	public constructor(props: Props) {
@@ -41,38 +43,54 @@ export class Chat extends Component<Props, State> {
 		this.state = {
 			messageText: '',
 			scrolledOffBottom: false,
-			newMessageCount: 0
+			newMessageCount: 0,
+			lastContentHeight: 1,
+			isLoading: true,
+			allowOldMessages: false,
+			showLoadingBar: false
 		};
 
 		this.animatedValues = {
-			newMessages: new Animated.Value(0)
+			newMessages: new Animated.Value(0),
+			loadOldMessage: new Animated.Value(0)
 		};
 
 		this.animatedStyles = {
-			newMessagesButtonOpacity: interpolateAnimation(this.animatedValues.newMessages, [ 0, 1 ], [ 0, 1 ])
+			newMessagesButtonOpacity: interpolateAnimation(this.animatedValues.newMessages, [ 0, 1 ], [ 0, 1 ]),
+			loadingBarWidth: interpolateAnimation(this.animatedValues.loadOldMessage, [ 0, 1 ], [ 0, width ])
 		};
-
 	}
 
 	public componentDidUpdate = (p: Props, s: State): void => {
 		const newMessageCount: number = this.props.messages.length - p.messages.length;
 
-		if (newMessageCount && !this.state.scrolledOffBottom) setTimeout(() => this._scrollView.scrollToEnd());
-		if (newMessageCount && this.state.scrolledOffBottom) this._showNewMessagesFloatButton(newMessageCount);
+		if (this.state.isLoading) setTimeout(() => this._scrollView.scrollToEnd({ animated: false }));
+		else if (newMessageCount && !this.state.scrolledOffBottom) setTimeout(() => this._scrollView.scrollToEnd());
+
+		if (this.state.isLoading && this.props.messages.length && newMessageCount) this.setState({ isLoading: false });
+		if (newMessageCount && this.state.scrolledOffBottom && this.props.lastContentType === 'NEW' && !this.props.isLastMessageByOwnUser)
+			this._showNewMessagesFloatButton(newMessageCount);
+		if (newMessageCount && this.state.scrolledOffBottom && this.props.lastContentType === 'NEW' && this.props.isLastMessageByOwnUser)
+			setTimeout(() => this._scrollView.scrollToEnd());
 	}
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
-		// await this._getChat();
 		// await this.props.chatSubscribe(this.props.otherUserId);
-		await this.props.chatSubscribe('cfa18855-2eb3-479b-9120-6ca3bef23fda');
-		this._scrollView.scrollToEnd();
+		await this.props.chatSubscribe('00c35391-2b2e-4155-b90d-47d6d922a245');
+
+		Keyboard.addListener('keyboardWillShow', () => this._scrollView.scrollToEnd({ animated: false }));
+		Keyboard.addListener('keyboardDidShow', () => this._scrollView.scrollToEnd({ animated: false }));
+		Keyboard.addListener('keyboardWillHide', () => this._scrollView.scrollToEnd({ animated: false }));
+		Keyboard.addListener('keyboardDidHide', () => this._scrollView.scrollToEnd({ animated: false }));
+
+		this._scrollView.scrollToEnd({ animated: false });
 	}
 
 	// 00c35391-2b2e-4155-b90d-47d6d922a245
 	// cfa18855-2eb3-479b-9120-6ca3bef23fda
 
 	private _unmountScreen = async (): Promise<void> => { // Triggered when the screen is navigated away from
-		await this.props.chatUnsubscribe('cfa18855-2eb3-479b-9120-6ca3bef23fda');
+		await this.props.chatUnsubscribe('00c35391-2b2e-4155-b90d-47d6d922a245');
 	}
 
 	private _showNewMessagesFloatButton = (newMessageCount: number): void => {
@@ -89,18 +107,33 @@ export class Chat extends Component<Props, State> {
 		const messageText: string = this.state.messageText;
 		if (!this.state.messageText) return;
 
+		// this._scrollView.scrollToEnd({ animated: false });
+
 		await MessageService.sendMessage({
 			text: messageText,
 			chatId: '29845242-8684-40d1-9e2f-b7d93dbaa2d7'
-		}, 'cfa18855-2eb3-479b-9120-6ca3bef23fda');
+		}, '00c35391-2b2e-4155-b90d-47d6d922a245');
+
 		this.setState({ messageText: '' });
 	}
 
-	private _scrollChatEvent = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): void => {
+	private _scrollChatEvent = async ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): Promise<void> => {
 		const scrolledOffBottom: boolean = !(layoutMeasurement.height + contentOffset.y >= contentSize.height - 20);
-		this.setState({ scrolledOffBottom, newMessageCount: scrolledOffBottom ? this.state.newMessageCount : 0 });
 
-		console.log(scrolledOffBottom);
+		this.setState({
+			scrolledOffBottom,
+			lastContentHeight: contentSize.height,
+			allowOldMessages: true,
+			newMessageCount: scrolledOffBottom ? this.state.newMessageCount : 0
+		});
+
+		if (contentOffset.y <= 10 && this.state.allowOldMessages) await this._loadOldMessages();
+	}
+
+	private _loadOldMessages = async (): Promise<void> => {
+		if (!this.props.chat || this.props.requestingOldMessages || !this.props.lastEvaluatedKey) return; // SK for message LEK is createdAt
+
+		await this.props.getChatMessages(this.props.chat.chatId, this.props.lastEvaluatedKey.sk);
 	}
 
 	private _scrollToBottom = (): void => {
@@ -149,39 +182,68 @@ export class Chat extends Component<Props, State> {
 
 	public render(): ReactElement {
 		return (
-			<View style={ styles.container }>
+			<KeyboardAvoidingView style={ { flex: 1, justifyContent: 'center' } } behavior={ Platform.OS === 'ios' ? 'height' : undefined }
+				keyboardVerticalOffset={ 110 }
+			>
 				<ScrollView
 					style={ styles.chatWindow }
 					ref={ (ref: ScrollView): void => { this._scrollView = ref; }}
 					onMomentumScrollEnd={
-						({ nativeEvent }: { nativeEvent: NativeScrollEvent }): void => this._scrollChatEvent(nativeEvent)
+						({ nativeEvent }: { nativeEvent: NativeScrollEvent }): Promise<void> => this._scrollChatEvent(nativeEvent)
 					}
 					onScrollEndDrag={
-						({ nativeEvent }: { nativeEvent: NativeScrollEvent }): void => this._scrollChatEvent(nativeEvent)
+						({ nativeEvent }: { nativeEvent: NativeScrollEvent }): Promise<void> => this._scrollChatEvent(nativeEvent)
 					}
+					onContentSizeChange={ (contentWidth: number, contentHeight: number): void => {
+						if (!this.state.isLoading && this.props.lastContentType === 'OLD') {
+							this._scrollView.scrollTo({ x: 0, y: contentHeight - this.state.lastContentHeight, animated: false });
+							this._scrollView.scrollTo({ x: 0, y: contentHeight - this.state.lastContentHeight - 20, animated: true });
+						}
+					} }
 				>
 					{ this._renderNavigationEvents() }
+
+					{
+						!this.props.lastEvaluatedKey && this.props.messages.length > 10 &&
+							<Text
+								style={ {
+									alignSelf: 'center',
+									marginBottom: 20,
+									marginTop: 10
+								} }
+							>
+								No More Previous Messages
+							</Text>
+					}
 
 					<View style={ styles.messagesContainer }>
 						{
 							this.props.messages.map((message: Message) => this._renderMessage(message))
 						}
 					</View>
+
 				</ScrollView>
-				<View>
+
+				<View style={ { bottom: 0, position: 'absolute', left: 0, right: 0, backgroundColor: 'white' } }>
 					<TextInput
 						style={ styles.messageInput }
 						placeholder='Your message'
 						onChangeText={ (messageText: string): void => this.setState({ messageText }) }
 						value={ this.state.messageText }
+						autoCompleteType='off'
+						autoCorrect={ false }
 					/>
-					<Icon
-						name='paper-plane'
-						size={ 24 }
-						solid
-						style={ [ styles.sendButton, !this.state.messageText ? { color: '#555' } : { } ] }
+					<TouchableOpacity
+						style={ styles.sendButton }
 						onPress={ this._sendMessage }
-					/>
+					>
+						<Icon
+							name='paper-plane'
+							size={ 24 }
+							solid
+							style={ [ styles.sendButtonIcon, !this.state.messageText ? { color: '#555' } : { } ] }
+						/>
+					</TouchableOpacity>
 
 					{
 						!!this.state.newMessageCount &&
@@ -214,7 +276,21 @@ export class Chat extends Component<Props, State> {
 							</TouchableOpacity>
 					}
 				</View>
-			</View>
+
+				{
+					this.state.showLoadingBar &&
+						<Animated.View
+							style={ {
+								height: 5,
+								width: this.animatedStyles.loadingBarWidth,
+								backgroundColor: 'red',
+								position: 'absolute',
+								top: 0,
+								left: 0
+							} }
+						/>
+				}
+			</KeyboardAvoidingView>
 		);
 	}
 }

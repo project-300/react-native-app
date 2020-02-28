@@ -5,8 +5,11 @@ import { GetChatMessagesResult } from '../types/http-responses';
 
 export class MessageService {
 
-	public static getChatMessages = async (chatId: string): Promise<GetChatMessagesResult> =>
-		API.post(ApiName, `/messages/chat/${chatId}`, '').catch(MessageService.handleError);
+	public static getChatMessages = async (chatId: string, createdAt?: string): Promise<GetChatMessagesResult> => {
+		const url: string = createdAt ? `/messages/chat/${chatId}?last=${createdAt}` : `/messages/chat/${chatId}`;
+		console.log(url);
+		return API.get(ApiName, url, '').catch(MessageService.handleError);
+	}
 
 	public static sendMessage = async (message: Partial<Message>, otherUserId: string): Promise<{ success: boolean; message: Message}> =>
 		API.post(ApiName, `/messages`, { body: { message, otherUserId } }).catch(MessageService.handleError);

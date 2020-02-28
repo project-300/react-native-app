@@ -9,7 +9,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	chatWindow: {
-		padding: 20
+		padding: 20,
+		marginBottom: 50
 	},
 
 	messagesContainer: {
@@ -68,7 +69,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 	sendButton: {
 		position: 'absolute',
 		right: 20,
-		top: 16,
+		top: 16
+	},
+
+	sendButtonIcon: {
 		color: '#177cd4'
 	},
 

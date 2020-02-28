@@ -66,9 +66,11 @@ export interface ChatState {
 }
 
 export interface ChatMessagesState {
-	isGatheringMessages: boolean;
 	messages: Message[];
 	lastEvaluatedKey?: LastEvaluatedKey;
+	requestingOldMessages: boolean;
+	lastContentType: 'NONE' | 'INITIAL' | 'NEW' | 'OLD';
+	isLastMessageByOwnUser: boolean;
 }
 
 export interface UpdateUserFieldState {

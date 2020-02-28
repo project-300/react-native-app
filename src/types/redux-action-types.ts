@@ -461,6 +461,7 @@ export interface GetChatMessagesRequest {
 export interface GetChatMessagesSuccess {
 	type: typeof GET_CHAT_MESSAGES_SUCCESS;
 	messages: Message[];
+	userId: string;
 	lastEvaluatedKey?: LastEvaluatedKey;
 }
 

@@ -55,10 +55,7 @@ export default class App extends Component<Props, State> {
 			const loggedIn = await isStoreLoggedIn();
 			this.setState({ loggedIn, checkedLoggedIn: true });
 
-			console.log(await deviceId());
-
 			await setDeviceId();
-			console.log(await deviceId());
 			WS._setup();
 		} catch (err) {
 			toastr.error('Unable to authenticate');
