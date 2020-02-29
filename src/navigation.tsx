@@ -9,6 +9,7 @@ import NewJourney from './screens/new-journey';
 import AllJourneys from './screens/all-journeys';
 import ViewJourney from './screens/passenger/view-journey';
 import InteractiveMap from './screens/passenger/view-journey/journey-map';
+import AllChats from './screens/chat/all-chats';
 import Chat from './screens/chat';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
@@ -134,9 +135,13 @@ const NewJourneyTab: NavigationContainer = createStackNavigator({
 });
 
 const ChatTab: NavigationContainer = createStackNavigator({
+	AllChats: {
+		screen: AllChats,
+		...navigationOptions('Your Chats', undefined, false)
+	},
 	Chat: {
 		screen: Chat,
-		...navigationOptions('Chat', undefined, false)
+		...navigationOptions('Chat', undefined, true)
 	}
 });
 

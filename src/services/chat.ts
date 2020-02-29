@@ -5,6 +5,9 @@ import { deviceId } from '../app';
 
 export class ChatService {
 
+	public static getAllChats = async (): Promise<{ success: boolean; chats: Chat[] }> =>
+		API.get(ApiName, `/chats`, '').catch(ChatService.handleError);
+
 	public static chatSubscribe = async (userId: string): Promise<{ success: boolean; chat: Chat }> =>
 		API.get(ApiName, `/chats/subscribe/${userId}/${await deviceId()}`, '').catch(ChatService.handleError);
 

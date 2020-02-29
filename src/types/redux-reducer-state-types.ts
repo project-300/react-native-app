@@ -60,6 +60,11 @@ export interface InterestsState {
 	interests: string[];
 }
 
+export interface AllChatState {
+	fetchingChats: boolean;
+	chats: Chat[];
+}
+
 export interface ChatState {
 	fetchingChat: boolean;
 	chat: Chat | undefined;

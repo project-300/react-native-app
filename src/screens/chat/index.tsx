@@ -76,7 +76,7 @@ export class Chat extends Component<Props, State> {
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
 		// await this.props.chatSubscribe(this.props.otherUserId);
-		await this.props.chatSubscribe('00c35391-2b2e-4155-b90d-47d6d922a245');
+		await this.props.chatSubscribe('cfa18855-2eb3-479b-9120-6ca3bef23fda');
 
 		Keyboard.addListener('keyboardWillShow', () => this._scrollView.scrollToEnd({ animated: false }));
 		Keyboard.addListener('keyboardDidShow', () => this._scrollView.scrollToEnd({ animated: false }));
@@ -90,7 +90,7 @@ export class Chat extends Component<Props, State> {
 	// cfa18855-2eb3-479b-9120-6ca3bef23fda
 
 	private _unmountScreen = async (): Promise<void> => { // Triggered when the screen is navigated away from
-		await this.props.chatUnsubscribe('00c35391-2b2e-4155-b90d-47d6d922a245');
+		await this.props.chatUnsubscribe('cfa18855-2eb3-479b-9120-6ca3bef23fda');
 	}
 
 	private _showNewMessagesFloatButton = (newMessageCount: number): void => {
@@ -111,8 +111,8 @@ export class Chat extends Component<Props, State> {
 
 		await MessageService.sendMessage({
 			text: messageText,
-			chatId: '29845242-8684-40d1-9e2f-b7d93dbaa2d7'
-		}, '00c35391-2b2e-4155-b90d-47d6d922a245');
+			chatId: '5862cb22-3c10-4723-8472-9698eb83d8e3'
+		}, 'cfa18855-2eb3-479b-9120-6ca3bef23fda');
 
 		this.setState({ messageText: '' });
 	}

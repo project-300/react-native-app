@@ -61,6 +61,9 @@ export const INTERESTS_FAILURE: string = 'INTERESTS_FAILURE';
 export const GET_CHAT_REQUEST: string = 'GET_CHAT_REQUEST';
 export const GET_CHAT_SUCCESS: string = 'GET_CHAT_SUCCESS';
 export const GET_CHAT_FAILURE: string = 'GET_CHAT_FAILURE';
+export const GET_ALL_CHATS_REQUEST: string = 'GET_ALL_CHATS_REQUEST';
+export const GET_ALL_CHATS_SUCCESS: string = 'GET_ALL_CHATS_SUCCESS';
+export const GET_ALL_CHATS_FAILURE: string = 'GET_ALL_CHATS_FAILURE';
 
 // Messages
 export const GET_CHAT_MESSAGES_REQUEST: string = 'GET_CHAT_MESSAGES_REQUEST';

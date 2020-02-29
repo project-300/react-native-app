@@ -89,7 +89,7 @@ import {
 	GET_CHAT_MESSAGES_REQUEST,
 	GET_CHAT_MESSAGES_SUCCESS,
 	GET_CHAT_MESSAGES_FAILURE,
-	NEW_CHAT_SUB_MESSAGES
+	NEW_CHAT_SUB_MESSAGES, GET_ALL_CHATS_REQUEST, GET_ALL_CHATS_SUCCESS, GET_ALL_CHATS_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -441,6 +441,19 @@ export interface InterestsFailure {
 	type: typeof INTERESTS_FAILURE;
 }
 
+export interface GetAllChatRequest {
+	type: typeof GET_ALL_CHATS_REQUEST;
+}
+
+export interface GetAllChatSuccess {
+	type: typeof GET_ALL_CHATS_SUCCESS;
+	chats: Chat[];
+}
+
+export interface GetAllChatFailure {
+	type: typeof GET_ALL_CHATS_FAILURE;
+}
+
 export interface GetChatRequest {
 	type: typeof GET_CHAT_REQUEST;
 }
@@ -567,6 +580,11 @@ export type InterestsActionTypes =
 	InterestsSuccess |
 	InterestsFailure;
 
+export type AllChatActionTypes =
+	GetAllChatRequest |
+	GetAllChatSuccess |
+	GetAllChatFailure;
+
 export type ChatActionTypes =
 	GetChatRequest |
 	GetChatSuccess |
@@ -687,5 +705,6 @@ export type AppActions =
 	SearchJourneysActionTypes |
 	ViewJourneyActionTypes |
 	InterestsActionTypes |
+	AllChatActionTypes |
 	ChatActionTypes |
 	MessageActionTypes;

@@ -14,6 +14,7 @@ import darkModeReducer from './theme/theme';
 import viewJourneyReducer from './passenger/view-journey';
 import contentReloadReducer from './content-reloading';
 import chatReducer from './chat/chat';
+import allChatsReducer from './chat/all-chat';
 import chatMessagesReducer from './chat/message';
 
 export default combineReducers({
@@ -31,6 +32,7 @@ export default combineReducers({
 	darkModeReducer,
 	viewJourneyReducer,
 	contentReloadReducer,
+	allChatsReducer,
 	chatReducer,
 	chatMessagesReducer
 });
