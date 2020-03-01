@@ -111,9 +111,7 @@ const chatMessagesReducer = (state: ChatMessagesState = initialState, action: Me
 
 			// Messages do not belong to current chat
 			// It's possible the user is subscribed to more than 1 chat - Reject messages and return previous state
-			console.log(subData.payload.data.chatId, state.chat.chatId);
 			if (subData.payload.data.chatId !== state.chat.chatId) return { ...state };
-			console.log('ok');
 
 			if (subData.payload.type === PublishType.QUERY) messages = subData.payload.data.messages.reverse();
 			if (subData.payload.type === PublishType.INSERT) {
@@ -123,8 +121,6 @@ const chatMessagesReducer = (state: ChatMessagesState = initialState, action: Me
 
 				messages = removeExistingLocalMessage(messages, message);
 			}
-
-			console.log('ok2');
 
 			let currentUserAvatar: string | undefined;
 
@@ -144,8 +140,6 @@ const chatMessagesReducer = (state: ChatMessagesState = initialState, action: Me
 				currentUserAvatar,
 				localMessageCount
 			};
-
-			console.log('ok3');
 
 			if (subData.payload.type === PublishType.QUERY) newState.lastEvaluatedKey = subData.payload.data.lastEvaluatedKey;
 

@@ -55,3 +55,18 @@ export const chatUnsubscribe = (userId: string): (dispatch: Dispatch) => Promise
 		}
 	};
 };
+
+export const markMessagesRead = (chatId: string, otherUserId: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		try {
+			const result = await ChatService.markMessagesRead(chatId, otherUserId);
+			console.log(result);
+
+			if (result.success) return;
+
+			throw Error('Unable to read messages');
+		} catch (err) {
+			console.log(err);
+		}
+	};
+};

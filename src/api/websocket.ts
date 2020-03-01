@@ -87,10 +87,7 @@ class WebSocketAPI {
 		let { subscription } = payload;
 
 		if (payload.subscription === 'connectionUpdated') await updateConnectionId(payload.connectionId);
-
-		console.log(subscription);
 		if (subscription && subscription.indexOf('/#')) subscription = subscription.split('/#')[0];
-		console.log(subscription);
 		console.log(payload);
 
 		const userId: string = (await Auth.currentUserInfo()).attributes.sub;

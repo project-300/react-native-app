@@ -63,6 +63,7 @@ export interface InterestsState {
 export interface AllChatState {
 	fetchingChats: boolean;
 	chats: Chat[];
+	totalUnreadCount: number;
 }
 
 export interface ChatState {

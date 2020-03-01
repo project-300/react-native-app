@@ -17,7 +17,7 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State, AnimationStyles, AnimationValues } from './interfaces';
-import { chatSubscribe, chatUnsubscribe, getChatMessages, sendMessage } from '../../redux/actions';
+import { chatSubscribe, chatUnsubscribe, getChatMessages, sendMessage, markMessagesRead } from '../../redux/actions';
 import { AppState } from '../../store';
 import { ChatState } from '../../types/redux-reducer-state-types';
 import { NavigationEvents } from 'react-navigation';
@@ -77,11 +77,17 @@ export class Chat extends Component<Props, State> {
 		};
 	}
 
-	public componentDidUpdate = (p: Props, s: State): void => {
+	public componentDidUpdate = async (p: Props, s: State): Promise<void> => {
 		const newMessageCount: number = this.props.messages.length - p.messages.length;
 
 		if (this.state.isLoading) setTimeout(() => this._scrollView.scrollToEnd({ animated: false }));
-		else if (newMessageCount && !this.state.scrolledOffBottom && !this.props.isLastMessageByOwnUser) setTimeout(() => this._scrollView.scrollToEnd());
+		else if (newMessageCount && !this.state.scrolledOffBottom && !this.props.isLastMessageByOwnUser)
+			setTimeout(() => this._scrollView.scrollToEnd());
+
+		if (newMessageCount && !this.props.isLastMessageByOwnUser && this.props.chat && this.props.chat.otherUser) {
+			console.log('READ');
+			await this.props.markMessagesRead(this.props.chat.chatId, this.props.chat.otherUser.userId);
+		}
 
 		if (this.state.isLoading && this.props.messages.length && newMessageCount) this.setState({ isLoading: false });
 		if (newMessageCount && this.state.scrolledOffBottom && this.props.lastContentType === 'NEW' && !this.props.isLastMessageByOwnUser)
@@ -369,5 +375,6 @@ export default connect(mapStateToProps, {
 	chatSubscribe,
 	chatUnsubscribe,
 	getChatMessages,
-	sendMessage
+	sendMessage,
+	markMessagesRead
 })(Chat);

@@ -8,7 +8,7 @@ import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
 import { Theme, DarkTheme as Test } from './constants/theme';
-import { setDarkMode } from './redux/actions';
+import { getChats, setDarkMode } from './redux/actions';
 import WS from './api/websocket';
 import { v4 as uuid } from 'uuid';
 import { AsyncStorage } from 'react-native';
@@ -20,6 +20,7 @@ interface State {
 	loggedIn: boolean;
 	checkedLoggedIn: boolean;
 	isDarkMode: boolean;
+	totalUnreadCount: number;
 }
 
 /*
@@ -44,7 +45,8 @@ export default class App extends Component<Props, State> {
 		this.state = {
 			loggedIn: false,
 			checkedLoggedIn: false,
-			isDarkMode: false
+			isDarkMode: false,
+			totalUnreadCount: 0
 		};
 
 		store.dispatch(setDarkMode());
@@ -57,9 +59,17 @@ export default class App extends Component<Props, State> {
 
 			await setDeviceId();
 			WS._setup();
+			// await getChats();
+			store.dispatch(getChats());
 		} catch (err) {
 			toastr.error('Unable to authenticate');
 		}
+
+		// store.subscribe(() => {
+		// 	const totalUnreadCount: number = store.getState().allChatsReducer.totalUnreadCount;
+		// 	if (totalUnreadCount !== this.state.totalUnreadCount)
+		// 		this.setState({ totalUnreadCount });
+		// });
 	}
 
 	public render(): ReactElement | null {

@@ -35,6 +35,7 @@ export interface Props extends CommonProps {
 	chatUnsubscribe(userId: string): Promise<boolean>;
 	getChatMessages(chatId: string, createdAt?: string): Promise<boolean>;
 	sendMessage(chatId: string, text: string, otherUserId: string): Promise<void>;
+	markMessagesRead(chatId: string, otherUserId: string): Promise<void>;
 }
 
 export interface State {

@@ -20,7 +20,7 @@ import {
 	createSwitchNavigator,
 	NavigationContainer,
 	NavigationScreenConfig,
-	NavigationStackScreenOptions,
+	NavigationStackScreenOptions, ScreenProps,
 } from 'react-navigation';
 import {
 	createMaterialBottomTabNavigator,
@@ -28,6 +28,17 @@ import {
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 import { Theme } from './constants/theme';
+import { AppState, store } from './store';
+import { AllChatState } from './types/redux-reducer-state-types';
+import { connect } from 'react-redux';
+import { getChats } from './redux/actions';
+
+let UNREAD_COUNT: number = 0;
+store.subscribe(() => {
+	console.log('UPDATED');
+	UNREAD_COUNT = store.getState().allChatsReducer.totalUnreadCount;
+	console.log(UNREAD_COUNT);
+});
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -183,7 +194,8 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 	},
 	ChatTab: {
 		screen: ChatTab,
-		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+		navigationOptions: ({ screenProps }: { screenProps: ScreenProps }): NavigationMaterialBottomTabOptions => ({
+			// tabBarBadge: screenProps.totalUnreadCount,
 			title: 'Chat',
 			tabBarIcon: <Icon name={ 'comments' } size={ 22 } color={ Theme.accent } solid />,
 			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {

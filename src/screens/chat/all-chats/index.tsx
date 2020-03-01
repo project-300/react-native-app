@@ -22,7 +22,15 @@ export class AllChats extends Component<Props, State> {
 	}
 
 	public async componentDidMount(): Promise<void> {
-		await this.props.getChats();
+		await this.props.getChats(); // Already subscribed in /app.tsx, but resubscribing in case connection was lost
+	}
+
+	private _setBadgeCount = (isEditing: boolean): void => {
+		this.props.navigation.setParams({
+			headerDetails: {
+				title: isEditing ? 'Editing Profile' : 'My Profile'
+			}
+		});
 	}
 
 	public render(): ReactElement {
@@ -62,7 +70,6 @@ export class AllChats extends Component<Props, State> {
 						return <TouchableWithoutFeedback
 							key={ chat.chatId }
 							onPress={ (): void => {
-								console.log('CLICK');
 								this.props.navigation.navigate('Chat', {
 									otherUserId: chat.otherUser && chat.otherUser.userId,
 									chatId: chat.chatId });
