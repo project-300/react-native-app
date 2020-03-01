@@ -14,6 +14,9 @@ import vehicleMakesAndModelsReducer from './vehicles';
 import darkModeReducer from './theme/theme';
 import viewJourneyReducer from './passenger/view-journey';
 import contentReloadReducer from './content-reloading';
+// import chatReducer from './chat/chat';
+import allChatsReducer from './chat/all-chat';
+import chatMessagesReducer from './chat/message';
 
 export default combineReducers({
 	signUpReducer,
@@ -30,5 +33,8 @@ export default combineReducers({
 	vehicleMakesAndModelsReducer
 	darkModeReducer,
 	viewJourneyReducer,
-	contentReloadReducer
+	contentReloadReducer,
+	allChatsReducer,
+	// chatReducer,
+	chatMessagesReducer
 });

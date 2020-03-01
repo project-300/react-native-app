@@ -92,6 +92,8 @@ export class InteractiveMap extends Component<Props, State> {
 		});
 	}
 
+	private _map: MapView = React.createRef<MapView>();
+
 	public render(): ReactElement {
 		const journey: Journey = this.state.journey;
 
@@ -101,7 +103,8 @@ export class InteractiveMap extends Component<Props, State> {
 					<MapView
 						provider={ PROVIDER_GOOGLE }
 						style={ styles.map}
-						region={ this._mapRegion() }
+						//region={ this._mapRegion() }
+						ref={ (m: MapView): MapView => this._map = m }
 					>
 						{ journey && this._createMarker(journey.origin) }
 						{ journey && this._createMarker(journey.destination) }

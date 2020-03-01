@@ -27,8 +27,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	map: {
-		...StyleSheet.absoluteFillObject,
-		marginBottom: 50 // Ensure this is the height of the button
+		...StyleSheet.absoluteFillObject
 	},
 
 	bottomPanel: {

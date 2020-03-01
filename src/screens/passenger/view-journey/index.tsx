@@ -20,11 +20,11 @@ import {
 	contentReloadOn,
 	clearJourneyInfo
 } from '../../../redux/actions';
-import moment, { Duration, Moment } from 'moment';
 import { NoticeBanner } from '../../../components/miscellaneous/notice-banner';
 import styles from './styles';
 import { DarkMode } from '../../../helpers/dark-mode';
 import { AnimatedStyles } from '../../../animations/styles';
+import DatesTimes from '../../../services/dates-times';
 
 const { width, height } = Dimensions.get('window');
 const { timing } = Animated;
@@ -148,14 +148,6 @@ export class ViewJourney extends Component<Props, State> {
 		url += `&maptype=roadmap&key=${GoogleMapsAPIKey}`;
 
 		return url;
-	}
-
-	private _formatLeavingTime = (leavingAt: string): string => {
-		const date: Moment = moment(leavingAt);
-		const duration: Duration = moment.duration(moment(date).diff(moment()));
-
-		if (duration.asDays() > 6) return moment().format('dddd MMMM Do YYYY, h:mm A');
-		return moment(leavingAt).calendar();
 	}
 
 	private _renderNavigationEvents = (): ReactElement =>
@@ -294,7 +286,7 @@ export class ViewJourney extends Component<Props, State> {
 						</Text>
 
 						{
-							driver.firstName || driver.lastName &&
+							!!driver.firstName || !!driver.lastName &&
 								<Text style={ [
 									styles.infoRow,
 									DarkMode.bwTextColorSwitch(DARK_MODE)
@@ -318,7 +310,7 @@ export class ViewJourney extends Component<Props, State> {
 								styles.bold,
 								DarkMode.bwTextColorSwitch(DARK_MODE)
 							] }>
-								{ `${journey.readableDurations.createdAt}` }
+								{ ` ${journey.readableDurations.createdAt}` }
 							</Text>
 						</Text>
 
@@ -331,7 +323,7 @@ export class ViewJourney extends Component<Props, State> {
 								styles.bold,
 								DarkMode.bwTextColorSwitch(DARK_MODE)
 							] }>
-								{ ` ${this._formatLeavingTime(journey.times.leavingAt)}` }
+								{ ` ${DatesTimes.dayAndTime(journey.times.leavingAt)}` }
 							</Text>
 						</Text>
 					</View>

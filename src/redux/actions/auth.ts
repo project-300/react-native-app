@@ -1,10 +1,12 @@
-import { UserService } from './../../services/user';
+import { UserService } from '../../services/user';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { Auth } from 'aws-amplify';
 import { storeLogin } from '../../auth';
 import toastr from '../../helpers/toastr';
 import { AppActions } from '../../types/redux-action-types';
+import WS from '../../api/websocket';
+import { deviceId, setDeviceId } from '../../app';
 
 const loginRequest = (): AppActions => ({ type: LOGIN_REQUEST });
 
@@ -21,6 +23,9 @@ export const login = (email: string, password: string): (dispatch: Dispatch) => 
 			const user = await UserService.getUser(auth.attributes.sub);
 			await storeLogin(user.userId, user.userType);
 			if (success) {
+
+				if (!await deviceId()) await setDeviceId();
+				await WS.updateConnection(false); // Sends userId to websocket connection
 
 				dispatch(loginSuccess());
 				return true;

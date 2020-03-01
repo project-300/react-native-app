@@ -1,4 +1,4 @@
-import { Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey } from '@project-300/common-types';
+import { Chat, Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey, Message } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
@@ -66,6 +66,31 @@ export interface UserProfileState {
 export interface InterestsState {
 	requestingInterests: boolean;
 	interests: string[];
+}
+
+export interface AllChatState {
+	fetchingChats: boolean;
+	chats: Chat[];
+	totalUnreadCount: number;
+}
+
+export interface ChatState {
+	fetchingChat: boolean;
+	chat: Chat | undefined;
+}
+
+export interface ChatMessagesState {
+	fetchingChat: boolean;
+	chat: Chat | undefined;
+	requestedChatId: string;
+	messages: Message[];
+	lastEvaluatedKey?: LastEvaluatedKey;
+	requestingOldMessages: boolean;
+	lastContentType: 'NONE' | 'INITIAL' | 'NEW' | 'OLD';
+	isLastMessageByOwnUser: boolean;
+	sendingMessage: boolean;
+	currentUserAvatar: string | undefined;
+	localMessageCount: number;
 }
 
 export interface UpdateUserFieldState {

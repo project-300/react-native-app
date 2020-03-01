@@ -1,6 +1,5 @@
 import { Dispatch } from 'redux';
 import { InterestsListResult } from '../../../types/http-responses';
-import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { INTERESTS_REQUEST, INTERESTS_SUCCESS, INTERESTS_FAILURE } from '../../../constants/redux-actions';

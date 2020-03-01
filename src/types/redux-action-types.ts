@@ -84,7 +84,20 @@ import {
 	GET_VIEW_JOURNEY_SUCCESS,
 	GET_VIEW_JOURNEY_FAILURE,
 	CONTENT_RELOAD_ON,
-	CONTENT_RELOAD_OFF
+	CONTENT_RELOAD_OFF,
+	GET_CHAT_REQUEST,
+	GET_CHAT_SUCCESS,
+	GET_CHAT_FAILURE,
+	GET_CHAT_MESSAGES_REQUEST,
+	GET_CHAT_MESSAGES_SUCCESS,
+	GET_CHAT_MESSAGES_FAILURE,
+	NEW_CHAT_SUB_MESSAGES,
+	GET_ALL_CHATS_REQUEST,
+	GET_ALL_CHATS_SUCCESS,
+	GET_ALL_CHATS_FAILURE,
+	SEND_MESSAGE_REQUEST,
+	SEND_MESSAGE_SUCCESS,
+	SEND_MESSAGE_FAILURE, UPDATED_CHAT_SUB
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -95,8 +108,9 @@ import {
   User, 
   VehicleModel, 
   VehicleMake, 
-  LastEvaluatedKey
-
+  LastEvaluatedKey,
+  Chat, 
+  Message
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -473,6 +487,73 @@ export interface InterestsFailure {
 	type: typeof INTERESTS_FAILURE;
 }
 
+export interface GetAllChatRequest {
+	type: typeof GET_ALL_CHATS_REQUEST;
+}
+
+export interface GetAllChatSuccess {
+	type: typeof GET_ALL_CHATS_SUCCESS;
+	chats: Chat[];
+	userId: string;
+}
+
+export interface GetAllChatFailure {
+	type: typeof GET_ALL_CHATS_FAILURE;
+}
+
+export interface ChatListSubscriptionReceived {
+	type: typeof UPDATED_CHAT_SUB;
+	payload: SubscriptionPayload;
+	userId: string;
+}
+export interface GetChatRequest {
+	type: typeof GET_CHAT_REQUEST;
+	chatId?: string;
+}
+
+export interface GetChatSuccess {
+	type: typeof GET_CHAT_SUCCESS;
+	chat: Chat;
+}
+
+export interface GetChatFailure {
+	type: typeof GET_CHAT_FAILURE;
+}
+
+export interface SendMessageRequest {
+	type: typeof SEND_MESSAGE_REQUEST;
+	localMessage: Partial<Message>;
+}
+
+export interface SendMessageSuccess {
+	type: typeof SEND_MESSAGE_SUCCESS;
+}
+
+export interface SendMessageFailure {
+	type: typeof SEND_MESSAGE_FAILURE;
+}
+
+export interface GetChatMessagesRequest {
+	type: typeof GET_CHAT_MESSAGES_REQUEST;
+}
+
+export interface GetChatMessagesSuccess {
+	type: typeof GET_CHAT_MESSAGES_SUCCESS;
+	messages: Message[];
+	userId: string;
+	lastEvaluatedKey?: LastEvaluatedKey;
+}
+
+export interface GetChatMessagesFailure {
+	type: typeof GET_CHAT_MESSAGES_FAILURE;
+}
+
+export interface ChatSubscriptionMessagesReceived {
+	type: typeof NEW_CHAT_SUB_MESSAGES;
+	payload: SubscriptionPayload;
+	userId: string;
+}
+
 export interface UpdateUserFieldRequest {
 	type: typeof UPDATE_USER_REQUEST;
 }
@@ -573,6 +654,25 @@ export type InterestsActionTypes =
 	InterestsRequest |
 	InterestsSuccess |
 	InterestsFailure;
+
+export type AllChatActionTypes =
+	GetAllChatRequest |
+	GetAllChatSuccess |
+	GetAllChatFailure;
+
+export type ChatActionTypes =
+	GetChatRequest |
+	GetChatSuccess |
+	GetChatFailure;
+
+export type MessageActionTypes =
+	GetChatMessagesRequest |
+	GetChatMessagesSuccess |
+	GetChatMessagesFailure |
+	ChatSubscriptionMessagesReceived |
+	SendMessageRequest |
+	SendMessageSuccess |
+	SendMessageFailure;
 
 export type UpdateEmailActionTypes =
 	UpdateEmailRequest |
@@ -685,4 +785,7 @@ export type AppActions =
 	VehicleMakesAndModelsTypes |
 	SearchJourneysActionTypes |
 	ViewJourneyActionTypes |
-	InterestsActionTypes;
+	InterestsActionTypes |
+	AllChatActionTypes |
+	ChatActionTypes |
+	MessageActionTypes;

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment, { Duration, Moment } from 'moment';
 
 class DatesTimes {
 
@@ -6,6 +6,13 @@ class DatesTimes {
 
 	public static hoursMinutes = (d: Date | string): string => moment(d).format('HH:mm a');
 
+	public static dayAndTime = (d: string): string => {
+		const date: Moment = moment(d);
+		const duration: Duration = moment.duration(moment(date).diff(moment()));
+
+		if (duration.asDays() > 6) return date.format('dddd MMMM Do YYYY, h:mm A');
+		return moment(d).calendar();
+	}
 }
 
 export default DatesTimes;

@@ -8,7 +8,10 @@ import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
 import { Theme, DarkTheme as Test } from './constants/theme';
-import { setDarkMode } from './redux/actions';
+import { getChats, setDarkMode } from './redux/actions';
+import WS from './api/websocket';
+import { v4 as uuid } from 'uuid';
+import { AsyncStorage } from 'react-native';
 
 Amplify.configure(AWS_CONFIG);
 
@@ -17,7 +20,22 @@ interface State {
 	loggedIn: boolean;
 	checkedLoggedIn: boolean;
 	isDarkMode: boolean;
+	totalUnreadCount: number;
 }
+
+/*
+	Used for identifying what device a user is making API / websocket calls from.
+	It will improve websocket subscription handling on the backend.
+	This will allow the user to use more than 1 device at the same time
+*/
+export const setDeviceId = async (): Promise<void> => {
+	const currentDeviceId = await deviceId();
+	if (!currentDeviceId) await AsyncStorage.setItem('Device-ID', uuid());
+};
+
+export const deviceId = async (): Promise<string | null> => AsyncStorage.getItem('Device-ID');
+
+export const clearDeviceId = async (): Promise<void> => AsyncStorage.removeItem('Device-ID')
 
 export default class App extends Component<Props, State> {
 
@@ -27,7 +45,8 @@ export default class App extends Component<Props, State> {
 		this.state = {
 			loggedIn: false,
 			checkedLoggedIn: false,
-			isDarkMode: false
+			isDarkMode: false,
+			totalUnreadCount: 0
 		};
 
 		store.dispatch(setDarkMode());
@@ -37,9 +56,20 @@ export default class App extends Component<Props, State> {
 		try {
 			const loggedIn = await isStoreLoggedIn();
 			this.setState({ loggedIn, checkedLoggedIn: true });
+
+			await setDeviceId();
+			WS._setup();
+			// await getChats();
+			store.dispatch(getChats());
 		} catch (err) {
 			toastr.error('Unable to authenticate');
 		}
+
+		// store.subscribe(() => {
+		// 	const totalUnreadCount: number = store.getState().allChatsReducer.totalUnreadCount;
+		// 	if (totalUnreadCount !== this.state.totalUnreadCount)
+		// 		this.setState({ totalUnreadCount });
+		// });
 	}
 
 	public render(): ReactElement | null {
