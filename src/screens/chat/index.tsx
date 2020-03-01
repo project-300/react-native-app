@@ -207,8 +207,7 @@ export class Chat extends Component<Props, State> {
 	private _renderMessage = (message: Message): ReactElement => {
 		return <View style={ [
 			styles.messageContainer,
-			message.userOwnMessage ? { alignSelf: 'flex-end' } : { },
-			message.localMessage ? { backgroundColor: 'red' } : { }
+			message.userOwnMessage ? { alignSelf: 'flex-end' } : { }
 		] } key={ message.sk }>
 			{
 				!message.userOwnMessage &&
@@ -216,7 +215,10 @@ export class Chat extends Component<Props, State> {
 						style={ styles.avatarContainer }
 						onPress={ (): boolean => this.props.navigation.navigate('ChatOtherProfile', { userId: message.createdBy.userId })}
 					>
-						<Image style={ styles.avatar } source={ { uri: message.createdBy.avatar } } />
+						<Image
+							style={ styles.avatar }
+							source={ message.createdBy.avatar ? { uri: message.createdBy.avatar } : require('../../assets/images/no-avatar.jpg') }
+						/>
 					</TouchableOpacity>
 			}
 			<View
@@ -234,7 +236,10 @@ export class Chat extends Component<Props, State> {
 			{
 				message.userOwnMessage &&
 					<View style={ styles.avatarContainer }>
-						<Image style={ [ styles.avatar, styles.ownAvatar ] } source={ { uri: message.createdBy.avatar } } />
+						<Image
+							style={ [ styles.avatar, styles.ownAvatar ] }
+							source={ message.createdBy.avatar ? { uri: message.createdBy.avatar } : require('../../assets/images/no-avatar.jpg') }
+						/>
 					</View>
 			}
 		</View>;

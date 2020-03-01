@@ -95,7 +95,7 @@ import {
 	GET_ALL_CHATS_FAILURE,
 	SEND_MESSAGE_REQUEST,
 	SEND_MESSAGE_SUCCESS,
-	SEND_MESSAGE_FAILURE
+	SEND_MESSAGE_FAILURE, UPDATED_CHAT_SUB
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -454,12 +454,18 @@ export interface GetAllChatRequest {
 export interface GetAllChatSuccess {
 	type: typeof GET_ALL_CHATS_SUCCESS;
 	chats: Chat[];
+	userId: string;
 }
 
 export interface GetAllChatFailure {
 	type: typeof GET_ALL_CHATS_FAILURE;
 }
 
+export interface ChatListSubscriptionReceived {
+	type: typeof UPDATED_CHAT_SUB;
+	payload: SubscriptionPayload;
+	userId: string;
+}
 export interface GetChatRequest {
 	type: typeof GET_CHAT_REQUEST;
 	chatId?: string;

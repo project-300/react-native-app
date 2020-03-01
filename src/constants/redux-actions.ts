@@ -64,6 +64,7 @@ export const GET_CHAT_FAILURE: string = 'GET_CHAT_FAILURE';
 export const GET_ALL_CHATS_REQUEST: string = 'GET_ALL_CHATS_REQUEST';
 export const GET_ALL_CHATS_SUCCESS: string = 'GET_ALL_CHATS_SUCCESS';
 export const GET_ALL_CHATS_FAILURE: string = 'GET_ALL_CHATS_FAILURE';
+export const UPDATED_CHAT_SUB: string = 'UPDATED_CHAT_SUB';
 
 // Messages
 export const GET_CHAT_MESSAGES_REQUEST: string = 'GET_CHAT_MESSAGES_REQUEST';
@@ -73,7 +74,6 @@ export const SEND_MESSAGE_REQUEST: string = 'SEND_MESSAGE_REQUEST';
 export const SEND_MESSAGE_SUCCESS: string = 'SEND_MESSAGE_SUCCESS';
 export const SEND_MESSAGE_FAILURE: string = 'SEND_MESSAGE_FAILURE';
 export const NEW_CHAT_SUB_MESSAGES: string = 'NEW_CHAT_SUB_MESSAGES';
-// export const CHAT_MESSAGES_CACHE: string = 'CHAT_MESSAGES_CACHE';
 
 // Driver Applications
 export const DRIVER_APPLICATION_REQUEST: string = 'DRIVER_APPLICATION_REQUEST';

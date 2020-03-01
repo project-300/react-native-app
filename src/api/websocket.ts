@@ -1,7 +1,6 @@
 import { SERVER_WSS_URL } from '../../environment/env';
 import { store } from '../store';
-import { updateDriverLocation, newChatMessages } from '../redux/actions';
-import { userId } from '../auth';
+import { updateDriverLocation, newChatMessages, updatedChat } from '../redux/actions';
 import { JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
 import { SubscriptionPayload } from '@project-300/common-types';
 import { Auth } from 'aws-amplify';
@@ -51,19 +50,23 @@ class WebSocketAPI {
 
 		// append can be used as an extra detail for filtering subscriptions, eg. object id
 	public subscribe = async (subscription: string, append?: string): Promise<void> => {
+		const userId: string = (await Auth.currentUserInfo()).attributes.sub;
+
 		this.WS.send(JSON.stringify({
 			action: subscription,
 			subscription: append ? `${subscription}/#${append}` : subscription,
-			userId: await userId(),
+			userId,
 			subscribe: true
 		}));
 	}
 
 	public unsubscribe = async (subscription: string, append?: string): Promise<void> => {
+		const userId: string = (await Auth.currentUserInfo()).attributes.sub;
+
 		this.WS.send(JSON.stringify({
 			action: subscription,
 			subscription: append ? `${subscription}/#${append}` : subscription,
-			userId: await userId(),
+			userId,
 			subscribe: false
 		}));
 	}
@@ -90,14 +93,17 @@ class WebSocketAPI {
 		console.log(subscription);
 		console.log(payload);
 
+		const userId: string = (await Auth.currentUserInfo()).attributes.sub;
+
 		switch (subscription) {
 			case JOURNEY_DRIVER_LOCATION:
 				store.dispatch(updateDriverLocation(payload));
 				break;
 			case 'chat/messages':
-				const userId: string = (await Auth.currentUserInfo()).attributes.sub;
-
 				store.dispatch(newChatMessages(payload, userId));
+				break;
+			case 'chats/list':
+				store.dispatch(updatedChat(payload, userId));
 				break;
 			default:
 				return;
