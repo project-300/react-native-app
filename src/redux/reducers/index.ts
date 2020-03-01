@@ -10,6 +10,7 @@ import driverTrackingReducer from './passenger/driver-tracking';
 import newJourneyReducer from './driver/new-journey';
 import allJourneysReducer from './journey';
 import interestsListReducer from './data/interests';
+import vehicleMakesAndModelsReducer from './vehicles';
 import darkModeReducer from './theme/theme';
 import viewJourneyReducer from './passenger/view-journey';
 import contentReloadReducer from './content-reloading';
@@ -29,6 +30,7 @@ export default combineReducers({
 	newJourneyReducer,
 	allJourneysReducer,
 	interestsListReducer,
+	vehicleMakesAndModelsReducer
 	darkModeReducer,
 	viewJourneyReducer,
 	contentReloadReducer,

@@ -20,10 +20,9 @@ export const login = (email: string, password: string): (dispatch: Dispatch) => 
 
 		try {
 			const auth = await Auth.signIn(email, password);
-			const { success, user } = await UserService.getUser(auth.attributes.sub);
-
+			const user = await UserService.getUser(auth.attributes.sub);
+			await storeLogin(user.userId, user.userType);
 			if (success) {
-				await storeLogin(user.userId, user.userType);
 
 				if (!await deviceId()) await setDeviceId();
 				await WS.updateConnection(false); // Sends userId to websocket connection

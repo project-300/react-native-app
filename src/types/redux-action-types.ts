@@ -1,3 +1,4 @@
+import { VEHICLE_MAKES_REQUEST, VEHICLE_MAKES_SUCCESS, VEHICLE_MAKES_FAILURE, VEHICLE_MODELS_REQUEST, VEHICLE_MODELS_SUCCESS, VEHICLE_MODELS_FAILURE } from './../constants/redux-actions';
 import {
 	LOGIN_FAILURE,
 	LOGIN_REQUEST,
@@ -71,6 +72,7 @@ import {
 	UPDATE_INTERESTS_REQUEST,
 	UPDATE_INTERESTS_FAILURE,
 	UPDATE_USER_REQUEST,
+  APPLICATION_ALREADY_APPLIED,
 	UPDATE_USER_SUCCESS,
 	UPDATE_USER_FAILURE,
 	UPLOAD_AVATAR_REQUEST,
@@ -102,7 +104,13 @@ import {
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, User, LastEvaluatedKey, Chat, Message
+	GooglePlace, 
+  User, 
+  VehicleModel, 
+  VehicleMake, 
+  LastEvaluatedKey,
+  Chat, 
+  Message
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -254,6 +262,38 @@ export interface DriverApplicationSuccess {
 
 export interface DriverApplicationFailure {
 	type: typeof DRIVER_APPLICATION_FAILURE;
+}
+
+export interface ApplicationAlreadyApplied {
+	type: typeof APPLICATION_ALREADY_APPLIED;
+	applied: boolean;
+}
+
+export interface VehicleMakesRequest {
+	type: typeof VEHICLE_MAKES_REQUEST
+}
+
+export interface VehicleMakesSuccess {
+	type: typeof VEHICLE_MAKES_SUCCESS;
+	vehicleMakes: VehicleMake[];
+}
+
+export interface VehicleMakesFailure {
+	type: typeof VEHICLE_MAKES_FAILURE;
+	errMessage: string;
+}
+
+export interface VehicleModelsRequest {
+	type: typeof VEHICLE_MODELS_REQUEST
+}
+
+export interface VehicleModelsSuccess {
+	type: typeof VEHICLE_MODELS_SUCCESS;
+	vehicleModels: VehicleModel[];
+}
+
+export interface VehicleModelsFailure {
+	type: typeof VEHICLE_MODELS_FAILURE
 }
 
 export interface DriverJourneysRequest {
@@ -541,6 +581,15 @@ export interface UpdateAvatarFailure {
 	type: typeof UPLOAD_AVATAR_FAILURE;
 }
 
+export type VehicleMakesAndModelsTypes =
+	VehicleMakesRequest |
+ 	VehicleMakesSuccess |
+	VehicleMakesFailure |
+	VehicleModelsRequest |
+	VehicleModelsSuccess |
+ 	VehicleModelsSuccess;
+
+export type JourneyActionTypes =
 export interface ContentReloadOn {
 	type: typeof CONTENT_RELOAD_ON;
 }
@@ -633,7 +682,8 @@ export type UpdateEmailActionTypes =
 export type DriverApplicationActionTypes =
 	DriverApplicationRequest |
 	DriverApplicationSuccess |
-	DriverApplicationFailure;
+	DriverApplicationFailure |
+	ApplicationAlreadyApplied;
 
 export type DriverJourneysActionTypes =
 	DriverJourneysRequest |
@@ -731,6 +781,8 @@ export type AppActions =
 	DriverTrackingActionTypes |
 	DriverApplicationActionTypes |
 	CreateNewJourneyActionTypes |
+	JourneyActionTypes |
+	VehicleMakesAndModelsTypes |
 	SearchJourneysActionTypes |
 	ViewJourneyActionTypes |
 	InterestsActionTypes |
