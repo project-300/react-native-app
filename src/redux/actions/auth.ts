@@ -7,6 +7,7 @@ import toastr from '../../helpers/toastr';
 import { AppActions } from '../../types/redux-action-types';
 import WS from '../../api/websocket';
 import { deviceId, setDeviceId } from '../../app';
+import { User } from '@project-300/common-types';
 
 const loginRequest = (): AppActions => ({ type: LOGIN_REQUEST });
 
@@ -20,9 +21,11 @@ export const login = (email: string, password: string): (dispatch: Dispatch) => 
 
 		try {
 			const auth = await Auth.signIn(email, password);
-			const user = await UserService.getUser(auth.attributes.sub);
-			await storeLogin(user.userId, user.userType);
-			if (success) {
+			const result = await UserService.getUser(auth.attributes.sub);
+
+			if (result.success) {
+				const user: User = result.user;
+				await storeLogin(user.userId, user.userType);
 
 				if (!await deviceId()) await setDeviceId();
 				await WS.updateConnection(false); // Sends userId to websocket connection
