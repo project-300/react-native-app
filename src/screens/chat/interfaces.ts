@@ -12,8 +12,8 @@ export interface Styles {
 	messagesContainer: ViewStyle;
 	messageContainer: ViewStyle;
 	messageInput: ViewStyle;
+	avatarContainer: ViewStyle;
 	avatar: ImageStyle;
-	senderAvatar: ImageStyle;
 	ownAvatar: ImageStyle;
 	userOwnMessageBubble: ViewStyle;
 	userOwnMessageText: TextStyle;
@@ -30,26 +30,31 @@ export interface Props extends CommonProps {
 	lastContentType: 'NONE' | 'INITIAL' | 'NEW' | 'OLD';
 	initialLoad: boolean;
 	isLastMessageByOwnUser: boolean;
-	chatSubscribe(userId: string): Promise<boolean>;
+	localMessageCount: number;
+	chatSubscribe(userId: string, chatId?: string): Promise<boolean>;
 	chatUnsubscribe(userId: string): Promise<boolean>;
 	getChatMessages(chatId: string, createdAt?: string): Promise<boolean>;
+	sendMessage(chatId: string, text: string, otherUserId: string): Promise<void>;
 }
 
 export interface State {
+	otherUserId: string | undefined;
+	chatId: string | undefined;
 	messageText: string;
 	scrolledOffBottom: boolean;
 	newMessageCount: number;
 	lastContentHeight: number;
 	isLoading: boolean;
 	allowOldMessages: boolean;
+	scrollingDown: boolean;
+	statusBarHeight: number;
+	isUnMounting: boolean;
 }
 
 export interface AnimationValues {
 	newMessages: Animated.Value<number>;
-	loadOldMessage: Animated.Value<number>;
 }
 
 export interface AnimationStyles {
 	newMessagesButtonOpacity: Animated.Node<number> | number;
-	loadingBarWidth: Animated.Node<number> | number;
 }

@@ -6,12 +6,13 @@ import {
 	GET_CHAT_MESSAGES_SUCCESS,
 	GET_CHAT_MESSAGES_FAILURE,
 	NEW_CHAT_SUB_MESSAGES,
-	// CHAT_MESSAGES_CACHE
+	SEND_MESSAGE_REQUEST,
+	SEND_MESSAGE_SUCCESS,
+	SEND_MESSAGE_FAILURE,
 } from '../../../constants/redux-actions';
 import { LastEvaluatedKey, Message, SubscriptionPayload } from '@project-300/common-types';
 import { MessageService } from '../../../services/message';
 import { GetChatMessagesResult } from '../../../types/http-responses';
-import { MessageCache } from '../../../cache/messages';
 import { Auth } from 'aws-amplify';
 
 const getChatMessagesRequest = (): AppActions => ({ type: GET_CHAT_MESSAGES_REQUEST });
@@ -21,17 +22,18 @@ const getChatMessagesSuccess = (messages: Message[], userId: string, lastEvaluat
 
 const getChatMessagesFailure = (): AppActions => ({ type: GET_CHAT_MESSAGES_FAILURE });
 
+const sendMessageRequest = (localMessage: Partial<Message>): AppActions => ({ type: SEND_MESSAGE_REQUEST, localMessage });
+
+const sendMessageSuccess = (): AppActions => ({ type: SEND_MESSAGE_SUCCESS });
+
+const sendMessageFailure = (): AppActions => ({ type: SEND_MESSAGE_FAILURE });
+
 export const newChatMessages = (payload: SubscriptionPayload, userId: string): AppActions =>
 	({ type: NEW_CHAT_SUB_MESSAGES, payload, userId });
 
-// export const newChatMessages = (messages: Message[], userId: string): AppActions =>
-// 	({ type: CHAT_MESSAGES_CACHE, messages });
-
 export const getChatMessages = (chatId: string, createdAt?: string): (dispatch: Dispatch) => Promise<boolean> => {
-	return async (dispatch: Dispatch): Promise<boolean > => {
+	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(getChatMessagesRequest());
-
-		console.log('Getting more messages');
 
 		try {
 			const userId: string = (await Auth.currentUserInfo()).attributes.sub;
@@ -54,15 +56,24 @@ export const getChatMessages = (chatId: string, createdAt?: string): (dispatch: 
 	};
 };
 
-export const getMessageCache = (): (dispatch: Dispatch) => Promise<void> => {
-	return async (dispatch: Dispatch): Promise<void > => {
-		try {
-			const messages: Message[] | null = await MessageCache.RetrieveMessages();
-			console.log(messages);
+export const sendMessage = (chatId: string, text: string, otherUserId: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		dispatch(sendMessageRequest({ text, chatId }));
 
-			if (messages && messages.length) dispatch(getChatMessagesSuccess(messages));
+		try {
+			const result = await MessageService.sendMessage({ text, chatId }, otherUserId);
+			console.log(result);
+
+			if (result.success) {
+				dispatch(sendMessageSuccess());
+				return;
+			}
+
+			throw Error('Unable to send message');
 		} catch (err) {
 			console.log(err);
+			dispatch(sendMessageFailure());
+			toastr.error(`Unable to send message`);
 		}
 	};
 };

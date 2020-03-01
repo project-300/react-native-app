@@ -5,18 +5,18 @@ import { GET_CHAT_REQUEST, GET_CHAT_SUCCESS, GET_CHAT_FAILURE } from '../../../c
 import { Chat } from '@project-300/common-types';
 import { ChatService } from '../../../services/chat';
 
-const getChatRequest = (): AppActions => ({ type: GET_CHAT_REQUEST });
+const getChatRequest = (chatId?: string): AppActions => ({ type: GET_CHAT_REQUEST, chatId });
 
 const getChatSuccess = (chat: Chat): AppActions => ({ type: GET_CHAT_SUCCESS, chat });
 
 const getChatFailure = (): AppActions => ({ type: GET_CHAT_FAILURE });
 
-export const chatSubscribe = (userId: string): (dispatch: Dispatch) => Promise<boolean> => {
+export const chatSubscribe = (userId: string, chatId?: string): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean > => {
-		dispatch(getChatRequest());
+		dispatch(getChatRequest(chatId));
 
 		try {
-			const result: { success: boolean; chat: Chat } = await ChatService.chatSubscribe(userId);
+			const result: { success: boolean; chat: Chat } = await ChatService.chatSubscribe(userId, chatId);
 			console.log(result);
 
 			if (result.success) {

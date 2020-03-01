@@ -89,7 +89,13 @@ import {
 	GET_CHAT_MESSAGES_REQUEST,
 	GET_CHAT_MESSAGES_SUCCESS,
 	GET_CHAT_MESSAGES_FAILURE,
-	NEW_CHAT_SUB_MESSAGES, GET_ALL_CHATS_REQUEST, GET_ALL_CHATS_SUCCESS, GET_ALL_CHATS_FAILURE
+	NEW_CHAT_SUB_MESSAGES,
+	GET_ALL_CHATS_REQUEST,
+	GET_ALL_CHATS_SUCCESS,
+	GET_ALL_CHATS_FAILURE,
+	SEND_MESSAGE_REQUEST,
+	SEND_MESSAGE_SUCCESS,
+	SEND_MESSAGE_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -456,6 +462,7 @@ export interface GetAllChatFailure {
 
 export interface GetChatRequest {
 	type: typeof GET_CHAT_REQUEST;
+	chatId?: string;
 }
 
 export interface GetChatSuccess {
@@ -465,6 +472,19 @@ export interface GetChatSuccess {
 
 export interface GetChatFailure {
 	type: typeof GET_CHAT_FAILURE;
+}
+
+export interface SendMessageRequest {
+	type: typeof SEND_MESSAGE_REQUEST;
+	localMessage: Partial<Message>;
+}
+
+export interface SendMessageSuccess {
+	type: typeof SEND_MESSAGE_SUCCESS;
+}
+
+export interface SendMessageFailure {
+	type: typeof SEND_MESSAGE_FAILURE;
 }
 
 export interface GetChatMessagesRequest {
@@ -594,7 +614,10 @@ export type MessageActionTypes =
 	GetChatMessagesRequest |
 	GetChatMessagesSuccess |
 	GetChatMessagesFailure |
-	ChatSubscriptionMessagesReceived;
+	ChatSubscriptionMessagesReceived |
+	SendMessageRequest |
+	SendMessageSuccess |
+	SendMessageFailure;
 
 export type UpdateEmailActionTypes =
 	UpdateEmailRequest |

@@ -1,6 +1,10 @@
 import React, { Component, ReactElement } from 'react';
 import {
-	ScrollView, View, Text, Image, TouchableWithoutFeedback
+	ScrollView,
+	View,
+	Text,
+	Image,
+	TouchableWithoutFeedback
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -9,7 +13,7 @@ import { getChats } from '../../../redux/actions';
 import { AppState } from '../../../store';
 import { AllChatState } from '../../../types/redux-reducer-state-types';
 import { Chat } from '@project-300/common-types';
-import { Badge } from 'react-native-paper';
+import { ActivityIndicator, Badge } from 'react-native-paper';
 
 export class AllChats extends Component<Props, State> {
 
@@ -25,10 +29,45 @@ export class AllChats extends Component<Props, State> {
 		return (
 			<ScrollView contentContainerStyle={ styles.container }>
 				{
+					!this.props.chats.length && !this.props.fetchingChats &&
+						<View
+							style={ styles.noActiveChats }
+						>
+							<Text
+								style={ styles.noActiveChatsText }
+							>
+								You have no active chats
+							</Text>
+
+							<Image
+								resizeMode={ 'contain' }
+								style={ styles.chatLogo }
+								source={ require('../../../assets/images/chat.png') }
+							/>
+						</View>
+				}
+
+				{
+					this.props.fetchingChats &&
+						<ActivityIndicator
+							size={ 40 }
+							color={ 'red' }
+						/>
+				}
+
+				{
 					this.props.chats.map((chat: Chat) => {
 						if (!chat.otherUser) return;
 
-						return <TouchableWithoutFeedback onPress={ (): boolean => this.props.navigation.navigate('Chat', { chatId: chat.chatId }) }>
+						return <TouchableWithoutFeedback
+							key={ chat.chatId }
+							onPress={ (): void => {
+								console.log('CLICK');
+								this.props.navigation.navigate('Chat', {
+									otherUserId: chat.otherUser && chat.otherUser.userId,
+									chatId: chat.chatId });
+							}
+						}>
 							<View style={ styles.chatContainer }>
 								<View
 									style={ styles.otherUserAvatarContainer }
@@ -45,9 +84,10 @@ export class AllChats extends Component<Props, State> {
 										>{ chat.otherUser.firstName } { chat.otherUser.lastName }</Text>
 										<View style={ styles.newMessageCountContainer }>
 											<Badge
+												visible={ !!chat.unreadCount }
 												size={ 26 }
 												style={ styles.newMessageCount }
-											>3</Badge>
+											>{ chat.unreadCount }</Badge>
 										</View>
 									</View>
 
@@ -61,7 +101,7 @@ export class AllChats extends Component<Props, State> {
 									<View style={ styles.bottomRow }>
 										<Text
 											style={ styles.updatedAt }
-										>{ chat.readableDurations.updatedAt }</Text>
+										>{ chat.readableDurations && chat.readableDurations.updatedAt }</Text>
 									</View>
 								</View>
 							</View>

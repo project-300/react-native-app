@@ -13,7 +13,7 @@ import interestsListReducer from './data/interests';
 import darkModeReducer from './theme/theme';
 import viewJourneyReducer from './passenger/view-journey';
 import contentReloadReducer from './content-reloading';
-import chatReducer from './chat/chat';
+// import chatReducer from './chat/chat';
 import allChatsReducer from './chat/all-chat';
 import chatMessagesReducer from './chat/message';
 
@@ -33,6 +33,6 @@ export default combineReducers({
 	viewJourneyReducer,
 	contentReloadReducer,
 	allChatsReducer,
-	chatReducer,
+	// chatReducer,
 	chatMessagesReducer
 });

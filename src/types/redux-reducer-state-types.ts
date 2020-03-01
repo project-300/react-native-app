@@ -71,11 +71,17 @@ export interface ChatState {
 }
 
 export interface ChatMessagesState {
+	fetchingChat: boolean;
+	chat: Chat | undefined;
+	requestedChatId: string;
 	messages: Message[];
 	lastEvaluatedKey?: LastEvaluatedKey;
 	requestingOldMessages: boolean;
 	lastContentType: 'NONE' | 'INITIAL' | 'NEW' | 'OLD';
 	isLastMessageByOwnUser: boolean;
+	sendingMessage: boolean;
+	currentUserAvatar: string | undefined;
+	localMessageCount: number;
 }
 
 export interface UpdateUserFieldState {

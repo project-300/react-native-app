@@ -3,14 +3,20 @@ import { Styles } from './interfaces';
 
 const { width } = Dimensions.get('window');
 
+let avatarContainerFlex: number = 1;
+if (width <= 375) avatarContainerFlex = 1.4;
+
+let chatWindowPadding: number = 20;
+if (width <= 375) chatWindowPadding = 10;
+
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1
 	},
 
 	chatWindow: {
-		padding: 20,
-		marginBottom: 50
+		padding: chatWindowPadding,
+		marginBottom: 60
 	},
 
 	messagesContainer: {
@@ -18,7 +24,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	messageContainer: {
-		width: width * 0.9,
+		flex: 1,
 		flexDirection: 'row'
 	},
 
@@ -27,7 +33,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		padding: 12,
 		marginVertical: 10,
 		borderRadius: 16,
-		width: width * 0.8
+		flex: 5
 	},
 
 	messageText: {
@@ -38,23 +44,24 @@ const styles: Styles = StyleSheet.create<Styles>({
 	messageTime: {
 		fontSize: 12,
 		alignSelf: 'flex-end',
-		marginTop: 10
+		marginTop: 10,
+		color: 'black'
+	},
+
+	avatarContainer: {
+		flex: avatarContainerFlex,
+		alignSelf: 'flex-end'
 	},
 
 	avatar: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
-		alignSelf: 'flex-end',
+		width: 50,
+		height: 50,
+		borderRadius: 25,
 		bottom: 10
 	},
 
-	senderAvatar: {
-		right: 10
-	},
-
 	ownAvatar: {
-		right: -10
+		alignSelf: 'flex-end'
 	},
 
 	userOwnMessageBubble: {
@@ -78,6 +85,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	messageInput: {
 		paddingRight: 40,
+		height: 60,
 		padding: 20,
 		borderTopWidth: 0.5,
 		borderColor: '#AAA'

@@ -142,6 +142,10 @@ const ChatTab: NavigationContainer = createStackNavigator({
 	Chat: {
 		screen: Chat,
 		...navigationOptions('Chat', undefined, true)
+	},
+	ChatOtherProfile: {
+		screen: Profile,
+		...navigationOptions('Other Profile', undefined, true)
 	}
 });
 
@@ -181,7 +185,10 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		screen: ChatTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'Chat',
-			tabBarIcon: <Icon name={ 'comments' } size={ 22 } color={ Theme.accent } solid />
+			tabBarIcon: <Icon name={ 'comments' } size={ 22 } color={ Theme.accent } solid />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('AllChats');
+			}
 		})
 	}
 },
