@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
-import { isStoreLoggedIn } from './auth';
+import { isStoreLoggedIn, userType } from './auth';
 import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
@@ -21,6 +21,7 @@ interface State {
 	checkedLoggedIn: boolean;
 	isDarkMode: boolean;
 	totalUnreadCount: number;
+	userType: string;
 }
 
 /*
@@ -46,7 +47,8 @@ export default class App extends Component<Props, State> {
 			loggedIn: false,
 			checkedLoggedIn: false,
 			isDarkMode: false,
-			totalUnreadCount: 0
+			totalUnreadCount: 0,
+			userType: 'Passenger'
 		};
 
 		store.dispatch(setDarkMode());
@@ -58,6 +60,10 @@ export default class App extends Component<Props, State> {
 			this.setState({ loggedIn, checkedLoggedIn: true });
 
 			await setDeviceId();
+
+			const uType: string | null = await userType();
+			if (uType) this.setState({ userType: uType });
+
 			WS._setup();
 			// await getChats();
 			store.dispatch(getChats());
@@ -77,7 +83,7 @@ export default class App extends Component<Props, State> {
 
 		if (!checkedLoggedIn) return null; // Replace with Splash Screen
 
-		const Layout = CreateNavigator(loggedIn, true); // Update to pass in user type every time
+		const Layout = CreateNavigator(loggedIn, this.state.userType === 'Driver'); // Update to pass in user type every time
 
 		const theme: RNPTheme = {
 			...DefaultTheme,

@@ -28,10 +28,7 @@ import {
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 import { Theme } from './constants/theme';
-import { AppState, store } from './store';
-import { AllChatState } from './types/redux-reducer-state-types';
-import { connect } from 'react-redux';
-import { getChats } from './redux/actions';
+import { store } from './store';
 
 let UNREAD_COUNT: number = 0;
 store.subscribe(() => {
@@ -126,7 +123,7 @@ const SearchTab: NavigationContainer = createStackNavigator({
 const MyJourneysTab: NavigationContainer = createStackNavigator({
 	MyJourneys: {
 		screen: MyJourneys,
-		...navigationOptions('My Journeys', undefined, false)
+		...navigationOptions('My Accepted Lifts', undefined, false)
 	},
 	DriverTrackingMap: {
 		screen: DriverTracking,
@@ -168,8 +165,11 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 	MyJourneysTab: {
 		screen: MyJourneysTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'My Journeys',
-			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />
+			title: 'My Lifts',
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('MyJourneys');
+			}
 		})
 	},
 	ProfileTab: {
@@ -213,9 +213,15 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigator({
 	MyJourneysTab: {
 		screen: MyJourneysTab,
-		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'My Journeys',
-			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />
+		navigationOptions: (e): NavigationMaterialBottomTabOptions => ({
+			title: 'My Lifts',
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				console.log(navigation);
+				console.log(e);
+
+				if (navigation.isFocused) navigation.navigate('MyJourneys');
+			}
 		})
 	},
 	ProfileTab: {
