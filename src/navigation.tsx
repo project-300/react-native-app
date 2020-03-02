@@ -124,10 +124,6 @@ const SearchTab: NavigationContainer = createStackNavigator({
 });
 
 const MyJourneysTab: NavigationContainer = createStackNavigator({
-	JourneyMap: {
-		screen: JourneyMap,
-		...navigationOptions('Your Journey', undefined, true)
-	},
 	MyJourneys: {
 		screen: MyJourneys,
 		...navigationOptions('My Journeys', undefined, false)
@@ -135,6 +131,14 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 	DriverTrackingMap: {
 		screen: DriverTracking,
 		...navigationOptions('Track Driver', undefined, true)
+	},
+	JourneyMap: {
+		screen: JourneyMap,
+		...navigationOptions('Your Journey', undefined, true)
+	},
+	PassengerViewJourney: {
+		screen: ViewJourney,
+		...navigationOptions('Journey', undefined, true)
 	}
 });
 
@@ -160,7 +164,53 @@ const ChatTab: NavigationContainer = createStackNavigator({
 	}
 });
 
-const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
+const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavigator({
+	MyJourneysTab: {
+		screen: MyJourneysTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'My Journeys',
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />
+		})
+	},
+	ProfileTab: {
+		screen: ProfileTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Profile',
+			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
+		})
+	},
+	SearchTab: {
+		screen: SearchTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Search',
+			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ Theme.accent } solid />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('AllJourneys');
+			}
+		})
+	},
+	ChatTab: {
+		screen: ChatTab,
+		navigationOptions: ({ screenProps }: { screenProps: ScreenProps }): NavigationMaterialBottomTabOptions => ({
+			// tabBarBadge: screenProps.totalUnreadCount,
+			title: 'Chat',
+			tabBarIcon: <Icon name={ 'comments' } size={ 22 } color={ Theme.accent } solid />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('AllChats');
+			}
+		})
+	}
+},
+{
+	initialRouteName: 'MyJourneysTab',
+	tabBarPosition: 'bottom',
+	animationEnabled: true,
+	swipeEnabled: true,
+	shifting: true,
+	activeColor: Theme.accent
+});
+
+const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigator({
 	MyJourneysTab: {
 		screen: MyJourneysTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
@@ -204,21 +254,20 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 		})
 	}
 },
-	{
-		initialRouteName: 'MyJourneysTab',
-		tabBarPosition: 'bottom',
-		animationEnabled: true,
-		swipeEnabled: true,
-		shifting: true,
-		activeColor: Theme.accent
-	}
-);
+{
+	initialRouteName: 'MyJourneysTab',
+	tabBarPosition: 'bottom',
+	animationEnabled: true,
+	swipeEnabled: true,
+	shifting: true,
+	activeColor: Theme.accent
+});
 
-const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
+const SwitchNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer => {
 	return createSwitchNavigator(
 		{
 			SignedInStack: {
-				screen: SignedInStack
+				screen: isDriver ? SignedInDriverStack : SignedInPassengerStack
 			},
 			SignedOutStack: {
 				screen: SignedOutStack
@@ -233,7 +282,7 @@ const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
 	);
 };
 
-const CreateNavigator = (signedIn: boolean = false): NavigationContainer =>
-	createAppContainer(SwitchNavigator(signedIn));
+const CreateNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer =>
+	createAppContainer(SwitchNavigator(signedIn, isDriver));
 
 export default CreateNavigator;

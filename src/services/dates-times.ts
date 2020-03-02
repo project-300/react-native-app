@@ -13,6 +13,10 @@ class DatesTimes {
 		if (duration.asDays() > 6) return date.format('dddd MMMM Do YYYY, h:mm A');
 		return moment(d).calendar();
 	}
+
+	public static minutesSince = (date: string): number => {
+		return Math.floor(moment.duration(moment().diff(moment(date))).asMinutes());
+	}
 }
 
 export default DatesTimes;

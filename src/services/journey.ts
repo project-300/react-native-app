@@ -27,9 +27,9 @@ export class JourneyService {
 
 	public static addUserToJourney = async (journeyId: string, createdAt: string): Promise<void> => API.put(ApiName, '/journeys/add-user', { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
 
-	public static getDriverJourneys = async (userId: string): Promise<Journey[]> => API.get(ApiName, `/journeys/driver/${userId}`, '').catch(JourneyService.handleError);
+	public static getDriverJourneys = async (): Promise<{ success: boolean; journeys: Promise<Journey[]> }> => API.get(ApiName, `/journeys/driver`, '').catch(JourneyService.handleError);
 
-	public static getPassengerJourneys = async (userId: string): Promise<Journey[]> => API.get(ApiName, `/journeys/passenger/${userId}`, '').catch(JourneyService.handleError);
+	public static getPassengerJourneys = async (): Promise<{ success: boolean; journeys: Promise<Journey[]> }> => API.get(ApiName, `/journeys/passenger`, '').catch(JourneyService.handleError);
 
 	public static startJourney = async (journeyId: string): Promise<void> => API.put(ApiName, `/journeys/start/${journeyId}`, '').catch(JourneyService.handleError);
 

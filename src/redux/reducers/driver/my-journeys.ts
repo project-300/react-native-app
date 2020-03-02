@@ -25,15 +25,15 @@ const driverJourneysReducer = (state: JourneysState = initialState, action: Driv
 		case JOURNEYS_SUCCESS:
 			payload = action as DriverJourneysSuccess;
 
-			return { ...state, isRequesting: false, journeys: payload.journeys };
+			console.log(payload.journeys);
+
+			return { ...state, isRequesting: false, journeys: { current: payload.journeys, previous: [] } };
 		case JOURNEYS_FAILURE:
 			return { ...state, isRequesting: false };
 		case CANCEL_PASSENGER_JOURNEY_REQUEST:
 			return { ...state, isCancelling: true };
 		case CANCEL_PASSENGER_JOURNEY_SUCCESS:
 			payload = action as CancelPassengerAcceptedSuccess;
-
-			toastr.success('Journey Cancelled');
 
 			return { ...state, isCancelling: false, journeys: payload.journeys };
 		case CANCEL_PASSENGER_JOURNEY_FAILURE:

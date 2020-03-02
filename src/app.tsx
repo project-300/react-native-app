@@ -77,7 +77,7 @@ export default class App extends Component<Props, State> {
 
 		if (!checkedLoggedIn) return null; // Replace with Splash Screen
 
-		const Layout = CreateNavigator(loggedIn);
+		const Layout = CreateNavigator(loggedIn, true); // Update to pass in user type every time
 
 		const theme: RNPTheme = {
 			...DefaultTheme,

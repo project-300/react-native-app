@@ -310,7 +310,7 @@ export class ViewJourney extends Component<Props, State> {
 								styles.bold,
 								DarkMode.bwTextColorSwitch(DARK_MODE)
 							] }>
-								{ ` ${journey.readableDurations.createdAt}` }
+								{ ` ${journey.readableDurations && journey.readableDurations.createdAt}` }
 							</Text>
 						</Text>
 

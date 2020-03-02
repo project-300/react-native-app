@@ -13,6 +13,7 @@ import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { Journey } from '@project-300/common-types';
 import { userId } from '../../../auth';
+import { JourneyService } from '../../../services/journey';
 
 const journeysRequest = (): AppActions => ({ type: JOURNEYS_REQUEST });
 
@@ -31,12 +32,10 @@ export const getJourneys = (driver: boolean): (dispatch: Dispatch) => Promise<vo
 	return async (dispatch: Dispatch): Promise<void> => {
 		dispatch(journeysRequest());
 
-		const uId: string = await userId() as string;
-
 		try {
-			const apiRes: JourneysResult = (driver ?
-				await HttpAPI.getDriverJourneys({ userId: uId }) :
-				await HttpAPI.getPassengerJourneys({ userId: uId })) as JourneysResult;
+			const apiRes: { success: boolean; journeys: Promise<Journey[]> } = (driver ?
+				await JourneyService.getDriverJourneys() :
+				await JourneyService.getPassengerJourneys());
 
 			console.log(apiRes);
 
@@ -61,8 +60,13 @@ export const cancelPassengerAcceptedJourney = (journeyId: string): (dispatch: Di
 
 			console.log(apiRes);
 
-			if (apiRes.success && apiRes.journeys) dispatch(cancelPassengerAcceptedJourneySuccess(apiRes.journeys));
-			else dispatch(cancelPassengerAcceptedJourneyFailure());
+			if (apiRes.success && apiRes.journeys) {
+				dispatch(cancelPassengerAcceptedJourneySuccess(apiRes.journeys));
+				toastr.success('Journey Cancelled');
+			} else {
+				dispatch(cancelPassengerAcceptedJourneyFailure());
+				throw Error('Unable to cancel journey');
+			}
 		} catch (err) {
 			console.log(err);
 			dispatch(cancelPassengerAcceptedJourneyFailure());
