@@ -17,7 +17,7 @@ import { JourneyService } from '../../../services/journey';
 
 const journeysRequest = (): AppActions => ({ type: JOURNEYS_REQUEST });
 
-const journeysSuccess = (journeys: { previous: Journey[]; current: Journey[] }): AppActions => ({ type: JOURNEYS_SUCCESS, journeys });
+const journeysSuccess = (journeys: Journey[], isDriver: boolean): AppActions => ({ type: JOURNEYS_SUCCESS, journeys, isDriver });
 
 const journeysFailure = (): AppActions => ({ type: JOURNEYS_FAILURE });
 
@@ -28,18 +28,18 @@ const cancelPassengerAcceptedJourneySuccess = (journeys: { previous: Journey[]; 
 
 const cancelPassengerAcceptedJourneyFailure = (): AppActions => ({ type: CANCEL_PASSENGER_JOURNEY_FAILURE });
 
-export const getJourneys = (driver: boolean): (dispatch: Dispatch) => Promise<void> => {
+export const getJourneys = (isDriver: boolean): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		dispatch(journeysRequest());
 
 		try {
-			const apiRes: { success: boolean; journeys: Promise<Journey[]> } = (driver ?
+			const apiRes: { success: boolean; journeys: Journey[] } = (isDriver ?
 				await JourneyService.getDriverJourneys() :
 				await JourneyService.getPassengerJourneys());
 
 			console.log(apiRes);
 
-			if (apiRes.success && apiRes.journeys) dispatch(journeysSuccess(apiRes.journeys));
+			if (apiRes.success && apiRes.journeys) dispatch(journeysSuccess(apiRes.journeys, isDriver));
 			else dispatch(journeysFailure());
 		} catch (err) {
 			console.log(err);

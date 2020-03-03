@@ -24,12 +24,13 @@ export interface Props extends CommonProps {
 	routeTravelled: Coords[];
 	direction: number;
 	ended: boolean;
-	getPassengerJourneyDetails(j: string): Promise<void>;
+	getPassengerJourneyDetails(journeyId: string): Promise<void>;
+	subscribeDriverLocation(journeyId: string, createdAt: string): Promise<void>;
+	unsubscribeDriverLocation(journeyId: string): Promise<void>;
 }
 
 export interface State {
-	journeyId: string;
-	subscription: string;
+	journeyKey: { journeyId: string; createdAt: string };
 	driverRouteTravelled: Coords[];
 	mapRegion: {
 		latitude: number;

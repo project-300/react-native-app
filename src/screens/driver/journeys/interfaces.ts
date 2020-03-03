@@ -1,6 +1,7 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../../types/common';
-import { Journey } from '@project-300/common-types';
+import { Journey, UserBrief } from '@project-300/common-types';
+import Animated from 'react-native-reanimated';
 
 export interface Styles {
 	container: ViewStyle;
@@ -24,4 +25,15 @@ export interface Props extends CommonProps {
 
 export interface State {
 	driverView: boolean; // View the list with extra driver functionality (eg. Start a journey)
+	renderTrigger: number; // Changing this forces a re-render of the list to update times
+	userType: string;
+	selectedJourney?: Journey;
+}
+
+export interface AnimationValues {
+	panelOpen: Animated.Value<number>;
+}
+
+export interface AnimationStyles {
+	panelHeight: Animated.Node<number> | number;
 }

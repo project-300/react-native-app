@@ -18,6 +18,7 @@ import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { Coords, Journey } from '@project-300/common-types';
+import { JourneyService } from '../../../services/journey';
 
 const journeyDetailsRequest = (): AppActions => ({ type: JOURNEY_DETAILS_REQUEST });
 
@@ -43,18 +44,51 @@ const driverMovementSuccess = (journey: Journey): AppActions => ({ type: DRIVER_
 
 const driverMovementFailure = (): AppActions => ({ type: DRIVER_MOVEMENT_FAILURE });
 
-export const getJourneyDetails = (journeyId: string): (dispatch: Dispatch) => Promise<void> => {
+export const getJourneyDetails = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
-		console.log('getting details');
 		dispatch(journeyDetailsRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.getJourneyDetails({ journeyId }) as JourneyDetailsResult;
+			const result: { success: boolean; journey: Journey } = await JourneyService.getJourneyById(journeyId, createdAt);
+			console.log(result);
 
-			console.log(apiRes);
-			if (apiRes.success && apiRes.journey) dispatch(journeyDetailsSuccess(apiRes.journey));
+			if (result.success && result.journey) dispatch(journeyDetailsSuccess(result.journey));
 		} catch (err) {
 			dispatch(journeyDetailsFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const subscribeDriverLocation = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		// dispatch(journeyDetailsRequest());
+
+		try {
+			const result: { success: boolean } = await JourneyService.subscribeDriverLocation(journeyId, createdAt);
+			console.log(result);
+
+			// if (apiRes.success) dispatch(journeyDetailsSuccess(apiRes.journey));
+		} catch (err) {
+			console.log(err);
+			// dispatch(journeyDetailsFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const unsubscribeDriverLocation = (journeyId: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		// dispatch(journeyDetailsRequest());
+
+		try {
+			const result: { success: boolean } = await JourneyService.unsubscribeDriverLocation(journeyId);
+			console.log(result);
+
+			// if (apiRes.success) dispatch(journeyDetailsSuccess(apiRes.journey));
+		} catch (err) {
+			console.log(err);
+			// dispatch(journeyDetailsFailure());
 			toastr.error(err.message);
 		}
 	};
@@ -96,13 +130,13 @@ export const endJourney = (journeyId: string): (dispatch: Dispatch) => Promise<v
 	};
 };
 
-export const driverMovement = (journeyId: string, coords: Coords): (dispatch: Dispatch) => Promise<void> => {
+export const driverMovement = (journeyId: string, createdAt: string, coords: Coords): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		console.log('driver movement');
 		dispatch(driverMovementRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.driverMovement({ journeyId, coords }) as JourneyDetailsResult;
+			const apiRes: JourneyDetailsResult = await JourneyService.driverMovement(journeyId, createdAt, coords) as JourneyDetailsResult;
 
 			console.log(apiRes);
 			if (apiRes.success && apiRes.journey) dispatch(driverMovementSuccess(apiRes.journey));

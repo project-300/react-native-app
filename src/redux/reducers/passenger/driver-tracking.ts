@@ -41,21 +41,20 @@ const driverTrackingReducer = (state: DriverTrackingState = initialState, action
 		case UPDATE_DRIVER_LOCATION:
 			payload = action.payload as SubscriptionPayload;
 
-			if (payload.data.ended) return { ...state, ended: payload.data.ended };
+			// if (payload.data.ended) return { ...state, ended: payload.data.ended };
 
-			const routeTravelled = state.routeTravelled.concat(payload.data.location);
+			const routeTravelled = [ ...state.routeTravelled ];
+			routeTravelled.push(payload.data.coords);
 
-			// const mapCenter = state.driverLocation ?
-			// 	MapUtils.calculateMapCenter(state.driverLocation, state.passengerLocation) :
-			// 	driverLocation;
+			const length: number = routeTravelled.length;
 
-			const length: number = state.routeTravelled.length;
-			const start: Coords = state.routeTravelled[length - 2];
-			const end: Coords = state.routeTravelled[length - 1];
+			const start: Coords = routeTravelled[length - 2];
+			const end: Coords = routeTravelled[length - 1];
 
-			const direction: number = MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude);
+			let direction: number = 0;
+			direction = length >= 2 ? MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) : direction;
 
-			return { ...state, driverLocation: payload.data.location, routeTravelled, direction, isWaitingOnDriverCoords: false, ended: (payload.data.ended || false) };
+			return { ...state, driverLocation: payload.data.coords, direction, routeTravelled, isWaitingOnDriverCoords: false, ended: false };
 		default:
 			return state;
 	}

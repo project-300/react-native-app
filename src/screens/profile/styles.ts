@@ -83,6 +83,8 @@ const styles = StyleSheet.create<Styles>({
 		shadowOpacity: 0.1,
 		shadowRadius: 6,
 		elevation: 6,
+		borderWidth: 0.5,
+		borderColor: '#DDD',
 		marginBottom: 20
 	},
 

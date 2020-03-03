@@ -2,32 +2,34 @@ import React, { Component, ReactElement } from 'react';
 import {
 	View,
 	TouchableOpacity,
-	Text,
-	Image
+	Text
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { DriverTrackingState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getPassengerJourneyDetails } from '../../../redux/actions';
+import {
+	getPassengerJourneyDetails,
+	subscribeDriverLocation,
+	unsubscribeDriverLocation
+} from '../../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { Journey, Place } from '@project-300/common-types';
 import { Container } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
-import WS from '../../../api/websocket';
-import { JOURNEY_DRIVER_LOCATION } from '../../../constants/websocket-subscriptions';
 
 export class DriverTracking extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
 
-		const journeyId: string = this.props.navigation.getParam('journeyId');
+		const journeyKey: { journeyId: string; createdAt: string } = this.props.navigation.getParam('journeyKey');
+
+		console.log(journeyKey);
 
 		this.state = {
-			journeyId,
-			subscription: `${JOURNEY_DRIVER_LOCATION}/${journeyId}`,
+			journeyKey,
 			driverRouteTravelled: [],
 			mapRegion: {
 				latitude: 54.2,
@@ -40,12 +42,12 @@ export class DriverTracking extends Component<Props, State> {
 	}
 
 	public async componentDidMount(): Promise<void> {
-		await this.props.getPassengerJourneyDetails(this.state.journeyId);
-		await WS.subscribe(JOURNEY_DRIVER_LOCATION, this.state.journeyId);
+		await this.props.getPassengerJourneyDetails(this.state.journeyKey.journeyId);
+		await this.props.subscribeDriverLocation(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 	}
 
 	public async componentWillUnmount(): Promise<void> {
-		await WS.unsubscribe(JOURNEY_DRIVER_LOCATION, this.state.journeyId);
+		await this.props.unsubscribeDriverLocation(this.state.journeyKey.journeyId);
 	}
 
 	private _mapRegion = (): Region | undefined => {
@@ -123,4 +125,8 @@ const mapStateToProps = (state: AppState): DriverTrackingState => ({
 	...state.driverTrackingReducer
 });
 
-export default connect(mapStateToProps, { getPassengerJourneyDetails })(DriverTracking);
+export default connect(mapStateToProps, {
+	getPassengerJourneyDetails,
+	subscribeDriverLocation,
+	unsubscribeDriverLocation
+})(DriverTracking);

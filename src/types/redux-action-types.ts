@@ -302,7 +302,8 @@ export interface DriverJourneysRequest {
 
 export interface DriverJourneysSuccess {
 	type: typeof JOURNEYS_SUCCESS;
-	journeys: { previous: Journey[]; current: Journey[] };
+	journeys: Journey[];
+	isDriver: boolean;
 }
 
 export interface DriverJourneysFailure {

@@ -104,7 +104,7 @@ export interface UpdatePasswordState {
 export interface JourneysState {
 	isRequesting: boolean;
 	isCancelling: boolean;
-	journeys: { current: Journey[]; previous: Journey[] };
+	journeys: { driver: Journey[]; passenger: Journey[] };
 }
 
 export interface JourneyMapState {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Appbar, Divider, Menu } from 'react-native-paper';
 import { CommonProps } from './types/common';
-import { storeLogout, userType } from './auth';
+import { setUserType, storeLogout, userType } from './auth';
 import { View } from 'react-native';
 import { Theme, ToggleDarkMode } from './constants/theme';
 import { Auth } from 'aws-amplify';

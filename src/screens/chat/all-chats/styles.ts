@@ -13,35 +13,47 @@ const chatContainerWidth: number = width - (mainContainerPadding * 2) - (chatCon
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		padding: mainContainerPadding
+		padding: mainContainerPadding,
+		backgroundColor: Colours.whiteGrey
 	},
 
 	chatContainer: {
 		borderWidth: 0.5,
-		borderColor: Colours.lightGrey,
+		borderColor: '#CCC',
 		backgroundColor: 'white',
 		marginVertical: 10,
 		padding: chatContainerPadding,
-		borderRadius: 2,
+		borderRadius: 4,
 		flexDirection: 'row',
+		shadowColor: Colours.black,
 		shadowOffset: {
-			width: -2,
-			height: 2
+			width: 0,
+			height: 0
 		},
-		shadowOpacity: 0.2,
-		shadowRadius: 4,
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
 		elevation: 6
 	},
 
 	otherUserAvatarContainer: {
 		flex: 1,
-		alignSelf: 'center'
+		alignSelf: 'center',
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 6
 	},
 
 	otherUserAvatar: {
 		width: chatContainerWidth * 0.25,
 		height: chatContainerWidth * 0.25,
-		borderRadius: (chatContainerWidth * 0.25) / 2
+		borderRadius: (chatContainerWidth * 0.25) / 2,
+		borderWidth: 0.5,
+		borderColor: '#DDD'
 	},
 
 	chatInfo: {
@@ -76,13 +88,14 @@ const styles: Styles = StyleSheet.create<Styles>({
 		flex: 1,
 		top: -20,
 		right: -20,
+		shadowColor: Colours.black,
 		shadowOffset: {
-			width: -1,
-			height: 1
+			width: 0,
+			height: 0
 		},
-		shadowOpacity: 0.4,
-		shadowRadius: 2,
-		elevation: 12
+		shadowOpacity: 0.2,
+		shadowRadius: 8,
+		elevation: 6
 	},
 
 	newMessageCount: {

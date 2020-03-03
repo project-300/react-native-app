@@ -170,10 +170,10 @@ export class Chat extends Component<Props, State> {
 		const { otherUserId, chatId } = this.state;
 
 		if (!this.state.messageText.trim()) return toastr.warning('Message content cannot be empty');
-		if (!chatId) return toastr.warning('Chat has not loaded');
+		if (!chatId && !this.props.chat.chatId) return toastr.warning('Chat has not loaded');
 		if (!otherUserId) return toastr.warning('No user selected');
 
-		await this.props.sendMessage(chatId, messageText.trim(), otherUserId);
+		await this.props.sendMessage(chatId || this.props.chat.chatId, messageText.trim(), otherUserId);
 
 		this.setState({ messageText: '' });
 	}

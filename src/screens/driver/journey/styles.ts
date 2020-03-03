@@ -1,5 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours } from '../../../constants/theme';
+
+const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -45,6 +48,42 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	spinnerTextStyle: {
 		color: '#FFF'
+	},
+
+	infoBox: {
+		borderRadius: 8,
+		flexDirection: 'column',
+		backgroundColor: `rgba(0,0,0,0.85)`,
+		right: 20,
+		position: 'absolute'
+	},
+
+	infoRow: {
+		flexDirection: 'row',
+		flex: 1,
+		alignItems: 'center'
+	},
+
+	infoIcon: {
+		flex: 1,
+		color: 'white'
+	},
+
+	infoText: {
+		fontWeight: 'bold',
+		color: 'white'
+	},
+
+	fab: {
+		// position: 'relative',
+		// margin: 16,
+		// right: -15,
+		// bottom: 70
+	},
+
+	backButton: {
+		position: 'absolute',
+		left: 20
 	}
 });
 

@@ -5,7 +5,7 @@ import { Colours, Theme } from '../../constants/theme';
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: Colours.offWhite
+		backgroundColor: Colours.whiteGrey
 	},
 
 	button: {
@@ -75,7 +75,15 @@ const styles: Styles = StyleSheet.create<Styles>({
 		backgroundColor: 'white',
 		margin: 10,
 		borderWidth: 0.5,
-		borderRadius: 8
+		borderRadius: 8,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 6
 	},
 
 	priceBadge: {

@@ -15,7 +15,7 @@ export const DarkTheme = {
 };
 
 export const Colours = {
-	whiteGrey: '#F7F7F7',
+	whiteGrey: '#FCFCFC',
 	lightGrey: '#AAA',
 	middleGrey: '#777',
 	darkGrey: '#333',

@@ -1,4 +1,4 @@
-import { ApiName } from './../../environment/env';
+import { ApiName } from '../../environment/env';
 import { API } from 'aws-amplify';
 import { User } from '@project-300/common-types';
 

@@ -101,7 +101,7 @@ export class AllChats extends Component<Props, State> {
 									<View style={ styles.messageRow }>
 										<Text
 											numberOfLines={ 2 }
-											style={ styles.lastMessage }
+											style={ [ styles.lastMessage, chat.unreadCount && { fontWeight: 'bold' } ] }
 										>{ chat.lastMessage }</Text>
 									</View>
 

@@ -93,7 +93,7 @@ class WebSocketAPI {
 		const userId: string = (await Auth.currentUserInfo()).attributes.sub;
 
 		switch (subscription) {
-			case JOURNEY_DRIVER_LOCATION:
+			case 'journey/driver-tracking':
 				store.dispatch(updateDriverLocation(payload));
 				break;
 			case 'chat/messages':

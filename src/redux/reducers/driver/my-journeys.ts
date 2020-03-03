@@ -8,12 +8,11 @@ import {
 } from '../../../constants/redux-actions';
 import { JourneysState } from '../../../types/redux-reducer-state-types';
 import { CancelPassengerAcceptedSuccess, DriverJourneysActionTypes, DriverJourneysSuccess } from '../../../types/redux-action-types';
-import toastr from '../../../helpers/toastr';
 
 const initialState: JourneysState = {
 	isRequesting: false,
 	isCancelling: false,
-	journeys: { current: [], previous: [] }
+	journeys: { driver: [], passenger: [] }
 };
 
 const driverJourneysReducer = (state: JourneysState = initialState, action: DriverJourneysActionTypes): JourneysState => {
@@ -27,7 +26,14 @@ const driverJourneysReducer = (state: JourneysState = initialState, action: Driv
 
 			console.log(payload.journeys);
 
-			return { ...state, isRequesting: false, journeys: { current: payload.journeys, previous: [] } };
+			const journeys = {
+				driver: payload.isDriver ? payload.journeys : [ ...state.journeys.driver ],
+				passenger: !payload.isDriver ? payload.journeys : [ ...state.journeys.passenger ]
+			};
+
+			console.log(journeys);
+
+			return { ...state, isRequesting: false, journeys };
 		case JOURNEYS_FAILURE:
 			return { ...state, isRequesting: false };
 		case CANCEL_PASSENGER_JOURNEY_REQUEST:

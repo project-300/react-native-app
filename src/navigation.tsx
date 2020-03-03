@@ -90,6 +90,13 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 	}
 });
 
+const JourneyMapStack: NavigationContainer = createStackNavigator({
+	JourneyMap: {
+		screen: JourneyMap,
+		navigationOptions: headerHidden
+	}
+});
+
 const ProfileTab: NavigationContainer = createStackNavigator({
 	Profile: {
 		screen: Profile,
@@ -129,13 +136,13 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 		screen: DriverTracking,
 		...navigationOptions('Track Driver', undefined, true)
 	},
-	JourneyMap: {
-		screen: JourneyMap,
-		...navigationOptions('Your Journey', undefined, true)
-	},
 	PassengerViewJourney: {
 		screen: ViewJourney,
 		...navigationOptions('Journey', undefined, true)
+	},
+	PassengerOtherProfile: {
+		screen: Profile,
+		...navigationOptions('Passenger Profile', undefined, true)
 	}
 });
 
@@ -172,13 +179,6 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 			}
 		})
 	},
-	ProfileTab: {
-		screen: ProfileTab,
-		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'Profile',
-			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
-		})
-	},
 	SearchTab: {
 		screen: SearchTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
@@ -199,6 +199,13 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 				if (navigation.isFocused) navigation.navigate('AllChats');
 			}
 		})
+	},
+	ProfileTab: {
+		screen: ProfileTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Profile',
+			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
+		})
 	}
 },
 {
@@ -213,22 +220,12 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigator({
 	MyJourneysTab: {
 		screen: MyJourneysTab,
-		navigationOptions: (e): NavigationMaterialBottomTabOptions => ({
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
 			title: 'My Lifts',
 			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />,
 			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
-				console.log(navigation);
-				console.log(e);
-
 				if (navigation.isFocused) navigation.navigate('MyJourneys');
 			}
-		})
-	},
-	ProfileTab: {
-		screen: ProfileTab,
-		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'Profile',
-			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
 		})
 	},
 	SearchTab: {
@@ -258,6 +255,13 @@ const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigato
 				if (navigation.isFocused) navigation.navigate('AllChats');
 			}
 		})
+	},
+	ProfileTab: {
+		screen: ProfileTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Profile',
+			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
+		})
 	}
 },
 {
@@ -274,6 +278,9 @@ const SwitchNavigator = (signedIn: boolean = false, isDriver: boolean = false): 
 		{
 			SignedInStack: {
 				screen: isDriver ? SignedInDriverStack : SignedInPassengerStack
+			},
+			JourneyMapStack: {
+				screen: JourneyMapStack
 			},
 			SignedOutStack: {
 				screen: SignedOutStack

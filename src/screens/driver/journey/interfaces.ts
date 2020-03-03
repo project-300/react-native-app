@@ -1,6 +1,7 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
+import Animated from "react-native-reanimated";
 
 export interface Styles {
 	container: ViewStyle;
@@ -20,26 +21,26 @@ export interface Props extends CommonProps {
 	isMoving: boolean;
 	isRequestingJourneyDetails: boolean;
 	journey: Journey | undefined;
-	getJourneyDetails(j: string): Promise<void>;
+	getJourneyDetails(journeyId: string, createdAt: string): Promise<void>;
 	startJourney(j: string): Promise<void>;
 	endJourney(j: string): Promise<void>;
 	driverMovement(j: string, c: Coords): Promise<void>;
 }
 
 export interface State {
-	journeyId: string;
+	journeyKey: { journeyId: string; createdAt: string };
 	driverRegion: {
 		latitude: number;
 		longitude: number;
 		latitudeDelta: number;
 		longitudeDelta: number;
-	}
+	};
 	currentPosition: { // The current position of the driver - Used for centering map & tracking
 		latitude: number;
 		longitude: number;
 		latitudeDelta: number;
 		longitudeDelta: number;
-	}
+	};
 	midpoint: { // Center point between origin and destination of a journey
 		latitude: number;
 		longitude: number;
@@ -47,4 +48,15 @@ export interface State {
 	routeTravelled: Coords[]; // Coordinates of movement points - Used to draw route on map. These are movements already made, not planned route.
 	movementCount: number; // A count of movements made. Every 5 or 10 movements is logged in the DB for routeTravelled.
 	tracker: number | null; // ID of the tracker - Used to stop tracking when the journey ends
+}
+
+export interface AnimationValues {
+	infoOpen: Animated.Value<number>;
+}
+
+export interface AnimationStyles {
+	infoHeight: Animated.Node<number> | number;
+	infoWidth: Animated.Node<number> | number;
+	infoPadding: Animated.Node<number> | number;
+	infoOpacity: Animated.Node<number> | number;
 }
