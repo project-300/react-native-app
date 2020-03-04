@@ -1,4 +1,17 @@
-import { VEHICLE_MAKES_REQUEST, VEHICLE_MAKES_SUCCESS, VEHICLE_MAKES_FAILURE, VEHICLE_MODELS_REQUEST, VEHICLE_MODELS_SUCCESS, VEHICLE_MODELS_FAILURE } from './../constants/redux-actions';
+import {
+	VEHICLE_MAKES_REQUEST,
+	VEHICLE_MAKES_SUCCESS,
+	VEHICLE_MAKES_FAILURE,
+	VEHICLE_MODELS_REQUEST,
+	VEHICLE_MODELS_SUCCESS,
+	VEHICLE_MODELS_FAILURE,
+	PAUSE_JOURNEY_SUCCESS,
+	PAUSE_JOURNEY_REQUEST,
+	PAUSE_JOURNEY_FAILURE,
+	RESUME_JOURNEY_REQUEST,
+	RESUME_JOURNEY_SUCCESS,
+	RESUME_JOURNEY_FAILURE
+} from './../constants/redux-actions';
 import {
 	LOGIN_FAILURE,
 	LOGIN_REQUEST,
@@ -97,20 +110,21 @@ import {
 	GET_ALL_CHATS_FAILURE,
 	SEND_MESSAGE_REQUEST,
 	SEND_MESSAGE_SUCCESS,
-	SEND_MESSAGE_FAILURE, UPDATED_CHAT_SUB
+	SEND_MESSAGE_FAILURE,
+	UPDATED_CHAT_SUB
 } from '../constants/redux-actions';
 import {
 	Coords,
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, 
-  User, 
-  VehicleModel, 
-  VehicleMake, 
-  LastEvaluatedKey,
-  Chat, 
-  Message
+	GooglePlace,
+	User,
+  	VehicleModel,
+  	VehicleMake,
+  	LastEvaluatedKey,
+  	Chat,
+  	Message
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -367,6 +381,32 @@ export interface StartJourneyFailure {
 	type: typeof START_JOURNEY_FAILURE;
 }
 
+export interface PauseJourneyRequest {
+	type: typeof PAUSE_JOURNEY_REQUEST;
+}
+
+export interface PauseJourneySuccess {
+	type: typeof PAUSE_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface PauseJourneyFailure {
+	type: typeof PAUSE_JOURNEY_FAILURE;
+}
+
+export interface ResumeJourneyRequest {
+	type: typeof RESUME_JOURNEY_REQUEST;
+}
+
+export interface ResumeJourneySuccess {
+	type: typeof RESUME_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface ResumeJourneyFailure {
+	type: typeof RESUME_JOURNEY_FAILURE;
+}
+
 export interface EndJourneyRequest {
 	type: typeof END_JOURNEY_REQUEST;
 }
@@ -582,15 +622,6 @@ export interface UpdateAvatarFailure {
 	type: typeof UPLOAD_AVATAR_FAILURE;
 }
 
-export type VehicleMakesAndModelsTypes =
-	VehicleMakesRequest |
- 	VehicleMakesSuccess |
-	VehicleMakesFailure |
-	VehicleModelsRequest |
-	VehicleModelsSuccess |
- 	VehicleModelsSuccess;
-
-export type JourneyActionTypes =
 export interface ContentReloadOn {
 	type: typeof CONTENT_RELOAD_ON;
 }
@@ -598,6 +629,14 @@ export interface ContentReloadOn {
 export interface ContentReloadOff {
 	type: typeof CONTENT_RELOAD_OFF;
 }
+
+export type VehicleMakesAndModelsTypes =
+	VehicleMakesRequest |
+	VehicleMakesSuccess |
+	VehicleMakesFailure |
+	VehicleModelsRequest |
+	VehicleModelsSuccess |
+	VehicleModelsSuccess;
 
 export type ContentReloadActionTypes =
 	ContentReloadOn |
@@ -716,6 +755,16 @@ export type StartJourneyActionTypes =
 	StartJourneySuccess |
 	StartJourneyFailure;
 
+export type PauseJourneyActionTypes =
+	PauseJourneyRequest |
+	PauseJourneySuccess |
+	PauseJourneyFailure;
+
+export type ResumeJourneyActionTypes =
+	ResumeJourneyRequest |
+	ResumeJourneySuccess |
+	ResumeJourneyFailure;
+
 export type EndJourneyActionTypes =
 	EndJourneyRequest |
 	EndJourneySuccess |
@@ -729,6 +778,8 @@ export type DriverMovementActionTypes =
 export type JourneyMapActionTypes =
 	JourneyDetailsActionTypes |
 	StartJourneyActionTypes |
+	PauseJourneyActionTypes |
+	ResumeJourneyActionTypes |
 	EndJourneyActionTypes |
 	DriverMovementActionTypes;
 
@@ -782,7 +833,6 @@ export type AppActions =
 	DriverTrackingActionTypes |
 	DriverApplicationActionTypes |
 	CreateNewJourneyActionTypes |
-	JourneyActionTypes |
 	VehicleMakesAndModelsTypes |
 	SearchJourneysActionTypes |
 	ViewJourneyActionTypes |

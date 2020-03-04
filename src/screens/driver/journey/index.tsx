@@ -1,14 +1,21 @@
 import React, { Component, ReactElement } from 'react';
 import {
 	View,
-	Text, Dimensions, SafeAreaView, NativeModules, Platform,
+	Text, Dimensions, SafeAreaView, NativeModules, Platform, ImageStyle,
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State, AnimationValues, AnimationStyles } from './interfaces';
 import { JourneyMapState } from '../../../types/redux-reducer-state-types';
 import { AppState } from '../../../store';
-import { getJourneyDetails, startJourney, endJourney, driverMovement } from '../../../redux/actions';
+import {
+	getJourneyDetails,
+	startJourney,
+	pauseJourney,
+	resumeJourney,
+	endJourney,
+	driverMovement
+} from '../../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import DriverLocation from '../../../services/driver-location';
 import { Coords, Journey, Place } from '@project-300/common-types';
@@ -19,6 +26,8 @@ import Animated, { Easing } from 'react-native-reanimated';
 import { interpolateAnimation } from '../../../animations/animations';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 import { FAB, Portal } from 'react-native-paper';
+import MapUtils from '../../../services/map-utils';
+import moment, { Duration } from 'moment';
 
 const { width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -65,7 +74,8 @@ export class JourneyMap extends Component<Props, State> {
 			tracker: null,
 			infoOpen: false,
 			isTogglingInfo: false,
-			statusBarHeight: 0
+			statusBarHeight: 0,
+			direction: 0
 		};
 
 		this.animatedValues = {
@@ -128,12 +138,24 @@ export class JourneyMap extends Component<Props, State> {
 				longitudeDelta: 0.0121
 			};
 
+			const { routeTravelled } = this.state;
+
+			const length: number = routeTravelled.length;
+
+			const start: Coords = routeTravelled[length - 2];
+			const end: Coords = routeTravelled[length - 1];
+
+			let direction: number = ((length >= 2 ?
+				MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) :
+				0) + 90) % 360;
+
 			this.setState({
 				currentPosition: region,
 				routeTravelled: this.state.routeTravelled.concat({
 					latitude: location.coords.latitude,
 					longitude: location.coords.longitude
-				})
+				}),
+				direction
 			});
 
 				//  && this.state.movementCount % 10 === 0
@@ -206,13 +228,25 @@ export class JourneyMap extends Component<Props, State> {
 	private _updateSavedLocation = async (coords: Coords): Promise<void> => await DriverLocation.setCurrentPosition(coords);
 
 	private _startJourney = async (): Promise<void> => {
-		await this.props.startJourney(this.state.journeyId);
+		await this.props.startJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
+		// this._zoomToDriverPosition();
+		this._trackDriver();
+	}
+
+	private _pauseJourney = async (): Promise<void> => {
+		await this.props.pauseJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
+		// this._zoomToDriverPosition();
+		this._stopTracking();
+	}
+
+	private _resumeJourney = async (): Promise<void> => {
+		await this.props.resumeJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		// this._zoomToDriverPosition();
 		this._trackDriver();
 	}
 
 	private _endJourney = async (): Promise<void> => {
-		await this.props.endJourney(this.state.journeyId);
+		await this.props.endJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		this._stopTracking();
 	}
 
@@ -264,16 +298,53 @@ export class JourneyMap extends Component<Props, State> {
 		this.props.navigation.navigate('MyJourneys');
 	}
 
+	private _carIconDirection = (): ImageStyle => {
+		const { direction } = this.state;
+		if ((direction <= 90) || direction <= 360 && direction >= 270) return { };
+		return {
+			transform: [ { rotateY: + '180deg' } ]
+		};
+	}
+
+	private _timeSinceStart = (): string => {
+		const duration: Duration = moment.duration(moment().diff(moment(this.props.journey.times.startedAt)));
+		const hours: number = Math.floor(duration.asHours());
+		const minutes: number = Math.floor(duration.asMinutes() % 60);
+		return `${hours}:${minutes}`;
+	}
+
 	public render(): ReactElement {
 		const journey: Journey = this.props.journey as Journey;
 		let spinnerText: string = '';
 		if (this.props.isStarting) spinnerText = 'Starting...';
 		if (this.props.isEnding) spinnerText = 'Ending...';
+		if (this.props.isPausing) spinnerText = 'Pausing...';
+		if (this.props.isResuming) spinnerText = 'Resuming...';
+
+		let actions = [];
+
+		if (journey) {
+			const { journeyStatus } = journey;
+
+			if (journeyStatus === 'NOT_STARTED') actions = [
+				{ icon: 'play', label: 'Start Journey', onPress: this._startJourney }
+			];
+
+			if (journeyStatus === 'STARTED') actions = [
+				{ icon: 'stop', label: 'End Journey', onPress: this._endJourney },
+				{ icon: 'pause', label: 'Pause Journey', onPress: this._pauseJourney },
+			];
+
+			if (journeyStatus === 'PAUSED') actions = [
+				{ icon: 'stop', label: 'End Journey', onPress: this._endJourney },
+				{ icon: 'play', label: 'Resume Journey', onPress: this._resumeJourney }
+			];
+		}
 
 		return (
 			<SafeAreaView style={ { flex: 1 } }>
 				<Spinner
-					visible={ this.props.isStarting || this.props.isEnding }
+					visible={ this.props.isStarting || this.props.isEnding || this.props.isPausing || this.props.isResuming }
 					textContent={ spinnerText }
 					textStyle={ styles.spinnerTextStyle }
 				/>
@@ -309,16 +380,22 @@ export class JourneyMap extends Component<Props, State> {
 							this.props.isStarted &&
 								<Marker
 									coordinate={ this.state.currentPosition }
-								/>
+								>
+									<Animated.Image
+										source={ require('../../../assets/images/car2.png') }
+										// style={ { transform: [ { rotateY: '180deg' } ] } }
+									/>
+								</Marker>
 						}
-
-						<Marker
-							coordinate={ this.state.currentPosition }
-						/>
 					</MapView>
 
 					<TapGestureHandler onHandlerStateChange={ this._goBack }>
-						<Icon name={ 'angle-left' } size={ 40 } color={ 'black' } style={ [ styles.backButton, { marginTop: this.state.statusBarHeight + 4 } ] } />
+						<Icon
+							name={ 'angle-left' }
+							size={ 40 }
+							color={ 'black' }
+							style={ [ styles.backButton, { marginTop: this.state.statusBarHeight + 4 } ] }
+						/>
 					</TapGestureHandler>
 
 					<TapGestureHandler
@@ -341,7 +418,7 @@ export class JourneyMap extends Component<Props, State> {
 										</View>
 										<View style={ styles.infoRow }>
 											<Icon name={ 'clock' } size={ 18 } style={ styles.infoIcon } />
-											<Text style={ styles.infoText }>{ this.props.travelTime }00:27</Text>
+											<Text style={ styles.infoText }>{ this._timeSinceStart() }</Text>
 										</View>
 									</View>
 							}
@@ -349,55 +426,19 @@ export class JourneyMap extends Component<Props, State> {
 							{
 								!this.state.infoOpen && !this.state.isTogglingInfo &&
 									<View style={ { alignSelf: 'center', justifyContent: 'center', flex: 1 } }>
-                                		<Icon name={ 'info' } size={ 16 } color={ 'white' } />
+										<Icon name={ 'info' } size={ 16 } color={ 'white' } />
 									</View>
 							}
 						</Animated.View>
 					</TapGestureHandler>
 				</View>
 
-				{/*{*/}
-				{/*	journey &&*/}
-				{/*		<View style={ { ...styles.bottomPanel } }>*/}
-				{/*			{*/}
-				{/*				journey.journeyStatus === 'NOT_STARTED' &&*/}
-				{/*				<TouchableOpacity style={ styles.button } onPress={ this._startJourney }>*/}
-				{/*					<Text style={ styles.buttonText }>Start </Text>*/}
-				{/*				</TouchableOpacity>*/}
-				{/*			}*/}
-
-				{/*			{*/}
-				{/*				journey.journeyStatus === 'STARTED' &&*/}
-				{/*				<TouchableOpacity style={ styles.button } onPress={ this._endJourney }>*/}
-				{/*					<Text style={ styles.buttonText }>End</Text>*/}
-				{/*				</TouchableOpacity>*/}
-				{/*			}*/}
-
-				{/*			{*/}
-				{/*				journey.journeyStatus === 'FINISHED' &&*/}
-				{/*				<TouchableOpacity style={ styles.button } onPress={ (): void => {*/}
-				{/*					this.props.navigation.goBack();*/}
-				{/*				} }>*/}
-				{/*					<Text style={ styles.buttonText }>Done</Text>*/}
-				{/*				</TouchableOpacity>*/}
-				{/*			}*/}
-				{/*		</View>*/}
-				{/*}*/}
-
-				{/*<FAB*/}
-				{/*	style={ styles.fab }*/}
-				{/*	icon={ 'car' }*/}
-				{/*	// onPress={ (): Promise<void> => this._switchUserTypeView(!this.state.driverView) }*/}
-				{/*/>*/}
-
 				<Portal>
 					<FAB.Group
 						fabStyle={ styles.fab }
 						open={ this.state.fabOpen }
-						icon={ 'car' }
-						actions={ [
-							{ icon: 'email', label: 'Start Journey', onPress: this._startJourney }
-						] }
+						icon={ 'circle' }
+						actions={ actions }
 						onStateChange={ ({ open }: { open: boolean }): void => this.setState({ fabOpen: open }) }
 						onPress={ (): void => {
 							if (this.state.fabOpen) {
@@ -420,6 +461,8 @@ const mapStateToProps = (state: AppState): JourneyMapState => ({
 export default connect(mapStateToProps, {
 	getJourneyDetails,
 	startJourney,
+	pauseJourney,
+	resumeJourney,
 	endJourney,
 	driverMovement
 })(JourneyMap);

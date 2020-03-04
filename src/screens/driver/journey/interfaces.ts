@@ -1,7 +1,7 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
-import Animated from "react-native-reanimated";
+import Animated from 'react-native-reanimated';
 
 export interface Styles {
 	container: ViewStyle;
@@ -16,14 +16,18 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	isStarting: boolean;
+	isPausing: boolean;
+	isResuming: boolean;
 	isStarted: boolean;
 	isEnding: boolean;
 	isMoving: boolean;
 	isRequestingJourneyDetails: boolean;
 	journey: Journey | undefined;
 	getJourneyDetails(journeyId: string, createdAt: string): Promise<void>;
-	startJourney(j: string): Promise<void>;
-	endJourney(j: string): Promise<void>;
+	startJourney(journeyId: string, createdAt: string): Promise<void>;
+	pauseJourney(journeyId: string, createdAt: string): Promise<void>;
+	resumeJourney(journeyId: string, createdAt: string): Promise<void>;
+	endJourney(journeyId: string, createdAt: string): Promise<void>;
 	driverMovement(j: string, c: Coords): Promise<void>;
 }
 

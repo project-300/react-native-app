@@ -109,8 +109,10 @@ export interface JourneysState {
 
 export interface JourneyMapState {
 	status: string;
-	isStarting: boolean;
 	isStarted: boolean;
+	isStarting: boolean;
+	isPausing: boolean;
+	isResuming: boolean;
 	isEnding: boolean;
 	isMoving: boolean;
 	isRequestingJourneyDetails: boolean;

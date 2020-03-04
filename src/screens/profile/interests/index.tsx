@@ -95,7 +95,7 @@ export class UpdateInterests extends Component<Props, State> {
 
 										<View style={ styles.buttonContainer }>
 											<Button
-												mode='outlined'
+												mode='contained'
 												style={ styles.button }
 												onPress={ this.props.close }
 											>

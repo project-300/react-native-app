@@ -28,14 +28,6 @@ import {
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 import { Theme } from './constants/theme';
-import { store } from './store';
-
-let UNREAD_COUNT: number = 0;
-store.subscribe(() => {
-	console.log('UPDATED');
-	UNREAD_COUNT = store.getState().allChatsReducer.totalUnreadCount;
-	console.log(UNREAD_COUNT);
-});
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null

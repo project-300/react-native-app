@@ -6,7 +6,7 @@ import {
 	ScrollView,
 	RefreshControl,
 	Dimensions,
-	Image, TouchableHighlight
+	Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -44,7 +44,7 @@ export class MyJourneys extends Component<Props, State> {
 		this.state = {
 			driverView: false,
 			renderTrigger: 0,
-			userType: 'Passenger',
+			userType: 'Passenger', // Default until it is set on mount
 			selectedJourney: undefined
 		};
 
@@ -202,6 +202,15 @@ export class MyJourneys extends Component<Props, State> {
 							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } }) }
 						>
 							<Text style={ styles.cardLink }>CONTINUE</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					journeyStatus === 'PAUSED' &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } }) }
+						>
+							<Text style={ styles.cardLink }>RESUME</Text>
 						</TouchableOpacity>
 				}
 

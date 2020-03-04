@@ -5,6 +5,12 @@ import {
 	START_JOURNEY_REQUEST,
 	START_JOURNEY_SUCCESS,
 	START_JOURNEY_FAILURE,
+	PAUSE_JOURNEY_REQUEST,
+	PAUSE_JOURNEY_SUCCESS,
+	PAUSE_JOURNEY_FAILURE,
+	RESUME_JOURNEY_REQUEST,
+	RESUME_JOURNEY_SUCCESS,
+	RESUME_JOURNEY_FAILURE,
 	END_JOURNEY_REQUEST,
 	END_JOURNEY_SUCCESS,
 	END_JOURNEY_FAILURE,
@@ -14,7 +20,6 @@ import {
 } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { JourneyDetailsResult } from '../../../types/http-responses';
-import HttpAPI from '../../../api/http';
 import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { Coords, Journey } from '@project-300/common-types';
@@ -31,6 +36,18 @@ const startJourneyRequest = (): AppActions => ({ type: START_JOURNEY_REQUEST });
 const startJourneySuccess = (journey: Journey): AppActions => ({ type: START_JOURNEY_SUCCESS, journey });
 
 const startJourneyFailure = (): AppActions => ({ type: START_JOURNEY_FAILURE });
+
+const pauseJourneyRequest = (): AppActions => ({ type: PAUSE_JOURNEY_REQUEST });
+
+const pauseJourneySuccess = (journey: Journey): AppActions => ({ type: PAUSE_JOURNEY_SUCCESS, journey });
+
+const pauseJourneyFailure = (): AppActions => ({ type: PAUSE_JOURNEY_FAILURE });
+
+const resumeJourneyRequest = (): AppActions => ({ type: RESUME_JOURNEY_REQUEST });
+
+const resumeJourneySuccess = (journey: Journey): AppActions => ({ type: RESUME_JOURNEY_SUCCESS, journey });
+
+const resumeJourneyFailure = (): AppActions => ({ type: RESUME_JOURNEY_FAILURE });
 
 const endJourneyRequest = (): AppActions => ({ type: END_JOURNEY_REQUEST });
 
@@ -94,16 +111,16 @@ export const unsubscribeDriverLocation = (journeyId: string): (dispatch: Dispatc
 	};
 };
 
-export const startJourney = (journeyId: string): (dispatch: Dispatch) => Promise<void> => {
+export const startJourney = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		console.log('starting journey');
 		dispatch(startJourneyRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.startJourney({ journeyId }) as JourneyDetailsResult;
+			const result: { success: boolean; journey: Journey } = await JourneyService.startJourney(journeyId, createdAt);
 
-			console.log(apiRes);
-			if (apiRes.success && apiRes.journey) dispatch(startJourneySuccess(apiRes.journey));
+			console.log(result);
+			if (result.success && result.journey) dispatch(startJourneySuccess(result.journey));
 		} catch (err) {
 			console.log(err);
 			dispatch(startJourneyFailure());
@@ -112,16 +129,52 @@ export const startJourney = (journeyId: string): (dispatch: Dispatch) => Promise
 	};
 };
 
-export const endJourney = (journeyId: string): (dispatch: Dispatch) => Promise<void> => {
+export const pauseJourney = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		console.log('pausing journey');
+		dispatch(pauseJourneyRequest());
+
+		try {
+			const result: { success: boolean; journey: Journey } = await JourneyService.pauseJourney(journeyId, createdAt);
+
+			console.log(result);
+			if (result.success && result.journey) dispatch(pauseJourneySuccess(result.journey));
+		} catch (err) {
+			console.log(err);
+			dispatch(pauseJourneyFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const resumeJourney = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		console.log('resuming journey');
+		dispatch(resumeJourneyRequest());
+
+		try {
+			const result: { success: boolean; journey: Journey } = await JourneyService.resumeJourney(journeyId, createdAt);
+
+			console.log(result);
+			if (result.success && result.journey) dispatch(resumeJourneySuccess(result.journey));
+		} catch (err) {
+			console.log(err);
+			dispatch(resumeJourneyFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const endJourney = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		console.log('ending journey');
 		dispatch(endJourneyRequest());
 
 		try {
-			const apiRes: JourneyDetailsResult = await HttpAPI.endJourney({ journeyId }) as JourneyDetailsResult;
+			const result: { success: boolean; journey: Journey } = await JourneyService.endJourney(journeyId, createdAt);
 
-			console.log(apiRes);
-			if (apiRes.success && apiRes.journey) dispatch(endJourneySuccess(apiRes.journey));
+			console.log(result);
+			if (result.success && result.journey) dispatch(endJourneySuccess(result.journey));
 		} catch (err) {
 			console.log(err);
 			dispatch(endJourneyFailure());
@@ -143,7 +196,7 @@ export const driverMovement = (journeyId: string, createdAt: string, coords: Coo
 		} catch (err) {
 			console.log(err);
 			dispatch(driverMovementFailure());
-			toastr.error(err.message);
+			// toastr.error(err.message);
 		}
 	};
 };

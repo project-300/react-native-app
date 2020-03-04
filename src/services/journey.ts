@@ -28,9 +28,13 @@ export class JourneyService {
 
 	public static getPassengerJourneys = async (): Promise<{ success: boolean; journeys: Journey[] }> => API.get(ApiName, `/journeys/passenger`, '').catch(JourneyService.handleError);
 
-	public static startJourney = async (journeyId: string): Promise<void> => API.put(ApiName, `/journeys/start/${journeyId}`, '').catch(JourneyService.handleError);
+	public static startJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/start/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
-	public static endJourney = async (journeyId: string): Promise<void> => API.put(ApiName, `/journeys/end/${journeyId}`, '').catch(JourneyService.handleError);
+	public static pauseJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/pause/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
+
+	public static resumeJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/resume/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
+
+	public static endJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/end/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
 	public static cancelPassengerAcceptedJourney = async (journeyId: string, createdAt: string): Promise<void> =>
 		API.put(ApiName, `/journeys/passenger-cancel`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
