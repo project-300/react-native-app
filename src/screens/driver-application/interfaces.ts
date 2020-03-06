@@ -15,7 +15,7 @@ export interface Styles {
 
 export interface Props extends CommonProps {
 	isFetching: boolean;
-	apply(vehicle: Vehicle): Promise<boolean>;
+	apply(vehicle: any): Promise<boolean>;
 	checkIfApplied(): Promise<boolean>;
 	applied?: boolean;
 	getVehicleMakes(): Promise<boolean>;
@@ -27,16 +27,12 @@ export interface Props extends CommonProps {
 
 export interface State {
 	loading: boolean;
-	modelPickerVisible: boolean;
-	makePickerVisible: boolean;
 	yearPickerVisible: boolean;
 	fuelTypePickerVisible: boolean;
 	selectedYear: string;
 	selectedFuelType: string;
-	selectedVehicleMake: SelectedVehicleMake | null;
-	selectedVehicleModel: SelectedVehicleModel | null;
-	modelPickerItems: VehicleModel[];
-	modelsLoading: boolean;
+	selectedVehicleMake: string;
+	selectedVehicleModel: string;
 	displayErrorMessage: boolean;
 }
 

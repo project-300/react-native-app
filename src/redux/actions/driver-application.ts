@@ -30,7 +30,7 @@ const applicationAlreadyApplied = (applied: boolean): AppActions => ({
 	applied
 });
 
-export const apply = (vehicle: Vehicle): ((dispatch: Dispatch) => Promise<boolean>) => {
+export const apply = (vehicle: any): ((dispatch: Dispatch) => Promise<boolean>) => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
 		dispatch(driverApplicationRequest());
 
