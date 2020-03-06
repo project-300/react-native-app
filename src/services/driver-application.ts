@@ -8,7 +8,7 @@ export class DriverApplicationService {
 	public static checkIfUserHasApplied = async (userId: string): Promise<DriverApplicationCheckResult> => API.get(ApiName,
 		`/driver-applications/check/${userId}`, '')
 
-	public static applyForApplication = async (vehicle: Vehicle): Promise<DriverApplicationResult> =>
+	public static applyForApplication = async (vehicle: any): Promise<DriverApplicationResult> =>
 		API.post(ApiName,
 		'/driver-applications/apply',
 		{
