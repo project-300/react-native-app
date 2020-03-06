@@ -39,7 +39,7 @@ export class NoticeBanner extends Component<Props> {
 
 		return (
 			<View style={ [ styles.acceptedLiftNoticeContainer, { backgroundColor } ] }>
-				<Text style={ styles.center }>
+				<Text style={ [ styles.center, { color, fontWeight: '600' } ] }>
 					{
 						icon &&
 							<Icon

@@ -4,7 +4,7 @@ import { Colours, Theme } from '../../../constants/theme';
 
 const { width } = Dimensions.get('window');
 
-const containerPadding: number = 10;
+const containerPadding: number = 20;
 const cardWidth: number = width - (containerPadding * 2);
 
 const styles: Styles = StyleSheet.create<Styles>({

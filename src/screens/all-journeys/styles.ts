@@ -63,7 +63,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	seatsLeft: {
 		fontSize: 14,
-		color: '#555'
+		color: '#555',
+		marginTop: 4
 	},
 
 	generalInfoContainer: {
@@ -97,13 +98,14 @@ const styles: Styles = StyleSheet.create<Styles>({
 		position: 'absolute',
 		right: 0,
 		bottom: 0,
+		shadowColor: Colours.black,
 		shadowOffset: {
 			width: 0,
-			height: 2
+			height: 0
 		},
 		shadowOpacity: 0.4,
-		shadowRadius: 6,
-		elevation: 12
+		shadowRadius: 4,
+		elevation: 6
 	},
 
 	searchField: {
@@ -136,6 +138,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	reloadSpinner: {
 		margin: 10
+	},
+
+	journeyDate: {
+		fontSize: 16
 	}
 });
 

@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
@@ -13,6 +13,7 @@ import MapView, {
 	PROVIDER_GOOGLE,
 	Region,
 } from 'react-native-maps';
+import { Theme } from '../../../../constants/theme';
 
 export class InteractiveMap extends Component<Props, State> {
 
@@ -30,7 +31,12 @@ export class InteractiveMap extends Component<Props, State> {
 				longitudeDelta: 1
 			},
 			route: [],
-			midpoint: undefined
+			midpoint: {
+				latitude: 54.2,
+				longitude: -8.5,
+				latitudeDelta: 1,
+				longitudeDelta: 1
+			}
 		};
 	}
 
@@ -98,12 +104,14 @@ export class InteractiveMap extends Component<Props, State> {
 		const journey: Journey = this.state.journey;
 
 		return (
-			<View>
+			<View style={ styles.container }>
+				<Text>test</Text>
 				<View style={ styles.mapContainer }>
+					<Text>test</Text>
 					<MapView
 						provider={ PROVIDER_GOOGLE }
 						style={ styles.map}
-						//region={ this._mapRegion() }
+						region={ this._mapRegion() }
 						ref={ (m: MapView): MapView => this._map = m }
 					>
 						{ journey && this._createMarker(journey.origin) }
@@ -111,10 +119,11 @@ export class InteractiveMap extends Component<Props, State> {
 
 						<Polyline
 							coordinates={ this.state.journey.plannedRoute }
-							strokeColor={ 'blue' }
+							strokeColor={ Theme.accent }
 							strokeWidth={ 4 }
 						/>
 					</MapView>
+					<Text>test</Text>
 				</View>
 			</View>
 		);

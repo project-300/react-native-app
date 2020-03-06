@@ -1,13 +1,13 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours, Theme } from '../../../constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
-		flex: 1,
-		backgroundColor: '#F5FCFF',
-		justifyContent: 'flex-end'
+		backgroundColor: Colours.whiteGrey,
+		flex: 1
 	},
 
 	mapImageTouchable: {
@@ -47,23 +47,35 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	content: {
-		height: '100%',
-		padding: 20
+		padding: 20,
+		flex: 1,
+		borderTopWidth: 0.5,
+		borderColor: '#DDD'
 	},
 
-	places: {
+	infoBlock: {
 		padding: 20,
 		borderRadius: 4,
 		marginBottom: 10,
-		alignItems: 'center'
-	},
-
-	origin: {
-		marginBottom: 20
+		marginTop: 20,
+		backgroundColor: Colours.white,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 6,
+		flex: 1,
+		flexDirection: 'column',
+		borderWidth: 0.5,
+		borderColor: '#CCC'
 	},
 
 	placeText: {
-		fontSize: 22
+		fontSize: 22,
+		marginBottom: 20
 	},
 
 	centerItems: {
@@ -71,17 +83,17 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	infoRow: {
-		fontSize: 18,
+		fontSize: 16,
 		marginVertical: 10
 	},
 
 	bold: {
-		fontWeight: 'bold'
+		fontWeight: '500'
 	},
 
 	actionButton: {
-		padding: 8,
-		marginVertical: 10
+		marginVertical: 10,
+		flex: 1
 	},
 
 	overlay: {
@@ -104,6 +116,27 @@ const styles: Styles = StyleSheet.create<Styles>({
 	overlayButton: {
 		padding: 8,
 		backgroundColor: 'white'
+	},
+
+	priceBadge: {
+		backgroundColor: Theme.accent,
+		padding: 5,
+		width: 64,
+		height: 64,
+		borderRadius: 32,
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'absolute',
+		right: 20,
+		top: -30,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.4,
+		shadowRadius: 4,
+		elevation: 6
 	}
 });
 

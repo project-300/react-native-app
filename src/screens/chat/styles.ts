@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours } from '../../constants/theme';
 
 const { width } = Dimensions.get('window');
 
@@ -50,7 +51,15 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	avatarContainer: {
 		flex: avatarContainerFlex,
-		alignSelf: 'flex-end'
+		alignSelf: 'flex-end',
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2
 	},
 
 	avatar: {

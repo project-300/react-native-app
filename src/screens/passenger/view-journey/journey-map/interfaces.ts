@@ -4,6 +4,7 @@ import { Coords, Journey } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 
 export interface Styles {
+	container: ViewStyle;
 	mapContainer: ViewStyle;
 	map: ViewStyle;
 }
@@ -21,5 +22,5 @@ export interface State {
 		longitudeDelta: number;
 	};
 	route: Coords[];
-	midpoint: Region | Coords | undefined;
+	midpoint: Region | Coords;
 }

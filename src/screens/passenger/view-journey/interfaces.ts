@@ -14,8 +14,7 @@ export interface Styles {
 	clickToExpandText: TextStyle;
 	placeText: TextStyle;
 	content: ViewStyle;
-	places: ViewStyle;
-	origin: ViewStyle;
+	infoBlock: ViewStyle;
 	centerItems: ViewStyle;
 	actionButton: ViewStyle;
 	overlay: ViewStyle;
@@ -23,6 +22,7 @@ export interface Styles {
 	overlayButton: ViewStyle;
 	infoRow: TextStyle;
 	bold: TextStyle;
+	priceBadge: ViewStyle;
 }
 
 export interface Props extends CommonProps, ContentReloading {

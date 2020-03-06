@@ -59,9 +59,9 @@ const headerBar = (
 		options={ {
 			display: true,
 			logout: true,
-			settings: true,
+			settings: false,
 			becomeDriver: true,
-			darkMode: true
+			darkMode: false
 		} }
 		customOptions={ customOptions }
 	/>;
@@ -107,7 +107,7 @@ const SearchTab: NavigationContainer = createStackNavigator({
 	},
 	ViewJourney: {
 		screen: ViewJourney,
-		...navigationOptions('Journey', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	},
 	InteractiveMap: {
 		screen: InteractiveMap,
@@ -115,7 +115,7 @@ const SearchTab: NavigationContainer = createStackNavigator({
 	},
 	OtherProfile: {
 		screen: Profile,
-		...navigationOptions('Other Profile', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	}
 });
 
@@ -134,7 +134,7 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 	},
 	PassengerOtherProfile: {
 		screen: Profile,
-		...navigationOptions('Passenger Profile', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	}
 });
 
@@ -152,11 +152,11 @@ const ChatTab: NavigationContainer = createStackNavigator({
 	},
 	Chat: {
 		screen: Chat,
-		...navigationOptions('Chat', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	},
 	ChatOtherProfile: {
 		screen: Profile,
-		...navigationOptions('Other Profile', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	}
 });
 

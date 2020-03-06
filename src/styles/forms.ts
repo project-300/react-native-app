@@ -4,6 +4,7 @@ interface FormStyles {
 	largeButton: ViewStyle;
 	buttonText: TextStyle;
 	input: ViewStyle;
+	button: ViewStyle;
 }
 
 const formStyles: FormStyles = StyleSheet.create<FormStyles>({
@@ -38,6 +39,10 @@ const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 		marginVertical: 5,
 		borderColor: 'rgba(0, 0, 0, 0.2)',
 		backgroundColor: 'white'
+	},
+
+	button: {
+		padding: 8
 	}
 });
 

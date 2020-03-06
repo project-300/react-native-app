@@ -26,6 +26,7 @@ export interface Styles {
 	searchFieldIcon: ViewStyle;
 	reloadIcon: ViewStyle;
 	reloadSpinner: ViewStyle;
+	journeyDate: TextStyle;
 }
 
 export interface Props extends CommonProps {

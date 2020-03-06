@@ -2,11 +2,11 @@ import React, { Component, ReactElement } from 'react';
 import { View } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import * as EmailValidator from 'email-validator';
 import toastr from '../../../helpers/toastr';
 import { EditTypes } from '../../../types/common';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
-import { Theme } from '../../../constants/theme';
+import { ContrastTheme, Theme } from '../../../constants/theme';
+import formStyles from '../../../styles/forms';
 
 export class UpdateUserField extends Component<Props, State> {
 
@@ -39,7 +39,7 @@ export class UpdateUserField extends Component<Props, State> {
 			<View style={ styles.container }>
 				<ActivityIndicator
 					animating={ this.props.isUpdating }
-					color={ Theme.primary }
+					color={ Theme.accent }
 					size='large'
 					style={ styles.spinner }
 				/>
@@ -49,15 +49,17 @@ export class UpdateUserField extends Component<Props, State> {
 					style={ styles.input }
 					label={ this.props.type }
 					mode='outlined'
-					onChangeText={ (value: string): void => this.setState({ value })}
+					onChangeText={ (value: string): void => this.setState({ value }) }
+					theme={ ContrastTheme }
 				/>
 
 				<View style={ styles.buttonContainer }>
 					<Button
 						mode={ 'contained'}
-						style={ styles.button }
+						style={ formStyles.button }
 						onPress={ this._updateValue }
 						disabled={ this.props.isUpdating || !this.state.value }
+						theme={ ContrastTheme }
 					>
 						UPDATE { this.props.type }
 					</Button>
@@ -66,8 +68,9 @@ export class UpdateUserField extends Component<Props, State> {
 				<View style={ styles.buttonContainer }>
 					<Button
 						mode={ 'outlined'}
-						style={ styles.button }
+						style={ formStyles.button }
 						onPress={ this.props.close }
+						theme={ ContrastTheme }
 					>
 						CANCEL
 					</Button>

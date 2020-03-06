@@ -1,5 +1,14 @@
 import React, { Component, ReactElement } from 'react';
-import { ScrollView, FlatList, View, NativeScrollEvent, TouchableOpacity, RefreshControl } from 'react-native';
+import {
+	ScrollView,
+	FlatList,
+	View,
+	NativeScrollEvent,
+	TouchableOpacity,
+	RefreshControl,
+	KeyboardAvoidingView,
+	Platform, StatusBarIOS, NativeModules, EmitterSubscription
+} from 'react-native';
 import { connect } from 'react-redux';
 import styles, { priceBadgeText } from './styles';
 import { Props, State } from './interfaces';
@@ -11,11 +20,15 @@ import DatesTimes from '../../services/dates-times';
 import { ActivityIndicator, Text, TextInput } from 'react-native-paper';
 import { NavigationEvents } from 'react-navigation';
 import _ from 'lodash';
-import { Theme } from '../../constants/theme';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { NoticeBanner } from '../../components/miscellaneous/notice-banner';
 
+const { StatusBarManager } = NativeModules;
+
 class AllJourneys extends Component<Props, State> {
+
+	private _statusBarListener: EmitterSubscription;
 
 	public constructor(props: Props) {
 		super(props);
@@ -24,11 +37,22 @@ class AllJourneys extends Component<Props, State> {
 	}
 
 	private initialState: State = {
-		searchText: ''
+		searchText: '',
+		statusBarHeight: 0
 	};
 
 	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
 		await this.props.getAllJourneys(true);
+
+		if (Platform.OS === 'ios') {
+			StatusBarManager.getHeight((statusBarFrameData: any) => {
+				this.setState({ statusBarHeight: statusBarFrameData.height });
+			});
+		}
+
+		this._statusBarListener = StatusBarIOS.addListener('statusBarFrameWillChange', (statusBarData: any) => {
+			this.setState({ statusBarHeight: statusBarData.frame.height });
+		});
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
@@ -42,9 +66,9 @@ class AllJourneys extends Component<Props, State> {
 	}
 
 	private _getBorderColour = (userJoined: boolean, isOwnedByUser: boolean): string => {
-		if (isOwnedByUser) return 'orange';
-		if (userJoined) return 'green';
-		return '#CCC';
+		// if (isOwnedByUser) return 'orange';
+		if (userJoined) return Colours.green;
+		return Colours.lighterGrey;
 	}
 
 	private _renderRow = ({ item, index }: { item: Journey; index: number }): ReactElement => {
@@ -60,10 +84,10 @@ class AllJourneys extends Component<Props, State> {
 					{
 						journey.userJoined &&
 							<NoticeBanner
-								icon='check'
-								text='You have accepted this lift'
-								backgroundColor='#69ff6b'
-								color='#555'
+								icon={ 'check' }
+								text={ 'You have accepted this lift' }
+								backgroundColor={ Colours.green }
+								color={ Colours.white }
 							/>
 					}
 
@@ -78,11 +102,8 @@ class AllJourneys extends Component<Props, State> {
 					</View>
 
 					<View style={ styles.generalInfoContainer }>
-						<Text>
-							{ DatesTimes.hoursMinutes(journey.times.leavingAt) }
-						</Text>
-						<Text>
-							{ DatesTimes.readableDate(journey.times.leavingAt) }
+						<Text style={ styles.journeyDate }>
+							{ DatesTimes.dayAndTime(journey.times.leavingAt) }
 						</Text>
 
 						<View
@@ -124,7 +145,9 @@ class AllJourneys extends Component<Props, State> {
 
 	public render(): ReactElement {
 		return (
-			<View style={ styles.container }>
+			<KeyboardAvoidingView style={ styles.container } behavior={ Platform.OS === 'ios' ? 'height' : undefined }
+				keyboardVerticalOffset={ this.state.statusBarHeight + 70 }
+			>
 				{ this._renderNavigationEvents() }
 
 				<View>
@@ -136,6 +159,9 @@ class AllJourneys extends Component<Props, State> {
 							this._searchJourneys();
 						}}
 						style={ styles.searchField }
+						theme={ ContrastTheme }
+						autoCompleteType='off'
+						autoCorrect={ false }
 					/>
 
 					{
@@ -198,7 +224,7 @@ class AllJourneys extends Component<Props, State> {
 							/>
 					}
 				</ScrollView>
-			</View>
+			</KeyboardAvoidingView>
 		);
 	}
 

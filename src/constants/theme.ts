@@ -4,8 +4,14 @@ import { store } from '../store';
 
 export const Theme = {
 	primary: 'white',
-	accent: '#177cd4',
-	text: 'black'
+	accent: '#177cd4'
+};
+
+export const ContrastTheme = {
+	colors: {
+		primary: '#177cd4',
+		accent: 'white'
+	}
 };
 
 export const DarkTheme = {
@@ -17,11 +23,13 @@ export const DarkTheme = {
 export const Colours = {
 	whiteGrey: '#FCFCFC',
 	lightGrey: '#AAA',
+	lighterGrey: '#CCC',
 	middleGrey: '#777',
 	darkGrey: '#333',
 	black: '#000',
 	white: '#FFF',
-	offWhite: '#FDFDFD'
+	offWhite: '#FDFDFD',
+	green: '#00a629'
 };
 
 /*

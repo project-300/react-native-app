@@ -16,10 +16,6 @@ const styles = StyleSheet.create<Styles>({
 		marginBottom: 10
 	},
 
-	button: {
-		padding: 8
-	},
-
 	spinner: {
 		marginVertical: 10
 	}

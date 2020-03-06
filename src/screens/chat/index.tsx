@@ -80,6 +80,8 @@ export class Chat extends Component<Props, State> {
 	public componentDidUpdate = async (p: Props, s: State): Promise<void> => {
 		const newMessageCount: number = this.props.messages.length - p.messages.length;
 
+		if (this.props.chat && !p.chat) this._setHeaderTitle();
+
 		if (this.state.isLoading) setTimeout(() => this._scrollView.scrollToEnd({ animated: false }));
 		else if (newMessageCount && !this.state.scrolledOffBottom && !this.props.isLastMessageByOwnUser)
 			setTimeout(() => this._scrollView.scrollToEnd());
@@ -135,6 +137,8 @@ export class Chat extends Component<Props, State> {
 		this._statusBarListener = StatusBarIOS.addListener('statusBarFrameWillChange', (statusBarData: any) => {
 			this.setState({ statusBarHeight: statusBarData.frame.height });
 		});
+
+		this._setHeaderTitle();
 	}
 
 	private _unmountScreen = async (): Promise<void> => { // Triggered when the screen is navigated away from
@@ -153,6 +157,16 @@ export class Chat extends Component<Props, State> {
 
 	public async componentWillUnmount(): Promise<void> {
 		await this._unmountScreen();
+	}
+
+	private _setHeaderTitle = (): void => {
+		this.props.navigation.setParams({
+			headerDetails: {
+				title: this.props.chat && this.props.chat.otherUser ?
+					`${this.props.chat.otherUser.firstName} ${this.props.chat.otherUser.lastName}` :
+					'Chat'
+			}
+		});
 	}
 
 	private _showNewMessagesFloatButton = (newMessageCount: number): void => {
@@ -338,7 +352,7 @@ export class Chat extends Component<Props, State> {
 							>
 								<Animated.View
 									style={ {
-										backgroundColor: 'orange',
+										backgroundColor: '#9b00ba',
 										padding: 12,
 										borderRadius: 8,
 										shadowOffset: {
@@ -356,7 +370,7 @@ export class Chat extends Component<Props, State> {
 										zIndex: 20
 									} }
 								>
-									<Text style={ { color: 'white', fontWeight: 'bold', alignSelf: 'center' } }>{ this.state.newMessageCount } New Messages</Text>
+									<Text style={ { color: 'white', fontWeight: 'bold', alignSelf: 'center' } }>{ this.state.newMessageCount } New Message{ this.state.newMessageCount !== 1 && 's' }</Text>
 								</Animated.View>
 							</TapGestureHandler>
 					}
