@@ -1,13 +1,14 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import Animated from 'react-native-reanimated';
+import { Colours } from '../../constants/theme';
 
 const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
+		backgroundColor: Colours.black,
 		justifyContent: 'center',
 		padding: 10
 	},
@@ -36,7 +37,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	logo: {
 		alignSelf: 'center',
-		width
+		width: width * 0.9
 	}
 });
 

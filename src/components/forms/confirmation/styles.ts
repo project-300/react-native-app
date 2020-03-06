@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours } from '../../../constants/theme';
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -8,11 +9,12 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	text: {
-		fontWeight: 'bold',
+		fontWeight: '500',
 		fontSize: 16,
 		textAlign: 'center',
 		marginVertical: 40,
-		marginHorizontal: 10
+		marginHorizontal: 10,
+		color: Colours.white
 	}
 });
 

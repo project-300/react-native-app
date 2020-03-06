@@ -1,4 +1,5 @@
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { Theme } from '../constants/theme';
 
 interface FormStyles {
 	largeButton: ViewStyle;
@@ -10,12 +11,12 @@ interface FormStyles {
 const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 	largeButton: {
 		backgroundColor: 'white',
-		height: 70,
+		height: 56,
 		marginHorizontal: 20,
-		borderRadius: 35,
+		borderRadius: 4,
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginVertical: 5,
+		marginVertical: 10,
 		shadowOffset: {
 			width: 2,
 			height: 2
@@ -26,8 +27,9 @@ const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 	},
 
 	buttonText: {
-		fontSize: 20,
-		fontWeight: 'bold'
+		fontSize: 16,
+		fontWeight: '500',
+		color: Theme.accent
 	},
 
 	input: {

@@ -14,6 +14,14 @@ export const ContrastTheme = {
 	}
 };
 
+export const AuthTheme = {
+	colors: {
+		primary: '#177cd4',
+		accent: 'white',
+		underlineColor: 'transparent'
+	}
+};
+
 export const DarkTheme = {
 	primary: 'black',
 	accent: 'white',

@@ -11,10 +11,8 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { HomeState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import MapView, { PROVIDER_GOOGLE, Marker, LatLng, MapEvent, Polyline } from 'react-native-maps';
-import { Form, Item, Input, H1, Label, Button, Icon, Grid, Col } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GooglePlace } from '../../types/maps';
 import {
@@ -28,8 +26,13 @@ import {
 	findRoute
 } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
-import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Coords, CreateJourney, Place } from '@project-300/common-types';
+import { NewJourneyState } from '../../types/redux-reducer-state-types';
+import { Button, TextInput } from 'react-native-paper';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
+import formStyles from '../../styles/forms';
+import moment from 'moment';
 
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
@@ -71,7 +74,7 @@ export class NewJourney extends Component<Props, State> {
 			placesFieldText: '',
 			totalNoOfSeats: 1,
 			pricePerSeat: 0,
-			leavingAt: new Date()
+			leavingAt: moment().add(1, 'day').toDate()
 		};
 	}
 
@@ -87,10 +90,6 @@ export class NewJourney extends Component<Props, State> {
 	private _createJourney = async (): Promise<void> => {
 		const { totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
 		const { originPlaceDetails, destinationPlaceDetails, route } = this.props;
-
-		if (!originPlaceDetails) return console.log(1);
-		if (!destinationPlaceDetails) return console.log(2);
-		if (!originPlaceDetails.geometry || !originPlaceDetails.geometry.location) return console.log(3);
 
 		const origin: Place = {
 			latitude: originPlaceDetails.geometry.location.lat,
@@ -125,93 +124,152 @@ export class NewJourney extends Component<Props, State> {
 	}
 
 	private _journeyForm = (): ReactElement => {
-		return <Form>
-			<TouchableOpacity onPress={ this._chooseOrigin }>
-				<Text style={ { fontSize: 20 } }>{ this.props.originPlaceDetails && this.props.originPlaceDetails.name || 'Choose Origin' }</Text>
-				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
-			</TouchableOpacity>
+		return <View style={ styles.stepsContainer }>
+			<View style={ styles.step }>
+				<Text style={ [ styles.stepLabel, styles.bold ] }>
+					Origin
+				</Text>
+				<TouchableOpacity onPress={ this._chooseOrigin }>
+					<Text style={ { fontSize: 20 } }>{ this.props.originPlaceDetails && this.props.originPlaceDetails.name || 'Search' }</Text>
+					<Icon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: Theme.accent } } />
+				</TouchableOpacity>
+			</View>
 
-			<View style={ styles.divider } />
+			{/*<View style={ styles.divider } />*/}
 
-			<TouchableOpacity onPress={ this._chooseDestination }>
-				<Text style={ { fontSize: 20 } }>{ this.props.destinationPlaceDetails && this.props.destinationPlaceDetails.name || 'Choose Destination' }</Text>
-				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
-			</TouchableOpacity>
+			<View style={ styles.step }>
+				<Text style={ [ styles.stepLabel, styles.bold ] }>
+					Destination
+				</Text>
 
-			<View style={ styles.divider } />
+				<TouchableOpacity onPress={ this._chooseDestination }>
+					<Text style={ { fontSize: 20 } }>{ this.props.destinationPlaceDetails && this.props.destinationPlaceDetails.name || 'Search' }</Text>
+					<Icon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: Theme.accent } } />
+				</TouchableOpacity>
+			</View>
 
-			<Text style={ { fontSize: 16, marginBottom: 20 } }>How many seats are available?</Text>
-			<Grid>
-				<Col>
-					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updateNoOfSeats(-1) }>
-						<FAIcon name={ 'minus' } style={ { color: 'white' } } />
+			{/*<View style={ styles.divider } />*/}
+
+			<View style={ styles.step }>
+				<Text style={ [ styles.stepLabel, styles.bold ] }>
+					Seats Available
+				</Text>
+
+				<View style={ styles.valueRow }>
+					<Button
+						style={ [ styles.valueButton, formStyles.button ] }
+						mode={ 'contained' }
+						theme={ ContrastTheme }
+						onPress={ (): void => this._updateNoOfSeats(-1) }
+						disabled={ this.state.totalNoOfSeats === 1 }
+					>
+						<Icon name={ 'minus' } style={ { color: 'white' } } />
 					</Button>
-				</Col>
-				<Col style={ { alignItems: 'center' } }>
-					<Text style={ { fontSize: 20, fontWeight: 'bold', marginTop: 10 } }>{ this.state.totalNoOfSeats }</Text>
-				</Col>
-				<Col>
-					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updateNoOfSeats(1) }>
-						<FAIcon name={ 'plus' } style={ { color: 'white' } } />
+
+					<Text style={ [ styles.valueContent, { fontSize: 20, fontWeight: '500' } ] }>{ this.state.totalNoOfSeats }</Text>
+
+					<Button
+						style={ [ styles.valueButton, formStyles.button ] }
+						mode={ 'contained' }
+						theme={ ContrastTheme }
+						onPress={ (): void => this._updateNoOfSeats(1) }
+						disabled={ this.state.totalNoOfSeats === 9 }
+					>
+						<Icon name={ 'plus' } style={ { color: 'white' } } />
 					</Button>
-				</Col>
-			</Grid>
+				</View>
+			</View>
 
-			<View style={ styles.divider } />
+			{/*<View style={ styles.divider } />*/}
 
-			<Text style={ { fontSize: 16, marginVertical: 20 } }>Cost per seat?</Text>
-			<Grid>
-				<Col>
-					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updatePrice(-1) }>
-						<FAIcon name={ 'minus' } style={ { color: 'white' } } />
+			<View style={ styles.step }>
+				<Text style={ [ styles.stepLabel, styles.bold ] }>
+					Cost Per Seat
+				</Text>
+
+				<View style={ styles.valueRow }>
+					<Button
+						style={ [ styles.valueButton, formStyles.button ] }
+						mode={ 'contained' }
+						theme={ ContrastTheme }
+						onPress={ (): void => this._updatePrice(-1) }
+						disabled={ this.state.pricePerSeat === 0 }
+					>
+						<Icon name={ 'minus' } style={ { color: 'white' } } />
 					</Button>
-				</Col>
-				<Col style={ { alignItems: 'center' } }>
-					<Text style={ { fontSize: 20, fontWeight: 'bold', marginTop: 10 } }>{ this.state.pricePerSeat ? `€${this.state.pricePerSeat}` : 'Free' }</Text>
-				</Col>
-				<Col>
-					<Button block light style={ { backgroundColor: '#194781' } } onPress={ (): void => this._updatePrice(1) }>
-						<FAIcon name={ 'plus' } style={ { color: 'white' } } />
+
+					<Text style={ [ styles.valueContent, { fontSize: 20, fontWeight: '500' } ] }>{ this.state.pricePerSeat ? `€${this.state.pricePerSeat}` : 'Free' }</Text>
+
+					<Button
+						style={ [ styles.valueButton, formStyles.button ] }
+						mode={ 'contained' }
+						theme={ ContrastTheme }
+						onPress={ (): void => this._updatePrice(1) }
+					>
+						<Icon name={ 'plus' } style={ { color: 'white' } } />
 					</Button>
-				</Col>
-			</Grid>
+				</View>
+			</View>
 
-			<View style={ styles.divider } />
+			{/*<View style={ styles.divider } />*/}
 
-			<Text style={ { fontSize: 16, marginVertical: 20 } }>What time are you leaving?</Text>
+			<View style={ styles.step }>
+				<Text style={ [ styles.stepLabel, styles.bold ] }>
+					Departure Time
+				</Text>
 
-			<TouchableOpacity onPress={ this._showDateTimePicker }>
-				<Text style={ { fontSize: 20 } }>{ this._leavingAtString() }</Text>
-				<FAIcon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: 'grey' } } />
-			</TouchableOpacity>
+				<TouchableOpacity onPress={ this._showDateTimePicker }>
+					<Text style={ { fontSize: 20 } }>{ this._leavingAtString() }</Text>
+					<Icon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: Theme.accent } } />
+				</TouchableOpacity>
 
-			<DateTimePicker
-				mode={ 'datetime' }
-				isVisible={ this.state.isDateTimePickerVisible }
-				onConfirm={ this._handleDatePicked }
-				onCancel={ this._hideDateTimePicker }
-				minimumDate={ new Date() }
-				is24Hour={ true }
-			/>
-		</Form>;
+				<DateTimePicker
+					mode={ 'datetime' }
+					isVisible={ this.state.isDateTimePickerVisible }
+					onConfirm={ this._handleDatePicked }
+					onCancel={ this._hideDateTimePicker }
+					minimumDate={ new Date() }
+					is24Hour={ true }
+				/>
+			</View>
+		</View>;
 	}
 
 	private _chooseLocationPanel = (locationType: string): ReactElement => {
 		return <View>
 			<TouchableOpacity onPress={ this._closeLocationPanel }>
-				<Icon name='arrow-back' />
+				<Icon
+					name={ 'angle-left' }
+					size={ 34 }
+					color={ Theme.accent }
+				/>
 			</TouchableOpacity>
-			<H1 style={ { alignSelf: 'center' } }>{ locationType }</H1>
-			<Item floatingLabel>
-				<Label>{ locationType }</Label>
-				<Input onChangeText={ (query: string): Promise<void> => this._searchPlaces(query) } autoCorrect={ false } />
-			</Item>
+
+			<TextInput
+				theme={ ContrastTheme }
+				onChangeText={ (query: string): Promise<void> => this._searchPlaces(query) }
+				autoCorrect={ false }
+				mode={ 'outlined' }
+				label={ `Search for the ${locationType}` }
+				style={ { marginTop: 30 } }
+			/>
 			{
 				!this.state.placesFieldText &&
 					<View style={ { alignItems: 'center' } }>
-						<Text style={ { marginVertical: 40, fontWeight: 'bold' } }>OR</Text>
-						<Button block light onPress={ this._openMap }>
-							<Text>Drop Marker</Text>
+						<Text style={ {
+							marginVertical: 40,
+							fontWeight: '500',
+							fontSize: 18,
+							color: Colours.darkGrey
+						} }>OR</Text>
+
+						<Button
+							mode={ 'contained' }
+							theme={ ContrastTheme }
+							onPress={ this._openMap }
+							style={ [ formStyles.button, { width: '100%' } ] }
+						>
+							Drop Marker
 						</Button>
 					</View>
 			}
@@ -229,18 +287,18 @@ export class NewJourney extends Component<Props, State> {
 	private _confirmPanel = (): ReactElement => {
 		if (!this.props.originPlaceDetails || !this.props.destinationPlaceDetails) return <View><Text>Origin or Destination is missing</Text></View>;
 
-		return <View>
-			<Text style={ styles.confirmRow }>You are travelling from <Text style={ styles.bold }>{ this.props.originPlaceDetails.name }</Text> to <Text style={ styles.bold }>{ this.props.destinationPlaceDetails.name }</Text>.</Text>
+		return <View style={ styles.confirmContainer }>
+			<Text style={ styles.confirmRow }>You are travelling from <Text style={ styles.bold }>{ this.props.originPlaceDetails && this.props.originPlaceDetails.name }</Text> to <Text style={ styles.bold }>{ this.props.destinationPlaceDetails && this.props.destinationPlaceDetails.name }</Text>.</Text>
 			<Text style={ styles.confirmRow }>There are <Text style={ styles.bold }>{ this.state.totalNoOfSeats }</Text> seats available.</Text>
 			<Text style={ styles.confirmRow }>Price per seat: <Text style={ styles.bold }>{ this.state.pricePerSeat ? `€${this.state.pricePerSeat}` : 'Free' }</Text></Text>
-			<Text style={ styles.confirmRow }>You will be departing from <Text style={ styles.bold }>{ this.props.originPlaceDetails.name }</Text> at <Text style={ styles.bold }>{ DatesTimes.hoursMinutes(this.state.leavingAt) }</Text> on <Text style={ styles.bold }>{ DatesTimes.readableDate(this.state.leavingAt)  }</Text></Text>
+			<Text style={ styles.confirmRow }>You will be departing from <Text style={ styles.bold }>{ this.props.originPlaceDetails && this.props.originPlaceDetails.name }</Text> at <Text style={ styles.bold }>{ DatesTimes.hoursMinutes(this.state.leavingAt) }</Text> on <Text style={ styles.bold }>{ DatesTimes.readableDate(this.state.leavingAt)  }</Text></Text>
 		</View>;
 	}
 
 	private _renderPlaceRow = ({ item, index }: { item: GooglePlace; index: number }): ReactElement<TouchableOpacity> => {
 		return (
 			<TouchableOpacity style={ styles.placeItem } onPress={ async (): Promise<void> => await this._selectPlace(item) }>
-				<Text style={ { fontWeight: 'bold', fontSize: 16 } }>{ item.structured_formatting.main_text }</Text>
+				<Text style={ { fontWeight: 'bold', fontSize: 16, marginBottom: 4 } }>{ item.structured_formatting.main_text }</Text>
 				<Text style={ { fontSize: 14 } }>{ item.structured_formatting.secondary_text }</Text>
 			</TouchableOpacity>
 		);
@@ -262,7 +320,9 @@ export class NewJourney extends Component<Props, State> {
 		return true;
 	}
 
-	private _leavingAtString = (): string => `${DatesTimes.readableDate(this.state.leavingAt)} at ${DatesTimes.hoursMinutes(this.state.leavingAt)}`;
+	private _leavingAtString = (): string => {
+		return `${DatesTimes.dayAndTime(this.state.leavingAt)}`;
+	}
 
 	private _chooseOrigin = (): void => this.setState({ openLocationPanel: true, locationType: ORIGIN });
 
@@ -316,11 +376,11 @@ export class NewJourney extends Component<Props, State> {
 		const { originMarkerCoords, destinationMarkerCoords, originPlaceDetails, destinationPlaceDetails } = this.props;
 
 		return (
-			<SafeAreaView style={ styles.container }>
+			<View style={ styles.container }>
 				<StatusBar barStyle='dark-content' />
 
 				{
-					droppingMarker &&
+					droppingMarker && originPlaceDetails && originPlaceDetails.name &&
 						<View style={ styles.locationNameHeader }>
 							<Text style={ { fontWeight: 'bold', fontSize: 16, color: 'white' } }>{
 								(locationType === ORIGIN && originPlaceDetails && originPlaceDetails.name) ||
@@ -368,7 +428,7 @@ export class NewJourney extends Component<Props, State> {
 									openLocationPanel && !openConfirmPanel &&
 									this._chooseLocationPanel(locationType === ORIGIN ? 'Origin' : 'Destination')
 								}
-								{ openConfirmPanel && !openLocationPanel && this._confirmPanel() }
+								{/*{ openConfirmPanel && !openLocationPanel && this._confirmPanel() }*/}
 							</View>
 					}
 
@@ -377,43 +437,58 @@ export class NewJourney extends Component<Props, State> {
 							<View style={ { alignItems: 'center' } }>
 								<Text style={ { marginBottom: 20 } }>Click on the map to drop a marker</Text>
 
-								<Button light block onPress={ this._confirmMarkerDrop }>
+								<Button
+									mode={ 'contained' }
+									theme={ ContrastTheme }
+									style={ [ styles.mapButton, { marginBottom: 10 } ] }
+									onPress={ this._confirmMarkerDrop }
+								>
 									<Text>Confirm</Text>
 								</Button>
 
-								<Text style={ { alignSelf: 'center', marginTop: 20 } } onPress={ this._closeMap }>
-									<Text>Cancel</Text>
-								</Text>
+                                <Button
+                                    mode={ 'outlined' }
+                                    theme={ ContrastTheme }
+                                    style={ styles.mapButton }
+                                    onPress={ this._closeMap }
+                                >
+                                    <Text>Cancel</Text>
+                                </Button>
 							</View>
 					}
+
+					{/*{*/}
+					{/*	!droppingMarker && !openLocationPanel && !openConfirmPanel &&*/}
+					{/*		<Button*/}
+					{/*			style={ [ formStyles.button, styles.button ] }*/}
+					{/*			mode={ 'contained' }*/}
+					{/*			theme={ ContrastTheme }*/}
+					{/*			onPress={ this._showConfirmPanel }*/}
+					{/*			disabled={ !this._formValid() }*/}
+					{/*		>*/}
+					{/*			Continue*/}
+					{/*		</Button>*/}
+					{/*}*/}
+
+					{
+						!droppingMarker && !openLocationPanel && !openConfirmPanel &&
+							<Button
+                                style={ [ formStyles.button, styles.button ] }
+								mode={ 'contained' }
+								theme={ ContrastTheme }
+								onPress={ this._createJourney }
+								disabled={ !this._formValid() }
+                            >
+								Create Journey
+							</Button>
+					}
 				</ScrollView>
-
-				{
-					!droppingMarker && !openLocationPanel && !openConfirmPanel &&
-						<TouchableOpacity
-							style={ [ styles.continueButton, this._formValid() ? styles.buttonValid : styles.buttonInvalid ] }
-							onPress={ this._showConfirmPanel }
-							disabled={ !this._formValid() }
-						>
-							<Text style={ { color: 'white', fontWeight: 'bold' } }>Continue</Text>
-						</TouchableOpacity>
-				}
-
-				{
-					openConfirmPanel &&
-						<TouchableOpacity
-							style={ [ styles.continueButton, styles.buttonValid ] }
-							onPress={ this._createJourney }
-						>
-							<Text style={ { color: 'white', fontWeight: 'bold' } }>Create Journey</Text>
-						</TouchableOpacity>
-				}
-			</SafeAreaView>
+			</View>
 		);
 	}
 }
 
-const mapStateToProps = (state: AppState): HomeState => ({
+const mapStateToProps = (state: AppState): NewJourneyState => ({
 	...state.newJourneyReducer
 });
 

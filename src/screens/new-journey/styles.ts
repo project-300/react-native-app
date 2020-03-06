@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours, Theme } from '../../constants/theme';
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
+		backgroundColor: Colours.whiteGrey,
 		alignItems: 'center'
 	},
 
@@ -33,7 +34,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	form: {
-		backgroundColor: '#FFFFFF',
+		backgroundColor: Colours.whiteGrey,
 		position: 'absolute',
 		padding: 20,
 		left: 0,
@@ -73,11 +74,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	button: {
-		backgroundColor: '#02b2cc',
-		padding: 10,
-		marginBottom: 10,
-		borderRadius: 4,
-		width: '80%'
+		width: '100%',
+		marginTop: 30
 	},
 
 	buttonText: {
@@ -95,12 +93,16 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	placesList: {
-		marginTop: 20,
-		marginLeft: 5
+		marginTop: 20
 	},
 
 	placeItem: {
-		marginVertical: 10
+		marginVertical: 4,
+		padding: 20,
+		borderWidth: 0.5,
+		borderColor: '#DDD',
+		borderRadius: 2,
+		backgroundColor: Colours.white
 	},
 
 	continueButton: {
@@ -127,7 +129,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		top: 0,
 		width: '100%',
 		elevation: 50,
-		backgroundColor: '#555',
+		backgroundColor: Theme.accent,
 		padding: 10,
 		alignItems: 'center',
 		zIndex: 100
@@ -139,10 +141,79 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	bold: {
-		fontWeight: 'bold'
+		fontWeight: '500'
+	},
+
+	stepsContainer: {
+		flex: 1,
+		flexDirection: 'column'
+	},
+
+	step: {
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 6,
+		flex: 1,
+		flexDirection: 'column',
+		borderWidth: 0.5,
+		borderColor: '#CCC',
+		padding: 20,
+		marginVertical: 16,
+		backgroundColor: Colours.white,
+		borderRadius: 2
+	},
+
+	valueRow: {
+		flex: 1,
+		flexDirection: 'row'
+	},
+
+	valueButton: {
+		flex: 0.5
+	},
+
+	valueContent: {
+		flex: 1,
+		alignSelf: 'center',
+		textAlign: 'center'
+	},
+
+	stepLabel: {
+		position: 'absolute',
+		top: -10,
+		left: 10,
+		backgroundColor: 'white',
+		color: Theme.accent,
+		fontSize: 16
+	},
+
+	confirmContainer: {
+		flex: 1,
+		flexDirection: 'column',
+		borderWidth: 0.5,
+		borderColor: '#CCC',
+		padding: 20,
+		marginVertical: 16,
+		backgroundColor: Colours.white,
+		borderRadius: 2,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 6
+	},
+
+	mapButton: {
+		width: '100%'
 	}
 });
 
 export default styles;
-
-
