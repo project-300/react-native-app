@@ -8,29 +8,24 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { apply, checkIfApplied, getVehicleMakes, getVehicleModels } from '../../redux/actions';
+import { apply, checkIfApplied } from '../../redux/actions';
 import { AppState } from '../../store';
 import { DriverApplicationState, VehicleMakesAndModelsState } from '../../types/redux-reducer-state-types';
 import ModalFilterPicker, { ModalFilterPickerOption } from 'react-native-modal-filter-picker';
-import { List, ActivityIndicator } from 'react-native-paper';
-import { Vehicle } from '@project-300/common-types';
+import { List, ActivityIndicator, TextInput } from 'react-native-paper';
 
 export class DriverApplication extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
 		this.state = {
-			modelPickerVisible: false,
-			makePickerVisible: false,
 			yearPickerVisible: false,
 			fuelTypePickerVisible: false,
-			modelPickerItems: [],
 			loading: false,
 			selectedYear: '',
 			selectedFuelType: '',
-			selectedVehicleMake: null,
-			selectedVehicleModel: null,
-			modelsLoading: false,
+			selectedVehicleMake: '',
+			selectedVehicleModel: '',
 			displayErrorMessage: false
 		};
 	}
@@ -45,26 +40,6 @@ export class DriverApplication extends Component<Props, State> {
 		}
 		this.setState({
 			loading: false
-		});
-	}
-
-	private _getItemsForMakePicker = (): ModalFilterPickerOption[] => {
-		return this.props.vehicleMakes.map((v) => {
-			const option: ModalFilterPickerOption = {
-				label: v.Make_Name,
-				key: v.Make_ID.toString()
-			};
-			return option;
-		});
-	}
-
-	private _getItemsForModelPicker = (): ModalFilterPickerOption[] => {
-		return this.state.modelPickerItems.map((v) => {
-			const option: ModalFilterPickerOption = {
-				label: v.Model_Name,
-				key: v.Model_ID.toString()
-			};
-			return option;
 		});
 	}
 
@@ -95,15 +70,9 @@ export class DriverApplication extends Component<Props, State> {
 	}
 
 	private _apply = async (): Promise<void> => {
-		const vehicle: Vehicle = {
-			make: {
-				Make_ID: this.state.selectedVehicleMake ? this.state.selectedVehicleMake.Make_ID : '',
-				Make_Name: this.state.selectedVehicleMake ? this.state.selectedVehicleMake.Make_Name : ''
-			},
-			model: {
-				Model_ID: this.state.selectedVehicleModel ? this.state.selectedVehicleModel.Model_ID : '',
-				Model_Name: this.state.selectedVehicleModel ? this.state.selectedVehicleModel.Model_ID : ''
-			},
+		const vehicle: any = {
+			make: this.state.selectedVehicleMake,
+			model: this.state.selectedVehicleModel,
 			yearOfManufacture: parseInt(this.state.selectedYear, 10),
 			fuelType: this.state.selectedFuelType as 'petrol' | 'diesel' | 'petrolHybrid' | 'dieselHybrid' | 'electric'
 		};
@@ -118,18 +87,6 @@ export class DriverApplication extends Component<Props, State> {
 		});
 	}
 
-	private _openVehicleMakePicker = (): void => {
-		this.setState({
-			makePickerVisible: true
-		});
-	}
-
-	private _openVehicleModelPicker = (): void => {
-		this.setState({
-			modelPickerVisible: true
-		});
-	}
-
 	private _openFuleTypePicker = (): void => {
 		this.setState({
 			fuelTypePickerVisible: true
@@ -139,34 +96,6 @@ export class DriverApplication extends Component<Props, State> {
 	private _openYearPicker = (): void => {
 		this.setState({
 			yearPickerVisible: true
-		});
-	}
-
-	private _onModelPickerSelect = (key: string) => {
-		this.setState({
-			modelPickerVisible: false,
-			selectedVehicleModel: {
-				Model_ID: key.key,
-				Model_Name: key.label
-			}
-		});
-	}
-
-	private _onMakePickerSelect = async (key: string) => {
-		this.setState({
-			makePickerVisible: false,
-			modelPickerItems: [],
-			selectedVehicleMake: {
-				Make_ID: key.key,
-				Make_Name: key.label
-			},
-			modelsLoading: true
-		});
-		await this.props.getVehicleModels(key.key, '2019');
-		this.setState({
-			modelsLoading: false,
-			modelPickerItems: this.props.vehicleModels,
-			displayErrorMessage: this.props.errMessage === null || this.props.errMessage === undefined ? false : true
 		});
 	}
 
@@ -196,24 +125,6 @@ export class DriverApplication extends Component<Props, State> {
 		});
 	}
 
-	private _onModelPickerCancel = (): void => {
-		this.setState({
-			modelPickerVisible: false
-		});
-	}
-
-	private _onMakePickerCancel = (): void => {
-		this.setState({
-			makePickerVisible: false
-		});
-	}
-
-	private _onModelPickerPress = (): void => {
-		if (typeof this.state.selectedVehicleMake === 'object' && this.state.selectedVehicleMake !== null && this.state.selectedYear !== '') {
-			this._openVehicleModelPicker();
-		}
-	}
-
 	private _getAllYearsBetweenDates = (): number[] => {
 		const startDate = new Date('01 ' + 'Jan 1980');
 		const yearOne = startDate.getFullYear();
@@ -235,12 +146,6 @@ export class DriverApplication extends Component<Props, State> {
 					this.props.applied ? <Text style={ styles.text }>Thanks for applying you will be notified soon</Text> :
 					<View style={ styles.formView }>
 						<ModalFilterPicker
-						options={ this._getItemsForMakePicker() }
-						visible={ this.state.makePickerVisible }
-						onSelect={ this._onMakePickerSelect }
-						onCancel={ this._onMakePickerCancel }
-						/>
-						<ModalFilterPicker
 						options={ this._getItemsForYearPicker() }
 						visible={ this.state.yearPickerVisible }
 						onSelect={ this._onYearPickerSelect }
@@ -252,19 +157,11 @@ export class DriverApplication extends Component<Props, State> {
 						onSelect={ this._onFuleTypeSelect }
 						onCancel={ this._onFuleTypeCancel }
 						/>
-						<ModalFilterPicker
-						options={ this._getItemsForModelPicker() }
-						visible={ this.state.modelPickerVisible && !this.state.displayErrorMessage }
-						onSelect={ this._onModelPickerSelect }
-						onCancel={ this._onModelPickerCancel }
+						<TextInput
+							label='Choose the make of the vehicle'
+							value={ this.state.selectedVehicleMake}
+							onChangeText={ (text: string): void => this.setState({ selectedVehicleMake: text})}
 						/>
-						<List.Item
-								title='Choose a vehicle make'
-								description={ this.state.selectedVehicleMake ? `"${this.state.selectedVehicleMake.Make_Name}" selected` : null }
-								onPress={ this._openVehicleMakePicker }
-								style= { styles.listItem}
-								right={ (props) => <List.Icon { ...props } icon='chevron-down'/>}
-							/>
 						<List.Item
 								title='Choose the year of manufacture'
 								description={ this.state.selectedYear !== '' ? `"${this.state.selectedYear}" selected` : '' }
@@ -279,20 +176,15 @@ export class DriverApplication extends Component<Props, State> {
 								style= { styles.listItem}
 								right={ (props) => <List.Icon { ...props } icon='chevron-down'/>}
 							/>
-						<List.Item
-								title='Vehicle Model Picker'
-								description={ this.state.selectedVehicleModel ? `"${this.state.selectedVehicleModel.Model_Name}" selected` : null  }
-								onPress={ this._onModelPickerPress }
-								style= { styles.listItem}
-								right={ (props) =>
-									this.state.modelsLoading ? <ActivityIndicator animating={ true }/> : <List.Icon { ...props } icon='chevron-down'/> }
-							/>
-						{ this.state.displayErrorMessage ? <Text style={ styles.errText }>There is no models for the selected make and year</Text> :
-						<View></View> }
+						<TextInput
+							label='Choose the model of the vehicle'
+							value={ this.state.selectedVehicleModel}
+							onChangeText={ (text: string): void => this.setState({ selectedVehicleModel: text})}
+						/>
 
 						<TouchableOpacity style= { styles.button }
 							onPress={ this._apply }
-							disabled={ this.state.selectedVehicleMake === null || this.state.selectedVehicleModel === null ||
+							disabled={ this.state.selectedVehicleMake === '' || this.state.selectedVehicleModel === '' ||
 								this.state.selectedYear === '' || this.state.selectedFuelType === '' ? true : false }
 						>
 							<Text style={ styles.buttonText }>Apply</Text>
@@ -305,9 +197,8 @@ export class DriverApplication extends Component<Props, State> {
 	}
 }
 
-const mapStateToProps = (state: AppState): DriverApplicationState & VehicleMakesAndModelsState => ({
-	...state.driverApplicationReducer,
-	...state.vehicleMakesAndModelsReducer
+const mapStateToProps = (state: AppState): DriverApplicationState => ({
+	...state.driverApplicationReducer
 });
 
-export default connect(mapStateToProps, { apply, checkIfApplied, getVehicleMakes, getVehicleModels })(DriverApplication);
+export default connect(mapStateToProps, { apply, checkIfApplied })(DriverApplication);
