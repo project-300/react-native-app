@@ -1,29 +1,46 @@
 import { StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours } from '../../constants/theme';
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
-		flex: 6,
-		backgroundColor: '#F5FCFF',
-		alignItems: 'center'
+		flex: 1,
+		alignItems: 'center',
+		flexDirection: 'row',
+		backgroundColor: Colours.whiteGrey,
+		padding: 20
 	},
+
 	listItem: {
-		width: '80%',
-		margin: 20
-		},
+		// width: '80%',
+		// margin: 20
+		marginVertical: 20,
+		paddingHorizontal: 10
+	},
+
 	errText: {
 		color: 'red',
 		textAlign: 'center',
 		alignSelf: 'stretch'
 	},
+
 	formView: {
-		width: '100%',
-		alignItems: 'center'
+		flex: 1,
+		backgroundColor: 'white',
+		padding: 20,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 6,
+		borderRadius: 2
 	},
+
 	text: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10
+		fontSize: 16,
+		color: Colours.darkGrey
 	},
 
 	button: {

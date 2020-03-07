@@ -10,9 +10,12 @@ import styles from './styles';
 import { Props, State } from './interfaces';
 import { apply, checkIfApplied } from '../../redux/actions';
 import { AppState } from '../../store';
-import { DriverApplicationState, VehicleMakesAndModelsState } from '../../types/redux-reducer-state-types';
+import { DriverApplicationState } from '../../types/redux-reducer-state-types';
 import ModalFilterPicker, { ModalFilterPickerOption } from 'react-native-modal-filter-picker';
-import { List, ActivityIndicator, TextInput } from 'react-native-paper';
+import { Button, List, TextInput } from 'react-native-paper';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
+import formStyles from '../../styles/forms';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export class DriverApplication extends Component<Props, State> {
 
@@ -57,7 +60,7 @@ export class DriverApplication extends Component<Props, State> {
 	}
 
 	private _getItemsForFuleTypePicker = (): ModalFilterPickerOption[] => {
-		const fuleTypes: string[] = ['petrol', 'diesel', 'petrolHybrid', 'dieselHybrid', 'electric'];
+		const fuleTypes: string[] = ['Petrol', 'Diesel', 'Petrol Hybrid', 'Diesel Hybrid', 'Electric'];
 
 		return fuleTypes.map((ft: string, index: number) => {
 			const option: ModalFilterPickerOption = {
@@ -74,7 +77,7 @@ export class DriverApplication extends Component<Props, State> {
 			make: this.state.selectedVehicleMake,
 			model: this.state.selectedVehicleModel,
 			yearOfManufacture: parseInt(this.state.selectedYear, 10),
-			fuelType: this.state.selectedFuelType as 'petrol' | 'diesel' | 'petrolHybrid' | 'dieselHybrid' | 'electric'
+			fuelType: this.state.selectedFuelType as 'Petrol' | 'Diesel' | 'Petrol Hybrid' | 'DieselHybrid' | 'Electric'
 		};
 
 		this.setState({
@@ -142,53 +145,84 @@ export class DriverApplication extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<ScrollView contentContainerStyle={ styles.container }>
-				{ this.state.loading ? <ActivityIndicator animating={ true }/> :
-					this.props.applied ? <Text style={ styles.text }>Thanks for applying you will be notified soon</Text> :
+				{
+					// this.props.applied ? <Text style={ styles.text }>Thanks for applying you will be notified soon</Text> :
 					<View style={ styles.formView }>
 						<ModalFilterPicker
-						options={ this._getItemsForYearPicker() }
-						visible={ this.state.yearPickerVisible }
-						onSelect={ this._onYearPickerSelect }
-						onCancel={ this._onYearPickerCancel }
-						/>
-						<ModalFilterPicker
-						options={ this._getItemsForFuleTypePicker() }
-						visible={ this.state.fuelTypePickerVisible }
-						onSelect={ this._onFuleTypeSelect }
-						onCancel={ this._onFuleTypeCancel }
-						/>
-						<TextInput
-							label='Choose the make of the vehicle'
-							value={ this.state.selectedVehicleMake}
-							onChangeText={ (text: string): void => this.setState({ selectedVehicleMake: text})}
-						/>
-						<List.Item
-								title='Choose the year of manufacture'
-								description={ this.state.selectedYear !== '' ? `"${this.state.selectedYear}" selected` : '' }
-								onPress={ this._openYearPicker }
-								style= { styles.listItem }
-								right={ (props) => <List.Icon { ...props } icon='chevron-down'/>}
-							/>
-						<List.Item
-								title='Choose the vehicle fule type'
-								description={ this.state.selectedFuelType !== '' ? `"${this.state.selectedFuelType}" selected` : '' }
-								onPress={ this._openFuleTypePicker }
-								style= { styles.listItem}
-								right={ (props) => <List.Icon { ...props } icon='chevron-down'/>}
-							/>
-						<TextInput
-							label='Choose the model of the vehicle'
-							value={ this.state.selectedVehicleModel}
-							onChangeText={ (text: string): void => this.setState({ selectedVehicleModel: text})}
+							options={ this._getItemsForYearPicker() }
+							visible={ this.state.yearPickerVisible }
+							onSelect={ this._onYearPickerSelect }
+							onCancel={ this._onYearPickerCancel }
 						/>
 
-						<TouchableOpacity style= { styles.button }
+						<ModalFilterPicker
+							options={ this._getItemsForFuleTypePicker() }
+							visible={ this.state.fuelTypePickerVisible }
+							onSelect={ this._onFuleTypeSelect }
+							onCancel={ this._onFuleTypeCancel }
+						/>
+
+						<TextInput
+							style={ { marginBottom: 20 } }
+							mode={ 'outlined' }
+							theme={ ContrastTheme }
+							label='Vehicle Make'
+							value={ this.state.selectedVehicleMake }
+							onChangeText={ (text: string): void => this.setState({ selectedVehicleMake: text })}
+						/>
+
+						<TextInput
+							style={ { marginBottom: 20 } }
+							mode={ 'outlined' }
+							theme={ ContrastTheme }
+							label='Vehicle Model'
+							value={ this.state.selectedVehicleModel }
+							onChangeText={ (text: string): void => this.setState({ selectedVehicleModel: text })}
+						/>
+
+						<TouchableOpacity
+							onPress={ this._openYearPicker }
+							style= { styles.listItem }
+						>
+							<Text style={ styles.text }>{ this.state.selectedYear || 'Year of Manufacture' }</Text>
+							{
+								!this.state.selectedYear ?
+									<Icon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: Theme.accent } } /> :
+									<Icon name={ 'check' } size={ 20 } style={ { position: 'absolute', right: 0, color: Colours.green } } />
+							}
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							onPress={ this._openFuleTypePicker }
+							style= { styles.listItem }
+						>
+							<Text style={ styles.text }>{ this.state.selectedFuelType || 'Fuel Type' }</Text>
+
+							{
+								!this.state.selectedFuelType ?
+									<Icon name={ 'edit' } size={ 20 } style={ { position: 'absolute', right: 0, color: Theme.accent } } /> :
+									<Icon name={ 'check' } size={ 20 } style={ { position: 'absolute', right: 0, color: Colours.green } } />
+							}
+						</TouchableOpacity>
+
+						{/*<List.Item*/}
+						{/*		title='Choose the vehicle fule type'*/}
+						{/*		description={ this.state.selectedFuelType !== '' ? `"${this.state.selectedFuelType}" selected` : '' }*/}
+						{/*		onPress={ this._openFuleTypePicker }*/}
+						{/*		style= { styles.listItem}*/}
+						{/*		right={ (props) => <List.Icon { ...props } icon='chevron-down'/>}*/}
+						{/*	/>*/}
+
+						<Button
+							mode={ 'contained' }
+							theme={ ContrastTheme }
+							style={ [formStyles.button, { marginTop: 20 }] }
 							onPress={ this._apply }
 							disabled={ this.state.selectedVehicleMake === '' || this.state.selectedVehicleModel === '' ||
-								this.state.selectedYear === '' || this.state.selectedFuelType === '' ? true : false }
+								this.state.selectedYear === '' || this.state.selectedFuelType === '' }
 						>
-							<Text style={ styles.buttonText }>Apply</Text>
-						</TouchableOpacity>
+							Apply
+						</Button>
 					</View>
 				}
 

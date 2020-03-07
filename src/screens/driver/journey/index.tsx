@@ -28,6 +28,7 @@ import { TapGestureHandler } from 'react-native-gesture-handler';
 import { FAB, Portal } from 'react-native-paper';
 import MapUtils from '../../../services/map-utils';
 import moment, { Duration } from 'moment';
+import { Theme } from '../../../constants/theme';
 
 const { width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -310,7 +311,8 @@ export class JourneyMap extends Component<Props, State> {
 		const duration: Duration = moment.duration(moment().diff(moment(this.props.journey.times.startedAt)));
 		const hours: number = Math.floor(duration.asHours());
 		const minutes: number = Math.floor(duration.asMinutes() % 60);
-		return `${hours}:${minutes}`;
+		return `13:51`;
+		// return `${hours}:${minutes}`;
 	}
 
 	public render(): ReactElement {
@@ -362,7 +364,7 @@ export class JourneyMap extends Component<Props, State> {
 							journey && journey.plannedRoute &&
 								<Polyline
 									coordinates={ journey.plannedRoute }
-									strokeColor={ 'red' }
+									strokeColor={ Theme.accent }
 									strokeWidth={ 4 }
 								/>
 						}
@@ -371,7 +373,7 @@ export class JourneyMap extends Component<Props, State> {
 							//journey && journey.journeyStatus === 'STARTED' &&
 								<Polyline
 									coordinates={ this.state.routeTravelled }
-									strokeColor={ 'green' }
+									strokeColor={ Theme.accent }
 									strokeWidth={ 4 }
 								/>
 						}
