@@ -18,10 +18,11 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	loginLink: {
 		marginTop: 40,
-		alignSelf: 'center',
+		alignSelf: 'stretch',
 		color: 'white',
 		fontWeight: 'bold',
-		fontSize: 16
+		fontSize: 16,
+		textAlign: 'center'
 	},
 
 	showPasswordIconContainer: {

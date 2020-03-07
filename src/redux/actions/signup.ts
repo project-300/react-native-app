@@ -42,9 +42,8 @@ export const signUp = (email: string, phoneNumber: string, password: string):
 				isSignUp: true
 			};
 		} catch (err) {
-			console.log(err);
 			dispatch(signUpFailure());
-			toastr.error(err.message);
+			toastr.error('Email does not match one of the listed domains');
 			return { ok: false };
 		}
 	};
