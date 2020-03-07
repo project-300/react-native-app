@@ -43,7 +43,10 @@ export const signUp = (email: string, phoneNumber: string, password: string):
 			};
 		} catch (err) {
 			dispatch(signUpFailure());
-			toastr.error('Email does not match one of the listed domains');
+			console.log(err);
+			if (err.code === 'InvalidLambdaResponseException') toastr.error('Email does not match one of the listed email domains');
+			if (err.code === 'UsernameExistsException') toastr.error('An account with the given email already exists');
+
 			return { ok: false };
 		}
 	};
