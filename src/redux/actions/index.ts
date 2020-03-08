@@ -18,3 +18,5 @@ export * from './content-reloading';
 export * from './chat/all-chats';
 export * from './chat/chat';
 export * from './chat/message';
+export * from './journey/journey';
+export * from './driver/passenger-pickup';

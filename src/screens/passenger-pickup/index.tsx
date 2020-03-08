@@ -8,8 +8,9 @@ import { AppState } from '../../store';
 import {
 	getPassengerPickupJourney,
 	driverConfirmPassengerPickup,
-	driverCancelPassengerPickup
-} from '../../redux/actions/driver/passenger-pickup';
+	driverCancelPassengerPickup,
+	cancelJourney
+} from '../../redux/actions';
 import { ActivityIndicator, Button, Modal, Portal } from 'react-native-paper';
 import { Colours, ContrastTheme, RedTheme } from '../../constants/theme';
 import { PassengerBrief } from '@project-300/common-types';
@@ -68,8 +69,10 @@ export class PassengerPickup extends Component<Props, State> {
 		this.setState({ showConfirmModal: false, showCancelModal: false });
 	}
 
-	private _cancelJourney = (): void => {
-
+	private _cancelJourney = async (): Promise<void> => {
+		const { journeyKey: { journeyId, createdAt } } = this.state;
+		const result: boolean = await this.props.cancelJourney(journeyId, createdAt);
+		if (result) this.props.navigation.navigate('MyJourneys');
 	}
 
 	private _renderConfirmModal = (): ReactElement => {
@@ -295,7 +298,8 @@ export class PassengerPickup extends Component<Props, State> {
 								style={ [ formStyles.button, styles.button ] }
 								disabled={ this.props.totalCount !== passengers.length }
 								onPress={ this._cancelJourney }
-							>Cancel This Journey</Button>
+								loading={ this.props.isCancellingJourney }
+							>{ this.props.isCancellingJourney ? 'Cancelling Journey' : 'Cancel This Journey' }</Button>
 					}
 				</ScrollView>
 
@@ -306,11 +310,13 @@ export class PassengerPickup extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): PassengerPickupState => ({
-	...state.passengerPickupReducer
+	...state.passengerPickupReducer,
+	...state.generalJourneyActionsReducer
 });
 
 export default connect(mapStateToProps, {
 	getPassengerPickupJourney,
 	driverConfirmPassengerPickup,
 	driverCancelPassengerPickup,
+	cancelJourney
 })(PassengerPickup);

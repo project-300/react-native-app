@@ -46,6 +46,8 @@ export class JourneyService {
 
 	public static endJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/end/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
+	public static cancelJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/cancel/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
+
 	public static cancelPassengerAcceptedJourney = async (journeyId: string, createdAt: string): Promise<void> =>
 		API.put(ApiName, `/journeys/passenger-cancel`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
 

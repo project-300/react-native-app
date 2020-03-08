@@ -121,7 +121,7 @@ import {
 	DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE,
 	DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST,
 	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS,
-	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE
+	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE, CANCEL_JOURNEY_SUCCESS, CANCEL_JOURNEY_REQUEST, CANCEL_JOURNEY_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -686,6 +686,19 @@ export interface UpdateAvatarFailure {
 	type: typeof UPLOAD_AVATAR_FAILURE;
 }
 
+export interface CancelJourneyRequest {
+	type: typeof CANCEL_JOURNEY_REQUEST;
+}
+
+export interface CancelJourneySuccess {
+	type: typeof CANCEL_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface CancelJourneyFailure {
+	type: typeof CANCEL_JOURNEY_FAILURE;
+}
+
 export interface ContentReloadOn {
 	type: typeof CONTENT_RELOAD_ON;
 }
@@ -902,6 +915,11 @@ export type CreateNewJourneyActionTypes =
 	FindNearbyPlaceActionTypes |
 	CreateJourneyFindRouteActionTypes;
 
+export type GeneralJourneyActionTypes =
+	CancelJourneyRequest |
+	CancelJourneySuccess |
+	CancelJourneyFailure;
+
 export type AppActions =
 	ContentReloadActionTypes |
 	DarkModeActionTypes |
@@ -921,4 +939,5 @@ export type AppActions =
 	InterestsActionTypes |
 	AllChatActionTypes |
 	ChatActionTypes |
-	MessageActionTypes;
+	MessageActionTypes |
+	GeneralJourneyActionTypes;

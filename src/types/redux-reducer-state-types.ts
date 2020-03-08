@@ -117,6 +117,11 @@ export interface PassengerPickupState {
 	totalCount: number;
 }
 
+export interface GeneralJourneyActionsState {
+	isCancellingJourney: boolean;
+	journey?: Journey;
+}
+
 export interface JourneyMapState {
 	status: string;
 	isStarted: boolean;

@@ -17,6 +17,7 @@ import contentReloadReducer from './content-reloading';
 import allChatsReducer from './chat/all-chat';
 import chatMessagesReducer from './chat/message';
 import passengerPickupReducer from './driver/passenger-pickup';
+import generalJourneyActionsReducer from './journey/journey';
 
 export default combineReducers({
 	signUpReducer,
@@ -36,5 +37,6 @@ export default combineReducers({
 	contentReloadReducer,
 	allChatsReducer,
 	chatMessagesReducer,
-	passengerPickupReducer
+	passengerPickupReducer,
+	generalJourneyActionsReducer
 });
