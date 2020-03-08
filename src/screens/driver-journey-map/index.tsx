@@ -10,6 +10,7 @@ import { JourneyMapState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import {
 	getJourneyDetails,
+	beginPickup,
 	startJourney,
 	pauseJourney,
 	resumeJourney,
@@ -28,7 +29,7 @@ import { TapGestureHandler } from 'react-native-gesture-handler';
 import { FAB, Portal } from 'react-native-paper';
 import MapUtils from '../../services/map-utils';
 import moment, { Duration } from 'moment';
-import { Theme } from '../../constants/theme';
+import { Colours, Theme } from '../../constants/theme';
 
 const { width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -75,6 +76,7 @@ export class JourneyMap extends Component<Props, State> {
 			tracker: null,
 			infoOpen: false,
 			isTogglingInfo: false,
+			fabOpen: false,
 			statusBarHeight: 0,
 			direction: 0
 		};
@@ -126,7 +128,6 @@ export class JourneyMap extends Component<Props, State> {
 
 	private _trackDriver = (): void => {
 		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
-			console.log('TRACK');
 			this.setState({ movementCount: this.state.movementCount + 1 });
 
 			const coords: Coords = {
@@ -146,7 +147,7 @@ export class JourneyMap extends Component<Props, State> {
 			const start: Coords = routeTravelled[length - 2];
 			const end: Coords = routeTravelled[length - 1];
 
-			let direction: number = ((length >= 2 ?
+			const direction: number = ((length >= 2 ?
 				MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) :
 				0) + 90) % 360;
 
@@ -228,6 +229,10 @@ export class JourneyMap extends Component<Props, State> {
 
 	private _updateSavedLocation = async (coords: Coords): Promise<void> => await DriverLocation.setCurrentPosition(coords);
 
+	private _beginPickup = async (): Promise<void> => {
+		await this.props.beginPickup(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
+	}
+
 	private _startJourney = async (): Promise<void> => {
 		await this.props.startJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		// this._zoomToDriverPosition();
@@ -308,11 +313,10 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _timeSinceStart = (): string => {
-		const duration: Duration = moment.duration(moment().diff(moment(this.props.journey.times.startedAt)));
+		const duration: Duration = moment.duration(moment().diff(moment(this.props.journey && this.props.journey.times.startedAt)));
 		const hours: number = Math.floor(duration.asHours());
 		const minutes: number = Math.floor(duration.asMinutes() % 60);
-		return `13:51`;
-		// return `${hours}:${minutes}`;
+		return `${hours}:${minutes}`;
 	}
 
 	public render(): ReactElement {
@@ -323,23 +327,24 @@ export class JourneyMap extends Component<Props, State> {
 		if (this.props.isPausing) spinnerText = 'Pausing...';
 		if (this.props.isResuming) spinnerText = 'Resuming...';
 
-		let actions = [];
+		let actions: any = [];
 
 		if (journey) {
 			const { journeyStatus } = journey;
 
 			if (journeyStatus === 'NOT_STARTED') actions = [
-				{ icon: 'play', label: 'Start Journey', onPress: this._startJourney }
+				{ icon: 'play', label: 'Begin Pickup', color: Colours.primary, onPress: this._beginPickup }
+				// { icon: 'play', label: 'Start Journey', color: Colours.primary, onPress: this._startJourney }
 			];
 
 			if (journeyStatus === 'STARTED') actions = [
-				{ icon: 'stop', label: 'End Journey', onPress: this._endJourney },
-				{ icon: 'pause', label: 'Pause Journey', onPress: this._pauseJourney },
+				{ icon: 'stop', label: 'End Journey', color: Colours.primary, onPress: this._endJourney },
+				{ icon: 'pause', label: 'Pause Journey', color: Colours.primary, onPress: this._pauseJourney }
 			];
 
 			if (journeyStatus === 'PAUSED') actions = [
-				{ icon: 'stop', label: 'End Journey', onPress: this._endJourney },
-				{ icon: 'play', label: 'Resume Journey', onPress: this._resumeJourney }
+				{ icon: 'stop', label: 'End Journey', color: Colours.primary, onPress: this._endJourney },
+				{ icon: 'play', label: 'Resume Journey', color: Colours.primary, onPress: this._resumeJourney }
 			];
 		}
 
@@ -370,7 +375,7 @@ export class JourneyMap extends Component<Props, State> {
 						}
 
 						{
-							//journey && journey.journeyStatus === 'STARTED' &&
+							journey && journey.journeyStatus === 'STARTED' &&
 								<Polyline
 									coordinates={ this.state.routeTravelled }
 									strokeColor={ Theme.accent }
@@ -416,7 +421,7 @@ export class JourneyMap extends Component<Props, State> {
 									<View style={ { flex: 1 } }>
 										<View style={ styles.infoRow }>
 											<Icon name={ 'road' } size={ 18 } style={ styles.infoIcon } />
-											<Text style={ styles.infoText }>{ this.props.distance }2.5 KM</Text>
+											<Text style={ styles.infoText }>{ this.props.distance } KM</Text>
 										</View>
 										<View style={ styles.infoRow }>
 											<Icon name={ 'clock' } size={ 18 } style={ styles.infoIcon } />
@@ -437,7 +442,6 @@ export class JourneyMap extends Component<Props, State> {
 
 				<Portal>
 					<FAB.Group
-						fabStyle={ styles.fab }
 						open={ this.state.fabOpen }
 						icon={ 'circle' }
 						actions={ actions }
@@ -462,6 +466,7 @@ const mapStateToProps = (state: AppState): JourneyMapState => ({
 
 export default connect(mapStateToProps, {
 	getJourneyDetails,
+	beginPickup,
 	startJourney,
 	pauseJourney,
 	resumeJourney,

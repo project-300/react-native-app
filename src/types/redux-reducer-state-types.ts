@@ -107,9 +107,20 @@ export interface JourneysState {
 	journeys: { driver: Journey[]; passenger: Journey[] };
 }
 
+export interface PassengerPickupState {
+	isRequesting: boolean;
+	isConfirming: string;
+	isCancelling: string;
+	journey?: Journey;
+	pickedUpCount: number;
+	cancelledCount: number;
+	totalCount: number;
+}
+
 export interface JourneyMapState {
 	status: string;
 	isStarted: boolean;
+	isBeginningPickup: boolean;
 	isStarting: boolean;
 	isPausing: boolean;
 	isResuming: boolean;

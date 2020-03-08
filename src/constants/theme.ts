@@ -22,6 +22,13 @@ export const AuthTheme = {
 	}
 };
 
+export const RedTheme = {
+	colors: {
+		primary: 'red',
+		accent: 'white'
+	}
+};
+
 export const DarkTheme = {
 	primary: 'black',
 	accent: 'white',
@@ -32,12 +39,16 @@ export const Colours = {
 	whiteGrey: '#FCFCFC',
 	lightGrey: '#AAA',
 	lighterGrey: '#CCC',
+	lightestGrey: '#EEE',
 	middleGrey: '#777',
 	darkGrey: '#333',
 	black: '#000',
 	white: '#FFF',
 	offWhite: '#FDFDFD',
-	green: '#00a629'
+	primary: '#177cd4',
+	primaryLight: '#65A6E1',
+	green: '#00a629',
+	red: '#d10000'
 };
 
 /*

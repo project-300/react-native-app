@@ -12,6 +12,11 @@ export interface Styles {
 	bottomPanel: ViewStyle;
 	spinner: ViewStyle;
 	spinnerTextStyle: TextStyle;
+	infoBox: ViewStyle;
+	infoRow: ViewStyle;
+	infoIcon: TextStyle;
+	infoText: TextStyle;
+	backButton: ViewStyle;
 }
 
 export interface Props extends CommonProps {
@@ -24,11 +29,12 @@ export interface Props extends CommonProps {
 	isRequestingJourneyDetails: boolean;
 	journey: Journey | undefined;
 	getJourneyDetails(journeyId: string, createdAt: string): Promise<void>;
+	beginPickup(journeyId: string, createdAt: string): Promise<void>;
 	startJourney(journeyId: string, createdAt: string): Promise<void>;
 	pauseJourney(journeyId: string, createdAt: string): Promise<void>;
 	resumeJourney(journeyId: string, createdAt: string): Promise<void>;
 	endJourney(journeyId: string, createdAt: string): Promise<void>;
-	driverMovement(j: string, c: Coords): Promise<void>;
+	driverMovement(journeyId: string, createdAt: string, c: Coords): Promise<void>;
 }
 
 export interface State {
@@ -52,6 +58,11 @@ export interface State {
 	routeTravelled: Coords[]; // Coordinates of movement points - Used to draw route on map. These are movements already made, not planned route.
 	movementCount: number; // A count of movements made. Every 5 or 10 movements is logged in the DB for routeTravelled.
 	tracker: number | null; // ID of the tracker - Used to stop tracking when the journey ends
+	infoOpen: boolean;
+	isTogglingInfo: boolean;
+	fabOpen: boolean;
+	statusBarHeight: number;
+	direction: number;
 }
 
 export interface AnimationValues {

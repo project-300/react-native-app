@@ -16,7 +16,10 @@ import {
 	END_JOURNEY_FAILURE,
 	DRIVER_MOVEMENT_REQUEST,
 	DRIVER_MOVEMENT_SUCCESS,
-	DRIVER_MOVEMENT_FAILURE
+	DRIVER_MOVEMENT_FAILURE,
+	BEGIN_PICKUP_REQUEST,
+	BEGIN_PICKUP_SUCCESS,
+	BEGIN_PICKUP_FAILURE
 } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import { JourneyDetailsResult } from '../../../types/http-responses';
@@ -36,6 +39,12 @@ const startJourneyRequest = (): AppActions => ({ type: START_JOURNEY_REQUEST });
 const startJourneySuccess = (journey: Journey): AppActions => ({ type: START_JOURNEY_SUCCESS, journey });
 
 const startJourneyFailure = (): AppActions => ({ type: START_JOURNEY_FAILURE });
+
+const beginPickupRequest = (): AppActions => ({ type: BEGIN_PICKUP_REQUEST });
+
+const beginPickupSuccess = (journey: Journey): AppActions => ({ type: BEGIN_PICKUP_SUCCESS, journey });
+
+const beginPickupFailure = (): AppActions => ({ type: BEGIN_PICKUP_FAILURE });
 
 const pauseJourneyRequest = (): AppActions => ({ type: PAUSE_JOURNEY_REQUEST });
 
@@ -71,6 +80,7 @@ export const getJourneyDetails = (journeyId: string, createdAt: string): (dispat
 
 			if (result.success && result.journey) dispatch(journeyDetailsSuccess(result.journey));
 		} catch (err) {
+			console.log(err);
 			dispatch(journeyDetailsFailure());
 			toastr.error(err.message);
 		}
@@ -124,6 +134,24 @@ export const startJourney = (journeyId: string, createdAt: string): (dispatch: D
 		} catch (err) {
 			console.log(err);
 			dispatch(startJourneyFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const beginPickup = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		console.log('begin pickup');
+		dispatch(beginPickupRequest());
+
+		try {
+			const result: { success: boolean; journey: Journey } = await JourneyService.beginPickup(journeyId, createdAt);
+
+			console.log(result);
+			if (result.success && result.journey) dispatch(beginPickupSuccess(result.journey));
+		} catch (err) {
+			console.log(err);
+			dispatch(beginPickupFailure());
 			toastr.error(err.message);
 		}
 	};

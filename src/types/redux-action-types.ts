@@ -1,18 +1,4 @@
 import {
-	VEHICLE_MAKES_REQUEST,
-	VEHICLE_MAKES_SUCCESS,
-	VEHICLE_MAKES_FAILURE,
-	VEHICLE_MODELS_REQUEST,
-	VEHICLE_MODELS_SUCCESS,
-	VEHICLE_MODELS_FAILURE,
-	PAUSE_JOURNEY_SUCCESS,
-	PAUSE_JOURNEY_REQUEST,
-	PAUSE_JOURNEY_FAILURE,
-	RESUME_JOURNEY_REQUEST,
-	RESUME_JOURNEY_SUCCESS,
-	RESUME_JOURNEY_FAILURE
-} from './../constants/redux-actions';
-import {
 	LOGIN_FAILURE,
 	LOGIN_REQUEST,
 	LOGIN_SUCCESS,
@@ -85,7 +71,7 @@ import {
 	UPDATE_INTERESTS_REQUEST,
 	UPDATE_INTERESTS_FAILURE,
 	UPDATE_USER_REQUEST,
-  APPLICATION_ALREADY_APPLIED,
+	APPLICATION_ALREADY_APPLIED,
 	UPDATE_USER_SUCCESS,
 	UPDATE_USER_FAILURE,
 	UPLOAD_AVATAR_REQUEST,
@@ -111,7 +97,31 @@ import {
 	SEND_MESSAGE_REQUEST,
 	SEND_MESSAGE_SUCCESS,
 	SEND_MESSAGE_FAILURE,
-	UPDATED_CHAT_SUB
+	UPDATED_CHAT_SUB,
+	VEHICLE_MAKES_REQUEST,
+	VEHICLE_MAKES_SUCCESS,
+	VEHICLE_MAKES_FAILURE,
+	VEHICLE_MODELS_REQUEST,
+	VEHICLE_MODELS_SUCCESS,
+	VEHICLE_MODELS_FAILURE,
+	PAUSE_JOURNEY_SUCCESS,
+	PAUSE_JOURNEY_REQUEST,
+	PAUSE_JOURNEY_FAILURE,
+	RESUME_JOURNEY_REQUEST,
+	RESUME_JOURNEY_SUCCESS,
+	RESUME_JOURNEY_FAILURE,
+	BEGIN_PICKUP_REQUEST,
+	BEGIN_PICKUP_SUCCESS,
+	BEGIN_PICKUP_FAILURE,
+	PASSENGER_PICKUP_JOURNEY_REQUEST,
+	PASSENGER_PICKUP_JOURNEY_SUCCESS,
+	PASSENGER_PICKUP_JOURNEY_FAILURE,
+	DRIVER_CONFIRM_PASSENGER_PICKUP_REQUEST,
+	DRIVER_CONFIRM_PASSENGER_PICKUP_SUCCESS,
+	DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE,
+	DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST,
+	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS,
+	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -337,6 +347,47 @@ export interface CancelPassengerAcceptedFailure {
 	type: typeof CANCEL_PASSENGER_JOURNEY_FAILURE;
 }
 
+export interface PassengerPickupJourneyRequest {
+	type: typeof PASSENGER_PICKUP_JOURNEY_REQUEST;
+}
+
+export interface PassengerPickupJourneySuccess {
+	type: typeof PASSENGER_PICKUP_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerPickupJourneyFailure {
+	type: typeof PASSENGER_PICKUP_JOURNEY_FAILURE;
+}
+
+export interface PassengerPickupConfirmRequest {
+	type: typeof DRIVER_CONFIRM_PASSENGER_PICKUP_REQUEST;
+	passengerId: string;
+}
+
+export interface PassengerPickupConfirmSuccess {
+	type: typeof DRIVER_CONFIRM_PASSENGER_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerPickupConfirmFailure {
+	type: typeof DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE;
+}
+
+export interface PassengerPickupCancelRequest {
+	type: typeof DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST;
+	passengerId: string;
+}
+
+export interface PassengerPickupCancelSuccess {
+	type: typeof DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerPickupCancelFailure {
+	type: typeof DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE;
+}
+
 export interface JourneyDetailsRequest {
 	type: typeof JOURNEY_DETAILS_REQUEST;
 }
@@ -366,6 +417,19 @@ export interface PassengerJourneyDetailsFailure {
 export interface UpdateDriverLocation {
 	type: typeof UPDATE_DRIVER_LOCATION;
 	payload: SubscriptionPayload;
+}
+
+export interface BeginPickupRequest {
+	type: typeof BEGIN_PICKUP_REQUEST;
+}
+
+export interface BeginPickupSuccess {
+	type: typeof BEGIN_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface BeginPickupFailure {
+	type: typeof BEGIN_PICKUP_FAILURE;
 }
 
 export interface StartJourneyRequest {
@@ -725,6 +789,17 @@ export type DriverApplicationActionTypes =
 	DriverApplicationFailure |
 	ApplicationAlreadyApplied;
 
+export type PassengerPickupActionTypes =
+	PassengerPickupJourneyRequest |
+	PassengerPickupJourneySuccess |
+	PassengerPickupJourneyFailure |
+	PassengerPickupConfirmRequest |
+	PassengerPickupConfirmSuccess |
+	PassengerPickupConfirmFailure |
+	PassengerPickupCancelRequest |
+	PassengerPickupCancelSuccess |
+	PassengerPickupCancelFailure;
+
 export type DriverJourneysActionTypes =
 	DriverJourneysRequest |
 	DriverJourneysSuccess |
@@ -749,6 +824,11 @@ export type PassengerJourneyDetailsActionTypes =
 	PassengerJourneyDetailsSuccess |
 	PassengerJourneyDetailsFailure |
 	UpdateDriverLocation;
+
+export type BeginPickupActionTypes =
+	BeginPickupRequest |
+	BeginPickupSuccess |
+	BeginPickupFailure;
 
 export type StartJourneyActionTypes =
 	StartJourneyRequest |
@@ -777,6 +857,7 @@ export type DriverMovementActionTypes =
 
 export type JourneyMapActionTypes =
 	JourneyDetailsActionTypes |
+	BeginPickupActionTypes |
 	StartJourneyActionTypes |
 	PauseJourneyActionTypes |
 	ResumeJourneyActionTypes |
@@ -829,6 +910,7 @@ export type AppActions =
 	UserProfileActionTypes |
 	UpdateEmailActionTypes |
 	JourneysActionTypes |
+	PassengerPickupActionTypes |
 	JourneyMapActionTypes |
 	DriverTrackingActionTypes |
 	DriverApplicationActionTypes |

@@ -28,6 +28,16 @@ export class JourneyService {
 
 	public static getPassengerJourneys = async (): Promise<{ success: boolean; journeys: Journey[] }> => API.get(ApiName, `/journeys/passenger`, '').catch(JourneyService.handleError);
 
+	public static driverConfirmPassengerPickup = async (journeyId: string, createdAt: string, passengerId: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/confirm-pickup/driver`, { body: { journeyId, createdAt, passengerId } }).catch(JourneyService.handleError);
+
+	public static passengerConfirmPickup = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/confirm-pickup/passenger`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
+
+	public static driverCancelPassengerPickup = async (journeyId: string, createdAt: string, passengerId: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/cancel-pickup/driver`, { body: { journeyId, createdAt, passengerId } }).catch(JourneyService.handleError);
+
+	public static passengerCancelPickup = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/cancel-pickup/passenger`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
+
+	public static beginPickup = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/begin-pickup/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
+
 	public static startJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/start/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
 	public static pauseJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/pause/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);

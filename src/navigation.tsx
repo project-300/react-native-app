@@ -11,6 +11,7 @@ import ViewJourneyDetails from './screens/view-journey-details';
 import InteractiveMap from './screens/view-journey-details/interactive-map';
 import AllChats from './screens/all-chats';
 import Chat from './screens/chat';
+import PassengerPickup from './screens/passenger-pickup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
@@ -124,6 +125,10 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 		screen: MyJourneys,
 		...navigationOptions('My Accepted Lifts', undefined, false)
 	},
+	PassengerPickup: {
+		screen: PassengerPickup,
+		...navigationOptions('Passenger Pickup', undefined, true)
+	},
 	DriverTrackingMap: {
 		screen: DriverTracking,
 		...navigationOptions('Track Driver', undefined, true)
@@ -201,7 +206,7 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 	}
 },
 {
-	initialRouteName: 'MyJourneysTab',
+	initialRouteName: 'SearchTab',
 	tabBarPosition: 'bottom',
 	animationEnabled: true,
 	swipeEnabled: true,

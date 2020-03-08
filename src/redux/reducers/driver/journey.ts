@@ -16,10 +16,11 @@ import {
 	END_JOURNEY_FAILURE,
 	DRIVER_MOVEMENT_REQUEST,
 	DRIVER_MOVEMENT_SUCCESS,
-	DRIVER_MOVEMENT_FAILURE
+	DRIVER_MOVEMENT_FAILURE, BEGIN_PICKUP_REQUEST, BEGIN_PICKUP_SUCCESS, BEGIN_PICKUP_FAILURE
 } from '../../../constants/redux-actions';
 import { JourneyMapState } from '../../../types/redux-reducer-state-types';
 import {
+	BeginPickupSuccess,
 	DriverMovementSuccess,
 	EndJourneySuccess,
 	JourneyDetailsSuccess,
@@ -32,6 +33,7 @@ import {
 const initialState: JourneyMapState = {
 	status: 'NOT_STARTED',
 	isStarted: false,
+	isBeginningPickup: false,
 	isStarting: false,
 	isPausing: false,
 	isResuming: false,
@@ -53,6 +55,14 @@ const journeyDetailsReducer = (state: JourneyMapState = initialState, action: Jo
 			return { ...state, isRequestingJourneyDetails: false, journey: payload.journey };
 		case JOURNEY_DETAILS_FAILURE:
 			return { ...state, isRequestingJourneyDetails: false };
+		case BEGIN_PICKUP_REQUEST:
+			return { ...state, isBeginningPickup: true };
+		case BEGIN_PICKUP_SUCCESS:
+			payload = action as BeginPickupSuccess;
+
+			return { ...state, isBeginningPickup: false, journey: payload.journey };
+		case BEGIN_PICKUP_FAILURE:
+			return { ...state, isBeginningPickup: false };
 		case START_JOURNEY_REQUEST:
 			return { ...state, isStarting: true };
 		case START_JOURNEY_SUCCESS:
@@ -61,7 +71,6 @@ const journeyDetailsReducer = (state: JourneyMapState = initialState, action: Jo
 			return { ...state, isStarting: false, journey: payload.journey, isStarted: true };
 		case START_JOURNEY_FAILURE:
 			return { ...state, isStarting: false };
-
 		case PAUSE_JOURNEY_REQUEST:
 			return { ...state, isPausing: true };
 		case PAUSE_JOURNEY_SUCCESS:

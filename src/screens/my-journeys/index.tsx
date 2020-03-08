@@ -18,12 +18,13 @@ import { Journey, UserBrief } from '@project-300/common-types';
 import { NavigationEvents } from 'react-navigation';
 import DatesTimes from '../../services/dates-times';
 import moment from 'moment';
-import { FAB } from 'react-native-paper';
+import { Button, FAB } from 'react-native-paper';
 import { userType } from '../../auth';
 import { AnimatedStyles } from '../../animations/styles';
 import Animated, { Easing } from 'react-native-reanimated';
 import { interpolateAnimation } from '../../animations/animations';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Colours, ContrastTheme } from '../../constants/theme';
 
 const { height } = Dimensions.get('window');
 const { timing } = Animated;
@@ -112,7 +113,7 @@ export class MyJourneys extends Component<Props, State> {
 
 		return (
 			<View style={ [ styles.journeyCard ] } key={ journey.journeyId }>
-				<View style={ [ styles.journeyCardHeader, journeyStatus === 'STARTED' && { backgroundColor: 'green' } ] }>
+				<View style={ [ styles.journeyCardHeader, journeyStatus === 'STARTED' && { backgroundColor: '#7BD981' } ] }>
 					<Text style={ styles.journeyLocations }>
 						<Text style={ styles.bold }>
 							{ origin.name }
@@ -181,7 +182,7 @@ export class MyJourneys extends Component<Props, State> {
 				{
 					journeyStatus === 'NOT_STARTED' && !this._15MinutesOrLess(leavingAt) &&
 						<TouchableOpacity
-							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } }) }
+							onPress={ (): boolean => this.props.navigation.navigate('PassengerPickup', { journeyKey: { journeyId, createdAt } }) }
 						>
 							<Text style={ styles.cardLink }>VIEW</Text>
 						</TouchableOpacity>
@@ -190,7 +191,7 @@ export class MyJourneys extends Component<Props, State> {
 				{
 					journeyStatus === 'NOT_STARTED' && this._15MinutesOrLess(leavingAt) &&
 						<TouchableOpacity
-							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } }) }
+							onPress={ (): boolean => this.props.navigation.navigate('PassengerPickup', { journeyKey: { journeyId, createdAt } }) }
 						>
 							<Text style={ styles.cardLink }>START</Text>
 						</TouchableOpacity>
@@ -321,6 +322,17 @@ export class MyJourneys extends Component<Props, State> {
 			<View style={ { flex: 1 } }>
 				<NavigationEvents onDidFocus={ (): Promise<void> => this._getJourneys(this.state.driverView) } />
 
+				{
+					this.state.userType === 'Driver' &&
+						<View style={ styles.switchView }>
+							<Button
+								theme={ ContrastTheme }
+								mode={ 'contained' }
+								onPress={ (): Promise<void> => this._switchUserTypeView(!this.state.driverView) }
+							>Switch to { this.state.driverView ? 'Passenger' : 'Driver' } View</Button>
+						</View>
+				}
+
 				<ScrollView
 					style={ styles.container }
 					refreshControl={
@@ -329,27 +341,6 @@ export class MyJourneys extends Component<Props, State> {
 						} } />
 					}
 				>
-
-					{/*<GestureRecognizer*/}
-					{/*	onSwipeLeft={ (): Promise<void> | false => {*/}
-					{/*		if (this.state.userType !== 'Driver') return false;*/}
-					{/*		return !this.state.driverView && this._switchUserTypeView(true);*/}
-					{/*	} }*/}
-					{/*	onSwipeRight={ (): Promise<void> | false => {*/}
-					{/*		if (this.state.userType !== 'Driver') return false;*/}
-					{/*		return this.state.driverView && this._switchUserTypeView(false);*/}
-					{/*	} }*/}
-					{/*	onSwipeDown={ (): boolean => {*/}
-					{/*		return true;*/}
-					{/*	} }*/}
-					{/*	config={ {*/}
-					{/*		velocityThreshold: 0.3,*/}
-					{/*		directionalOffsetThreshold: 80,*/}
-					{/*		// detectSwipeUp: false,*/}
-					{/*		// detectSwipeDown: false*/}
-					{/*	} }*/}
-					{/*	style={ { flex: 1 } }*/}
-					{/*>*/}
 
 					{
 						this.state.driverView && this.state.userType === 'Driver' && !!this.props.journeys.driver.length &&
@@ -378,18 +369,7 @@ export class MyJourneys extends Component<Props, State> {
 								</Text>
 							</View>
 					}
-
-					{/*</GestureRecognizer>*/}
 				</ScrollView>
-
-				{
-					this.state.userType === 'Driver' &&
-						<FAB
-							style={ styles.fab }
-							icon={ this.state.driverView ? 'account' : 'car' }
-							onPress={ (): Promise<void> => this._switchUserTypeView(!this.state.driverView) }
-						/>
-				}
 
 				{
 					selectedJourney &&
@@ -403,7 +383,7 @@ export class MyJourneys extends Component<Props, State> {
 								<Icon
 									name={ 'times' }
 									size={ 34 }
-									color={ '#555' }
+									color={ Colours.primary }
 									onPress={ this._closePassengerPanel }
 								/>
 

@@ -1,10 +1,12 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import { Colours, Theme } from '../../constants/theme';
+import { Col } from 'native-base';
 
 const { width } = Dimensions.get('window');
 
 const containerPadding: number = 20;
+const switchViewHeight: number = 76;
 const cardWidth: number = width - (containerPadding * 2);
 
 const styles: Styles = StyleSheet.create<Styles>({
@@ -81,7 +83,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	journeyCardHeader: {
-		backgroundColor: Theme.accent,
+		backgroundColor: Colours.primaryLight,
 		height: 80,
 		padding: 10,
 		borderTopLeftRadius: 4,
@@ -95,7 +97,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	journeyLocations: {
 		fontSize: 20,
-		color: 'white'
+		color: Colours.darkGrey
 	},
 
 	cardLink: {
@@ -132,7 +134,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	passengerJourneyCardHeader: {
-		backgroundColor: 'orange',
+		backgroundColor: Colours.primaryLight,
 		height: 80,
 		padding: 10,
 		borderTopLeftRadius: 4,
@@ -154,7 +156,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	passengerJourneyLocations: {
 		fontSize: 20,
-		color: 'white',
+		color: Colours.darkGrey,
 		alignSelf: 'flex-end'
 	},
 
@@ -166,7 +168,9 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	passengerPanel: {
-		backgroundColor: Colours.whiteGrey
+		backgroundColor: Colours.whiteGrey,
+		zIndex: 50,
+		marginTop: -switchViewHeight
 	},
 
 	passengerListContainer: {
@@ -232,7 +236,24 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	passengerArrowIcon: {
 		alignSelf: 'center',
-		color: '#555'
+		color: Colours.primary
+	},
+
+	switchView: {
+		padding: 20,
+		backgroundColor: Colours.white,
+		borderBottomWidth: 0.2,
+		borderColor: '#BBB',
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 4
+		},
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 4,
+		zIndex: 10,
+		height: switchViewHeight
 	}
 });
 

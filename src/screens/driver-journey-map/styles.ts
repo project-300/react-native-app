@@ -74,13 +74,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		color: 'white'
 	},
 
-	fab: {
-		// position: 'relative',
-		// margin: 16,
-		// right: -15,
-		// bottom: 70
-	},
-
 	backButton: {
 		position: 'absolute',
 		left: 20
