@@ -1,5 +1,5 @@
 import { TextStyle, ViewStyle } from 'react-native';
-import { CommonProps } from '../../../types/common';
+import { CommonProps } from '../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
 import Animated from 'react-native-reanimated';
 

@@ -1,8 +1,8 @@
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import { CommonProps, ContentReloading } from '../../../types/common';
+import { CommonProps, ContentReloading } from '../../types/common';
 import { Journey } from '@project-300/common-types';
 import Animated from 'react-native-reanimated';
-import { AppActions } from '../../../types/redux-action-types';
+import { AppActions } from '../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;

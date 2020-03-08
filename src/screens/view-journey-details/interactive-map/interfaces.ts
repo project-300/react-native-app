@@ -1,5 +1,5 @@
 import { ViewStyle } from 'react-native';
-import { CommonProps, ContentReloading } from '../../../../types/common';
+import { CommonProps, ContentReloading } from '../../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 

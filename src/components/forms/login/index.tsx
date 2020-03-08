@@ -31,7 +31,7 @@ export class LoginForm extends Component<Props, State> {
 		if (!password) return toastr.error('Password is missing');
 
 		const res: boolean = await this.props.login(email, password);
-		res && this.props.navigation.navigate('Chat');
+		res && this.props.navigation.navigate('SearchJourneys');
 	}
 
 	public render(): ReactElement {

@@ -9,9 +9,9 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { getChats } from '../../../redux/actions';
-import { AppState } from '../../../store';
-import { AllChatState } from '../../../types/redux-reducer-state-types';
+import { getChats } from '../../redux/actions';
+import { AppState } from '../../store';
+import { AllChatState } from '../../types/redux-reducer-state-types';
 import { Chat } from '@project-300/common-types';
 import { ActivityIndicator, Badge } from 'react-native-paper';
 
@@ -50,7 +50,7 @@ export class AllChats extends Component<Props, State> {
 							<Image
 								resizeMode={ 'contain' }
 								style={ styles.chatLogo }
-								source={ require('../../../assets/images/chat.png') }
+								source={ require('../../assets/images/chat.png') }
 							/>
 						</View>
 				}
@@ -80,7 +80,7 @@ export class AllChats extends Component<Props, State> {
 									style={ styles.otherUserAvatarContainer }
 								>
 									<Image
-										source={ chat.otherUser.avatar ? { uri: chat.otherUser.avatar } : require('../../../assets/images/no-avatar.jpg') }
+										source={ chat.otherUser.avatar ? { uri: chat.otherUser.avatar } : require('../../assets/images/no-avatar.jpg') }
 										style={ styles.otherUserAvatar }
 									/>
 								</View>

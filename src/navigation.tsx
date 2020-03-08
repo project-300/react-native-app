@@ -2,14 +2,14 @@ import Login from './screens/login';
 import SignUp from './screens/signup';
 import DriverApplication from './screens/driver-application';
 import Profile from './screens/profile';
-import MyJourneys from './screens/driver/journeys';
-import JourneyMap from './screens/driver/journey';
-import DriverTracking from './screens/passenger/driver-tracking';
-import NewJourney from './screens/new-journey';
-import AllJourneys from './screens/all-journeys';
-import ViewJourney from './screens/passenger/view-journey';
-import InteractiveMap from './screens/passenger/view-journey/journey-map';
-import AllChats from './screens/chat/all-chats';
+import MyJourneys from './screens/my-journeys';
+import JourneyMap from './screens/driver-journey-map';
+import DriverTracking from './screens/passenger-driver-tracking';
+import CreateJourney from './screens/create-journey';
+import SearchJourneys from './screens/search-journeys';
+import ViewJourneyDetails from './screens/view-journey-details';
+import InteractiveMap from './screens/view-journey-details/interactive-map';
+import AllChats from './screens/all-chats';
 import Chat from './screens/chat';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
@@ -101,12 +101,12 @@ const ProfileTab: NavigationContainer = createStackNavigator({
 });
 
 const SearchTab: NavigationContainer = createStackNavigator({
-	AllJourneys: {
-		screen: AllJourneys,
+	SearchJourneys: {
+		screen: SearchJourneys,
 		...navigationOptions('Search Journeys', undefined, false)
 	},
 	ViewJourney: {
-		screen: ViewJourney,
+		screen: ViewJourneyDetails,
 		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	},
 	InteractiveMap: {
@@ -129,7 +129,7 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 		...navigationOptions('Track Driver', undefined, true)
 	},
 	PassengerViewJourney: {
-		screen: ViewJourney,
+		screen: ViewJourneyDetails,
 		...navigationOptions('Journey', undefined, true)
 	},
 	PassengerOtherProfile: {
@@ -140,7 +140,7 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 
 const NewJourneyTab: NavigationContainer = createStackNavigator({
 	NewJourney: {
-		screen: NewJourney,
+		screen: CreateJourney,
 		...navigationOptions('Create Journey', undefined, false)
 	}
 });
@@ -177,7 +177,7 @@ const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavig
 			title: 'Search',
 			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ Theme.accent } solid />,
 			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
-				if (navigation.isFocused) navigation.navigate('AllJourneys');
+				if (navigation.isFocused) navigation.navigate('SearchJourneys');
 			}
 		})
 	},
@@ -226,7 +226,7 @@ const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigato
 			title: 'Search',
 			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ Theme.accent } solid />,
 			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
-				if (navigation.isFocused) navigation.navigate('AllJourneys');
+				if (navigation.isFocused) navigation.navigate('SearchJourneys');
 			}
 		})
 	},

@@ -11,18 +11,18 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { AnimationStyles, AnimationValues, Props, State } from './interfaces';
-import { JourneysState } from '../../../types/redux-reducer-state-types';
-import { AppState } from '../../../store';
-import { getJourneys, cancelPassengerAcceptedJourney } from '../../../redux/actions';
+import { JourneysState } from '../../types/redux-reducer-state-types';
+import { AppState } from '../../store';
+import { getJourneys, cancelPassengerAcceptedJourney } from '../../redux/actions';
 import { Journey, UserBrief } from '@project-300/common-types';
 import { NavigationEvents } from 'react-navigation';
-import DatesTimes from '../../../services/dates-times';
+import DatesTimes from '../../services/dates-times';
 import moment from 'moment';
 import { FAB } from 'react-native-paper';
-import { userType } from '../../../auth';
-import { AnimatedStyles } from '../../../animations/styles';
+import { userType } from '../../auth';
+import { AnimatedStyles } from '../../animations/styles';
 import Animated, { Easing } from 'react-native-reanimated';
-import { interpolateAnimation } from '../../../animations/animations';
+import { interpolateAnimation } from '../../animations/animations';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const { height } = Dimensions.get('window');
@@ -428,7 +428,7 @@ export class MyJourneys extends Component<Props, State> {
 															style={ styles.passengerListAvatarContainer }
 														>
 															<Image
-																source={ passenger.avatar ? { uri: passenger.avatar } : require('../../../assets/images/no-avatar.jpg') }
+																source={ passenger.avatar ? { uri: passenger.avatar } : require('../../assets/images/no-avatar.jpg') }
 																style={ styles.passengerListAvatar }
 															/>
 														</View>

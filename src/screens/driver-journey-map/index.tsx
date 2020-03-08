@@ -6,8 +6,8 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State, AnimationValues, AnimationStyles } from './interfaces';
-import { JourneyMapState } from '../../../types/redux-reducer-state-types';
-import { AppState } from '../../../store';
+import { JourneyMapState } from '../../types/redux-reducer-state-types';
+import { AppState } from '../../store';
 import {
 	getJourneyDetails,
 	startJourney,
@@ -15,20 +15,20 @@ import {
 	resumeJourney,
 	endJourney,
 	driverMovement
-} from '../../../redux/actions';
+} from '../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import DriverLocation from '../../../services/driver-location';
+import DriverLocation from '../../services/driver-location';
 import { Coords, Journey, Place } from '@project-300/common-types';
 import { getDistance } from 'geolib';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Animated, { Easing } from 'react-native-reanimated';
-import { interpolateAnimation } from '../../../animations/animations';
+import { interpolateAnimation } from '../../animations/animations';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 import { FAB, Portal } from 'react-native-paper';
-import MapUtils from '../../../services/map-utils';
+import MapUtils from '../../services/map-utils';
 import moment, { Duration } from 'moment';
-import { Theme } from '../../../constants/theme';
+import { Theme } from '../../constants/theme';
 
 const { width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -374,7 +374,7 @@ export class JourneyMap extends Component<Props, State> {
 								<Polyline
 									coordinates={ this.state.routeTravelled }
 									strokeColor={ Theme.accent }
-									strokeWidth={ 4 }
+									strokeWidth={ 6 }
 								/>
 						}
 
@@ -384,7 +384,7 @@ export class JourneyMap extends Component<Props, State> {
 									coordinate={ this.state.currentPosition }
 								>
 									<Animated.Image
-										source={ require('../../../assets/images/car2.png') }
+										source={ require('../../assets/images/car2.png') }
 										// style={ { transform: [ { rotateY: '180deg' } ] } }
 									/>
 								</Marker>

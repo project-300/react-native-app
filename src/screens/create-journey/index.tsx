@@ -1,7 +1,6 @@
 import React, { Component, ReactElement } from 'react';
 import {
 	FlatList,
-	SafeAreaView,
 	ScrollView,
 	StatusBar,
 	Text,
@@ -27,7 +26,7 @@ import {
 } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Coords, CreateJourney, Place } from '@project-300/common-types';
+import { Coords, CreateJourney as ICreateJourney, Place } from '@project-300/common-types';
 import { NewJourneyState } from '../../types/redux-reducer-state-types';
 import { Button, TextInput } from 'react-native-paper';
 import { Colours, ContrastTheme, Theme } from '../../constants/theme';
@@ -37,7 +36,7 @@ import moment from 'moment';
 const ORIGIN: string = 'ORIGIN';
 const DESTINATION: string = 'DESTINATION';
 
-export class NewJourney extends Component<Props, State> {
+export class CreateJourney extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
@@ -103,7 +102,7 @@ export class NewJourney extends Component<Props, State> {
 			name: destinationPlaceDetails.name
 		};
 
-		const journey: CreateJourney = {
+		const journey: ICreateJourney = {
 			origin,
 			destination,
 			totalNoOfSeats,
@@ -501,4 +500,4 @@ export default connect(mapStateToProps, {
 	clearNewJourneyFormDetails,
 	getPlaceByMarker,
 	findRoute
-})(NewJourney);
+})(CreateJourney);

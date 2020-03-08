@@ -18,7 +18,7 @@ import ImagePicker from 'react-native-image-picker';
 import toastr from '../../helpers/toastr';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { EditTypes } from '../../types/common';
-import { FormatMoney, User } from '@project-300/common-types';
+import { User } from '@project-300/common-types';
 import Animated, { Easing } from 'react-native-reanimated';
 import { UpdateUserField } from './update-user-field';
 import { UpdatePassword } from './update-password';

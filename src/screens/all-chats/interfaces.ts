@@ -1,6 +1,6 @@
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import { CommonProps } from '../../../types/common';
-import { AllChatState } from '../../../types/redux-reducer-state-types';
+import { CommonProps } from '../../types/common';
+import { AllChatState } from '../../types/redux-reducer-state-types';
 
 export interface Styles {
 	container: ViewStyle;

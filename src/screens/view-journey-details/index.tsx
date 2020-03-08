@@ -2,15 +2,15 @@ import React, { Component, ReactElement } from 'react';
 import { View, Dimensions, ScrollView, TouchableWithoutFeedback, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { Props, State, AnimationStyles, AnimationValues } from './interfaces';
-import { AppState } from '../../../store';
+import { AppState } from '../../store';
 import { Coords, Journey, Place, FormatMoney } from '@project-300/common-types';
-import { ViewJourneyState } from '../../../types/redux-reducer-state-types';
-import { GoogleMapsAPIKey } from '../../../../environment/env';
+import { ViewJourneyState } from '../../types/redux-reducer-state-types';
+import { GoogleMapsAPIKey } from '../../../environment/env';
 import Animated, { Easing } from 'react-native-reanimated';
-import { interpolateAnimation } from '../../../animations/animations';
+import { interpolateAnimation } from '../../animations/animations';
 import { Button, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Colours, ContrastTheme, Theme } from '../../../constants/theme';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
 import { NavigationEvents } from 'react-navigation';
 import {
 	getViewJourney,
@@ -19,19 +19,19 @@ import {
 	contentReloadOff,
 	contentReloadOn,
 	clearJourneyInfo
-} from '../../../redux/actions';
-import { NoticeBanner } from '../../../components/miscellaneous/notice-banner';
+} from '../../redux/actions';
+import { NoticeBanner } from '../../components/miscellaneous/notice-banner';
 import styles from './styles';
-import { DarkMode } from '../../../helpers/dark-mode';
-import { AnimatedStyles } from '../../../animations/styles';
-import DatesTimes from '../../../services/dates-times';
-import formStyles from '../../../styles/forms';
-import { priceBadgeText } from '../../all-journeys/styles';
+import { DarkMode } from '../../helpers/dark-mode';
+import { AnimatedStyles } from '../../animations/styles';
+import DatesTimes from '../../services/dates-times';
+import formStyles from '../../styles/forms';
+import { priceBadgeText } from '../search-journeys/styles';
 
 const { width, height } = Dimensions.get('window');
 const { timing } = Animated;
 
-export class ViewJourney extends Component<Props, State> {
+export class ViewJourneyDetails extends Component<Props, State> {
 
 	private animatedValues: AnimationValues = {
 		map: new Animated.Value(0),
@@ -424,4 +424,4 @@ export default connect(mapStateToProps, {
 	contentReloadOn,
 	contentReloadOff,
 	clearJourneyInfo
-})(ViewJourney);
+})(ViewJourneyDetails);

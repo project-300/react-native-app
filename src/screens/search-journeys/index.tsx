@@ -26,7 +26,7 @@ import { NoticeBanner } from '../../components/miscellaneous/notice-banner';
 
 const { StatusBarManager } = NativeModules;
 
-class AllJourneys extends Component<Props, State> {
+class SearchJourneys extends Component<Props, State> {
 
 	private _statusBarListener: EmitterSubscription;
 
@@ -238,4 +238,4 @@ export default connect(mapStateToProps, {
 	getAllJourneys,
 	searchJourneys,
 	clearJourneys
-})(AllJourneys);
+})(SearchJourneys);

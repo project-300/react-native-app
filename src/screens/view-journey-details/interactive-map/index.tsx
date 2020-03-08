@@ -3,9 +3,9 @@ import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { AppState } from '../../../../store';
+import { AppState } from '../../../store';
 import { Coords, Journey, Place } from '@project-300/common-types';
-import { AllJourneysListState } from '../../../../types/redux-reducer-state-types';
+import { AllJourneysListState } from '../../../types/redux-reducer-state-types';
 import { getDistance } from 'geolib';
 import MapView, {
 	Marker,
@@ -13,7 +13,7 @@ import MapView, {
 	PROVIDER_GOOGLE,
 	Region,
 } from 'react-native-maps';
-import { Theme } from '../../../../constants/theme';
+import { Theme } from '../../../constants/theme';
 
 export class InteractiveMap extends Component<Props, State> {
 
