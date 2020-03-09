@@ -1,6 +1,6 @@
 import { ApiName } from '../../environment/env';
 import { API } from 'aws-amplify';
-import { Coords, Journey, LastEvaluatedKey } from '@project-300/common-types';
+import { Coords, Journey, LastEvaluatedKey, UserTypes } from '@project-300/common-types';
 import { GetAllJourneysResult } from '../types/http-responses';
 import { deviceId } from '../app';
 
@@ -20,6 +20,8 @@ export class JourneyService {
 
 	public static getJourneyById = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.get(ApiName, `/journeys/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
+	public static getCurrentJourney = async (): Promise<{ success: boolean; journey: Journey; travellingAs: UserTypes }> => API.get(ApiName, `/journeys/current/${await deviceId()}`, '').catch(JourneyService.handleError);
+
 	public static createJourney = async (journey: Partial<Journey>): Promise<void> => API.post(ApiName, '/journeys', { body: { journey } }).catch(JourneyService.handleError);
 
 	public static addUserToJourney = async (journeyId: string, createdAt: string): Promise<void> => API.put(ApiName, '/journeys/add-user', { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
@@ -37,6 +39,8 @@ export class JourneyService {
 	public static passengerCancelPickup = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/cancel-pickup/passenger`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
 
 	public static beginPickup = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/begin-pickup/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
+
+	public static waitingJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/waiting/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 
 	public static startJourney = async (journeyId: string, createdAt: string): Promise<{ success: boolean; journey: Journey }> => API.put(ApiName, `/journeys/start/${journeyId}/${createdAt}`, '').catch(JourneyService.handleError);
 

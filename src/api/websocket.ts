@@ -1,6 +1,6 @@
 import { SERVER_WSS_URL } from '../../environment/env';
 import { store } from '../store';
-import { updateDriverLocation, newChatMessages, updatedChat } from '../redux/actions';
+import { updateDriverLocation, newChatMessages, updatedChat, currentJourneySubReceived } from '../redux/actions';
 import { JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
 import { SubscriptionPayload } from '@project-300/common-types';
 import { Auth } from 'aws-amplify';
@@ -95,6 +95,9 @@ class WebSocketAPI {
 		switch (subscription) {
 			case 'journey/driver-tracking':
 				store.dispatch(updateDriverLocation(payload));
+				break;
+			case 'journey/current':
+				store.dispatch(currentJourneySubReceived(payload, userId));
 				break;
 			case 'chat/messages':
 				store.dispatch(newChatMessages(payload, userId));

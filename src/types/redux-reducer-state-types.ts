@@ -1,4 +1,15 @@
-import { Chat, Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey, Message } from '@project-300/common-types';
+import {
+	Chat,
+	Coords,
+	GooglePlaceDetails,
+	Journey,
+	User,
+	VehicleMake,
+	VehicleModel,
+	LastEvaluatedKey,
+	Message,
+	UserTypes
+} from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
@@ -41,6 +52,12 @@ export interface SignUpState {
 
 export interface ConfirmState {
 	isConfirmingAccount: boolean;
+}
+
+export interface HeaderBarState {
+	currentJourney?: Journey;
+	travellingAs: UserTypes;
+	hasUpdated: boolean;
 }
 
 export interface DriverApplicationState {
@@ -109,6 +126,7 @@ export interface JourneysState {
 
 export interface PassengerPickupState {
 	isRequesting: boolean;
+	isBeginningPickup: boolean;
 	isConfirming: string;
 	isCancelling: string;
 	journey?: Journey;

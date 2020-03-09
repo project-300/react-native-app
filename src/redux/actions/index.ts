@@ -20,3 +20,4 @@ export * from './chat/chat';
 export * from './chat/message';
 export * from './journey/journey';
 export * from './driver/passenger-pickup';
+export * from './headerbar';

@@ -7,7 +7,7 @@ import {
 	DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE,
 	DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST,
 	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE,
-	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS
+	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS, BEGIN_PICKUP_REQUEST, BEGIN_PICKUP_SUCCESS, BEGIN_PICKUP_FAILURE
 } from '../../../constants/redux-actions';
 import { Dispatch } from 'redux';
 import toastr from '../../../helpers/toastr';
@@ -33,6 +33,12 @@ const driverCancelPassengerPickupSuccess = (journey: Journey): AppActions => ({ 
 
 const driverCancelPassengerPickupFailure = (): AppActions => ({ type: DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE });
 
+const beginPickupRequest = (): AppActions => ({ type: BEGIN_PICKUP_REQUEST });
+
+const beginPickupSuccess = (journey: Journey): AppActions => ({ type: BEGIN_PICKUP_SUCCESS, journey });
+
+const beginPickupFailure = (): AppActions => ({ type: BEGIN_PICKUP_FAILURE });
+
 export const getPassengerPickupJourney = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		dispatch(passengerPickupJourneyRequest());
@@ -48,6 +54,24 @@ export const getPassengerPickupJourney = (journeyId: string, createdAt: string):
 		} catch (err) {
 			console.log(err);
 			dispatch(passengerPickupJourneyFailure());
+			toastr.error(err.message);
+		}
+	};
+};
+
+export const beginPickup = (journeyId: string, createdAt: string): (dispatch: Dispatch) => Promise<void> => {
+	return async (dispatch: Dispatch): Promise<void> => {
+		console.log('begin pickup');
+		dispatch(beginPickupRequest());
+
+		try {
+			const result: { success: boolean; journey: Journey } = await JourneyService.beginPickup(journeyId, createdAt);
+
+			console.log(result);
+			if (result.success && result.journey) dispatch(beginPickupSuccess(result.journey));
+		} catch (err) {
+			console.log(err);
+			dispatch(beginPickupFailure());
 			toastr.error(err.message);
 		}
 	};

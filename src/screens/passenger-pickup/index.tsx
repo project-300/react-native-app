@@ -7,6 +7,7 @@ import { PassengerPickupState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import {
 	getPassengerPickupJourney,
+	beginPickup,
 	driverConfirmPassengerPickup,
 	driverCancelPassengerPickup,
 	cancelJourney
@@ -16,27 +17,37 @@ import { Colours, ContrastTheme, RedTheme } from '../../constants/theme';
 import { PassengerBrief } from '@project-300/common-types';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import formStyles from '../../styles/forms';
+import { NavigationEvents } from 'react-navigation';
 
 export class PassengerPickup extends Component<Props, State> {
+
+	private initialState: State = {
+		journeyKey: { journeyId: '', createdAt: '' },
+		showConfirmModal: false,
+		showCancelModal: false,
+		selectedPassenger: undefined
+	}
 
 	public constructor(props: Props) {
 		super(props);
 
 		const journeyKey: { journeyId: string; createdAt: string } = this.props.navigation.getParam('journeyKey');
 
-		console.log(journeyKey);
-
 		this.state = {
-			journeyKey,
-			showConfirmModal: false,
-			showCancelModal: false,
-			selectedPassenger: undefined
+			...this.initialState,
+			journeyKey
 		};
 	}
 
-	public async componentDidMount(): Promise<void> {
+	private _mountScreen = async (): Promise<void> => { // Triggered when this screen renders (navigated to)
 		const { journeyKey: { journeyId, createdAt } } = this.state;
 		await this.props.getPassengerPickupJourney(journeyId, createdAt);
+		await this.props.beginPickup(journeyId, createdAt);
+		// await this.props.currentJourney(this.props.journey);
+	}
+
+	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
+		this.setState(this.initialState);
 	}
 
 	// public async componentWillUnmount(): Promise<void> {
@@ -166,25 +177,41 @@ export class PassengerPickup extends Component<Props, State> {
 		);
 	}
 
+	private _renderNavigationEvents = (): ReactElement =>
+		<NavigationEvents onWillFocus={ this._mountScreen } onDidBlur={ this._unmountScreen } />
+
 	public render(): ReactElement {
 		const { journey } = this.props;
 		const { journeyKey: { journeyId, createdAt } } = this.state;
 
-		if (!journey) return <ActivityIndicator
-			color={ Colours.primary }
-			size={ 34 }
-			style={ styles.spinner }
-		/>;
+		if (!journey) return <View>
+			{ this._renderNavigationEvents() }
+
+			<ActivityIndicator
+				color={ Colours.primary }
+				size={ 34 }
+				style={ styles.spinner }
+			/>
+		</View>;
 
 		const { passengers, origin, destination } = journey;
 
 		return (
 			<View style={ styles.container }>
-				<ScrollView>
-					<Text style={ styles.places }>{ origin.name } - { destination.name }</Text>
+				{ this._renderNavigationEvents() }
 
-					<Text style={ styles.textBlock }>Tick off the passengers are you pick them up.</Text>
-					<Text style={ styles.textBlock }>Your location is being shared with your passengers to help them locate you easier.</Text>
+				<ScrollView>
+					<Text style={ styles.places }>
+						{ origin.name } - { destination.name }
+					</Text>
+
+					<Text style={ styles.textBlock }>
+						Tick off the passengers are you pick them up.
+					</Text>
+
+					<Text style={ styles.textBlock }>
+						Your location is being shared with your passengers to help them locate you easier.
+					</Text>
 
 					<View style={ styles.passengersList }>
 						{
@@ -266,17 +293,23 @@ export class PassengerPickup extends Component<Props, State> {
 
 					{
 						this.props.cancelledCount !== passengers.length &&
-							<Text style={ styles.summaryText }>{ this.props.pickedUpCount || 0 } / { passengers.length } Passengers Picked Up</Text>
+							<Text style={ styles.summaryText }>
+								{ this.props.pickedUpCount || 0 } / { passengers.length } Passengers Picked Up
+							</Text>
 					}
 
 					{
 						!!this.props.cancelledCount && this.props.cancelledCount !== passengers.length &&
-							<Text style={ styles.summaryText }>You have cancelled pickup for { this.props.cancelledCount } / { passengers.length } Passengers</Text>
+							<Text style={ styles.summaryText }>
+								You have cancelled pickup for { this.props.cancelledCount } / { passengers.length } Passengers
+							</Text>
 					}
 
 					{
 						this.props.cancelledCount === passengers.length &&
-							<Text style={ [ styles.summaryText, { color: 'red' } ] }>You have cancelled pickup for ALL Passengers</Text>
+							<Text style={ [ styles.summaryText, { color: 'red' } ] }>
+								You have cancelled pickup for ALL Passengers
+							</Text>
 					}
 
 					{
@@ -316,6 +349,7 @@ const mapStateToProps = (state: AppState): PassengerPickupState => ({
 
 export default connect(mapStateToProps, {
 	getPassengerPickupJourney,
+	beginPickup,
 	driverConfirmPassengerPickup,
 	driverCancelPassengerPickup,
 	cancelJourney

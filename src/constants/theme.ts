@@ -4,7 +4,8 @@ import { store } from '../store';
 
 export const Theme = {
 	primary: 'white',
-	accent: '#177cd4'
+	accent: '#177cd4',
+	backdrop: 'rgba(0, 0, 0, 0.8)'
 };
 
 export const ContrastTheme = {

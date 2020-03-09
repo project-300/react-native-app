@@ -7,10 +7,11 @@ import {
 	DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE,
 	DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST,
 	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS,
-	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE
+	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE, BEGIN_PICKUP_REQUEST, BEGIN_PICKUP_SUCCESS, BEGIN_PICKUP_FAILURE
 } from '../../../constants/redux-actions';
 import { PassengerPickupState } from '../../../types/redux-reducer-state-types';
 import {
+	BeginPickupSuccess,
 	PassengerPickupActionTypes, PassengerPickupConfirmRequest,
 	PassengerPickupConfirmSuccess,
 	PassengerPickupJourneySuccess
@@ -20,6 +21,7 @@ import { PassengerBrief } from '@project-300/common-types';
 
 const initialState: PassengerPickupState = {
 	isRequesting: false,
+	isBeginningPickup: false,
 	isConfirming: '',
 	isCancelling: '',
 	journey: undefined,
@@ -43,6 +45,14 @@ const passengerPickupReducer = (state: PassengerPickupState = initialState, acti
 			return { ...state, isRequesting: false, journey: payload.journey, pickedUpCount: counts.pickedUp, cancelledCount: counts.cancelled, totalCount: counts.total };
 		case PASSENGER_PICKUP_JOURNEY_FAILURE:
 			return { ...state, isRequesting: false };
+		case BEGIN_PICKUP_REQUEST:
+			return { ...state, isBeginningPickup: true };
+		case BEGIN_PICKUP_SUCCESS:
+			payload = action as BeginPickupSuccess;
+
+			return { ...state, isBeginningPickup: false, journey: payload.journey };
+		case BEGIN_PICKUP_FAILURE:
+			return { ...state, isBeginningPickup: false };
 		case DRIVER_CONFIRM_PASSENGER_PICKUP_REQUEST:
 			payload = action as PassengerPickupConfirmRequest;
 

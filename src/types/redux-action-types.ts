@@ -121,7 +121,12 @@ import {
 	DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE,
 	DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST,
 	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS,
-	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE, CANCEL_JOURNEY_SUCCESS, CANCEL_JOURNEY_REQUEST, CANCEL_JOURNEY_FAILURE
+	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE,
+	CANCEL_JOURNEY_SUCCESS,
+	CANCEL_JOURNEY_REQUEST,
+	CANCEL_JOURNEY_FAILURE,
+	CURRENT_JOURNEY_SUB_RECEIVED,
+	CURRENT_JOURNEY
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -130,11 +135,11 @@ import {
 	SubscriptionPayload,
 	GooglePlace,
 	User,
-  	VehicleModel,
-  	VehicleMake,
-  	LastEvaluatedKey,
-  	Chat,
-  	Message
+	VehicleModel,
+	VehicleMake,
+	LastEvaluatedKey,
+	Chat,
+	Message, UserTypes
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -236,6 +241,19 @@ export interface SignUpConfirmationSuccess {
 
 export interface SignUpConfirmationFailure {
 	type: typeof SIGNUP_CONFIRMATION_FAILURE;
+}
+
+export interface CurrentJourneySubReceived {
+	type: typeof CURRENT_JOURNEY_SUB_RECEIVED;
+	payload: SubscriptionPayload;
+	userId: string;
+}
+
+export interface SetCurrentJourney {
+	type: typeof CURRENT_JOURNEY;
+	journey: Journey;
+	travellingAs: UserTypes;
+	onAppLoad: boolean;
 }
 
 export interface UserProfileSubRequest {
@@ -753,6 +771,10 @@ export type SignUpActionTypes =
 	SignUpConfirmationSuccess |
 	SignUpConfirmationFailure;
 
+export type HeaderBarActionTypes =
+	CurrentJourneySubReceived |
+	SetCurrentJourney;
+
 export type UserProfileActionTypes =
 	UserProfileSubRequest |
 	UserProfileSubReceived |
@@ -940,4 +962,5 @@ export type AppActions =
 	AllChatActionTypes |
 	ChatActionTypes |
 	MessageActionTypes |
-	GeneralJourneyActionTypes;
+	GeneralJourneyActionTypes |
+	HeaderBarActionTypes;

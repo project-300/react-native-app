@@ -69,14 +69,14 @@ const styles: Styles = StyleSheet.create<Styles>({
 		flexDirection: 'row',
 		marginLeft: 20,
 		backgroundColor: Colours.white,
-		flex: 1
+		flex: 1.5
 	},
 
 	passengerOption: {
 		padding: 4,
-		width: 36,
-		height: 36,
-		borderRadius: 18,
+		width: 42,
+		height: 42,
+		borderRadius: 21,
 		borderWidth: 0.5,
 		borderColor: '#CCC',
 		justifyContent: 'center',
@@ -84,7 +84,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	optionSpinnerContainer: {
-		flex: 1,
+		flex: 1.5,
 		marginLeft: 20
 	},
 

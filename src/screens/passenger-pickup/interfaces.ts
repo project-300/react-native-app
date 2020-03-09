@@ -22,6 +22,7 @@ export interface Styles {
 export interface Props extends CommonProps, PassengerPickupState, GeneralJourneyActionsState {
 	journey: Journey | undefined;
 	getPassengerPickupJourney(journeyId: string, createdAt: string): Promise<void>;
+	beginPickup(journeyId: string, createdAt: string): Promise<void>;
 	driverConfirmPassengerPickup(journeyId: string, createdAt: string, passengerId: string): Promise<boolean>;
 	driverCancelPassengerPickup(journeyId: string, createdAt: string, passengerId: string): Promise<boolean>;
 	cancelJourney(journeyId: string, createdAt: string): Promise<boolean>;

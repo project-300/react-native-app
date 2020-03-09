@@ -8,7 +8,7 @@ import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
 import { Theme, DarkTheme as Test } from './constants/theme';
-import { getChats, setDarkMode } from './redux/actions';
+import { getChats, setDarkMode, getCurrentJourney } from './redux/actions';
 import WS from './api/websocket';
 import { v4 as uuid } from 'uuid';
 import { AsyncStorage } from 'react-native';
@@ -66,6 +66,7 @@ export default class App extends Component<Props, State> {
 
 			WS._setup();
 			// await getChats();
+			store.dispatch(getCurrentJourney(true));
 			store.dispatch(getChats());
 		} catch (err) {
 			toastr.error('Unable to authenticate');
