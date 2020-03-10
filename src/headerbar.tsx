@@ -7,7 +7,7 @@ import { Colours, Theme, ToggleDarkMode } from './constants/theme';
 import { Auth } from 'aws-amplify';
 import { clearDeviceId } from './app';
 import { AppState } from './store';
-import { CustomNavigationState, HeaderBarState, PassengerConfirmPickupState } from './types/redux-reducer-state-types';
+import { CurrentJourneyState, CustomNavigationState } from './types/redux-reducer-state-types';
 import { connect } from 'react-redux';
 import { PassengerPickup } from './screens/passenger-pickup';
 import toastr from './helpers/toastr';
@@ -16,7 +16,7 @@ import { AppActions } from './types/redux-action-types';
 import { Journey } from '@project-300/common-types';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-interface Props extends CommonProps, HeaderBarState, CustomNavigationState {
+interface Props extends CommonProps, CustomNavigationState, CurrentJourneyState {
 	title?: string;
 	subtitle?: string;
 	backButton: boolean;
@@ -121,7 +121,7 @@ export class HeaderBar extends Component<Props, State> {
 			case 'STARTED':
 			case 'PAUSED':
 			case 'ARRIVED':
-				route = 'MyJourneys'; // Change to journey overview
+				route = 'PassengerJourneyOverview';
 				break;
 			case 'FINISHED': // Review
 				route = null;
@@ -282,7 +282,7 @@ export class HeaderBar extends Component<Props, State> {
 
 }
 
-const mapStateToProps = (state: AppState): HeaderBarState => ({
+const mapStateToProps = (state: AppState): CurrentJourneyState => ({
 	...state.currentJourneyReducer,
 	...state.customNavigationReducer
 });

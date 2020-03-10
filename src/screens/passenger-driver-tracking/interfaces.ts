@@ -1,6 +1,7 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Coords, Journey, Place } from '@project-300/common-types';
+import { CurrentJourneyState } from '../../types/redux-reducer-state-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -14,7 +15,7 @@ export interface Styles {
 	spinnerTextStyle: TextStyle;
 }
 
-export interface Props extends CommonProps {
+export interface Props extends CommonProps, CurrentJourneyState {
 	journey: Journey | undefined;
 	isRequesting: boolean;
 	isWaitingOnDriverCoords: boolean;

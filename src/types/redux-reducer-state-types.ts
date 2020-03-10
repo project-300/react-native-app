@@ -59,7 +59,7 @@ export interface ConfirmState {
 	isConfirmingAccount: boolean;
 }
 
-export interface HeaderBarState {
+export interface CurrentJourneyState {
 	currentJourney?: Journey;
 	travellingAs: UserTypes;
 	hasUpdated: boolean;

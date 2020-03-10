@@ -17,7 +17,7 @@ import { AllJourneysListState } from '../../types/redux-reducer-state-types';
 import { Journey, FormatMoney } from '@project-300/common-types';
 import { getAllJourneys, searchJourneys, clearJourneys } from '../../redux/actions';
 import DatesTimes from '../../services/dates-times';
-import { ActivityIndicator, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { NavigationEvents } from 'react-navigation';
 import _ from 'lodash';
 import { Colours, ContrastTheme, Theme } from '../../constants/theme';
@@ -163,6 +163,8 @@ class SearchJourneys extends Component<Props, State> {
 						autoCompleteType='off'
 						autoCorrect={ false }
 					/>
+
+					<Button theme={ ContrastTheme } mode={ 'outlined' } onPress={ () => this.props.navigation.navigate('PassengerJourneyOverview') }>Journey overview</Button>
 
 					{
 						this.props.isSearching ?

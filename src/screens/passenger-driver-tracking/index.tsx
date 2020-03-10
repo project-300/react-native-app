@@ -53,6 +53,18 @@ export class DriverTracking extends Component<Props, State> {
 		await this.props.unsubscribeDriverLocation(this.state.journeyKey.journeyId);
 	}
 
+	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+		if (
+			prevProps.currentJourney && this.props.currentJourney &&
+			prevProps.currentJourney.journeyStatus !== this.props.currentJourney.journeyStatus &&
+			this.props.travellingAs === 'Passenger' &&
+			this.props.currentJourney.journeyStatus !== 'PICKUP'
+		) {
+			// const { journeyId, times: { createdAt } } = this.props.currentJourney;
+			this.props.navigation.navigate('PassengerJourneyOverview');
+		}
+	}
+
 	private _mapRegion = (): Region | undefined => {
 		return this.props.driverLocation ? ({
 			...this.props.driverLocation,
@@ -125,7 +137,8 @@ export class DriverTracking extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): DriverTrackingState => ({
-	...state.driverTrackingReducer
+	...state.driverTrackingReducer,
+	...state.currentJourneyReducer
 });
 
 export default connect(mapStateToProps, {

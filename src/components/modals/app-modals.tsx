@@ -4,14 +4,14 @@ import { CommonProps } from '../../types/common';
 import { Image, View } from 'react-native';
 import { ContrastTheme } from '../../constants/theme';
 import { AppState } from '../../store';
-import { HeaderBarState, PassengerConfirmPickupState } from '../../types/redux-reducer-state-types';
+import { CurrentJourneyState, PassengerConfirmPickupState } from '../../types/redux-reducer-state-types';
 import { connect } from 'react-redux';
 import { setCurrentJourney, resetCurrentJourneyUpdatedFlag, clearPickupAlerts, passengerConfirmPickup, passengerCancelPickup, navigateTo } from '../../redux/actions';
 import { AppActions } from '../../types/redux-action-types';
 import { DriverBrief, Journey } from '@project-300/common-types';
 import modalStyles from '../../styles/modal';
 
-interface Props extends CommonProps, HeaderBarState, PassengerConfirmPickupState {
+interface Props extends CommonProps, CurrentJourneyState, PassengerConfirmPickupState {
 	setCurrentJourney(journey?: Journey): AppActions;
 	resetCurrentJourneyUpdatedFlag(): AppActions;
 	clearPickupAlerts(): AppActions;
@@ -190,7 +190,7 @@ export class ModalLayer extends Component<Props, State> {
 
 }
 
-const mapStateToProps = (state: AppState): HeaderBarState => ({
+const mapStateToProps = (state: AppState): CurrentJourneyState => ({
 	...state.currentJourneyReducer,
 	...state.passengerConfirmPickupReducer
 });

@@ -12,6 +12,7 @@ import InteractiveMap from './screens/view-journey-details/interactive-map';
 import AllChats from './screens/all-chats';
 import Chat from './screens/chat';
 import PassengerPickup from './screens/passenger-pickup';
+import JourneyOverview from './screens/passenger-journey-overview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
@@ -147,6 +148,10 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 		screen: ViewJourneyDetails,
 		...navigationOptions('Journey', undefined, true)
 	},
+	PassengerJourneyOverview: {
+		screen: JourneyOverview,
+		...navigationOptions('Journey Overview', undefined, false)
+	},
 	PassengerOtherProfile: {
 		screen: Profile,
 		...navigationOptions('Loading...', undefined, true) // Title updated in screen
@@ -280,21 +285,6 @@ const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigato
 	activeColor: Theme.accent,
 	unmountInactiveRoutes: true
 });
-
-
-// const mapStateToProps = (state: AppState): HeaderBarState => ({
-// 	...state.headerBarReducer,
-// 	...state.passengerConfirmPickupReducer
-// });
-//
-// const bottomNav = connect(mapStateToProps, {
-// 	setCurrentJourney,
-// 	resetCurrentJourneyUpdatedFlag,
-// 	clearPickupAlerts,
-// 	passengerConfirmPickup,
-// 	passengerCancelPickup
-// })(SignedInPassengerStack);
-
 
 const SwitchNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer => {
 	return createSwitchNavigator(
