@@ -58,6 +58,7 @@ export interface HeaderBarState {
 	currentJourney?: Journey;
 	travellingAs: UserTypes;
 	hasUpdated: boolean;
+	awaitingConfirmation: boolean;
 }
 
 export interface DriverApplicationState {
@@ -164,6 +165,12 @@ export interface DriverTrackingState {
 	routeTravelled: Coords[],
 	direction: number;
 	ended: boolean;
+}
+
+export interface PassengerConfirmPickupState {
+	isConfirming: boolean;
+	journey?: Journey;
+	passengerConfirmPickupAlert: boolean;
 }
 
 export interface NewJourneyState {

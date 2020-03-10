@@ -1,6 +1,12 @@
 import { SERVER_WSS_URL } from '../../environment/env';
 import { store } from '../store';
-import { updateDriverLocation, newChatMessages, updatedChat, currentJourneySubReceived } from '../redux/actions';
+import {
+	updateDriverLocation,
+	newChatMessages,
+	updatedChat,
+	currentJourneySubReceived,
+	passengerConfirmPickupAlert
+} from '../redux/actions';
 import { JOURNEY_DRIVER_LOCATION } from '../constants/websocket-subscriptions';
 import { SubscriptionPayload } from '@project-300/common-types';
 import { Auth } from 'aws-amplify';
@@ -42,7 +48,7 @@ class WebSocketAPI {
 			console.log(ev.code, ev.reason);
 
 			if (ev.code === 1001) { // Connection dropped - Recreate connection
-				this.WS =  new WebSocket(SERVER_WSS_URL);
+				this.WS = new WebSocket(SERVER_WSS_URL);
 				this._setup(true);
 			}
 		};
@@ -98,6 +104,9 @@ class WebSocketAPI {
 				break;
 			case 'journey/current':
 				store.dispatch(currentJourneySubReceived(payload, userId));
+				break;
+			case 'journey/pickup-alerts':
+				store.dispatch(passengerConfirmPickupAlert(payload));
 				break;
 			case 'chat/messages':
 				store.dispatch(newChatMessages(payload, userId));

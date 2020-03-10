@@ -13,10 +13,6 @@ export interface Styles {
 	passengerName: TextStyle;
 	passengerToggle: ViewStyle;
 	passengerCancel: TextStyle;
-	modalContent: ViewStyle;
-	modalText: TextStyle;
-	modalCancelButton: ViewStyle;
-	modalImage: ImageStyle;
 }
 
 export interface Props extends CommonProps, PassengerPickupState, GeneralJourneyActionsState {

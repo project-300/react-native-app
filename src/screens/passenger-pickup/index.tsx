@@ -18,6 +18,7 @@ import { PassengerBrief } from '@project-300/common-types';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import formStyles from '../../styles/forms';
 import { NavigationEvents } from 'react-navigation';
+import modalStyles from '../../styles/modal';
 
 export class PassengerPickup extends Component<Props, State> {
 
@@ -96,17 +97,17 @@ export class PassengerPickup extends Component<Props, State> {
 			>
 				{
 					selectedPassenger &&
-						<View style={ styles.modalContent }>
+						<View style={ modalStyles.modalContent }>
 							{
 								selectedPassenger.avatar &&
 								<Image
-									style={ styles.modalImage }
+									style={ modalStyles.modalImage }
 									source={ { uri: selectedPassenger.avatar } }
 								/>
 							}
 
 							<Text
-								style={ styles.modalText }
+								style={ modalStyles.modalText }
 							>Are you sure you want to confirm pickup for { selectedPassenger.firstName } { selectedPassenger.lastName }?</Text>
 
 							<Button
@@ -116,7 +117,7 @@ export class PassengerPickup extends Component<Props, State> {
 							>Confirm Pickup</Button>
 
 							<Button
-								style={ styles.modalCancelButton }
+								style={ modalStyles.modalCancelButton }
 								mode={ 'outlined' }
 								theme={ ContrastTheme }
 								onPress={ this._hideModals }
@@ -137,17 +138,17 @@ export class PassengerPickup extends Component<Props, State> {
 			>
 				{
 					selectedPassenger &&
-						<View style={ styles.modalContent }>
+						<View style={ modalStyles.modalContent }>
 							{
 								selectedPassenger.avatar &&
 								<Image
-									style={ styles.modalImage }
+									style={ modalStyles.modalImage }
 									source={ { uri: selectedPassenger.avatar } }
 								/>
 							}
 
 							<Text
-								style={ styles.modalText }
+								style={ modalStyles.modalText }
 							>Are you sure you want to cancel pickup for { selectedPassenger.firstName } { selectedPassenger.lastName }?</Text>
 
 							<Button
@@ -157,7 +158,7 @@ export class PassengerPickup extends Component<Props, State> {
 							>Cancel Pickup</Button>
 
 							<Button
-								style={ styles.modalCancelButton }
+								style={ modalStyles.modalCancelButton }
 								mode={ 'outlined' }
 								theme={ ContrastTheme }
 								onPress={ this._hideModals }

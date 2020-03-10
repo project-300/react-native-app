@@ -6,12 +6,15 @@ import { isStoreLoggedIn, userType } from './auth';
 import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
-import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
-import { Theme, DarkTheme as Test } from './constants/theme';
+import { Appbar, Button, DefaultTheme, Modal, Portal, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
+import { Theme, DarkTheme as Test, ContrastTheme } from './constants/theme';
 import { getChats, setDarkMode, getCurrentJourney } from './redux/actions';
 import WS from './api/websocket';
 import { v4 as uuid } from 'uuid';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Image, Text, View } from 'react-native';
+import { DriverBrief } from '@project-300/common-types';
+import modalStyles from './styles/modal';
+import ModalLayer from './components/modals/app-modals';
 
 Amplify.configure(AWS_CONFIG);
 
@@ -101,8 +104,9 @@ export default class App extends Component<Props, State> {
 			<StoreProvider store={ store }>
 				<PaperProvider theme={ theme }>
 					<Layout />
+					<ModalLayer />
 				</PaperProvider>
-		  	</StoreProvider>
+			</StoreProvider>
 		);
 	}
 

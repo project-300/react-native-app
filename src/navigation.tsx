@@ -29,6 +29,16 @@ import {
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 import { Theme } from './constants/theme';
+import { AppState } from './store';
+import { HeaderBarState } from './types/redux-reducer-state-types';
+import { connect } from 'react-redux';
+import {
+	clearPickupAlerts,
+	passengerCancelPickup,
+	passengerConfirmPickup,
+	resetCurrentJourneyUpdatedFlag,
+	setCurrentJourney
+} from './redux/actions';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -267,8 +277,24 @@ const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigato
 	animationEnabled: true,
 	swipeEnabled: true,
 	shifting: true,
-	activeColor: Theme.accent
+	activeColor: Theme.accent,
+	unmountInactiveRoutes: true
 });
+
+
+// const mapStateToProps = (state: AppState): HeaderBarState => ({
+// 	...state.headerBarReducer,
+// 	...state.passengerConfirmPickupReducer
+// });
+//
+// const bottomNav = connect(mapStateToProps, {
+// 	setCurrentJourney,
+// 	resetCurrentJourneyUpdatedFlag,
+// 	clearPickupAlerts,
+// 	passengerConfirmPickup,
+// 	passengerCancelPickup
+// })(SignedInPassengerStack);
+
 
 const SwitchNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer => {
 	return createSwitchNavigator(

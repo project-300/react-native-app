@@ -126,7 +126,11 @@ import {
 	CANCEL_JOURNEY_REQUEST,
 	CANCEL_JOURNEY_FAILURE,
 	CURRENT_JOURNEY_SUB_RECEIVED,
-	CURRENT_JOURNEY
+	CURRENT_JOURNEY,
+	PASSENGER_CONFIRM_PICKUP_ALERT,
+	PASSENGER_CONFIRM_PICKUP_SUCCESS,
+	PASSENGER_CONFIRM_PICKUP_REQUEST,
+	PASSENGER_CONFIRM_PICKUP_FAILURE, PASSENGER_CANCEL_PICKUP_SUCCESS, PASSENGER_CANCEL_PICKUP_REQUEST, PASSENGER_CANCEL_PICKUP_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -249,11 +253,17 @@ export interface CurrentJourneySubReceived {
 	userId: string;
 }
 
+export interface PassengerPickupConfirmationAlert {
+	type: typeof PASSENGER_CONFIRM_PICKUP_ALERT;
+	payload: SubscriptionPayload;
+}
+
 export interface SetCurrentJourney {
 	type: typeof CURRENT_JOURNEY;
 	journey: Journey;
 	travellingAs: UserTypes;
 	onAppLoad: boolean;
+	awaitingConfirmation: boolean;
 }
 
 export interface UserProfileSubRequest {
@@ -430,6 +440,32 @@ export interface PassengerJourneyDetailsSuccess {
 
 export interface PassengerJourneyDetailsFailure {
 	type: typeof PASSENGER_JOURNEY_DETAILS_FAILURE;
+}
+
+export interface PassengerConfirmPickupRequest {
+	type: typeof PASSENGER_CONFIRM_PICKUP_REQUEST;
+}
+
+export interface PassengerConfirmPickupSuccess {
+	type: typeof PASSENGER_CONFIRM_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerConfirmPickupFailure {
+	type: typeof PASSENGER_CONFIRM_PICKUP_FAILURE;
+}
+
+export interface PassengerCancelPickupRequest {
+	type: typeof PASSENGER_CANCEL_PICKUP_REQUEST;
+}
+
+export interface PassengerCancelPickupSuccess {
+	type: typeof PASSENGER_CANCEL_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerCancelPickupFailure {
+	type: typeof PASSENGER_CANCEL_PICKUP_FAILURE;
 }
 
 export interface UpdateDriverLocation {
@@ -773,6 +809,7 @@ export type SignUpActionTypes =
 
 export type HeaderBarActionTypes =
 	CurrentJourneySubReceived |
+	PassengerPickupConfirmationAlert |
 	SetCurrentJourney;
 
 export type UserProfileActionTypes =
@@ -859,6 +896,14 @@ export type PassengerJourneyDetailsActionTypes =
 	PassengerJourneyDetailsSuccess |
 	PassengerJourneyDetailsFailure |
 	UpdateDriverLocation;
+
+export type PassengerConfirmPickupActionTypes =
+	PassengerConfirmPickupRequest |
+	PassengerConfirmPickupSuccess |
+	PassengerConfirmPickupFailure |
+	PassengerCancelPickupRequest |
+	PassengerCancelPickupSuccess |
+	PassengerCancelPickupFailure;
 
 export type BeginPickupActionTypes =
 	BeginPickupRequest |
@@ -963,4 +1008,5 @@ export type AppActions =
 	ChatActionTypes |
 	MessageActionTypes |
 	GeneralJourneyActionTypes |
-	HeaderBarActionTypes;
+	HeaderBarActionTypes |
+	PassengerConfirmPickupActionTypes;

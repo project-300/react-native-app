@@ -7,15 +7,16 @@ import { Colours, Theme, ToggleDarkMode } from './constants/theme';
 import { Auth } from 'aws-amplify';
 import { clearDeviceId } from './app';
 import { AppState } from './store';
-import { HeaderBarState } from './types/redux-reducer-state-types';
+import { HeaderBarState, PassengerConfirmPickupState } from './types/redux-reducer-state-types';
 import { connect } from 'react-redux';
 import { PassengerPickup } from './screens/passenger-pickup';
 import toastr from './helpers/toastr';
 import { setCurrentJourney, resetCurrentJourneyUpdatedFlag } from './redux/actions';
 import { AppActions } from './types/redux-action-types';
 import { Journey } from '@project-300/common-types';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-interface Props extends CommonProps, HeaderBarState {
+interface Props extends CommonProps, HeaderBarState, PassengerConfirmPickupState {
 	title?: string;
 	subtitle?: string;
 	backButton: boolean;
@@ -188,14 +189,27 @@ export class HeaderBar extends Component<Props, State> {
 					style={ { alignSelf: 'center' } }
 				/>
 
-				{
-					currentJourney &&
-						<Appbar.Action
-							icon='car'
-							onPress={ this._goToCurrentJourney }
-							color={ this.props.hasUpdated ? 'red' : Colours.primary }
-						/>
-				}
+				<View>
+					{
+						currentJourney &&
+							<Appbar.Action
+								icon='car'
+								onPress={ this._goToCurrentJourney }
+								color={ Colours.primary }
+							/>
+					}
+
+					{
+						this.props.hasUpdated &&
+							<Icon
+								style={ { position: 'absolute', top: 11, right: 12 } }
+								name={ 'circle' }
+								size={ 10 }
+								color={ Colours.red }
+								solid
+							/>
+					}
+				</View>
 
 				{
 					this.props.options && this.props.options.display &&
@@ -264,7 +278,7 @@ export class HeaderBar extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): HeaderBarState => ({
-	...state.headerBarReducer
+	...state.currentJourneyReducer
 });
 
 export default connect(mapStateToProps, {

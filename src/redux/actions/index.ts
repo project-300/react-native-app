@@ -21,3 +21,4 @@ export * from './chat/message';
 export * from './journey/journey';
 export * from './driver/passenger-pickup';
 export * from './headerbar';
+export * from './passenger/pickup';
