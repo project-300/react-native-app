@@ -24,3 +24,4 @@ export * from './headerbar';
 export * from './passenger/pickup';
 export * from './location-tracking';
 export * from './navigation';
+export * from './passenger/rating';

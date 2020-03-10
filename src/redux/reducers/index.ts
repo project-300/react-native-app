@@ -22,6 +22,7 @@ import currentJourneyReducer from './headerbar';
 import passengerConfirmPickupReducer from './passenger/pickup';
 import locationTrackingReducer from './location-tracking';
 import customNavigationReducer from './navigation';
+import passengerJourneyRatingReducer from './passenger/rating';
 
 export default combineReducers({
 	signUpReducer,
@@ -46,5 +47,6 @@ export default combineReducers({
 	currentJourneyReducer,
 	passengerConfirmPickupReducer,
 	locationTrackingReducer,
-	customNavigationReducer
+	customNavigationReducer,
+	passengerJourneyRatingReducer
 });

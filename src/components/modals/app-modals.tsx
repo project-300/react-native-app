@@ -4,25 +4,37 @@ import { CommonProps } from '../../types/common';
 import { Image, View } from 'react-native';
 import { ContrastTheme } from '../../constants/theme';
 import { AppState } from '../../store';
-import { CurrentJourneyState, PassengerConfirmPickupState } from '../../types/redux-reducer-state-types';
+import { CurrentJourneyState, PassengerConfirmPickupState, PassengerJourneyRatingState } from '../../types/redux-reducer-state-types';
 import { connect } from 'react-redux';
-import { setCurrentJourney, resetCurrentJourneyUpdatedFlag, clearPickupAlerts, passengerConfirmPickup, passengerCancelPickup, navigateTo } from '../../redux/actions';
+import {
+	setCurrentJourney,
+	resetCurrentJourneyUpdatedFlag,
+	clearPickupAlerts,
+	passengerConfirmPickup,
+	passengerCancelPickup,
+	passengerJourneyRating,
+	navigateTo
+} from '../../redux/actions';
 import { AppActions } from '../../types/redux-action-types';
 import { DriverBrief, Journey } from '@project-300/common-types';
 import modalStyles from '../../styles/modal';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-interface Props extends CommonProps, CurrentJourneyState, PassengerConfirmPickupState {
+interface Props extends CommonProps, CurrentJourneyState, PassengerConfirmPickupState, PassengerJourneyRatingState {
 	setCurrentJourney(journey?: Journey): AppActions;
 	resetCurrentJourneyUpdatedFlag(): AppActions;
 	clearPickupAlerts(): AppActions;
 	passengerConfirmPickup(journeyId: string, createdAt: string): Promise<boolean>;
 	passengerCancelPickup(journeyId: string, createdAt: string): Promise<boolean>;
+	passengerJourneyRating(journeyId: string, createdAt: string, rating: number): Promise<boolean>;
 	navigateTo(route: string, params?: any): AppActions;
 }
 
 interface State {
 	showConfirmModal: boolean;
 	showStartedPickupModal: boolean;
+	showRateJourneyModal: boolean;
+	journeyRating: number;
 }
 
 export class ModalLayer extends Component<Props, State> {
@@ -32,7 +44,9 @@ export class ModalLayer extends Component<Props, State> {
 
 		this.state = {
 			showConfirmModal: false,
-			showStartedPickupModal: false
+			showStartedPickupModal: false,
+			showRateJourneyModal: false,
+			journeyRating: 0
 		};
 	}
 
@@ -58,10 +72,17 @@ export class ModalLayer extends Component<Props, State> {
 			currentJourney.journeyStatus === 'PICKUP' &&
 			prevJourney.journeyStatus === 'NOT_STARTED'
 		) this.setState({ showStartedPickupModal: true });
+
+		if (
+			prevProps.currentJourney && this.props.currentJourney &&
+			prevProps.currentJourney.journeyStatus !== this.props.currentJourney.journeyStatus &&
+			this.props.currentJourney.journeyStatus === 'FINISHED' &&
+			this._travellingAs(travellingAs, 'Passenger')
+		) this.setState({ showRateJourneyModal: true });
 	}
 
 	private _hideModals = (): void => {
-		this.setState({ showConfirmModal: false, showStartedPickupModal: false });
+		this.setState({ showConfirmModal: false, showStartedPickupModal: false, showRateJourneyModal: false });
 		this.props.clearPickupAlerts();
 	}
 
@@ -91,6 +112,16 @@ export class ModalLayer extends Component<Props, State> {
 				}
 			}
 		);
+	}
+
+	private _submitRating = async (): Promise<void> => {
+		const { currentJourney } = this.props;
+		if (!currentJourney) return;
+		const { journeyId, times: { createdAt } } = currentJourney;
+
+		this.setState({ showRateJourneyModal: false });
+		const result: boolean = await this.props.passengerJourneyRating(journeyId, createdAt, this.state.journeyRating);
+		if (!result) this.setState({ showRateJourneyModal: true });
 	}
 
 	private _renderPickupConfirmationModal = (): ReactElement => {
@@ -179,11 +210,61 @@ export class ModalLayer extends Component<Props, State> {
 		);
 	}
 
+	private _renderRateJourneyModal = (): ReactElement => {
+		const { currentJourney } = this.props;
+		if (!currentJourney) return;
+
+		return (
+			<Modal
+				visible={ this.state.showRateJourneyModal }
+				onDismiss={ this._hideModals }
+			>
+				{
+					currentJourney &&
+						<View style={ modalStyles.modalContent }>
+							<Text
+								style={ modalStyles.modalText }
+							>You have arrived at your destination. Rate your experience below.</Text>
+
+							<View style={ modalStyles.ratingContainer }>
+								<View style={ modalStyles.ratingStarContainer }>
+									{
+										[ 1, 2, 3, 4, 5 ].map((rating: number) => {
+											return <Icon
+												name={ 'star' }
+												style={ modalStyles.ratingStar }
+												solid={ this.state.journeyRating >= rating }
+												onPress={ (): void => this.setState({ journeyRating: rating }) }
+											/>;
+										})
+									}
+								</View>
+							</View>
+
+							<Button
+								mode={ 'contained' }
+								theme={ ContrastTheme }
+								onPress={ this._submitRating }
+							>Submit</Button>
+
+							<Button
+								style={ modalStyles.modalCancelButton }
+								mode={ 'outlined' }
+								theme={ ContrastTheme }
+								onPress={ this._hideModals }
+							>Close</Button>
+						</View>
+				}
+			</Modal>
+		);
+	}
+
 	public render(): React.ReactElement {
 		return (
 			<Portal>
 				{ this._renderPickupConfirmationModal() }
 				{ this._renderStartedPickupModal() }
+				{ this._renderRateJourneyModal() }
 			</Portal>
 		);
 	}
@@ -192,7 +273,8 @@ export class ModalLayer extends Component<Props, State> {
 
 const mapStateToProps = (state: AppState): CurrentJourneyState => ({
 	...state.currentJourneyReducer,
-	...state.passengerConfirmPickupReducer
+	...state.passengerConfirmPickupReducer,
+	...state.passengerJourneyRatingReducer
 });
 
 export default connect(mapStateToProps, {
@@ -201,5 +283,6 @@ export default connect(mapStateToProps, {
 	clearPickupAlerts,
 	passengerConfirmPickup,
 	passengerCancelPickup,
+	passengerJourneyRating,
 	navigateTo
 })(ModalLayer);

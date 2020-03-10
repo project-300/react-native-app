@@ -183,6 +183,10 @@ export interface PassengerConfirmPickupState {
 	passengerConfirmPickupAlert: boolean;
 }
 
+export interface PassengerJourneyRatingState {
+	isRating: boolean;
+}
+
 export interface NewJourneyState {
 	places: GooglePlace[];
 	originPlace: GooglePlace | null;

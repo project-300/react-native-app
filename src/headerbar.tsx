@@ -123,8 +123,8 @@ export class HeaderBar extends Component<Props, State> {
 			case 'ARRIVED':
 				route = 'PassengerJourneyOverview';
 				break;
-			case 'FINISHED': // Review
-				route = null;
+			case 'FINISHED':
+				route = 'JourneyReview';
 				break;
 			case 'CANCELLED':
 				route = null;

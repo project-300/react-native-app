@@ -13,6 +13,7 @@ import AllChats from './screens/all-chats';
 import Chat from './screens/chat';
 import PassengerPickup from './screens/passenger-pickup';
 import JourneyOverview from './screens/passenger-journey-overview';
+import JourneyRating from './screens/journey-rating';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
@@ -30,16 +31,6 @@ import {
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 import { Theme } from './constants/theme';
-import { AppState } from './store';
-import { HeaderBarState } from './types/redux-reducer-state-types';
-import { connect } from 'react-redux';
-import {
-	clearPickupAlerts,
-	passengerCancelPickup,
-	passengerConfirmPickup,
-	resetCurrentJourneyUpdatedFlag,
-	setCurrentJourney
-} from './redux/actions';
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -151,6 +142,10 @@ const MyJourneysTab: NavigationContainer = createStackNavigator({
 	PassengerJourneyOverview: {
 		screen: JourneyOverview,
 		...navigationOptions('Journey Overview', undefined, false)
+	},
+	JourneyRating: {
+		screen: JourneyRating,
+		...navigationOptions('Journey Rating', undefined, false)
 	},
 	PassengerOtherProfile: {
 		screen: Profile,

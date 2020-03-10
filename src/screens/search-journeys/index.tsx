@@ -164,8 +164,6 @@ class SearchJourneys extends Component<Props, State> {
 						autoCorrect={ false }
 					/>
 
-					<Button theme={ ContrastTheme } mode={ 'outlined' } onPress={ () => this.props.navigation.navigate('PassengerJourneyOverview') }>Journey overview</Button>
-
 					{
 						this.props.isSearching ?
 							<ActivityIndicator

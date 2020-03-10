@@ -256,6 +256,7 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _endJourney = async (): Promise<void> => {
+		console.log("ENDING");
 		await this.props.endJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		this._stopTracking();
 	}

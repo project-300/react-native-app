@@ -21,6 +21,16 @@ export class JourneyOverview extends Component<Props, State> {
 		this.state = { };
 	}
 
+	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+		if (
+			prevProps.currentJourney && this.props.currentJourney &&
+			prevProps.currentJourney.journeyStatus !== this.props.currentJourney.journeyStatus &&
+			this.props.currentJourney.journeyStatus === 'FINISHED'
+		) console.log('test');
+
+			// this.props.navigation.navigate('JourneyRating');
+	}
+
 	private _renderTitleText = (): ReactElement => {
 		const journey: Journey = this.props.currentJourney as Journey;
 		const { driver } = journey;

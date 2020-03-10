@@ -27,7 +27,7 @@ const modalStyles: ModalStyles = StyleSheet.create<ModalStyles>({
 
 	modalCancelButton: {
 		backgroundColor: 'white',
-		marginTop: 10
+		marginTop: 20
 	},
 
 	modalImage: {
@@ -35,6 +35,28 @@ const modalStyles: ModalStyles = StyleSheet.create<ModalStyles>({
 		height: width * 0.5,
 		borderRadius: width * 0.25,
 		alignSelf: 'center'
+	},
+
+	ratingContainer: {
+		backgroundColor: Colours.white,
+		width: '100%',
+		height: 160,
+		marginBottom: 40,
+		borderRadius: 4
+	},
+
+	ratingStarContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+
+	ratingStar: {
+		color: Colours.primary,
+		fontSize: 40,
+		marginHorizontal: 5
 	}
 });
 

@@ -134,7 +134,12 @@ import {
 	PASSENGER_CANCEL_PICKUP_SUCCESS,
 	PASSENGER_CANCEL_PICKUP_REQUEST,
 	PASSENGER_CANCEL_PICKUP_FAILURE,
-	START_LOCATION_TRACKING, STOP_LOCATION_TRACKING, SET_CURRENT_LOCATION, NAVIGATE_TO
+	START_LOCATION_TRACKING,
+	STOP_LOCATION_TRACKING,
+	SET_CURRENT_LOCATION,
+	NAVIGATE_TO,
+	PASSENGER_JOURNEY_RATING_REQUEST,
+	PASSENGER_JOURNEY_RATING_SUCCESS, PASSENGER_JOURNEY_RATING_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -784,6 +789,23 @@ export interface NavigateTo {
 	params: any;
 }
 
+export interface PassengerJourneyRatingRequest {
+	type: typeof PASSENGER_JOURNEY_RATING_REQUEST;
+}
+
+export interface PassengerJourneyRatingSuccess {
+	type: typeof PASSENGER_JOURNEY_RATING_SUCCESS;
+}
+
+export interface PassengerJourneyRatingFailure {
+	type: typeof PASSENGER_JOURNEY_RATING_FAILURE;
+}
+
+export type PassengerJourneyRatingActionsTypes =
+	PassengerJourneyRatingRequest |
+	PassengerJourneyRatingSuccess |
+	PassengerJourneyRatingFailure;
+
 export type LocationTrackingActionTypes =
 	StartTracking |
 	StopTracking |
@@ -1041,4 +1063,5 @@ export type AppActions =
 	HeaderBarActionTypes |
 	PassengerConfirmPickupActionTypes |
 	LocationTrackingActionTypes |
-	NavigationActionTypes;
+	NavigationActionTypes |
+	PassengerJourneyRatingActionsTypes;
