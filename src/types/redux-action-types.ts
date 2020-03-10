@@ -130,7 +130,11 @@ import {
 	PASSENGER_CONFIRM_PICKUP_ALERT,
 	PASSENGER_CONFIRM_PICKUP_SUCCESS,
 	PASSENGER_CONFIRM_PICKUP_REQUEST,
-	PASSENGER_CONFIRM_PICKUP_FAILURE, PASSENGER_CANCEL_PICKUP_SUCCESS, PASSENGER_CANCEL_PICKUP_REQUEST, PASSENGER_CANCEL_PICKUP_FAILURE
+	PASSENGER_CONFIRM_PICKUP_FAILURE,
+	PASSENGER_CANCEL_PICKUP_SUCCESS,
+	PASSENGER_CANCEL_PICKUP_REQUEST,
+	PASSENGER_CANCEL_PICKUP_FAILURE,
+	START_LOCATION_TRACKING, STOP_LOCATION_TRACKING, SET_CURRENT_LOCATION, NAVIGATE_TO
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -761,6 +765,30 @@ export interface ContentReloadOff {
 	type: typeof CONTENT_RELOAD_OFF;
 }
 
+export interface StartTracking {
+	type: typeof START_LOCATION_TRACKING;
+}
+
+export interface StopTracking {
+	type: typeof STOP_LOCATION_TRACKING;
+}
+
+export interface SetCurrentLocation {
+	type: typeof SET_CURRENT_LOCATION;
+	coords: Coords;
+}
+
+export interface NavigateTo {
+	type: typeof NAVIGATE_TO;
+	route: string;
+	params: any;
+}
+
+export type LocationTrackingActionTypes =
+	StartTracking |
+	StopTracking |
+	SetCurrentLocation;
+
 export type VehicleMakesAndModelsTypes =
 	VehicleMakesRequest |
 	VehicleMakesSuccess |
@@ -987,6 +1015,8 @@ export type GeneralJourneyActionTypes =
 	CancelJourneySuccess |
 	CancelJourneyFailure;
 
+export type NavigationActionTypes = NavigateTo;
+
 export type AppActions =
 	ContentReloadActionTypes |
 	DarkModeActionTypes |
@@ -1009,4 +1039,6 @@ export type AppActions =
 	MessageActionTypes |
 	GeneralJourneyActionTypes |
 	HeaderBarActionTypes |
-	PassengerConfirmPickupActionTypes;
+	PassengerConfirmPickupActionTypes |
+	LocationTrackingActionTypes |
+	NavigationActionTypes;

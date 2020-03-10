@@ -50,6 +50,11 @@ export interface SignUpState {
 	payload?: object;
 }
 
+export interface LocationTrackingState {
+	allowTracking: boolean;
+	currentLocation?: Coords;
+}
+
 export interface ConfirmState {
 	isConfirmingAccount: boolean;
 }
@@ -59,6 +64,11 @@ export interface HeaderBarState {
 	travellingAs: UserTypes;
 	hasUpdated: boolean;
 	awaitingConfirmation: boolean;
+}
+
+export interface CustomNavigationState {
+	navigateToRoute: string;
+	navigationParams: any;
 }
 
 export interface DriverApplicationState {
