@@ -22,3 +22,5 @@ export * from './journey/journey';
 export * from './driver/passenger-pickup';
 export * from './headerbar';
 export * from './passenger/pickup';
+export * from './location-tracking';
+export * from './navigation';

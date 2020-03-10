@@ -6,15 +6,14 @@ import { isStoreLoggedIn, userType } from './auth';
 import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
-import { Appbar, Button, DefaultTheme, Modal, Portal, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
-import { Theme, DarkTheme as Test, ContrastTheme } from './constants/theme';
+import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
+import { Theme, DarkTheme as Test } from './constants/theme';
 import { getChats, setDarkMode, getCurrentJourney } from './redux/actions';
 import WS from './api/websocket';
 import { v4 as uuid } from 'uuid';
-import { AsyncStorage, Image, Text, View } from 'react-native';
-import { DriverBrief } from '@project-300/common-types';
-import modalStyles from './styles/modal';
+import { AsyncStorage } from 'react-native';
 import ModalLayer from './components/modals/app-modals';
+import LocationTracker from './components/tracking/tracking';
 
 Amplify.configure(AWS_CONFIG);
 
@@ -68,18 +67,12 @@ export default class App extends Component<Props, State> {
 			if (uType) this.setState({ userType: uType });
 
 			WS._setup();
-			// await getChats();
+
 			store.dispatch(getCurrentJourney(true));
 			store.dispatch(getChats());
 		} catch (err) {
 			toastr.error('Unable to authenticate');
 		}
-
-		// store.subscribe(() => {
-		// 	const totalUnreadCount: number = store.getState().allChatsReducer.totalUnreadCount;
-		// 	if (totalUnreadCount !== this.state.totalUnreadCount)
-		// 		this.setState({ totalUnreadCount });
-		// });
 	}
 
 	public render(): ReactElement | null {
@@ -105,6 +98,7 @@ export default class App extends Component<Props, State> {
 				<PaperProvider theme={ theme }>
 					<Layout />
 					<ModalLayer />
+					<LocationTracker />
 				</PaperProvider>
 			</StoreProvider>
 		);

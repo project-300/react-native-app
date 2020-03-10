@@ -7,7 +7,7 @@ import { Colours, Theme, ToggleDarkMode } from './constants/theme';
 import { Auth } from 'aws-amplify';
 import { clearDeviceId } from './app';
 import { AppState } from './store';
-import { HeaderBarState, PassengerConfirmPickupState } from './types/redux-reducer-state-types';
+import { CustomNavigationState, HeaderBarState, PassengerConfirmPickupState } from './types/redux-reducer-state-types';
 import { connect } from 'react-redux';
 import { PassengerPickup } from './screens/passenger-pickup';
 import toastr from './helpers/toastr';
@@ -16,7 +16,7 @@ import { AppActions } from './types/redux-action-types';
 import { Journey } from '@project-300/common-types';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-interface Props extends CommonProps, HeaderBarState, PassengerConfirmPickupState {
+interface Props extends CommonProps, HeaderBarState, CustomNavigationState {
 	title?: string;
 	subtitle?: string;
 	backButton: boolean;
@@ -51,6 +51,11 @@ export class HeaderBar extends Component<Props, State> {
 			optionsVisible: false,
 			driverUpgradeAvailable: false
 		};
+	}
+
+	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+		if (prevProps.navigateToRoute !== this.props.navigateToRoute)
+			this.props.navigation.navigate(this.props.navigateToRoute, this.props.navigationParams);
 	}
 
 	private _goBack = (): void => { this.props.navigation.goBack(); };
@@ -278,7 +283,8 @@ export class HeaderBar extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): HeaderBarState => ({
-	...state.currentJourneyReducer
+	...state.currentJourneyReducer,
+	...state.customNavigationReducer
 });
 
 export default connect(mapStateToProps, {

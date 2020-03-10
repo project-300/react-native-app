@@ -2,6 +2,7 @@ import { TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
 import Animated from 'react-native-reanimated';
+import { AppActions } from '../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -35,6 +36,8 @@ export interface Props extends CommonProps {
 	resumeJourney(journeyId: string, createdAt: string): Promise<void>;
 	endJourney(journeyId: string, createdAt: string): Promise<void>;
 	driverMovement(journeyId: string, createdAt: string, c: Coords): Promise<void>;
+	startLocationTracking(): AppActions;
+	stopLocationTracking(): AppActions;
 }
 
 export interface State {

@@ -20,6 +20,8 @@ import passengerPickupReducer from './driver/passenger-pickup';
 import generalJourneyActionsReducer from './journey/journey';
 import currentJourneyReducer from './headerbar';
 import passengerConfirmPickupReducer from './passenger/pickup';
+import locationTrackingReducer from './location-tracking';
+import customNavigationReducer from './navigation';
 
 export default combineReducers({
 	signUpReducer,
@@ -42,5 +44,7 @@ export default combineReducers({
 	passengerPickupReducer,
 	generalJourneyActionsReducer,
 	currentJourneyReducer,
-	passengerConfirmPickupReducer
+	passengerConfirmPickupReducer,
+	locationTrackingReducer,
+	customNavigationReducer
 });

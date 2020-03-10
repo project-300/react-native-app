@@ -12,7 +12,8 @@ import { AppState } from '../../store';
 import {
 	getPassengerJourneyDetails,
 	subscribeDriverLocation,
-	unsubscribeDriverLocation
+	unsubscribeDriverLocation,
+	startLocationTracking
 } from '../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { Journey, Place } from '@project-300/common-types';
@@ -42,6 +43,8 @@ export class DriverTracking extends Component<Props, State> {
 	}
 
 	public async componentDidMount(): Promise<void> {
+		this.props.startLocationTracking();
+
 		await this.props.getPassengerJourneyDetails(this.state.journeyKey.journeyId);
 		await this.props.subscribeDriverLocation(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 	}
@@ -128,5 +131,6 @@ const mapStateToProps = (state: AppState): DriverTrackingState => ({
 export default connect(mapStateToProps, {
 	getPassengerJourneyDetails,
 	subscribeDriverLocation,
-	unsubscribeDriverLocation
+	unsubscribeDriverLocation,
+	startLocationTracking
 })(DriverTracking);

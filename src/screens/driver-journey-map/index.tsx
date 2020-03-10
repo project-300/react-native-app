@@ -15,7 +15,9 @@ import {
 	pauseJourney,
 	resumeJourney,
 	endJourney,
-	driverMovement
+	driverMovement,
+	startLocationTracking,
+	stopLocationTracking
 } from '../../redux/actions';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import DriverLocation from '../../services/driver-location';
@@ -106,8 +108,9 @@ export class JourneyMap extends Component<Props, State> {
 
 		await this._getJourneyDetails();
 
-		if (this.props.journey && this.props.journey.journeyStatus === 'STARTED') {
-			this._trackDriver();
+		if (this.props.journey && (this.props.journey.journeyStatus === 'STARTED')) {
+			// this._trackDriver();
+			this.props.startLocationTracking();
 			this._setRouteTravelled();
 		}
 		if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
@@ -126,59 +129,60 @@ export class JourneyMap extends Component<Props, State> {
 		this._stopTracking();
 	}
 
-	private _trackDriver = (): void => {
-		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
-			this.setState({ movementCount: this.state.movementCount + 1 });
-
-			const coords: Coords = {
-				latitude: location.coords.latitude,
-				longitude: location.coords.longitude
-			};
-			const region = {
-				...coords,
-				latitudeDelta: 0.015,
-				longitudeDelta: 0.0121
-			};
-
-			const { routeTravelled } = this.state;
-
-			const length: number = routeTravelled.length;
-
-			const start: Coords = routeTravelled[length - 2];
-			const end: Coords = routeTravelled[length - 1];
-
-			const direction: number = ((length >= 2 ?
-				MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) :
-				0) + 90) % 360;
-
-			this.setState({
-				currentPosition: region,
-				routeTravelled: this.state.routeTravelled.concat({
-					latitude: location.coords.latitude,
-					longitude: location.coords.longitude
-				}),
-				direction
-			});
-
-				//  && this.state.movementCount % 10 === 0
-			if (this.props.journey) { // Save movement every 10 movements
-				await this._updateSavedLocation(coords);
-				await this.props.driverMovement(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt, coords);
-			}
-		},
-	 (error: PositionError) => console.log(error.message),
-{ enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 });
-
-		console.log(tracker);
-		this.setState({ tracker });
-	}
+// 	private _trackDriver = (): void => {
+// 		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
+// 			this.setState({ movementCount: this.state.movementCount + 1 });
+//
+// 			const coords: Coords = {
+// 				latitude: location.coords.latitude,
+// 				longitude: location.coords.longitude
+// 			};
+// 			const region = {
+// 				...coords,
+// 				latitudeDelta: 0.015,
+// 				longitudeDelta: 0.0121
+// 			};
+//
+// 			const { routeTravelled } = this.state;
+//
+// 			const length: number = routeTravelled.length;
+//
+// 			const start: Coords = routeTravelled[length - 2];
+// 			const end: Coords = routeTravelled[length - 1];
+//
+// 			const direction: number = ((length >= 2 ?
+// 				MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) :
+// 				0) + 90) % 360;
+//
+// 			this.setState({
+// 				currentPosition: region,
+// 				routeTravelled: this.state.routeTravelled.concat({
+// 					latitude: location.coords.latitude,
+// 					longitude: location.coords.longitude
+// 				}),
+// 				direction
+// 			});
+//
+// 				//  && this.state.movementCount % 10 === 0
+// 			if (this.props.journey) { // Save movement every 10 movements
+// 				await this._updateSavedLocation(coords);
+// 				await this.props.driverMovement(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt, coords);
+// 			}
+// 		},
+// 	 (error: PositionError) => console.log(error.message),
+// { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 });
+//
+// 		console.log(tracker);
+// 		this.setState({ tracker });
+// 	}
 
 	private _stopTracking = (): void => {
-		const tracker: number = this.state.tracker as number;
-
-		navigator.geolocation.clearWatch(tracker);
-
-		this.setState({ tracker: null });
+		this.props.stopLocationTracking();
+		// const tracker: number = this.state.tracker as number;
+		//
+		// navigator.geolocation.clearWatch(tracker);
+		//
+		// this.setState({ tracker: null });
 	}
 
 	private _setRouteTravelled = (): void => this.props.journey && this.setState({ routeTravelled: this.props.journey.routeTravelled });
@@ -229,14 +233,14 @@ export class JourneyMap extends Component<Props, State> {
 
 	private _updateSavedLocation = async (coords: Coords): Promise<void> => await DriverLocation.setCurrentPosition(coords);
 
-	private _beginPickup = async (): Promise<void> => {
-		await this.props.beginPickup(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
-	}
+	// private _beginPickup = async (): Promise<void> => {
+	// 	await this.props.beginPickup(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
+	// }
 
 	private _startJourney = async (): Promise<void> => {
 		await this.props.startJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		// this._zoomToDriverPosition();
-		this._trackDriver();
+		this.props.startLocationTracking();
 	}
 
 	private _pauseJourney = async (): Promise<void> => {
@@ -332,9 +336,8 @@ export class JourneyMap extends Component<Props, State> {
 		if (journey) {
 			const { journeyStatus } = journey;
 
-			if (journeyStatus === 'NOT_STARTED') actions = [
-				{ icon: 'play', label: 'Begin Pickup', color: Colours.primary, onPress: this._beginPickup }
-				// { icon: 'play', label: 'Start Journey', color: Colours.primary, onPress: this._startJourney }
+			if (journeyStatus === 'NOT_STARTED' || journeyStatus === 'WAITING') actions = [
+				{ icon: 'play', label: 'Start Journey', color: Colours.primary, onPress: this._startJourney }
 			];
 
 			if (journeyStatus === 'STARTED') actions = [
@@ -461,7 +464,8 @@ export class JourneyMap extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): JourneyMapState => ({
-	...state.journeyDetailsReducer
+	...state.journeyDetailsReducer,
+	...state.locationTrackingReducer
 });
 
 export default connect(mapStateToProps, {
@@ -471,5 +475,7 @@ export default connect(mapStateToProps, {
 	pauseJourney,
 	resumeJourney,
 	endJourney,
-	driverMovement
+	driverMovement,
+	startLocationTracking,
+	stopLocationTracking
 })(JourneyMap);

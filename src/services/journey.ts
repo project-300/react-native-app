@@ -58,6 +58,9 @@ export class JourneyService {
 	public static driverMovement = async (journeyId: string, createdAt: string, coords: Coords): Promise<void> =>
 		API.put(ApiName, `/journeys/driver-movement`, { body: { journeyId, createdAt, coords } }).catch(JourneyService.handleError);
 
+	public static locationMovement = async (coords: Coords): Promise<void> =>
+		API.put(ApiName, `/journeys/location-movement`, { body: { coords } }).catch(JourneyService.handleError);
+
 	public static subscribeDriverLocation = async (journeyId: string, createdAt: string): Promise<{ success: boolean }> =>
 		API.put(ApiName, `/journeys/subscribe/driver-location`, { body: { journeyId, createdAt, deviceId: await deviceId() } }).catch(JourneyService.handleError);
 

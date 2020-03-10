@@ -1,6 +1,13 @@
+export const NAVIGATE_TO: string = 'NAVIGATE_TO';
+
 // Content Reload
 export const CONTENT_RELOAD_ON: string = 'CONTENT_RELOAD_ON';
 export const CONTENT_RELOAD_OFF: string = 'CONTENT_RELOAD_OFF';
+
+// Location Tracking
+export const START_LOCATION_TRACKING: string = 'START_LOCATION_TRACKING';
+export const STOP_LOCATION_TRACKING: string = 'STOP_LOCATION_TRACKING';
+export const SET_CURRENT_LOCATION: string = 'SET_CURRENT_LOCATION';
 
 // Login
 export const LOGIN_REQUEST: string = 'LOGIN_REQUEST';

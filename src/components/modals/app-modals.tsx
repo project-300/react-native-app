@@ -6,7 +6,7 @@ import { ContrastTheme } from '../../constants/theme';
 import { AppState } from '../../store';
 import { HeaderBarState, PassengerConfirmPickupState } from '../../types/redux-reducer-state-types';
 import { connect } from 'react-redux';
-import { setCurrentJourney, resetCurrentJourneyUpdatedFlag, clearPickupAlerts, passengerConfirmPickup, passengerCancelPickup } from '../../redux/actions';
+import { setCurrentJourney, resetCurrentJourneyUpdatedFlag, clearPickupAlerts, passengerConfirmPickup, passengerCancelPickup, navigateTo } from '../../redux/actions';
 import { AppActions } from '../../types/redux-action-types';
 import { DriverBrief, Journey } from '@project-300/common-types';
 import modalStyles from '../../styles/modal';
@@ -17,6 +17,7 @@ interface Props extends CommonProps, HeaderBarState, PassengerConfirmPickupState
 	clearPickupAlerts(): AppActions;
 	passengerConfirmPickup(journeyId: string, createdAt: string): Promise<boolean>;
 	passengerCancelPickup(journeyId: string, createdAt: string): Promise<boolean>;
+	navigateTo(route: string, params?: any): AppActions;
 }
 
 interface State {
@@ -81,12 +82,15 @@ export class ModalLayer extends Component<Props, State> {
 		this.setState({ showStartedPickupModal: false });
 		this.props.resetCurrentJourneyUpdatedFlag();
 
-		this.props.navigation.navigate('DriverTrackingMap', {
-			journeyKey: {
-				journeyId: currentJourney.journeyId,
-				createdAt: currentJourney.times.createdAt
+		this.props.navigateTo(
+			'DriverTrackingMap',
+			{
+				journeyKey: {
+					journeyId: currentJourney.journeyId,
+					createdAt: currentJourney.times.createdAt
+				}
 			}
-		});
+		);
 	}
 
 	private _renderPickupConfirmationModal = (): ReactElement => {
@@ -196,5 +200,6 @@ export default connect(mapStateToProps, {
 	resetCurrentJourneyUpdatedFlag,
 	clearPickupAlerts,
 	passengerConfirmPickup,
-	passengerCancelPickup
+	passengerCancelPickup,
+	navigateTo
 })(ModalLayer);

@@ -1,8 +1,7 @@
 import {
 	CURRENT_JOURNEY_SUB_RECEIVED,
 	CURRENT_JOURNEY,
-	RESET_CURRENT_JOURNEY_UPDATED_FLAG,
-	PASSENGER_CONFIRM_PICKUP_ALERT, RESET_PICKUP_ALERTS
+	RESET_CURRENT_JOURNEY_UPDATED_FLAG
 } from '../../constants/redux-actions';
 import { AppActions } from '../../types/redux-action-types';
 import { Journey, SubscriptionPayload, UserTypes } from '@project-300/common-types';
