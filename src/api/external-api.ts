@@ -7,13 +7,13 @@ export default class ExternalApi {
 
 	public static GooglePlaces = async (query: string): Promise<GooglePlacesSearchResult> => {
 		let url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}`;
-		url += `&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry`;
+		url += `&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&components=country:ie`;
 		url += `&key=${GoogleMapsAPIKey}`;
 
 		const res: Response = await fetch(url);
-
 		const ok: boolean = res.ok;
 		const data: GooglePlacesSearchResult = await res.json();
+		console.log(data);
 
 		if (!ok) throw data.error || Error('Unknown Error');
 		return data;
@@ -32,7 +32,7 @@ export default class ExternalApi {
 	}
 
 	public static GoogleNearbyPlaces = async (loc: Coords): Promise<GoogleNearbyPlaceResult> => {
-		const location = `${loc.latitude},${loc.longitude}`
+		const location = `${loc.latitude},${loc.longitude}`;
 
 		const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=1000&key=${GoogleMapsAPIKey}`;
 
