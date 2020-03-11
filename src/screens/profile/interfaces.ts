@@ -8,8 +8,10 @@ import Animated from 'react-native-reanimated';
 export interface Styles {
 	container: ViewStyle;
 	avatar: ImageStyle;
+	driverRating: ViewStyle;
 	userTypeTag: ViewStyle;
-	userTypeTagText: TextStyle;
+	tagText: TextStyle;
+	ratingStar: TextStyle;
 	name: TextStyle;
 	editRow: ViewStyle;
 	label: TextStyle;

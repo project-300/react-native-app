@@ -308,6 +308,7 @@ export class Profile extends Component<Props, State> {
 	}
 
 	private _renderViewColumn = (user: User): ReactElement => {
+		const { statistics, userType } = user;
 		return(
 			<Animated.View
 				style={ [
@@ -316,8 +317,16 @@ export class Profile extends Component<Props, State> {
 				] }>
 				<View style={ styles.sectionContainer }>
 					<View style={ styles.userTypeTag }>
-						<Text style={ styles.userTypeTagText }>{ this.props.user && this.props.user.userType }</Text>
+						<Text style={ styles.tagText }>{ this.props.user && this.props.user.userType }</Text>
 					</View>
+
+					{
+						user.userType === 'Driver' &&
+							<View style={ styles.driverRating }>
+								<Icon name={ 'star' } color={ Colours.white } style={ styles.ratingStar } solid />
+								<Text style={ styles.tagText }>{ this.props.user && this.props.user.averageRating.toFixed(1) }</Text>
+							</View>
+					}
 
 					{
 						this.state.isOtherUser &&
@@ -337,28 +346,44 @@ export class Profile extends Component<Props, State> {
 					<View style={ styles.statsContainer }>
 						<View style={ styles.statsItem }>
 							<Text style={ styles.statsItemText }>
-								2,304
-							</Text>
-							<Text style={ styles.statsItemDesc }>
-								KM Travelled
-							</Text>
-						</View>
-						<View style={ styles.statsItem }>
-							<Text style={ styles.statsItemText }>
-								453
+								{ statistics.emissions.toFixed(2) }
 							</Text>
 							<Text style={ styles.statsItemDesc }>
 								KG CO2 Saved
 							</Text>
 						</View>
+
 						<View style={ styles.statsItem }>
 							<Text style={ styles.statsItemText }>
-								41
+								{ statistics.fuel.toFixed(2) }
 							</Text>
 							<Text style={ styles.statsItemDesc }>
-								Lifts Given
+								Fuel Saved (L)
 							</Text>
 						</View>
+						{
+							userType === 'Driver' &&
+								<View style={ styles.statsItem }>
+									<Text style={ styles.statsItemText }>
+										{ statistics.liftsGiven || 0 }
+									</Text>
+									<Text style={ styles.statsItemDesc }>
+										Lifts Given
+									</Text>
+								</View>
+						}
+
+						{
+							userType !== 'Driver' &&
+								<View style={ styles.statsItem }>
+									<Text style={ styles.statsItemText }>
+										{ statistics.liftsTaken || 0 }
+									</Text>
+									<Text style={ styles.statsItemDesc }>
+										Lifts Taken
+									</Text>
+								</View>
+						}
 					</View>
 				</View>
 

@@ -35,16 +35,41 @@ const styles = StyleSheet.create<Styles>({
 		elevation: 12
 	},
 
-	userTypeTagText: {
+	driverRating: {
+		backgroundColor: Theme.accent,
+		width: 60,
+		height: 60,
+		paddingVertical: 5,
+		paddingHorizontal: 15,
+		borderRadius: 30,
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'absolute',
+		top: -30,
+		right: 20,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.3,
+		shadowRadius: 6,
+		elevation: 12
+	},
+
+	tagText: {
 		color: Colours.white,
 		fontWeight: 'bold'
+	},
+
+	ratingStar: {
+		marginBottom: 5,
+		fontSize: 16
 	},
 
 	name: {
 		alignSelf: 'center',
 		fontSize: 22,
 		fontWeight: 'bold',
-		marginBottom: 4,
 		color: Colours.black,
 		marginBottom: 20
 	},
