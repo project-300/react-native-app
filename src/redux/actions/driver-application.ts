@@ -36,6 +36,7 @@ export const apply = (vehicle: any): ((dispatch: Dispatch) => Promise<boolean>) 
 
 		try {
 			const apiRes: DriverApplicationResult = await DriverApplicationService.applyForApplication(vehicle);
+			console.log(apiRes);
 			if (apiRes.success) {
 				dispatch(driverApplicationSuccess());
 				toastr.success('You have successfully submitted your application');
@@ -53,8 +54,6 @@ export const apply = (vehicle: any): ((dispatch: Dispatch) => Promise<boolean>) 
 
 export const checkIfApplied = (): ((dispatch: Dispatch) => Promise<boolean>) => {
 	return async (dispatch: Dispatch): Promise<boolean> => {
-		dispatch(driverApplicationRequest());
-
 		try {
 			const id: string = await userId() as string;
 			const apiRes: DriverApplicationCheckResult = await DriverApplicationService.checkIfUserHasApplied(id);
@@ -66,7 +65,6 @@ export const checkIfApplied = (): ((dispatch: Dispatch) => Promise<boolean>) => 
 			dispatch(applicationAlreadyApplied(false));
 			return true;
 		} catch (err) {
-			dispatch(driverApplicationFailure());
 			toastr.error(err.message || err.description || 'Unknown Error');
 			return false;
 		}

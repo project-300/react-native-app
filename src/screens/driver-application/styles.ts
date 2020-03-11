@@ -56,6 +56,11 @@ const styles: Styles = StyleSheet.create<Styles>({
 		color: 'white',
 		fontWeight: 'bold',
 		textAlign: 'center'
+	},
+
+	spinner: {
+		alignSelf: 'center',
+		flex: 1
 	}
 });
 

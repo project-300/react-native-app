@@ -11,29 +11,26 @@ export interface Styles {
 	listItem: ViewStyle;
 	formView: ViewStyle;
 	errText: TextStyle;
+	spinner: ViewStyle;
 }
 
 export interface Props extends CommonProps {
-	isFetching: boolean;
+	isApplying: boolean;
 	apply(vehicle: any): Promise<boolean>;
 	checkIfApplied(): Promise<boolean>;
 	applied?: boolean;
-	getVehicleMakes(): Promise<boolean>;
 	vehicleMakes: VehicleMake[];
-	getVehicleModels(makeId: string, year: string): Promise<boolean>;
 	vehicleModels: VehicleModel[];
-	errMessage: string;
 }
 
 export interface State {
-	loading: boolean;
 	yearPickerVisible: boolean;
+	isChecking: boolean;
 	fuelTypePickerVisible: boolean;
 	selectedYear: string;
 	selectedFuelType: string;
 	selectedVehicleMake: string;
 	selectedVehicleModel: string;
-	displayErrorMessage: boolean;
 }
 
 export interface SelectedVehicleMake {
