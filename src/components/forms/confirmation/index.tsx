@@ -75,8 +75,6 @@ export default class ConfirmationForm extends Component<Props, State> {
 				<TextInput
 					placeholder={ 'Confirmation Code' }
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ AuthTheme }
-					// mode={ 'outlined' }
 					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, width: width * 0.8, alignSelf: 'center' } }
 					onChangeText={ (code: string): void => this.setState({ code }) }
 					autoCorrect={ false }

@@ -54,6 +54,7 @@ export interface ForgotPasswordState {
 
 export interface SignUpState {
 	isCreatingAccount: boolean;
+	passwordError: boolean;
 	payload?: object;
 }
 

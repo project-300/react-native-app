@@ -269,6 +269,7 @@ export interface SignUpSuccess {
 
 export interface SignUpFailure {
 	type: typeof SIGNUP_FAILURE;
+	code?: string;
 }
 
 export interface SignUpConfirmationRequired {

@@ -45,9 +45,7 @@ export class LoginForm extends Component<Props, State> {
 				<TextInput
 					placeholder='Email Address'
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ ContrastTheme }
-					// mode={ 'outlined' }
-					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
+					style={ { padding: 16, borderWidth: 0.4, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
 					onChangeText={ (email: string): void => this.setState({ email }) }
 					autoCorrect={ false }
 					autoCompleteType={ 'off' }
@@ -58,9 +56,7 @@ export class LoginForm extends Component<Props, State> {
 				<TextInput
 					placeholder='Password'
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ AuthTheme }
-					// mode={ 'outlined' }
-					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4 } }
+					style={ { padding: 16, borderWidth: 0.4, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4 } }
 					secureTextEntry={ true }
 					autoCapitalize='none'
 					onChangeText={ (password: string): void => this.setState({ password })}

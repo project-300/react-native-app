@@ -1,15 +1,16 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import Animated from 'react-native-reanimated';
+import { Colours } from '../../constants/theme';
 
 const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
+		backgroundColor: Colours.black,
 		justifyContent: 'center',
-		padding: 10
+		padding: 20
 	},
 
 	loginLink: {
@@ -45,7 +46,16 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	logo: {
 		alignSelf: 'center',
-		width
+		width: width * 0.9
+	},
+
+	text: {
+		color: 'white',
+		alignSelf: 'center',
+		textAlign: 'center',
+		fontWeight: '500',
+		marginBottom: 20,
+		fontSize: 16
 	}
 });
 

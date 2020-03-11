@@ -14,7 +14,7 @@ const signUpRequest = (): AppActions => ({ type: SIGNUP_REQUEST });
 
 const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 
-const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
+const signUpFailure = (code?: string): AppActions => ({ type: SIGNUP_FAILURE, code });
 
 export const signUp = (email: string, firstname: string, surname: string, phoneNumber: string, password: string):
 	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse | { ok: boolean }> => {
@@ -44,7 +44,7 @@ export const signUp = (email: string, firstname: string, surname: string, phoneN
 				isSignUp: true
 			};
 		} catch (err) {
-			dispatch(signUpFailure());
+			dispatch(signUpFailure(err.code));
 			console.log(err);
 			if (err.code === 'InvalidLambdaResponseException') toastr.error('Email does not match one of the listed email domains');
 			if (err.code === 'UsernameExistsException') toastr.error('An account with the given email already exists');

@@ -19,4 +19,5 @@ export interface Props extends CommonProps {
 export interface CompState {
 	formOpen: boolean;
 	keyboardOpen: boolean;
+	isClosingForm: boolean;
 }
