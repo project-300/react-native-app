@@ -1,4 +1,4 @@
-import { VEHICLE_MAKES_REQUEST, VEHICLE_MAKES_SUCCESS, VEHICLE_MAKES_FAILURE, VEHICLE_MODELS_REQUEST, VEHICLE_MODELS_SUCCESS, VEHICLE_MODELS_FAILURE } from './../constants/redux-actions';
+import { VEHICLE_MAKES_REQUEST, VEHICLE_MAKES_SUCCESS, VEHICLE_MAKES_FAILURE, VEHICLE_MODELS_REQUEST, VEHICLE_MODELS_SUCCESS, VEHICLE_MODELS_FAILURE, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUBMIT_REQUEST, FORGOT_PASSWORD_SUBMIT_SUCCESS, FORGOT_PASSWORD_SUBMIT_FAILURE } from './../constants/redux-actions';
 import {
 	LOGIN_FAILURE,
 	LOGIN_REQUEST,
@@ -104,12 +104,12 @@ import {
 	GooglePlaceDetails,
 	Journey,
 	SubscriptionPayload,
-	GooglePlace, 
-  User, 
-  VehicleModel, 
-  VehicleMake, 
+	GooglePlace,
+  User,
+  VehicleModel,
+  VehicleMake,
   LastEvaluatedKey,
-  Chat, 
+  Chat,
   Message
 } from '@project-300/common-types';
 import { EditTypes } from './common';
@@ -183,6 +183,30 @@ export interface LoginSuccess {
 
 export interface LoginFailure {
 	type: typeof LOGIN_FAILURE;
+}
+
+export interface ForgotPasswordRequest {
+	type: typeof FORGOT_PASSWORD_REQUEST;
+}
+
+export interface ForgotPasswordSuccess {
+	type: typeof FORGOT_PASSWORD_SUCCESS;
+}
+
+export interface ForgotPasswordFailure {
+	type: typeof FORGOT_PASSWORD_FAILURE;
+}
+
+export interface ForgotPasswordSubmitRequest {
+	type: typeof FORGOT_PASSWORD_SUBMIT_REQUEST;
+}
+
+export interface ForgotPasswordSubmitSuccess {
+	type: typeof FORGOT_PASSWORD_SUBMIT_SUCCESS;
+}
+
+export interface ForgotPasswordSubmitFailure {
+	type: typeof FORGOT_PASSWORD_SUBMIT_FAILURE;
 }
 
 export interface SignUpRequest {
@@ -590,7 +614,7 @@ export type VehicleMakesAndModelsTypes =
  	VehicleModelsSuccess;
 
 export type JourneyActionTypes =
-export interface ContentReloadOn {
+export; interface ContentReloadOn {
 	type: typeof CONTENT_RELOAD_ON;
 }
 
@@ -626,6 +650,14 @@ export type LoginActionTypes =
 	LoginRequest |
 	LoginSuccess |
 	LoginFailure;
+
+export type ForgotPasswordActionTypes =
+	ForgotPasswordRequest |
+	ForgotPasswordSuccess |
+	ForgotPasswordFailure |
+	ForgotPasswordSubmitRequest |
+	ForgotPasswordSubmitSuccess |
+	ForgotPasswordSubmitFailure;
 
 export type SignUpActionTypes =
 	SignUpRequest |
@@ -773,6 +805,7 @@ export type AppActions =
 	ContentReloadActionTypes |
 	DarkModeActionTypes |
 	LoginActionTypes |
+	ForgotPasswordActionTypes |
 	SignUpActionTypes |
 	UserProfileActionTypes |
 	UpdateEmailActionTypes |

@@ -256,7 +256,7 @@ export class Login extends Component<Props, CompState> {
 							styles.bottomForm,
 							AnimatedStyles.zIndex(this.textInputZIndex),
 							AnimatedStyles.translateY(this.textInputY),
-							AnimatedStyles.opacity(this.textInputOpacity),
+							AnimatedStyles.opacity(this.textInputOpacity)
 						] }>
 
 						<TouchableOpacity
@@ -287,6 +287,12 @@ export class Login extends Component<Props, CompState> {
 							keyboardOpen={ this.state.keyboardOpen }
 							navigation={ this.props.navigation }
 						/>
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('ForgotPassword') }>
+							<Text style={ styles.loginLink }>
+								Forgot Password? Reset here
+							</Text>
+						</TouchableOpacity>
 					</Animated.View>
 				</View>
 			</KeyboardAvoidingView>
