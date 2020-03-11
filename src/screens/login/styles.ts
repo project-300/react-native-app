@@ -21,6 +21,15 @@ const styles: Styles = StyleSheet.create<Styles>({
 		zIndex: 50
 	},
 
+	loginLink: {
+		marginTop: 40,
+		alignSelf: 'stretch',
+		color: 'black',
+		fontWeight: 'bold',
+		fontSize: 16,
+		textAlign: 'center'
+	},
+
 	closeButton: {
 		height: 40,
 		width: 40,

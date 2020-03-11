@@ -23,11 +23,13 @@ import passengerConfirmPickupReducer from './passenger/pickup';
 import locationTrackingReducer from './location-tracking';
 import customNavigationReducer from './navigation';
 import passengerJourneyRatingReducer from './passenger/rating';
+import forgotPasswordReducer from './forgot-password';
 
 export default combineReducers({
 	signUpReducer,
 	confirmReducer,
 	loginReducer,
+	forgotPasswordReducer,
 	driverApplicationReducer,
 	userProfileReducer,
 	driverJourneysReducer,

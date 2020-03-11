@@ -13,7 +13,7 @@ export interface Styles {
 export interface Props extends CommonProps {
 	isCreatingAccount: boolean;
 	isConfirmingAccount: boolean;
-	signUp(u: string, pn: string, p: string): Promise<SignUpActionResponse | { ok: boolean }>;
+	signUp(u: string, fn: string, ln: string, pn: string, p: string): Promise<SignUpActionResponse | { ok: boolean }>;
 	confirmAccount(uId: string, c: string, iSU: boolean, u: string): Promise<boolean>;
 }
 

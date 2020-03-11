@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 
 export interface Styles {
@@ -7,6 +7,7 @@ export interface Styles {
 	closeButtonContainer: ViewStyle;
 	closeButton: ViewStyle;
 	bottomForm: ViewStyle;
+	loginLink: TextStyle;
 }
 
 export interface Props extends CommonProps {

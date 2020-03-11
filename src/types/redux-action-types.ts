@@ -139,7 +139,14 @@ import {
 	SET_CURRENT_LOCATION,
 	NAVIGATE_TO,
 	PASSENGER_JOURNEY_RATING_REQUEST,
-	PASSENGER_JOURNEY_RATING_SUCCESS, PASSENGER_JOURNEY_RATING_FAILURE
+	PASSENGER_JOURNEY_RATING_SUCCESS, 
+  PASSENGER_JOURNEY_RATING_FAILURE,
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS, 
+  FORGOT_PASSWORD_FAILURE, 
+  FORGOT_PASSWORD_SUBMIT_REQUEST,
+  FORGOT_PASSWORD_SUBMIT_SUCCESS, 
+  FORGOT_PASSWORD_SUBMIT_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -152,7 +159,8 @@ import {
 	VehicleMake,
 	LastEvaluatedKey,
 	Chat,
-	Message, UserTypes
+	Message, 
+  UserTypes
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -225,6 +233,30 @@ export interface LoginSuccess {
 
 export interface LoginFailure {
 	type: typeof LOGIN_FAILURE;
+}
+
+export interface ForgotPasswordRequest {
+	type: typeof FORGOT_PASSWORD_REQUEST;
+}
+
+export interface ForgotPasswordSuccess {
+	type: typeof FORGOT_PASSWORD_SUCCESS;
+}
+
+export interface ForgotPasswordFailure {
+	type: typeof FORGOT_PASSWORD_FAILURE;
+}
+
+export interface ForgotPasswordSubmitRequest {
+	type: typeof FORGOT_PASSWORD_SUBMIT_REQUEST;
+}
+
+export interface ForgotPasswordSubmitSuccess {
+	type: typeof FORGOT_PASSWORD_SUBMIT_SUCCESS;
+}
+
+export interface ForgotPasswordSubmitFailure {
+	type: typeof FORGOT_PASSWORD_SUBMIT_FAILURE;
 }
 
 export interface SignUpRequest {
@@ -852,6 +884,14 @@ export type LoginActionTypes =
 	LoginSuccess |
 	LoginFailure;
 
+export type ForgotPasswordActionTypes =
+	ForgotPasswordRequest |
+	ForgotPasswordSuccess |
+	ForgotPasswordFailure |
+	ForgotPasswordSubmitRequest |
+	ForgotPasswordSubmitSuccess |
+	ForgotPasswordSubmitFailure;
+
 export type SignUpActionTypes =
 	SignUpRequest |
 	SignUpSuccess |
@@ -1047,6 +1087,7 @@ export type AppActions =
 	ContentReloadActionTypes |
 	DarkModeActionTypes |
 	LoginActionTypes |
+	ForgotPasswordActionTypes |
 	SignUpActionTypes |
 	UserProfileActionTypes |
 	UpdateEmailActionTypes |

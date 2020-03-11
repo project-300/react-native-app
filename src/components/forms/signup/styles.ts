@@ -24,7 +24,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	loginLink: {
 		marginTop: 40,
-		alignSelf: 'center',
+		alignSelf: 'stretch',
 		color: 'white',
 		fontWeight: '500',
 		fontSize: 16
