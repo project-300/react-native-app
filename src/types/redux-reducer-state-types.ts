@@ -81,7 +81,7 @@ export interface CustomNavigationState {
 }
 
 export interface DriverApplicationState {
-	isFetching: boolean;
+	isApplying: boolean;
 	applied?: boolean;
 }
 
