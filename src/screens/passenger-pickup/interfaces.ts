@@ -2,6 +2,7 @@ import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { CommonProps } from '../../types/common';
 import { Journey, PassengerBrief } from '@project-300/common-types';
 import { GeneralJourneyActionsState, PassengerPickupState } from '../../types/redux-reducer-state-types';
+import { AppActions } from '../../types/redux-action-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -22,6 +23,9 @@ export interface Props extends CommonProps, PassengerPickupState, GeneralJourney
 	driverConfirmPassengerPickup(journeyId: string, createdAt: string, passengerId: string): Promise<boolean>;
 	driverCancelPassengerPickup(journeyId: string, createdAt: string, passengerId: string): Promise<boolean>;
 	cancelJourney(journeyId: string, createdAt: string): Promise<boolean>;
+	startLocationTracking(): AppActions;
+	stopLocationTracking(): AppActions;
+	stopPublishingLocation(): AppActions;
 }
 
 export interface State {

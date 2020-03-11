@@ -45,7 +45,7 @@ export default class ExternalApi {
 		return data;
 	}
 
-	public static GoogleDirectionsRoute = async (origin: Coords, destination: Coords): Promise<Coords[]> => {
+	public static GoogleDirectionsRoute = async (origin: Coords, destination: Coords): Promise<{ route: Coords[]; distance?: number; duration?: number }> => {
 		const o = `${origin.latitude},${origin.longitude}`;
 		const d = `${destination.latitude},${destination.longitude}`;
 
@@ -56,12 +56,19 @@ export default class ExternalApi {
 		const ok: boolean = res.ok;
 		const data: GoogleDirectionsResult = await res.json();
 
+		console.log(data);
+
 		if (!ok) throw data.error || Error('Unknown Error');
 
 		const route = ExternalApi._convertPointsToCoords(data.routes[0]);
 		if (!route) throw Error('No route found');
 
-		return route;
+		if (!data.routes.length || !data.routes[0].legs.length) return { route };
+
+		const distance: number = data.routes[0].legs[0].distance.value;
+		const duration: number = data.routes[0].legs[0].duration.value;
+
+		return { route, distance, duration };
 	}
 
 	private static _convertPointsToCoords = (route: GoogleDirectionsRoute): Coords[] => {

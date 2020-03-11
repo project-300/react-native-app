@@ -88,7 +88,7 @@ export class CreateJourney extends Component<Props, State> {
 
 	private _createJourney = async (): Promise<void> => {
 		const { totalNoOfSeats, pricePerSeat, leavingAt } = this.state;
-		const { originPlaceDetails, destinationPlaceDetails, route } = this.props;
+		const { originPlaceDetails, destinationPlaceDetails, route, duration, distance } = this.props;
 
 		const origin: Place = {
 			latitude: originPlaceDetails.geometry.location.lat,
@@ -108,6 +108,8 @@ export class CreateJourney extends Component<Props, State> {
 			totalNoOfSeats,
 			pricePerSeat,
 			plannedRoute: route,
+			estimatedDuration: duration,
+			estimatedDistance: distance,
 			times: {
 				leavingAt
 			}

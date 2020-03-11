@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { LocationTrackingState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import {
-	setCurrentLocation
+	setCurrentLocation,
+	updateCurrentLocation
 } from '../../redux/actions';
 import DriverLocation from '../../services/driver-location';
 import { Coords } from '@project-300/common-types';
@@ -11,14 +12,14 @@ import { View } from 'react-native';
 import { AppActions } from '../../types/redux-action-types';
 
 interface State {
-	// routeTravelled: Coords[];
 	movementCount: number;
 	tracker: number | null;
 }
 
 interface Props extends LocationTrackingState {
 	driverMovement(journeyId: string, createdAt: string, coords: Coords): Promise<void>;
-	setCurrentLocation(): AppActions;
+	setCurrentLocation(coords: Coords): Promise<void>;
+	updateCurrentLocation(coords: Coords): AppActions;
 }
 
 export class LocationTracker extends Component<Props, State> {
@@ -27,7 +28,6 @@ export class LocationTracker extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			// routeTravelled: [],
 			movementCount: 0, // Current session driver movements
 			tracker: null
 		};
@@ -57,30 +57,9 @@ export class LocationTracker extends Component<Props, State> {
 				console.log('MOVEMENT');
 				console.log(coords);
 
-				// const { routeTravelled } = this.state;
-				// const length: number = routeTravelled.length;
-				// const start: Coords = routeTravelled[length - 2];
-				// const end: Coords = routeTravelled[length - 1];
-				// const direction: number = ((length >= 2 ?
-				// 	MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) :
-				// 	0) + 90) % 360;
-
-				// this.setState({
-				// 	routeTravelled: this.state.routeTravelled.concat({
-				// 		latitude: location.coords.latitude,
-				// 		longitude: location.coords.longitude
-				// 	})
-				// });
-
-				// if (this.props.journey) { // Save movement every 10 movements
-				// 	await this._updateSavedLocation(coords);
-				// 	await this.props.driverMovement(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt, coords);
-				// }
-
-				// 	await this.props.driverMovement(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt, coords);
-
 				await this._updateSavedLocation(coords);
-				this.props.setCurrentLocation(coords);
+				if (this.props.publishLocation) await this.props.setCurrentLocation(coords);
+				else this.props.updateCurrentLocation(coords);
 			},
 			(error: PositionError) => console.log(error.message),
 			{ enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 });
@@ -110,5 +89,6 @@ const mapStateToProps = (state: AppState): LocationTrackingState => ({
 });
 
 export default connect(mapStateToProps, {
-	setCurrentLocation
+	setCurrentLocation,
+	updateCurrentLocation
 })(LocationTracker);

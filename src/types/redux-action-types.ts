@@ -260,6 +260,7 @@ export interface CurrentJourneySubReceived {
 	type: typeof CURRENT_JOURNEY_SUB_RECEIVED;
 	payload: SubscriptionPayload;
 	userId: string;
+	travellingAs?: UserTypes;
 }
 
 export interface PassengerPickupConfirmationAlert {
@@ -636,6 +637,8 @@ export interface CreateJourneyFindRouteRequest {
 export interface CreateJourneyFindRouteSuccess {
 	type: typeof CREATE_JOURNEY_FIND_ROUTE_SUCCESS;
 	route: Coords[];
+	distance: number;
+	duration: number;
 }
 
 export interface CreateJourneyFindRouteFailure {
@@ -772,6 +775,7 @@ export interface ContentReloadOff {
 
 export interface StartTracking {
 	type: typeof START_LOCATION_TRACKING;
+	publishLocation: boolean;
 }
 
 export interface StopTracking {

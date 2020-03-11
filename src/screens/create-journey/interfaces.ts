@@ -36,6 +36,8 @@ export interface Props extends CommonProps {
 	destinationMarkerCoords: Coords | null;
 	originMarkerCoords: Coords | null;
 	route: Coords[];
+	duration: number;
+	distance: number;
 	googlePlacesSearch(q: string): Promise<void>;
 	getGooglePlaceDetails(p: string, l: string): Promise<void>;
 	selectGooglePlace(p: GooglePlace, l: string): AppActions;

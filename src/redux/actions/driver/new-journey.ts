@@ -25,9 +25,7 @@ import { AppActions } from '../../../types/redux-action-types';
 import { GooglePlace } from '../../../types/maps';
 import { GoogleNearbyPlaceResult, GooglePlaceDetailsResult, GooglePlacesSearchResult } from '../../../types/google';
 import ExternalApi from '../../../api/external-api';
-import { Coords, CreateJourney, GooglePlaceDetails, Journey } from '@project-300/common-types';
-import HttpAPI from '../../../api/http';
-import { userId } from '../../../auth';
+import { Coords, GooglePlaceDetails, Journey } from '@project-300/common-types';
 import { CreateJourneyResult } from '../../../types/http-responses';
 import { JourneyService } from '../../../services/journey';
 
@@ -52,7 +50,8 @@ const createJourneyFailure = (): AppActions => ({ type: CREATE_JOURNEY_FAILURE }
 
 const createJourneyFindRouteRequest = (): AppActions => ({ type: CREATE_JOURNEY_FIND_ROUTE_REQUEST });
 
-const createJourneyFindRouteSuccess = (route: Coords[]): AppActions => ({ type: CREATE_JOURNEY_FIND_ROUTE_SUCCESS, route });
+const createJourneyFindRouteSuccess = (route: Coords[], distance?: number, duration?: number): AppActions =>
+	({ type: CREATE_JOURNEY_FIND_ROUTE_SUCCESS, route, distance, duration });
 
 const createJourneyFindRouteFailure = (): AppActions => ({ type: CREATE_JOURNEY_FIND_ROUTE_FAILURE });
 
@@ -171,12 +170,13 @@ export const findRoute = (origin: Coords, destination: Coords): (dispatch: Dispa
 		dispatch(createJourneyFindRouteRequest());
 
 		try {
-			const route: Coords[] = await ExternalApi.GoogleDirectionsRoute(origin, destination);
+			const details: { route: Coords[]; distance?: number; duration?: number } =
+				await ExternalApi.GoogleDirectionsRoute(origin, destination);
 
-			console.log(route);
+			console.log(details);
 
-			if (route.length) {
-				dispatch(createJourneyFindRouteSuccess(route));
+			if (details.route.length) {
+				dispatch(createJourneyFindRouteSuccess(details.route, details.distance, details.duration));
 			} else {
 				dispatch(createJourneyFindRouteFailure());
 				toastr.error('Unable to find route');

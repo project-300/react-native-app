@@ -43,7 +43,7 @@ export class DriverTracking extends Component<Props, State> {
 	}
 
 	public async componentDidMount(): Promise<void> {
-		this.props.startLocationTracking();
+		// this.props.startLocationTracking();
 
 		await this.props.getPassengerJourneyDetails(this.state.journeyKey.journeyId);
 		await this.props.subscribeDriverLocation(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);

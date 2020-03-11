@@ -10,7 +10,10 @@ import {
 	beginPickup,
 	driverConfirmPassengerPickup,
 	driverCancelPassengerPickup,
-	cancelJourney
+	cancelJourney,
+	startLocationTracking,
+	stopLocationTracking,
+	stopPublishingLocation
 } from '../../redux/actions';
 import { ActivityIndicator, Button, Modal, Portal } from 'react-native-paper';
 import { Colours, ContrastTheme, RedTheme } from '../../constants/theme';
@@ -44,11 +47,13 @@ export class PassengerPickup extends Component<Props, State> {
 		const { journeyKey: { journeyId, createdAt } } = this.state;
 		await this.props.getPassengerPickupJourney(journeyId, createdAt);
 		await this.props.beginPickup(journeyId, createdAt);
+		this.props.startLocationTracking();
 		// await this.props.currentJourney(this.props.journey);
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
 		this.setState(this.initialState);
+		this.props.stopLocationTracking();
 	}
 
 	// public async componentWillUnmount(): Promise<void> {
@@ -85,6 +90,13 @@ export class PassengerPickup extends Component<Props, State> {
 		const { journeyKey: { journeyId, createdAt } } = this.state;
 		const result: boolean = await this.props.cancelJourney(journeyId, createdAt);
 		if (result) this.props.navigation.navigate('MyJourneys');
+	}
+
+	private _continueToMap = (): void => {
+		const { journeyKey: { journeyId, createdAt } } = this.state;
+
+		this.props.stopPublishingLocation();
+		this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } });
 	}
 
 	private _renderConfirmModal = (): ReactElement => {
@@ -183,7 +195,6 @@ export class PassengerPickup extends Component<Props, State> {
 
 	public render(): ReactElement {
 		const { journey } = this.props;
-		const { journeyKey: { journeyId, createdAt } } = this.state;
 
 		if (!journey) return <View>
 			{ this._renderNavigationEvents() }
@@ -320,7 +331,7 @@ export class PassengerPickup extends Component<Props, State> {
 								theme={ ContrastTheme }
 								style={ [ formStyles.button, styles.button ] }
 								disabled={ this.props.totalCount !== passengers.length }
-								onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } }) }
+								onPress={ this._continueToMap }
 							>Continue</Button>
 					}
 
@@ -353,5 +364,8 @@ export default connect(mapStateToProps, {
 	beginPickup,
 	driverConfirmPassengerPickup,
 	driverCancelPassengerPickup,
-	cancelJourney
+	cancelJourney,
+	startLocationTracking,
+	stopLocationTracking,
+	stopPublishingLocation
 })(PassengerPickup);

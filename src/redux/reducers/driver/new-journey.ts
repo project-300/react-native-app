@@ -33,7 +33,9 @@ const initialState: NewJourneyState = {
 	destinationPlaceDetails: undefined,
 	destinationMarkerCoords: null,
 	originMarkerCoords: null,
-	route: []
+	route: [],
+	distance: 0,
+	duration: 0
 };
 
 const newJourneyReducer = (state: NewJourneyState = initialState, action: GooglePlacesSearchActionTypes): NewJourneyState => {
@@ -82,7 +84,7 @@ const newJourneyReducer = (state: NewJourneyState = initialState, action: Google
 		case CREATE_JOURNEY_FIND_ROUTE_SUCCESS:
 			payload = action as CreateJourneyFindRouteSuccess;
 
-			return { ...state, route: payload.route };
+			return { ...state, route: payload.route, distance: payload.distance, duration: payload.duration };
 		case CREATE_JOURNEY_FIND_ROUTE_FAILURE:
 			return { ...state };
 		case CLEAR_NEW_JOURNEY_FORM_DETAILS:

@@ -53,6 +53,7 @@ export interface SignUpState {
 export interface LocationTrackingState {
 	allowTracking: boolean;
 	currentLocation?: Coords;
+	publishLocation: boolean;
 }
 
 export interface ConfirmState {
@@ -196,4 +197,6 @@ export interface NewJourneyState {
 	destinationMarkerCoords: Coords | null;
 	originMarkerCoords: Coords | null;
 	route: Coords[];
+	distance: number;
+	duration: number;
 }

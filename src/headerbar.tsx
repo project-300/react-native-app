@@ -92,10 +92,14 @@ export class HeaderBar extends Component<Props, State> {
 
 		if (!route) this.props.setCurrentJourney(undefined);
 
-		if (!route && this._journeyStatus(journeyStatus, 'CANCELLED'))
+		if (!route && this._journeyStatus(journeyStatus, 'CANCELLED')) {
+			this.props.resetCurrentJourneyUpdatedFlag();
 			return toastr.warning('Your current journey has been Cancelled');
-		if (!route && this._journeyStatus(journeyStatus, 'FINISHED'))
+		}
+		if (!route && this._journeyStatus(journeyStatus, 'FINISHED')) {
+			this.props.resetCurrentJourneyUpdatedFlag();
 			return toastr.warning('Your current journey has Finished');
+		}
 
 		if (route) this.props.navigation.navigate(route, {
 			journeyKey: {
