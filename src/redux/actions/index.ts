@@ -18,3 +18,4 @@ export * from './content-reloading';
 export * from './chat/all-chats';
 export * from './chat/chat';
 export * from './chat/message';
+export * from './forgot-password';

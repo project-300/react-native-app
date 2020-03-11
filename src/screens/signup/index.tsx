@@ -100,16 +100,16 @@ export class SignUp extends Component<Props, State> {
 		}).start();
 	}
 
-	private _signUp = async (email: string, phoneNumber: string, password: string): Promise<void | boolean> => {
+	private _signUp = async (email: string, firstname: string, surname: string, phoneNumber: string, password: string): Promise<void | boolean> => {
 		this.swipeBackground('LEFT');
 
 		if (!email) return toastr.error('Email is missing');
 		if (!EmailValidator.validate(email)) return toastr.error('Invalid Email Address');
 		if (!phoneNumber) return toastr.error('Phone number is missing');
-		if (!new RegExp('08[35679]\\d{7}$').test(phoneNumber)) return toastr.error('Phone number is not a valid Irish number');
+		// if (!new RegExp('08[35679]\\d{7}$').test(phoneNumber)) return toastr.error('Phone number is not a valid Irish number');
 		if (!password) return toastr.error('Password is missing');
 
-		const res: SignUpActionResponse = await this.props.signUp(email, phoneNumber, password) as SignUpActionResponse;
+		const res: SignUpActionResponse = await this.props.signUp(email, firstname, surname, phoneNumber, password) as SignUpActionResponse;
 		if (!res || !res.ok) return;
 
 		const { userId, codeDeliveryDetails, isSignUp } = res;

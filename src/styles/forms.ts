@@ -26,7 +26,9 @@ const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 
 	buttonText: {
 		fontSize: 20,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		textAlign: 'center',
+		alignSelf: 'stretch'
 	},
 
 	input: {

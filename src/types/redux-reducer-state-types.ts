@@ -34,6 +34,13 @@ export interface LoginState {
 	isLoggedIn: boolean;
 }
 
+export interface ForgotPasswordState {
+	isConfirming: boolean;
+	confirmed: boolean;
+	isSendingCode: boolean;
+	codeSent: boolean;
+}
+
 export interface SignUpState {
 	isCreatingAccount: boolean;
 	payload?: object;

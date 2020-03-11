@@ -36,7 +36,7 @@ export class JourneyService {
 	public static endJourney = async (journeyId: string): Promise<void> => API.put(ApiName, `/journeys/end/${journeyId}`, '').catch(JourneyService.handleError);
 
 	public static cancelPassengerAcceptedJourney = async (journeyId: string, createdAt: string): Promise<void> =>
-		API.put(ApiName, `/journeys/passenger-cancel`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError);
+		API.put(ApiName, `/journeys/passenger-cancel`, { body: { journeyId, createdAt } }).catch(JourneyService.handleError)
 
 	private static handleError = (error: any): void => {
 		if (!error.response || !error.response.data || !error.response.data) throw { message: 'Unknown Error' };

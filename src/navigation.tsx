@@ -1,5 +1,6 @@
 import Login from './screens/login';
 import SignUp from './screens/signup';
+import ForgotPassword from './screens/forgotpassword';
 import DriverApplication from './screens/driver-application';
 import Profile from './screens/profile';
 import MyJourneys from './screens/driver/journeys';
@@ -89,6 +90,10 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 	},
 	SignUp: {
 		screen: SignUp,
+		navigationOptions: headerHidden
+	},
+	ForgotPassword: {
+		screen: ForgotPassword,
 		navigationOptions: headerHidden
 	}
 });

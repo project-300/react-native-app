@@ -16,11 +16,13 @@ import viewJourneyReducer from './passenger/view-journey';
 import contentReloadReducer from './content-reloading';
 import allChatsReducer from './chat/all-chat';
 import chatMessagesReducer from './chat/message';
+import forgotPasswordReducer from './forgot-password';
 
 export default combineReducers({
 	signUpReducer,
 	confirmReducer,
 	loginReducer,
+	forgotPasswordReducer,
 	driverApplicationReducer,
 	userProfileReducer,
 	driverJourneysReducer,
