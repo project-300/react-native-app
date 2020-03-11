@@ -1,20 +1,22 @@
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { Theme } from '../constants/theme';
 
 interface FormStyles {
 	largeButton: ViewStyle;
 	buttonText: TextStyle;
 	input: ViewStyle;
+	button: ViewStyle;
 }
 
 const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 	largeButton: {
 		backgroundColor: 'white',
-		height: 70,
+		height: 56,
 		marginHorizontal: 20,
-		borderRadius: 35,
+		borderRadius: 4,
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginVertical: 5,
+		marginVertical: 10,
 		shadowOffset: {
 			width: 2,
 			height: 2
@@ -25,10 +27,9 @@ const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 	},
 
 	buttonText: {
-		fontSize: 20,
-		fontWeight: 'bold',
-		textAlign: 'center',
-		alignSelf: 'stretch'
+		fontSize: 16,
+		fontWeight: '500',
+		color: Theme.accent
 	},
 
 	input: {
@@ -40,6 +41,10 @@ const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 		marginVertical: 5,
 		borderColor: 'rgba(0, 0, 0, 0.2)',
 		backgroundColor: 'white'
+	},
+
+	button: {
+		padding: 8
 	}
 });
 

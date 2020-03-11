@@ -5,6 +5,12 @@ import {
 	START_JOURNEY_REQUEST,
 	START_JOURNEY_SUCCESS,
 	START_JOURNEY_FAILURE,
+	PAUSE_JOURNEY_REQUEST,
+	PAUSE_JOURNEY_SUCCESS,
+	PAUSE_JOURNEY_FAILURE,
+	RESUME_JOURNEY_REQUEST,
+	RESUME_JOURNEY_SUCCESS,
+	RESUME_JOURNEY_FAILURE,
 	END_JOURNEY_REQUEST,
 	END_JOURNEY_SUCCESS,
 	END_JOURNEY_FAILURE,
@@ -18,13 +24,18 @@ import {
 	EndJourneySuccess,
 	JourneyDetailsSuccess,
 	JourneyMapActionTypes,
+	PauseJourneySuccess,
+	ResumeJourneySuccess,
 	StartJourneySuccess
 } from '../../../types/redux-action-types';
 
 const initialState: JourneyMapState = {
 	status: 'NOT_STARTED',
-	isStarting: false,
 	isStarted: false,
+	isBeginningPickup: false,
+	isStarting: false,
+	isPausing: false,
+	isResuming: false,
 	isEnding: false,
 	isMoving: false,
 	isRequestingJourneyDetails: false,
@@ -51,6 +62,24 @@ const journeyDetailsReducer = (state: JourneyMapState = initialState, action: Jo
 			return { ...state, isStarting: false, journey: payload.journey, isStarted: true };
 		case START_JOURNEY_FAILURE:
 			return { ...state, isStarting: false };
+		case PAUSE_JOURNEY_REQUEST:
+			return { ...state, isPausing: true };
+		case PAUSE_JOURNEY_SUCCESS:
+			payload = action as PauseJourneySuccess;
+
+			return { ...state, isPausing: false, journey: payload.journey };
+		case PAUSE_JOURNEY_FAILURE:
+			return { ...state, isPausing: false };
+
+		case RESUME_JOURNEY_REQUEST:
+			return { ...state, isResuming: true };
+		case RESUME_JOURNEY_SUCCESS:
+			payload = action as ResumeJourneySuccess;
+
+			return { ...state, isResuming: false, journey: payload.journey };
+		case RESUME_JOURNEY_FAILURE:
+			return { ...state, isResuming: false };
+
 		case END_JOURNEY_REQUEST:
 			return { ...state, isEnding: true };
 		case END_JOURNEY_SUCCESS:

@@ -1,4 +1,15 @@
-import { Chat, Coords, GooglePlaceDetails, Journey, User, VehicleMake, VehicleModel, LastEvaluatedKey, Message } from '@project-300/common-types';
+import {
+	Chat,
+	Coords,
+	GooglePlaceDetails,
+	Journey,
+	User,
+	VehicleMake,
+	VehicleModel,
+	LastEvaluatedKey,
+	Message,
+	UserTypes
+} from '@project-300/common-types';
 import { Region } from 'react-native-maps';
 import { GooglePlace } from './maps';
 
@@ -46,8 +57,26 @@ export interface SignUpState {
 	payload?: object;
 }
 
+export interface LocationTrackingState {
+	allowTracking: boolean;
+	currentLocation?: Coords;
+	publishLocation: boolean;
+}
+
 export interface ConfirmState {
 	isConfirmingAccount: boolean;
+}
+
+export interface CurrentJourneyState {
+	currentJourney?: Journey;
+	travellingAs: UserTypes;
+	hasUpdated: boolean;
+	awaitingConfirmation: boolean;
+}
+
+export interface CustomNavigationState {
+	navigateToRoute: string;
+	navigationParams: any;
 }
 
 export interface DriverApplicationState {
@@ -111,13 +140,32 @@ export interface UpdatePasswordState {
 export interface JourneysState {
 	isRequesting: boolean;
 	isCancelling: boolean;
-	journeys: { current: Journey[]; previous: Journey[] };
+	journeys: { driver: Journey[]; passenger: Journey[] };
+}
+
+export interface PassengerPickupState {
+	isRequesting: boolean;
+	isBeginningPickup: boolean;
+	isConfirming: string;
+	isCancelling: string;
+	journey?: Journey;
+	pickedUpCount: number;
+	cancelledCount: number;
+	totalCount: number;
+}
+
+export interface GeneralJourneyActionsState {
+	isCancellingJourney: boolean;
+	journey?: Journey;
 }
 
 export interface JourneyMapState {
 	status: string;
-	isStarting: boolean;
 	isStarted: boolean;
+	isBeginningPickup: boolean;
+	isStarting: boolean;
+	isPausing: boolean;
+	isResuming: boolean;
 	isEnding: boolean;
 	isMoving: boolean;
 	isRequestingJourneyDetails: boolean;
@@ -137,6 +185,17 @@ export interface DriverTrackingState {
 	ended: boolean;
 }
 
+export interface PassengerConfirmPickupState {
+	isConfirming: boolean;
+	journey?: Journey;
+	passengerConfirmPickupAlert: boolean;
+}
+
+export interface PassengerJourneyRatingState {
+	isRating: boolean;
+	requestRating: boolean;
+}
+
 export interface NewJourneyState {
 	places: GooglePlace[];
 	originPlace: GooglePlace | null;
@@ -146,4 +205,6 @@ export interface NewJourneyState {
 	destinationMarkerCoords: Coords | null;
 	originMarkerCoords: Coords | null;
 	route: Coords[];
+	distance: number;
+	duration: number;
 }

@@ -2,16 +2,18 @@ import React, { Component, ReactElement } from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import CreateNavigator from './navigation';
 import Amplify from 'aws-amplify';
-import { isStoreLoggedIn } from './auth';
+import { isStoreLoggedIn, userType } from './auth';
 import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
 import { store } from './store';
 import { DefaultTheme, Provider as PaperProvider, Theme as RNPTheme } from 'react-native-paper';
 import { Theme, DarkTheme as Test } from './constants/theme';
-import { getChats, setDarkMode } from './redux/actions';
+import { getChats, setDarkMode, getCurrentJourney } from './redux/actions';
 import WS from './api/websocket';
 import { v4 as uuid } from 'uuid';
 import { AsyncStorage } from 'react-native';
+import ModalLayer from './components/modals/app-modals';
+import LocationTracker from './components/tracking/tracking';
 
 Amplify.configure(AWS_CONFIG);
 
@@ -21,6 +23,7 @@ interface State {
 	checkedLoggedIn: boolean;
 	isDarkMode: boolean;
 	totalUnreadCount: number;
+	userType: string;
 }
 
 /*
@@ -46,7 +49,8 @@ export default class App extends Component<Props, State> {
 			loggedIn: false,
 			checkedLoggedIn: false,
 			isDarkMode: false,
-			totalUnreadCount: 0
+			totalUnreadCount: 0,
+			userType: 'Passenger'
 		};
 
 		store.dispatch(setDarkMode());
@@ -58,18 +62,17 @@ export default class App extends Component<Props, State> {
 			this.setState({ loggedIn, checkedLoggedIn: true });
 
 			await setDeviceId();
+
+			const uType: string | null = await userType();
+			if (uType) this.setState({ userType: uType });
+
 			WS._setup();
-			// await getChats();
+
+			store.dispatch(getCurrentJourney(true));
 			store.dispatch(getChats());
 		} catch (err) {
 			toastr.error('Unable to authenticate');
 		}
-
-		// store.subscribe(() => {
-		// 	const totalUnreadCount: number = store.getState().allChatsReducer.totalUnreadCount;
-		// 	if (totalUnreadCount !== this.state.totalUnreadCount)
-		// 		this.setState({ totalUnreadCount });
-		// });
 	}
 
 	public render(): ReactElement | null {
@@ -77,7 +80,7 @@ export default class App extends Component<Props, State> {
 
 		if (!checkedLoggedIn) return null; // Replace with Splash Screen
 
-		const Layout = CreateNavigator(loggedIn);
+		const Layout = CreateNavigator(loggedIn, this.state.userType === 'Driver'); // Update to pass in user type every time
 
 		const theme: RNPTheme = {
 			...DefaultTheme,
@@ -94,8 +97,10 @@ export default class App extends Component<Props, State> {
 			<StoreProvider store={ store }>
 				<PaperProvider theme={ theme }>
 					<Layout />
+					<ModalLayer />
+					<LocationTracker />
 				</PaperProvider>
-		  	</StoreProvider>
+			</StoreProvider>
 		);
 	}
 

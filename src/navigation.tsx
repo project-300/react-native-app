@@ -3,15 +3,18 @@ import SignUp from './screens/signup';
 import ForgotPassword from './screens/forgotpassword';
 import DriverApplication from './screens/driver-application';
 import Profile from './screens/profile';
-import MyJourneys from './screens/driver/journeys';
-import JourneyMap from './screens/driver/journey';
-import DriverTracking from './screens/passenger/driver-tracking';
-import NewJourney from './screens/new-journey';
-import AllJourneys from './screens/all-journeys';
-import ViewJourney from './screens/passenger/view-journey';
-import InteractiveMap from './screens/passenger/view-journey/journey-map';
-import AllChats from './screens/chat/all-chats';
+import MyJourneys from './screens/my-journeys';
+import JourneyMap from './screens/driver-journey-map';
+import DriverTracking from './screens/passenger-driver-tracking';
+import CreateJourney from './screens/create-journey';
+import SearchJourneys from './screens/search-journeys';
+import ViewJourneyDetails from './screens/view-journey-details';
+import InteractiveMap from './screens/view-journey-details/interactive-map';
+import AllChats from './screens/all-chats';
 import Chat from './screens/chat';
+import PassengerPickup from './screens/passenger-pickup';
+import JourneyOverview from './screens/passenger-journey-overview';
+import JourneyRating from './screens/journey-rating';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import React from 'react';
 import HeaderBar, { CustomOption } from './headerbar';
@@ -29,17 +32,6 @@ import {
 } from 'react-navigation-material-bottom-tabs';
 import { NavigationTabProp } from 'react-navigation-material-bottom-tabs/src/types';
 import { Theme } from './constants/theme';
-import { AppState, store } from './store';
-import { AllChatState } from './types/redux-reducer-state-types';
-import { connect } from 'react-redux';
-import { getChats } from './redux/actions';
-
-let UNREAD_COUNT: number = 0;
-store.subscribe(() => {
-	console.log('UPDATED');
-	UNREAD_COUNT = store.getState().allChatsReducer.totalUnreadCount;
-	console.log(UNREAD_COUNT);
-});
 
 const headerHidden = (): NavigationStackScreenOptions => ({
 	header: null
@@ -71,9 +63,9 @@ const headerBar = (
 		options={ {
 			display: true,
 			logout: true,
-			settings: true,
+			settings: false,
 			becomeDriver: true,
-			darkMode: true
+			darkMode: false
 		} }
 		customOptions={ customOptions }
 	/>;
@@ -98,6 +90,13 @@ const SignedOutStack: NavigationContainer = createStackNavigator({
 	}
 });
 
+const JourneyMapStack: NavigationContainer = createStackNavigator({
+	JourneyMap: {
+		screen: JourneyMap,
+		navigationOptions: headerHidden
+	}
+});
+
 const ProfileTab: NavigationContainer = createStackNavigator({
 	Profile: {
 		screen: Profile,
@@ -110,13 +109,13 @@ const ProfileTab: NavigationContainer = createStackNavigator({
 });
 
 const SearchTab: NavigationContainer = createStackNavigator({
-	AllJourneys: {
-		screen: AllJourneys,
+	SearchJourneys: {
+		screen: SearchJourneys,
 		...navigationOptions('Search Journeys', undefined, false)
 	},
 	ViewJourney: {
-		screen: ViewJourney,
-		...navigationOptions('Journey', undefined, true)
+		screen: ViewJourneyDetails,
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	},
 	InteractiveMap: {
 		screen: InteractiveMap,
@@ -124,28 +123,44 @@ const SearchTab: NavigationContainer = createStackNavigator({
 	},
 	OtherProfile: {
 		screen: Profile,
-		...navigationOptions('Other Profile', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	}
 });
 
 const MyJourneysTab: NavigationContainer = createStackNavigator({
-	JourneyMap: {
-		screen: JourneyMap,
-		...navigationOptions('Your Journey', undefined, true)
-	},
 	MyJourneys: {
 		screen: MyJourneys,
-		...navigationOptions('My Journeys', undefined, false)
+		...navigationOptions('My Accepted Lifts', undefined, false)
+	},
+	PassengerPickup: {
+		screen: PassengerPickup,
+		...navigationOptions('Passenger Pickup', undefined, true)
 	},
 	DriverTrackingMap: {
 		screen: DriverTracking,
 		...navigationOptions('Track Driver', undefined, true)
+	},
+	PassengerViewJourney: {
+		screen: ViewJourneyDetails,
+		...navigationOptions('Journey', undefined, true)
+	},
+	PassengerJourneyOverview: {
+		screen: JourneyOverview,
+		...navigationOptions('Journey Overview', undefined, false)
+	},
+	JourneyRating: {
+		screen: JourneyRating,
+		...navigationOptions('Journey Rating', undefined, false)
+	},
+	PassengerOtherProfile: {
+		screen: Profile,
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	}
 });
 
 const NewJourneyTab: NavigationContainer = createStackNavigator({
 	NewJourney: {
-		screen: NewJourney,
+		screen: CreateJourney,
 		...navigationOptions('Create Journey', undefined, false)
 	}
 });
@@ -157,27 +172,23 @@ const ChatTab: NavigationContainer = createStackNavigator({
 	},
 	Chat: {
 		screen: Chat,
-		...navigationOptions('Chat', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	},
 	ChatOtherProfile: {
 		screen: Profile,
-		...navigationOptions('Other Profile', undefined, true)
+		...navigationOptions('Loading...', undefined, true) // Title updated in screen
 	}
 });
 
-const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
+const SignedInPassengerStack: NavigationContainer = createMaterialBottomTabNavigator({
 	MyJourneysTab: {
 		screen: MyJourneysTab,
 		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'My Journeys',
-			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />
-		})
-	},
-	ProfileTab: {
-		screen: ProfileTab,
-		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
-			title: 'Profile',
-			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
+			title: 'My Lifts',
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('MyJourneys');
+			}
 		})
 	},
 	SearchTab: {
@@ -186,7 +197,56 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 			title: 'Search',
 			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ Theme.accent } solid />,
 			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
-				if (navigation.isFocused) navigation.navigate('AllJourneys');
+				if (navigation.isFocused) navigation.navigate('SearchJourneys');
+			}
+		})
+	},
+	ChatTab: {
+		screen: ChatTab,
+		navigationOptions: ({ screenProps }: { screenProps: ScreenProps }): NavigationMaterialBottomTabOptions => ({
+			// tabBarBadge: screenProps.totalUnreadCount,
+			title: 'Chat',
+			tabBarIcon: <Icon name={ 'comments' } size={ 22 } color={ Theme.accent } solid />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('AllChats');
+			}
+		})
+	},
+	ProfileTab: {
+		screen: ProfileTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Profile',
+			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
+		})
+	}
+},
+{
+	initialRouteName: 'SearchTab',
+	tabBarPosition: 'bottom',
+	animationEnabled: true,
+	swipeEnabled: true,
+	shifting: true,
+	activeColor: Theme.accent
+});
+
+const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigator({
+	MyJourneysTab: {
+		screen: MyJourneysTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'My Lifts',
+			tabBarIcon: <Icon name={ 'car' } size={ 22 } color={ Theme.accent } />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('MyJourneys');
+			}
+		})
+	},
+	SearchTab: {
+		screen: SearchTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Search',
+			tabBarIcon: <Icon name={ 'search' } size={ 22 } color={ Theme.accent } solid />,
+			tabBarOnPress: ({ navigation }: { navigation: NavigationTabProp }): void => {
+				if (navigation.isFocused) navigation.navigate('SearchJourneys');
 			}
 		})
 	},
@@ -207,23 +267,33 @@ const SignedInStack: NavigationContainer = createMaterialBottomTabNavigator({
 				if (navigation.isFocused) navigation.navigate('AllChats');
 			}
 		})
+	},
+	ProfileTab: {
+		screen: ProfileTab,
+		navigationOptions: (): NavigationMaterialBottomTabOptions => ({
+			title: 'Profile',
+			tabBarIcon: <Icon name={ 'user' } size={ 22 } color={ Theme.accent } solid />
+		})
 	}
 },
-	{
-		initialRouteName: 'MyJourneysTab',
-		tabBarPosition: 'bottom',
-		animationEnabled: true,
-		swipeEnabled: true,
-		shifting: true,
-		activeColor: Theme.accent
-	}
-);
+{
+	initialRouteName: 'MyJourneysTab',
+	tabBarPosition: 'bottom',
+	animationEnabled: true,
+	swipeEnabled: true,
+	shifting: true,
+	activeColor: Theme.accent,
+	unmountInactiveRoutes: true
+});
 
-const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
+const SwitchNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer => {
 	return createSwitchNavigator(
 		{
 			SignedInStack: {
-				screen: SignedInStack
+				screen: isDriver ? SignedInDriverStack : SignedInPassengerStack
+			},
+			JourneyMapStack: {
+				screen: JourneyMapStack
 			},
 			SignedOutStack: {
 				screen: SignedOutStack
@@ -238,7 +308,7 @@ const SwitchNavigator = (signedIn: boolean = false): NavigationContainer => {
 	);
 };
 
-const CreateNavigator = (signedIn: boolean = false): NavigationContainer =>
-	createAppContainer(SwitchNavigator(signedIn));
+const CreateNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer =>
+	createAppContainer(SwitchNavigator(signedIn, isDriver));
 
 export default CreateNavigator;

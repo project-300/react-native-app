@@ -18,7 +18,7 @@ import ImagePicker from 'react-native-image-picker';
 import toastr from '../../helpers/toastr';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { EditTypes } from '../../types/common';
-import { User, UserType } from '@project-300/common-types';
+import { User } from '@project-300/common-types';
 import Animated, { Easing } from 'react-native-reanimated';
 import { UpdateUserField } from './update-user-field';
 import { UpdatePassword } from './update-password';
@@ -38,8 +38,9 @@ import { AnimatedStyles } from '../../animations/styles';
 import { ImagePickerResponse } from '../../types/images';
 import { NavigationEvents } from 'react-navigation';
 import { interpolateAnimation } from '../../animations/animations';
-import { Theme } from '../../constants/theme';
+import { Colours, Theme } from '../../constants/theme';
 import { userId } from '../../auth';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 
 const { height, width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -93,6 +94,7 @@ export class Profile extends Component<Props, State> {
 		this._setupAnimations();
 		await this.props.getUserProfile(uId || await userId() as string);
 		await this.props.getInterestsList();
+		this._setHeaderTitle(false);
 	}
 
 	private _unmountScreen = (): void => { // Triggered when the screen is navigated away from
@@ -136,16 +138,6 @@ export class Profile extends Component<Props, State> {
 				await this.props.uploadAvatar(img);
 			}
 		});
-	}
-
-	private _userTypeIcon = (): string => {
-		const userType = this.props.user && this.props.user.userType;
-
-		if (!userType || userType.toUpperCase() === UserType.PASSENGER) return 'user';
-		if (userType.toUpperCase() === UserType.DRIVER) return 'car';
-		if (userType.toUpperCase() === UserType.ADMIN) return 'user-shield';
-
-		return 'user';
 	}
 
 	private openForm = (editType: string): void => { // Form will slide up from bottom
@@ -198,10 +190,19 @@ export class Profile extends Component<Props, State> {
 		}
 	}
 
+	private _openUserChat = (): void => {
+		if (this.props.user) this.props.navigation.navigate('Chat', { otherUserId: this.props.user.userId });
+	}
+
 	private _setHeaderTitle = (isEditing: boolean): void => {
 		this.props.navigation.setParams({
 			headerDetails: {
-				title: isEditing ? 'Editing Profile' : 'My Profile'
+				title: isEditing ?
+					'Edit Profile' :
+					(this.state.isOtherUser && this.props.user ?
+						`${this.props.user.firstName} ${this.props.user.lastName}` :
+						'My Profile'
+					)
 			}
 		});
 	}
@@ -220,7 +221,7 @@ export class Profile extends Component<Props, State> {
 						<IconButton
 							icon={ user.interests && user.interests.length ? 'pencil' : 'plus' }
 							onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
-							color='black'
+							color={ Theme.accent }
 							size={ 26 }
 							style={ { position: 'absolute', top: 8, right: 6 } }
 						/>
@@ -283,11 +284,11 @@ export class Profile extends Component<Props, State> {
 								] }>
 								{
 									this.props.uploadingAvatar ?
-										<ActivityIndicator animating={ true } color={ Theme.primary } size='large' /> :
+										<ActivityIndicator animating={ true } color={ Theme.accent } size='large' /> :
 										<Icon
 											name='edit'
 											size={ 60 }
-											color='black'
+											color={ Theme.accent }
 											style={ styles.editAvatarIcon }
 										/>
 								}
@@ -307,6 +308,7 @@ export class Profile extends Component<Props, State> {
 	}
 
 	private _renderViewColumn = (user: User): ReactElement => {
+		const { statistics, userType } = user;
 		return(
 			<Animated.View
 				style={ [
@@ -315,13 +317,27 @@ export class Profile extends Component<Props, State> {
 				] }>
 				<View style={ styles.sectionContainer }>
 					<View style={ styles.userTypeTag }>
-						<Icon
-							style={ styles.userTypeTagText }
-							name={ this._userTypeIcon() }
-							size={ 20 }
-							solid
-						/>
+						<Text style={ styles.tagText }>{ this.props.user && this.props.user.userType }</Text>
 					</View>
+
+					{
+						user.userType === 'Driver' &&
+							<View style={ styles.driverRating }>
+								<Icon name={ 'star' } color={ Colours.white } style={ styles.ratingStar } solid />
+								<Text style={ styles.tagText }>{ this.props.user && this.props.user.averageRating.toFixed(1) }</Text>
+							</View>
+					}
+
+					{
+						this.state.isOtherUser &&
+							<TapGestureHandler onHandlerStateChange={ this._openUserChat }>
+								<View
+									style={ styles.messageIconBadge }
+								>
+									<Icon name={ 'comment' } size={ 30 } color={ Colours.white } solid />
+								</View>
+							</TapGestureHandler>
+					}
 
 					<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
 
@@ -330,28 +346,44 @@ export class Profile extends Component<Props, State> {
 					<View style={ styles.statsContainer }>
 						<View style={ styles.statsItem }>
 							<Text style={ styles.statsItemText }>
-								2,304
-							</Text>
-							<Text style={ styles.statsItemDesc }>
-								KM Travelled
-							</Text>
-						</View>
-						<View style={ styles.statsItem }>
-							<Text style={ styles.statsItemText }>
-								453
+								{ statistics.emissions.toFixed(2) }
 							</Text>
 							<Text style={ styles.statsItemDesc }>
 								KG CO2 Saved
 							</Text>
 						</View>
+
 						<View style={ styles.statsItem }>
 							<Text style={ styles.statsItemText }>
-								41
+								{ statistics.fuel.toFixed(2) }
 							</Text>
 							<Text style={ styles.statsItemDesc }>
-								Lifts Given
+								Fuel Saved (L)
 							</Text>
 						</View>
+						{
+							userType === 'Driver' &&
+								<View style={ styles.statsItem }>
+									<Text style={ styles.statsItemText }>
+										{ statistics.liftsGiven || 0 }
+									</Text>
+									<Text style={ styles.statsItemDesc }>
+										Lifts Given
+									</Text>
+								</View>
+						}
+
+						{
+							userType !== 'Driver' &&
+								<View style={ styles.statsItem }>
+									<Text style={ styles.statsItemText }>
+										{ statistics.liftsTaken || 0 }
+									</Text>
+									<Text style={ styles.statsItemDesc }>
+										Lifts Taken
+									</Text>
+								</View>
+						}
 					</View>
 				</View>
 

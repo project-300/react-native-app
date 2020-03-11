@@ -9,7 +9,7 @@ import {
 	PASSENGER_JOURNEY_DETAILS_FAILURE,
 	UPDATE_DRIVER_LOCATION
 } from '../../../constants/redux-actions';
-import { Coords, Journey, SubscriptionPayload } from '@project-300/common-types';
+import { Journey, SubscriptionPayload } from '@project-300/common-types';
 
 export const updateDriverLocation = (payload: SubscriptionPayload): AppActions =>
 	({ type: UPDATE_DRIVER_LOCATION, payload });

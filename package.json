@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mapbox/polyline": "1.1.0",
-    "@project-300/common-types": "^4.0.22",
+    "@project-300/common-types": "^4.0.23",
     "@types/enzyme": "3.10.3",
     "@types/enzyme-adapter-react-16": "1.0.5",
     "@types/googlemaps": "3.38.1",
@@ -46,6 +46,7 @@
     "react-native-scripts": "2.0.1",
     "react-native-svg": "11.0.1",
     "react-native-svg-transformer": "0.14.3",
+    "react-native-swipe-gestures": "^1.0.4",
     "react-native-vector-icons": "6.6.0",
     "react-navigation": "3.11.0",
     "react-navigation-material-bottom-tabs": "2.1.5",

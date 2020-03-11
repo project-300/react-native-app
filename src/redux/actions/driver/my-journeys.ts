@@ -13,10 +13,11 @@ import toastr from '../../../helpers/toastr';
 import { AppActions } from '../../../types/redux-action-types';
 import { Journey } from '@project-300/common-types';
 import { userId } from '../../../auth';
+import { JourneyService } from '../../../services/journey';
 
 const journeysRequest = (): AppActions => ({ type: JOURNEYS_REQUEST });
 
-const journeysSuccess = (journeys: { previous: Journey[]; current: Journey[] }): AppActions => ({ type: JOURNEYS_SUCCESS, journeys });
+const journeysSuccess = (journeys: Journey[], isDriver: boolean): AppActions => ({ type: JOURNEYS_SUCCESS, journeys, isDriver });
 
 const journeysFailure = (): AppActions => ({ type: JOURNEYS_FAILURE });
 
@@ -27,20 +28,18 @@ const cancelPassengerAcceptedJourneySuccess = (journeys: { previous: Journey[]; 
 
 const cancelPassengerAcceptedJourneyFailure = (): AppActions => ({ type: CANCEL_PASSENGER_JOURNEY_FAILURE });
 
-export const getJourneys = (driver: boolean): (dispatch: Dispatch) => Promise<void> => {
+export const getJourneys = (isDriver: boolean): (dispatch: Dispatch) => Promise<void> => {
 	return async (dispatch: Dispatch): Promise<void> => {
 		dispatch(journeysRequest());
 
-		const uId: string = await userId() as string;
-
 		try {
-			const apiRes: JourneysResult = (driver ?
-				await HttpAPI.getDriverJourneys({ userId: uId }) :
-				await HttpAPI.getPassengerJourneys({ userId: uId })) as JourneysResult;
+			const apiRes: { success: boolean; journeys: Journey[] } = (isDriver ?
+				await JourneyService.getDriverJourneys() :
+				await JourneyService.getPassengerJourneys());
 
 			console.log(apiRes);
 
-			if (apiRes.success && apiRes.journeys) dispatch(journeysSuccess(apiRes.journeys));
+			if (apiRes.success && apiRes.journeys) dispatch(journeysSuccess(apiRes.journeys, isDriver));
 			else dispatch(journeysFailure());
 		} catch (err) {
 			console.log(err);
@@ -61,8 +60,13 @@ export const cancelPassengerAcceptedJourney = (journeyId: string): (dispatch: Di
 
 			console.log(apiRes);
 
-			if (apiRes.success && apiRes.journeys) dispatch(cancelPassengerAcceptedJourneySuccess(apiRes.journeys));
-			else dispatch(cancelPassengerAcceptedJourneyFailure());
+			if (apiRes.success && apiRes.journeys) {
+				dispatch(cancelPassengerAcceptedJourneySuccess(apiRes.journeys));
+				toastr.success('Journey Cancelled');
+			} else {
+				dispatch(cancelPassengerAcceptedJourneyFailure());
+				throw Error('Unable to cancel journey');
+			}
 		} catch (err) {
 			console.log(err);
 			dispatch(cancelPassengerAcceptedJourneyFailure());

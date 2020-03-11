@@ -1,12 +1,13 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
+import { Colours } from '../../constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
 		flex: 1,
-		backgroundColor: 'white',
+		backgroundColor: Colours.whiteGrey,
 		justifyContent: 'flex-end'
 	},
 
@@ -37,7 +38,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'absolute',
-		top: -40,
+		top: -50,
 		left: (width / 2) - 20,
 		shadowOffset: {
 			width: 2,
@@ -51,6 +52,12 @@ const styles: Styles = StyleSheet.create<Styles>({
 	bottomForm: {
 		top: undefined,
 		justifyContent: 'center'
+	},
+
+	logo: {
+		alignSelf: 'center',
+		width: width * 0.9,
+		zIndex: 1000
 	}
 });
 

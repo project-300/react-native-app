@@ -4,7 +4,6 @@ import { EditTypes } from '../../../types/common';
 export interface Styles {
 	container: ViewStyle;
 	input: TextStyle;
-	button: ViewStyle;
 	buttonContainer: ViewStyle;
 	spinner: ViewStyle;
 }

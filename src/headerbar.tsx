@@ -3,11 +3,20 @@ import { Appbar, Divider, Menu } from 'react-native-paper';
 import { CommonProps } from './types/common';
 import { storeLogout, userType } from './auth';
 import { View } from 'react-native';
-import { Theme, ToggleDarkMode } from './constants/theme';
+import { Colours, Theme, ToggleDarkMode } from './constants/theme';
 import { Auth } from 'aws-amplify';
 import { clearDeviceId } from './app';
+import { AppState } from './store';
+import { CurrentJourneyState, CustomNavigationState } from './types/redux-reducer-state-types';
+import { connect } from 'react-redux';
+import { PassengerPickup } from './screens/passenger-pickup';
+import toastr from './helpers/toastr';
+import { setCurrentJourney, resetCurrentJourneyUpdatedFlag } from './redux/actions';
+import { AppActions } from './types/redux-action-types';
+import { Journey } from '@project-300/common-types';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-interface Props extends CommonProps {
+interface Props extends CommonProps, CustomNavigationState, CurrentJourneyState {
 	title?: string;
 	subtitle?: string;
 	backButton: boolean;
@@ -19,6 +28,8 @@ interface Props extends CommonProps {
 		darkMode: boolean;
 	};
 	customOptions?: CustomOption[];
+	setCurrentJourney(journey?: Journey): AppActions;
+	resetCurrentJourneyUpdatedFlag(): AppActions;
 }
 
 interface State {
@@ -31,7 +42,7 @@ export interface CustomOption {
 	title: string;
 }
 
-export default class HeaderBar extends Component<Props, State> {
+export class HeaderBar extends Component<Props, State> {
 
 	public constructor(props: Props) {
 		super(props);
@@ -40,6 +51,17 @@ export default class HeaderBar extends Component<Props, State> {
 			optionsVisible: false,
 			driverUpgradeAvailable: false
 		};
+	}
+
+	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+		if (prevProps.navigateToRoute !== this.props.navigateToRoute)
+			this.props.navigation.navigate(this.props.navigateToRoute, this.props.navigationParams);
+
+		// if (
+		// 	prevProps.currentJourney && this.props.currentJourney &&
+		// 	prevProps.currentJourney.journeyStatus !== this.props.currentJourney.journeyStatus &&
+		// 	this.props.currentJourney.journeyStatus === 'FINISHED' && this._travellingAs(this.props.travellingAs, 'Driver')
+		// ) this.props.navigation.navigate('')
 	}
 
 	private _goBack = (): void => { this.props.navigation.goBack(); };
@@ -65,6 +87,94 @@ export default class HeaderBar extends Component<Props, State> {
 		this.props.navigation.navigate('Settings'); // No settings screen
 	}
 
+	private _goToCurrentJourney = (): void => {
+		const { currentJourney, travellingAs } = this.props;
+		if (!currentJourney) return;
+		const { journeyStatus } = currentJourney;
+		let route: string | null = null;
+
+		if (this._travellingAs(travellingAs, 'Driver')) route = this._getDriverJourneyRoute(journeyStatus);
+		if (this._travellingAs(travellingAs, 'Passenger')) route = this._getPassengerJourneyRoute(journeyStatus);
+
+		if (!route) this.props.setCurrentJourney(undefined);
+
+		if (!route && this._journeyStatus(journeyStatus, 'CANCELLED')) {
+			this.props.resetCurrentJourneyUpdatedFlag();
+			return toastr.warning('Your current journey has been Cancelled');
+		}
+		if (!route && this._journeyStatus(journeyStatus, 'FINISHED')) {
+			this.props.resetCurrentJourneyUpdatedFlag();
+			return toastr.warning('Your current journey has Finished');
+		}
+
+		if (route) this.props.navigation.navigate(route, {
+			journeyKey: {
+				journeyId: currentJourney.journeyId,
+				createdAt: currentJourney.times.createdAt
+			}
+		});
+
+		this.props.resetCurrentJourneyUpdatedFlag();
+	}
+
+	private _getPassengerJourneyRoute = (journeyStatus: string): string | null => {
+		let route: string | null;
+
+		switch (journeyStatus) {
+			case 'NOT_STARTED':
+				route = 'PassengerJourneyOverview';
+				break;
+			case 'PICKUP':
+				route = 'DriverTrackingMap';
+				break;
+			case 'WAITING':
+			case 'STARTED':
+			case 'PAUSED':
+			case 'ARRIVED':
+			case 'FINISHED':
+				route = 'PassengerJourneyOverview';
+				break;
+			case 'CANCELLED':
+				route = null;
+				break;
+			default:
+				route = 'MyJourneys';
+		}
+
+		return route;
+	}
+
+	private _getDriverJourneyRoute = (journeyStatus: string): string | null => {
+		let route: string | null;
+
+		switch (journeyStatus) {
+			case 'NOT_STARTED':
+			case 'PICKUP':
+				route = 'PassengerPickup';
+				break;
+			case 'WAITING':
+			case 'STARTED':
+			case 'PAUSED':
+			case 'ARRIVED':
+				route = 'JourneyMap';
+				break;
+			case 'FINISHED':
+				route = null;
+				break;
+			case 'CANCELLED':
+				route = null;
+				break;
+			default:
+				route = 'PassengerPickup';
+		}
+
+		return route;
+	}
+
+	private _journeyStatus = (currentStatus: string, expectedStatus: string): boolean => currentStatus === expectedStatus;
+
+	private _travellingAs = (userType: string, expectedType: string): boolean => userType === expectedType;
+
 	public componentDidMount = async (): Promise<void> => {
 		const uType: string = await userType() as string;
 
@@ -72,6 +182,8 @@ export default class HeaderBar extends Component<Props, State> {
 	}
 
 	public render(): React.ReactElement {
+		const { currentJourney } = this.props;
+
 		return (
 			<Appbar.Header>
 				{
@@ -87,7 +199,30 @@ export default class HeaderBar extends Component<Props, State> {
 					subtitle={ this.props.subtitle }
 					color={ Theme.accent }
 					titleStyle={ { fontWeight: 'bold' } }
+					style={ { alignSelf: 'center' } }
 				/>
+
+				<View>
+					{
+						currentJourney &&
+							<Appbar.Action
+								icon='car'
+								onPress={ this._goToCurrentJourney }
+								color={ Colours.primary }
+							/>
+					}
+
+					{
+						this.props.hasUpdated &&
+							<Icon
+								style={ { position: 'absolute', top: 11, right: 12 } }
+								name={ 'circle' }
+								size={ 10 }
+								color={ Colours.red }
+								solid
+							/>
+					}
+				</View>
 
 				{
 					this.props.options && this.props.options.display &&
@@ -102,6 +237,7 @@ export default class HeaderBar extends Component<Props, State> {
 								/>
 							}
 						>
+
 							{
 								this.props.options.becomeDriver && this.state.driverUpgradeAvailable &&
 									<Menu.Item
@@ -153,3 +289,13 @@ export default class HeaderBar extends Component<Props, State> {
 	}
 
 }
+
+const mapStateToProps = (state: AppState): CurrentJourneyState => ({
+	...state.currentJourneyReducer,
+	...state.customNavigationReducer
+});
+
+export default connect(mapStateToProps, {
+	setCurrentJourney,
+	resetCurrentJourneyUpdatedFlag
+})(HeaderBar);

@@ -1,4 +1,3 @@
-import { VEHICLE_MAKES_REQUEST, VEHICLE_MAKES_SUCCESS, VEHICLE_MAKES_FAILURE, VEHICLE_MODELS_REQUEST, VEHICLE_MODELS_SUCCESS, VEHICLE_MODELS_FAILURE, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUBMIT_REQUEST, FORGOT_PASSWORD_SUBMIT_SUCCESS, FORGOT_PASSWORD_SUBMIT_FAILURE } from './../constants/redux-actions';
 import {
 	LOGIN_FAILURE,
 	LOGIN_REQUEST,
@@ -72,7 +71,7 @@ import {
 	UPDATE_INTERESTS_REQUEST,
 	UPDATE_INTERESTS_FAILURE,
 	UPDATE_USER_REQUEST,
-  APPLICATION_ALREADY_APPLIED,
+	APPLICATION_ALREADY_APPLIED,
 	UPDATE_USER_SUCCESS,
 	UPDATE_USER_FAILURE,
 	UPLOAD_AVATAR_REQUEST,
@@ -97,7 +96,57 @@ import {
 	GET_ALL_CHATS_FAILURE,
 	SEND_MESSAGE_REQUEST,
 	SEND_MESSAGE_SUCCESS,
-	SEND_MESSAGE_FAILURE, UPDATED_CHAT_SUB
+	SEND_MESSAGE_FAILURE,
+	UPDATED_CHAT_SUB,
+	VEHICLE_MAKES_REQUEST,
+	VEHICLE_MAKES_SUCCESS,
+	VEHICLE_MAKES_FAILURE,
+	VEHICLE_MODELS_REQUEST,
+	VEHICLE_MODELS_SUCCESS,
+	VEHICLE_MODELS_FAILURE,
+	PAUSE_JOURNEY_SUCCESS,
+	PAUSE_JOURNEY_REQUEST,
+	PAUSE_JOURNEY_FAILURE,
+	RESUME_JOURNEY_REQUEST,
+	RESUME_JOURNEY_SUCCESS,
+	RESUME_JOURNEY_FAILURE,
+	BEGIN_PICKUP_REQUEST,
+	BEGIN_PICKUP_SUCCESS,
+	BEGIN_PICKUP_FAILURE,
+	PASSENGER_PICKUP_JOURNEY_REQUEST,
+	PASSENGER_PICKUP_JOURNEY_SUCCESS,
+	PASSENGER_PICKUP_JOURNEY_FAILURE,
+	DRIVER_CONFIRM_PASSENGER_PICKUP_REQUEST,
+	DRIVER_CONFIRM_PASSENGER_PICKUP_SUCCESS,
+	DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE,
+	DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST,
+	DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS,
+	DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE,
+	CANCEL_JOURNEY_SUCCESS,
+	CANCEL_JOURNEY_REQUEST,
+	CANCEL_JOURNEY_FAILURE,
+	CURRENT_JOURNEY_SUB_RECEIVED,
+	CURRENT_JOURNEY,
+	PASSENGER_CONFIRM_PICKUP_ALERT,
+	PASSENGER_CONFIRM_PICKUP_SUCCESS,
+	PASSENGER_CONFIRM_PICKUP_REQUEST,
+	PASSENGER_CONFIRM_PICKUP_FAILURE,
+	PASSENGER_CANCEL_PICKUP_SUCCESS,
+	PASSENGER_CANCEL_PICKUP_REQUEST,
+	PASSENGER_CANCEL_PICKUP_FAILURE,
+	START_LOCATION_TRACKING,
+	STOP_LOCATION_TRACKING,
+	SET_CURRENT_LOCATION,
+	NAVIGATE_TO,
+	PASSENGER_JOURNEY_RATING_REQUEST,
+	PASSENGER_JOURNEY_RATING_SUCCESS, 
+  PASSENGER_JOURNEY_RATING_FAILURE,
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS, 
+  FORGOT_PASSWORD_FAILURE, 
+  FORGOT_PASSWORD_SUBMIT_REQUEST,
+  FORGOT_PASSWORD_SUBMIT_SUCCESS, 
+  FORGOT_PASSWORD_SUBMIT_FAILURE
 } from '../constants/redux-actions';
 import {
 	Coords,
@@ -105,12 +154,13 @@ import {
 	Journey,
 	SubscriptionPayload,
 	GooglePlace,
-  User,
-  VehicleModel,
-  VehicleMake,
-  LastEvaluatedKey,
-  Chat,
-  Message
+	User,
+	VehicleModel,
+	VehicleMake,
+	LastEvaluatedKey,
+	Chat,
+	Message, 
+  UserTypes
 } from '@project-300/common-types';
 import { EditTypes } from './common';
 
@@ -238,6 +288,26 @@ export interface SignUpConfirmationFailure {
 	type: typeof SIGNUP_CONFIRMATION_FAILURE;
 }
 
+export interface CurrentJourneySubReceived {
+	type: typeof CURRENT_JOURNEY_SUB_RECEIVED;
+	payload: SubscriptionPayload;
+	userId: string;
+	travellingAs?: UserTypes;
+}
+
+export interface PassengerPickupConfirmationAlert {
+	type: typeof PASSENGER_CONFIRM_PICKUP_ALERT;
+	payload: SubscriptionPayload;
+}
+
+export interface SetCurrentJourney {
+	type: typeof CURRENT_JOURNEY;
+	journey: Journey;
+	travellingAs: UserTypes;
+	onAppLoad: boolean;
+	awaitingConfirmation: boolean;
+}
+
 export interface UserProfileSubRequest {
 	type: typeof USER_PROFILE_REQUEST;
 }
@@ -326,7 +396,8 @@ export interface DriverJourneysRequest {
 
 export interface DriverJourneysSuccess {
 	type: typeof JOURNEYS_SUCCESS;
-	journeys: { previous: Journey[]; current: Journey[] };
+	journeys: Journey[];
+	isDriver: boolean;
 }
 
 export interface DriverJourneysFailure {
@@ -344,6 +415,47 @@ export interface CancelPassengerAcceptedSuccess {
 
 export interface CancelPassengerAcceptedFailure {
 	type: typeof CANCEL_PASSENGER_JOURNEY_FAILURE;
+}
+
+export interface PassengerPickupJourneyRequest {
+	type: typeof PASSENGER_PICKUP_JOURNEY_REQUEST;
+}
+
+export interface PassengerPickupJourneySuccess {
+	type: typeof PASSENGER_PICKUP_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerPickupJourneyFailure {
+	type: typeof PASSENGER_PICKUP_JOURNEY_FAILURE;
+}
+
+export interface PassengerPickupConfirmRequest {
+	type: typeof DRIVER_CONFIRM_PASSENGER_PICKUP_REQUEST;
+	passengerId: string;
+}
+
+export interface PassengerPickupConfirmSuccess {
+	type: typeof DRIVER_CONFIRM_PASSENGER_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerPickupConfirmFailure {
+	type: typeof DRIVER_CONFIRM_PASSENGER_PICKUP_FAILURE;
+}
+
+export interface PassengerPickupCancelRequest {
+	type: typeof DRIVER_CANCEL_PASSENGER_PICKUP_REQUEST;
+	passengerId: string;
+}
+
+export interface PassengerPickupCancelSuccess {
+	type: typeof DRIVER_CANCEL_PASSENGER_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerPickupCancelFailure {
+	type: typeof DRIVER_CANCEL_PASSENGER_PICKUP_FAILURE;
 }
 
 export interface JourneyDetailsRequest {
@@ -372,9 +484,48 @@ export interface PassengerJourneyDetailsFailure {
 	type: typeof PASSENGER_JOURNEY_DETAILS_FAILURE;
 }
 
+export interface PassengerConfirmPickupRequest {
+	type: typeof PASSENGER_CONFIRM_PICKUP_REQUEST;
+}
+
+export interface PassengerConfirmPickupSuccess {
+	type: typeof PASSENGER_CONFIRM_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerConfirmPickupFailure {
+	type: typeof PASSENGER_CONFIRM_PICKUP_FAILURE;
+}
+
+export interface PassengerCancelPickupRequest {
+	type: typeof PASSENGER_CANCEL_PICKUP_REQUEST;
+}
+
+export interface PassengerCancelPickupSuccess {
+	type: typeof PASSENGER_CANCEL_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface PassengerCancelPickupFailure {
+	type: typeof PASSENGER_CANCEL_PICKUP_FAILURE;
+}
+
 export interface UpdateDriverLocation {
 	type: typeof UPDATE_DRIVER_LOCATION;
 	payload: SubscriptionPayload;
+}
+
+export interface BeginPickupRequest {
+	type: typeof BEGIN_PICKUP_REQUEST;
+}
+
+export interface BeginPickupSuccess {
+	type: typeof BEGIN_PICKUP_SUCCESS;
+	journey: Journey;
+}
+
+export interface BeginPickupFailure {
+	type: typeof BEGIN_PICKUP_FAILURE;
 }
 
 export interface StartJourneyRequest {
@@ -388,6 +539,32 @@ export interface StartJourneySuccess {
 
 export interface StartJourneyFailure {
 	type: typeof START_JOURNEY_FAILURE;
+}
+
+export interface PauseJourneyRequest {
+	type: typeof PAUSE_JOURNEY_REQUEST;
+}
+
+export interface PauseJourneySuccess {
+	type: typeof PAUSE_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface PauseJourneyFailure {
+	type: typeof PAUSE_JOURNEY_FAILURE;
+}
+
+export interface ResumeJourneyRequest {
+	type: typeof RESUME_JOURNEY_REQUEST;
+}
+
+export interface ResumeJourneySuccess {
+	type: typeof RESUME_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface ResumeJourneyFailure {
+	type: typeof RESUME_JOURNEY_FAILURE;
 }
 
 export interface EndJourneyRequest {
@@ -492,6 +669,8 @@ export interface CreateJourneyFindRouteRequest {
 export interface CreateJourneyFindRouteSuccess {
 	type: typeof CREATE_JOURNEY_FIND_ROUTE_SUCCESS;
 	route: Coords[];
+	distance: number;
+	duration: number;
 }
 
 export interface CreateJourneyFindRouteFailure {
@@ -605,22 +784,76 @@ export interface UpdateAvatarFailure {
 	type: typeof UPLOAD_AVATAR_FAILURE;
 }
 
-export type VehicleMakesAndModelsTypes =
-	VehicleMakesRequest |
- 	VehicleMakesSuccess |
-	VehicleMakesFailure |
-	VehicleModelsRequest |
-	VehicleModelsSuccess |
- 	VehicleModelsSuccess;
+export interface CancelJourneyRequest {
+	type: typeof CANCEL_JOURNEY_REQUEST;
+}
 
-export type JourneyActionTypes =
-export; interface ContentReloadOn {
+export interface CancelJourneySuccess {
+	type: typeof CANCEL_JOURNEY_SUCCESS;
+	journey: Journey;
+}
+
+export interface CancelJourneyFailure {
+	type: typeof CANCEL_JOURNEY_FAILURE;
+}
+
+export interface ContentReloadOn {
 	type: typeof CONTENT_RELOAD_ON;
 }
 
 export interface ContentReloadOff {
 	type: typeof CONTENT_RELOAD_OFF;
 }
+
+export interface StartTracking {
+	type: typeof START_LOCATION_TRACKING;
+	publishLocation: boolean;
+}
+
+export interface StopTracking {
+	type: typeof STOP_LOCATION_TRACKING;
+}
+
+export interface SetCurrentLocation {
+	type: typeof SET_CURRENT_LOCATION;
+	coords: Coords;
+}
+
+export interface NavigateTo {
+	type: typeof NAVIGATE_TO;
+	route: string;
+	params: any;
+}
+
+export interface PassengerJourneyRatingRequest {
+	type: typeof PASSENGER_JOURNEY_RATING_REQUEST;
+}
+
+export interface PassengerJourneyRatingSuccess {
+	type: typeof PASSENGER_JOURNEY_RATING_SUCCESS;
+}
+
+export interface PassengerJourneyRatingFailure {
+	type: typeof PASSENGER_JOURNEY_RATING_FAILURE;
+}
+
+export type PassengerJourneyRatingActionsTypes =
+	PassengerJourneyRatingRequest |
+	PassengerJourneyRatingSuccess |
+	PassengerJourneyRatingFailure;
+
+export type LocationTrackingActionTypes =
+	StartTracking |
+	StopTracking |
+	SetCurrentLocation;
+
+export type VehicleMakesAndModelsTypes =
+	VehicleMakesRequest |
+	VehicleMakesSuccess |
+	VehicleMakesFailure |
+	VehicleModelsRequest |
+	VehicleModelsSuccess |
+	VehicleModelsSuccess;
 
 export type ContentReloadActionTypes =
 	ContentReloadOn |
@@ -667,6 +900,11 @@ export type SignUpActionTypes =
 	SignUpConfirmationRequest |
 	SignUpConfirmationSuccess |
 	SignUpConfirmationFailure;
+
+export type HeaderBarActionTypes =
+	CurrentJourneySubReceived |
+	PassengerPickupConfirmationAlert |
+	SetCurrentJourney;
 
 export type UserProfileActionTypes =
 	UserProfileSubRequest |
@@ -717,6 +955,17 @@ export type DriverApplicationActionTypes =
 	DriverApplicationFailure |
 	ApplicationAlreadyApplied;
 
+export type PassengerPickupActionTypes =
+	PassengerPickupJourneyRequest |
+	PassengerPickupJourneySuccess |
+	PassengerPickupJourneyFailure |
+	PassengerPickupConfirmRequest |
+	PassengerPickupConfirmSuccess |
+	PassengerPickupConfirmFailure |
+	PassengerPickupCancelRequest |
+	PassengerPickupCancelSuccess |
+	PassengerPickupCancelFailure;
+
 export type DriverJourneysActionTypes =
 	DriverJourneysRequest |
 	DriverJourneysSuccess |
@@ -742,10 +991,33 @@ export type PassengerJourneyDetailsActionTypes =
 	PassengerJourneyDetailsFailure |
 	UpdateDriverLocation;
 
+export type PassengerConfirmPickupActionTypes =
+	PassengerConfirmPickupRequest |
+	PassengerConfirmPickupSuccess |
+	PassengerConfirmPickupFailure |
+	PassengerCancelPickupRequest |
+	PassengerCancelPickupSuccess |
+	PassengerCancelPickupFailure;
+
+export type BeginPickupActionTypes =
+	BeginPickupRequest |
+	BeginPickupSuccess |
+	BeginPickupFailure;
+
 export type StartJourneyActionTypes =
 	StartJourneyRequest |
 	StartJourneySuccess |
 	StartJourneyFailure;
+
+export type PauseJourneyActionTypes =
+	PauseJourneyRequest |
+	PauseJourneySuccess |
+	PauseJourneyFailure;
+
+export type ResumeJourneyActionTypes =
+	ResumeJourneyRequest |
+	ResumeJourneySuccess |
+	ResumeJourneyFailure;
 
 export type EndJourneyActionTypes =
 	EndJourneyRequest |
@@ -759,7 +1031,10 @@ export type DriverMovementActionTypes =
 
 export type JourneyMapActionTypes =
 	JourneyDetailsActionTypes |
+	BeginPickupActionTypes |
 	StartJourneyActionTypes |
+	PauseJourneyActionTypes |
+	ResumeJourneyActionTypes |
 	EndJourneyActionTypes |
 	DriverMovementActionTypes;
 
@@ -801,6 +1076,13 @@ export type CreateNewJourneyActionTypes =
 	FindNearbyPlaceActionTypes |
 	CreateJourneyFindRouteActionTypes;
 
+export type GeneralJourneyActionTypes =
+	CancelJourneyRequest |
+	CancelJourneySuccess |
+	CancelJourneyFailure;
+
+export type NavigationActionTypes = NavigateTo;
+
 export type AppActions =
 	ContentReloadActionTypes |
 	DarkModeActionTypes |
@@ -810,15 +1092,21 @@ export type AppActions =
 	UserProfileActionTypes |
 	UpdateEmailActionTypes |
 	JourneysActionTypes |
+	PassengerPickupActionTypes |
 	JourneyMapActionTypes |
 	DriverTrackingActionTypes |
 	DriverApplicationActionTypes |
 	CreateNewJourneyActionTypes |
-	JourneyActionTypes |
 	VehicleMakesAndModelsTypes |
 	SearchJourneysActionTypes |
 	ViewJourneyActionTypes |
 	InterestsActionTypes |
 	AllChatActionTypes |
 	ChatActionTypes |
-	MessageActionTypes;
+	MessageActionTypes |
+	GeneralJourneyActionTypes |
+	HeaderBarActionTypes |
+	PassengerConfirmPickupActionTypes |
+	LocationTrackingActionTypes |
+	NavigationActionTypes |
+	PassengerJourneyRatingActionsTypes;

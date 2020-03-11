@@ -16,6 +16,13 @@ import viewJourneyReducer from './passenger/view-journey';
 import contentReloadReducer from './content-reloading';
 import allChatsReducer from './chat/all-chat';
 import chatMessagesReducer from './chat/message';
+import passengerPickupReducer from './driver/passenger-pickup';
+import generalJourneyActionsReducer from './journey/journey';
+import currentJourneyReducer from './headerbar';
+import passengerConfirmPickupReducer from './passenger/pickup';
+import locationTrackingReducer from './location-tracking';
+import customNavigationReducer from './navigation';
+import passengerJourneyRatingReducer from './passenger/rating';
 import forgotPasswordReducer from './forgot-password';
 
 export default combineReducers({
@@ -36,5 +43,12 @@ export default combineReducers({
 	viewJourneyReducer,
 	contentReloadReducer,
 	allChatsReducer,
-	chatMessagesReducer
+	chatMessagesReducer,
+	passengerPickupReducer,
+	generalJourneyActionsReducer,
+	currentJourneyReducer,
+	passengerConfirmPickupReducer,
+	locationTrackingReducer,
+	customNavigationReducer,
+	passengerJourneyRatingReducer
 });

@@ -26,7 +26,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	showPasswordIcon: {
-		color: Theme.primary,
+		color: Theme.accent,
 		fontSize: 18
 	},
 

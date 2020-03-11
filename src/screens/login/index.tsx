@@ -10,7 +10,8 @@ import {
 	Platform,
 	EmitterSubscription,
 	KeyboardEvent,
-	TouchableOpacity
+	TouchableOpacity,
+	Image as RNImage
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CompState, Props } from './interfaces';
@@ -221,6 +222,16 @@ export class Login extends Component<Props, CompState> {
 							preserveAspectRatio='xMinYMid slice'
 							clipPath='url(#clip)'
 						/>
+						<View style={ { width: '100%', alignItems: 'center' } }>
+							<RNImage
+								source={ require('../../assets/images/dryve.png') }
+								style={ styles.logo }
+								resizeMode={ 'contain' }
+								// height={ height + 50 }
+								// preserveAspectRatio='xMinYMid slice'
+								// clipPath='url(#clip)'
+							/>
+						</View>
 					</Svg>
 				</Animated.View>
 				<View style={ styles.heightThird }>

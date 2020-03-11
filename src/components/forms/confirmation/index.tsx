@@ -3,13 +3,17 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity, Dimensions
 } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
 import { EMAIL, PHONE } from '../../../constants/cognito-delivery-methods';
 import toastr from '../../../helpers/toastr';
 import formStyles from '../../../styles/forms';
+import { Colours, ContrastTheme, Theme } from '../../../constants/theme';
+import { Button } from 'react-native-paper';
+
+const { width, height } = Dimensions.get('window');
 
 export default class ConfirmationForm extends Component<Props, State> {
 
@@ -69,21 +73,27 @@ export default class ConfirmationForm extends Component<Props, State> {
 				<Text style={ styles.text }>{ this.state.confirmationText }</Text>
 
 				<TextInput
-					placeholder={ 'CONFIRMATION CODE' }
-					placeholderTextColor='black'
+					placeholder={ 'Confirmation Code' }
+					placeholderTextColor={ Colours.middleGrey }
+					// theme={ AuthTheme }
+					// mode={ 'outlined' }
+					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, width: width * 0.8, alignSelf: 'center' } }
 					onChangeText={ (code: string): void => this.setState({ code }) }
 					autoCorrect={ false }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
 					keyboardType={ 'numeric' }
-					style={ formStyles.input } />
+				/>
 
-				<TouchableOpacity
+				<Button
 					disabled={ this.props.isConfirmingAccount }
-					style={ formStyles.largeButton }
+					style={ [ formStyles.button, { backgroundColor: 'white', marginTop: 20, width: width * 0.8, alignSelf: 'center' } ] }
+					theme={ ContrastTheme }
+					mode={ 'outlined' }
+					labelStyle={ { color: Theme.accent } }
 					onPress={ this._confirmSignUp }>
-					<Text style={ formStyles.buttonText }>CONFIRM</Text>
-				</TouchableOpacity>
+					CONFIRM
+				</Button>
 			</View>
 		);
 	}

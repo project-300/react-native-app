@@ -3,7 +3,7 @@ import {
 	StyleSheet,
 	KeyboardAvoidingView,
 	EmitterSubscription,
-	Keyboard
+	Keyboard, Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles, { imageStyle } from './styles';
@@ -11,8 +11,9 @@ import { Props, SignUpActionResponse, State } from './interfaces';
 import { signUp, confirmAccount } from '../../redux/actions';
 import { SignUpState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import Background from '../../assets/svg/signup-bg.svg';
-import Logo from '../../assets/svg/mini.svg';
+// import Background from '../../assets/svg/signup-bg.svg';
+// import Logo from '../../assets/svg/mini.svg';
+import Logo from '../../assets/images/dryve.png';
 import Animated, { Easing } from 'react-native-reanimated';
 import ConfirmationForm from '../../components/forms/confirmation';
 import SignUpForm from '../../components/forms/signup';
@@ -127,13 +128,14 @@ export class SignUp extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<KeyboardAvoidingView behavior='padding' style={ styles.container }>
-				<Animated.View style={ [ StyleSheet.absoluteFill, { right: this.backgroundPosition } ] }>
-					<Background preserveAspectRatio='xMaxYMid slice' />
-				</Animated.View>
 				{
 					!this.state.keyboardOpen &&
-						<Animated.View style={ imageStyle(this.imageOpacity) }>
-							<Logo style={ styles.logo } />
+						<Animated.View style={ [ imageStyle(this.imageOpacity), { width: '100%' } ] }>
+							<Image
+								source={ require('../../assets/images/dryve.png') }
+								style={ styles.logo }
+								resizeMode={ 'contain' }
+							/>
 						</Animated.View>
 				}
 

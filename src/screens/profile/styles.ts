@@ -17,32 +17,59 @@ const styles = StyleSheet.create<Styles>({
 
 	userTypeTag: {
 		backgroundColor: Theme.accent,
-		width: 50,
-		height: 50,
+		// width: 50,
+		paddingVertical: 5,
+		paddingHorizontal: 15,
 		borderRadius: 25,
 		justifyContent: 'center',
 		alignItems: 'center',
 		position: 'absolute',
-		top: -25,
+		top: -10,
 		left: 20,
 		shadowOffset: {
 			width: 0,
 			height: 0
 		},
-		shadowOpacity: 0.1,
+		shadowOpacity: 0.3,
 		shadowRadius: 6,
 		elevation: 12
 	},
 
-	userTypeTagText: {
-		color: Colours.darkGrey
+	driverRating: {
+		backgroundColor: Theme.accent,
+		width: 60,
+		height: 60,
+		paddingVertical: 5,
+		paddingHorizontal: 15,
+		borderRadius: 30,
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'absolute',
+		top: -30,
+		right: 20,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.3,
+		shadowRadius: 6,
+		elevation: 12
+	},
+
+	tagText: {
+		color: Colours.white,
+		fontWeight: 'bold'
+	},
+
+	ratingStar: {
+		marginBottom: 5,
+		fontSize: 16
 	},
 
 	name: {
 		alignSelf: 'center',
 		fontSize: 22,
 		fontWeight: 'bold',
-		marginBottom: 4,
 		color: Colours.black,
 		marginBottom: 20
 	},
@@ -83,6 +110,8 @@ const styles = StyleSheet.create<Styles>({
 		shadowOpacity: 0.1,
 		shadowRadius: 6,
 		elevation: 6,
+		borderWidth: 0.5,
+		borderColor: '#DDD',
 		marginBottom: 20
 	},
 
@@ -159,6 +188,27 @@ const styles = StyleSheet.create<Styles>({
 	statsContainer: {
 		flexDirection: 'row',
 		alignContent: 'stretch'
+	},
+
+	messageIconBadge: {
+		backgroundColor: Theme.accent,
+		padding: 5,
+		width: 64,
+		height: 64,
+		borderRadius: 32,
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'absolute',
+		right: 20,
+		top: -30,
+		shadowColor: Colours.black,
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.4,
+		shadowRadius: 4,
+		elevation: 6
 	}
 });
 

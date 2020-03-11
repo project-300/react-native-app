@@ -2,8 +2,9 @@ import React, { Component, ReactElement } from 'react';
 import { ScrollView, View } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
-import { ActivityIndicator, Button, List } from 'react-native-paper';
-import { Theme } from '../../../constants/theme';
+import { ActivityIndicator, Button, List, TextInput } from 'react-native-paper';
+import { ContrastTheme, Theme } from '../../../constants/theme';
+import formStyles from '../../../styles/forms';
 
 export class UpdateInterests extends Component<Props, State> {
 
@@ -56,6 +57,7 @@ export class UpdateInterests extends Component<Props, State> {
 													(props: object): ReactElement =>
 														<List.Icon
 															{ ...props }
+															color={ Theme.accent }
 															icon={ this._interestIcon(interest) }
 														/>
 												}
@@ -85,19 +87,21 @@ export class UpdateInterests extends Component<Props, State> {
 										<View style={ styles.buttonContainer }>
 											<Button
 												mode='contained'
-												style={ styles.button }
+												style={ formStyles.button }
 												disabled={ this.props.isUpdating }
 												onPress={ this._updateInterests }
+												theme={ ContrastTheme }
 											>
-												UPDATE { this.props.type }
+												UPDATE MY { this.props.type }
 											</Button>
 										</View>
 
 										<View style={ styles.buttonContainer }>
 											<Button
 												mode='outlined'
-												style={ styles.button }
+												style={ formStyles.button }
 												onPress={ this.props.close }
+												theme={ ContrastTheme }
 											>
 												CANCEL
 											</Button>

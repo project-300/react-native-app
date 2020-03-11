@@ -26,6 +26,7 @@ export const getInterestsList = (): (dispatch: Dispatch) => Promise<void | boole
 
 			throw Error('Unable to retrieve list of interests');
 		} catch (err) {
+			console.log(err);
 			dispatch(interestsFailure());
 			toastr.error(`Unable to retrieve list of interests: ${err.message}`);
 			return false;
