@@ -11,8 +11,10 @@ export interface Props extends CommonProps {
 	codeDeliveryDetails: CodeDeliveryDetails;
 	userId: string;
 	isSignUp: boolean;
+	password: string;
 	isConfirmingAccount: boolean;
 	confirmAccount(uId: string, c: string, iSU: boolean, u: string): Promise<boolean>;
+	login(email: string, password: string): Promise<boolean>;
 }
 
 export interface CodeDeliveryDetails {

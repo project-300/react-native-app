@@ -126,7 +126,8 @@ export const createJourney = (journey: Partial<Journey>): (dispatch: Dispatch) =
 		} catch (err) {
 			console.log(err);
 			dispatch(createJourneyFailure());
-			toastr.error(err.message);
+			if (err.description === 'journey-clashing') toastr.error('This Journey Will Overlap With Another Journey You Created');
+			else toastr.error(err.message);
 			return false;
 		}
 	};

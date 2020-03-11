@@ -1,7 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import CreateNavigator from './navigation';
-import Amplify from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 import { isStoreLoggedIn, userType } from './auth';
 import { AWS_CONFIG } from '../environment/env';
 import toastr from './helpers/toastr';
@@ -68,19 +68,21 @@ export default class App extends Component<Props, State> {
 
 			WS._setup();
 
-			store.dispatch(getCurrentJourney(true));
-			store.dispatch(getChats());
+			if (loggedIn) {
+				store.dispatch(getCurrentJourney(true));
+				store.dispatch(getChats());
+			}
 		} catch (err) {
 			toastr.error('Unable to authenticate');
 		}
 	}
 
 	public render(): ReactElement | null {
-		const { checkedLoggedIn, loggedIn } = this.state;
+		const { checkedLoggedIn, loggedIn, userType } = this.state;
 
 		if (!checkedLoggedIn) return null; // Replace with Splash Screen
 
-		const Layout = CreateNavigator(loggedIn, this.state.userType === 'Driver'); // Update to pass in user type every time
+		const Layout = CreateNavigator(loggedIn, userType === 'Driver'); // Update to pass in user type every time
 
 		const theme: RNPTheme = {
 			...DefaultTheme,

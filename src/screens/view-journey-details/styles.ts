@@ -55,6 +55,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	infoBlock: {
 		padding: 20,
+		paddingTop: 30,
 		borderRadius: 4,
 		marginBottom: 10,
 		marginTop: 20,
@@ -75,7 +76,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	placeText: {
 		fontSize: 22,
-		marginBottom: 20
+		marginBottom: 20,
+		width: width * 0.6
 	},
 
 	centerItems: {
@@ -128,7 +130,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		justifyContent: 'center',
 		position: 'absolute',
 		right: 20,
-		top: -30,
+		top: -32,
 		shadowColor: Colours.black,
 		shadowOffset: {
 			width: 0,

@@ -7,6 +7,7 @@ export interface Props extends CommonProps {
 	isLoggingIn: boolean;
 	isLoggedIn: boolean;
 	login(u: string, p: string): Promise<boolean>;
+	getCurrentJourney(onAppLoad?: boolean): Promise<void>;
 }
 
 export interface State {

@@ -96,8 +96,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'absolute',
-		right: 0,
-		bottom: 0,
+		right: -5,
+		bottom: -5,
 		shadowColor: Colours.black,
 		shadowOffset: {
 			width: 0,

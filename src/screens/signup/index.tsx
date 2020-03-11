@@ -7,7 +7,7 @@ import {
 import { connect } from 'react-redux';
 import styles, { imageStyle } from './styles';
 import { Props, SignUpActionResponse, State } from './interfaces';
-import { signUp, confirmAccount } from '../../redux/actions';
+import { signUp, confirmAccount, login } from '../../redux/actions';
 import { SignUpState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Animated, { Easing } from 'react-native-reanimated';
@@ -108,7 +108,8 @@ export class SignUp extends Component<Props, State> {
 				userId,
 				email,
 				codeDeliveryDetails,
-				isSignUp
+				isSignUp,
+				password
 			}
 		});
 	}
@@ -144,7 +145,9 @@ export class SignUp extends Component<Props, State> {
 							<ConfirmationForm
 								navigation={ this.props.navigation }
 								confirmAccount={ this.props.confirmAccount }
+                                login={ this.props.login }
 								username={ this.state.confirmationDetails.email }
+								password={ this.state.confirmationDetails.password }
 								userId={ this.state.confirmationDetails.userId }
 								codeDeliveryDetails={ this.state.confirmationDetails.codeDeliveryDetails }
 								isSignUp={ this.state.confirmationDetails.isSignUp }
@@ -161,4 +164,4 @@ const mapStateToProps = (state: AppState): SignUpState => ({
 	...state.confirmReducer
 });
 
-export default connect(mapStateToProps, { signUp, confirmAccount })(SignUp);
+export default connect(mapStateToProps, { signUp, confirmAccount, login })(SignUp);

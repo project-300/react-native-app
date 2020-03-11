@@ -89,7 +89,7 @@ export class JourneyMap extends Component<Props, State> {
 		};
 
 		this.animatedStyles = {
-			infoHeight: interpolateAnimation(this.animatedValues.infoOpen, [ 0, 1 ], [ 30, 120 ]),
+			infoHeight: interpolateAnimation(this.animatedValues.infoOpen, [ 0, 1 ], [ 30, 60 ]),
 			infoWidth: interpolateAnimation(this.animatedValues.infoOpen, [ 0, 1 ], [ 30, width * 0.25 ]),
 			infoPadding: interpolateAnimation(this.animatedValues.infoOpen, [ 0, 1 ], [ 0, 10 ]),
 			infoOpacity: interpolateAnimation(this.animatedValues.infoOpen, [ 0, 1 ], [ 0.5, 0.9 ])
@@ -142,60 +142,8 @@ export class JourneyMap extends Component<Props, State> {
 		}
 	}
 
-// 	private _trackDriver = (): void => {
-// 		const tracker: number = navigator.geolocation.watchPosition(async (location: Position) => {
-// 			this.setState({ movementCount: this.state.movementCount + 1 });
-//
-// 			const coords: Coords = {
-// 				latitude: location.coords.latitude,
-// 				longitude: location.coords.longitude
-// 			};
-// 			const region = {
-// 				...coords,
-// 				latitudeDelta: 0.015,
-// 				longitudeDelta: 0.0121
-// 			};
-//
-// 			const { routeTravelled } = this.state;
-//
-// 			const length: number = routeTravelled.length;
-//
-// 			const start: Coords = routeTravelled[length - 2];
-// 			const end: Coords = routeTravelled[length - 1];
-//
-// 			const direction: number = ((length >= 2 ?
-// 				MapUtils.direction(start.latitude, start.longitude, end.latitude, end.longitude) :
-// 				0) + 90) % 360;
-//
-// 			this.setState({
-// 				currentPosition: region,
-// 				routeTravelled: this.state.routeTravelled.concat({
-// 					latitude: location.coords.latitude,
-// 					longitude: location.coords.longitude
-// 				}),
-// 				direction
-// 			});
-//
-// 				//  && this.state.movementCount % 10 === 0
-// 			if (this.props.journey) { // Save movement every 10 movements
-// 				await this._updateSavedLocation(coords);
-// 				await this.props.driverMovement(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt, coords);
-// 			}
-// 		},
-// 	 (error: PositionError) => console.log(error.message),
-// { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000, distanceFilter: 10 });
-//
-// 		console.log(tracker);
-// 		this.setState({ tracker });
-// 	}
-
 	private _stopTracking = (): void => {
 		this.props.stopLocationTracking();
-		// const tracker: number = this.state.tracker as number;
-		//
-		// navigator.geolocation.clearWatch(tracker);
-		//
-		// this.setState({ tracker: null });
 	}
 
 	private _setRouteTravelled = (): void => this.props.journey && this.setState({ routeTravelled: this.props.journey.routeTravelled });
@@ -245,10 +193,6 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _updateSavedLocation = async (coords: Coords): Promise<void> => await DriverLocation.setCurrentPosition(coords);
-
-	// private _beginPickup = async (): Promise<void> => {
-	// 	await this.props.beginPickup(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
-	// }
 
 	private _startJourney = async (): Promise<void> => {
 		await this.props.startJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
@@ -319,7 +263,6 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _goBack = (): void => {
-		console.log('GO BACK');
 		this.props.navigation.navigate('MyJourneys');
 	}
 
@@ -333,8 +276,10 @@ export class JourneyMap extends Component<Props, State> {
 
 	private _timeSinceStart = (): string => {
 		const duration: Duration = moment.duration(moment().diff(moment(this.props.journey && this.props.journey.times.startedAt)));
-		const hours: number = Math.floor(duration.asHours());
-		const minutes: number = Math.floor(duration.asMinutes() % 60);
+		let hours: string = Math.floor(duration.asHours()).toString();
+		let minutes: string = Math.floor(duration.asMinutes() % 60).toString();
+		if (hours.length === 1) hours = `0${hours}`;
+		if (minutes.length === 1) minutes = `0${minutes}`;
 		return `${hours}:${minutes}`;
 	}
 
@@ -423,39 +368,42 @@ export class JourneyMap extends Component<Props, State> {
 						/>
 					</TapGestureHandler>
 
-					<TapGestureHandler
-						onHandlerStateChange={ this._toggleInfo }
-					>
-						<Animated.View
-							style={ [ styles.infoBox, {
-								height: this.animatedStyles.infoHeight,
-								width: this.animatedStyles.infoWidth,
-								padding: this.animatedStyles.infoPadding,
-								marginTop: this.state.statusBarHeight + 10
-							} ] }
-						>
-							{
-								this.state.infoOpen && !this.state.isTogglingInfo &&
-									<View style={ { flex: 1 } }>
-										<View style={ styles.infoRow }>
-											<Icon name={ 'road' } size={ 18 } style={ styles.infoIcon } />
-											<Text style={ styles.infoText }>{ this.props.distance } KM</Text>
+					{
+						(journey.journeyStatus === 'STARTED' || journey.journeyStatus === 'PAUSED') &&
+							<TapGestureHandler
+								onHandlerStateChange={ this._toggleInfo }
+							>
+								<Animated.View
+									style={ [ styles.infoBox, {
+										height: this.animatedStyles.infoHeight,
+										width: this.animatedStyles.infoWidth,
+										padding: this.animatedStyles.infoPadding,
+										marginTop: this.state.statusBarHeight + 10
+									} ] }
+								>
+									{
+										this.state.infoOpen && !this.state.isTogglingInfo &&
+										<View style={ { flex: 1 } }>
+											{/*<View style={ styles.infoRow }>*/}
+											{/*	<Icon name={ 'road' } size={ 18 } style={ styles.infoIcon } />*/}
+											{/*	<Text style={ styles.infoText }>{ this.props.distance } KM</Text>*/}
+											{/*</View>*/}
+											<View style={ styles.infoRow }>
+												<Icon name={ 'clock' } size={ 18 } style={ styles.infoIcon } />
+												<Text style={ styles.infoText }>{ this._timeSinceStart() }</Text>
+											</View>
 										</View>
-										<View style={ styles.infoRow }>
-											<Icon name={ 'clock' } size={ 18 } style={ styles.infoIcon } />
-											<Text style={ styles.infoText }>{ this._timeSinceStart() }</Text>
-										</View>
-									</View>
-							}
+									}
 
-							{
-								!this.state.infoOpen && !this.state.isTogglingInfo &&
-									<View style={ { alignSelf: 'center', justifyContent: 'center', flex: 1 } }>
-										<Icon name={ 'info' } size={ 16 } color={ 'white' } />
-									</View>
-							}
-						</Animated.View>
-					</TapGestureHandler>
+									{
+										!this.state.infoOpen && !this.state.isTogglingInfo &&
+											<View style={ { alignSelf: 'center', justifyContent: 'center', flex: 1 } }>
+												<Icon name={ 'info' } size={ 16 } color={ 'white' } />
+											</View>
+									}
+								</Animated.View>
+							</TapGestureHandler>
+					}
 				</View>
 
 				<Portal>

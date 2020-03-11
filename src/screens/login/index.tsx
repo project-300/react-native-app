@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CompState, Props } from './interfaces';
-import { login } from '../../redux/actions';
+import { login, getCurrentJourney } from '../../redux/actions';
 import { LoginState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Animated, { Easing } from 'react-native-reanimated';
@@ -299,6 +299,7 @@ export class Login extends Component<Props, CompState> {
 							login={ this.props.login }
 							keyboardOpen={ this.state.keyboardOpen }
 							navigation={ this.props.navigation }
+							getCurrentJourney={ this.props.getCurrentJourney }
 						/>
 						<TouchableOpacity
 							onPress={ (): boolean => this.props.navigation.navigate('ForgotPassword') }>
@@ -317,4 +318,7 @@ const mapStateToProps = (state: AppState): LoginState => ({
 	...state.loginReducer
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, {
+	login,
+	getCurrentJourney
+})(Login);
