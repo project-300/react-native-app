@@ -16,7 +16,7 @@ const signUpSuccess = (): AppActions => ({ type: SIGNUP_SUCCESS });
 
 const signUpFailure = (): AppActions => ({ type: SIGNUP_FAILURE });
 
-export const signUp = (email: string, phoneNumber: string, password: string):
+export const signUp = (email: string, firstname: string, surname: string, phoneNumber: string, password: string):
 	(dispatch: Dispatch<AppActions>) => Promise<SignUpActionResponse | { ok: boolean }> => {
 	return async (dispatch: Dispatch<AppActions>): Promise<SignUpActionResponse | { ok: boolean }> => {
 		dispatch(signUpRequest());
@@ -27,7 +27,9 @@ export const signUp = (email: string, phoneNumber: string, password: string):
 				password,
 				attributes: {
 					email,
-					phone_number: MobileNumberWithExtension(phoneNumber)
+					phone_number: MobileNumberWithExtension(phoneNumber),
+					given_name: firstname,
+					family_name: surname
 				}
 			});
 

@@ -47,11 +47,7 @@ export class ForgotPassword extends Component<Props, State> {
 			code: '',
 			password: '',
 			keyboardOpen: false,
-			isConfirming: false,
 			email: '',
-			confirmed: false,
-			codeSent: false,
-			isSendingCode: false,
 			confirmPassword: ''
 		};
 
@@ -173,6 +169,7 @@ export class ForgotPassword extends Component<Props, State> {
 					placeholderTextColor='black'
 					onChangeText={ (password: string): void => this.setState({ password }) }
 					autoCorrect={ false }
+					secureTextEntry= { true }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
 					style={ formStyles.input } />
@@ -181,6 +178,7 @@ export class ForgotPassword extends Component<Props, State> {
 					placeholderTextColor='black'
 					onChangeText={ (confirmPassword: string): void => this.setState({ confirmPassword }) }
 					autoCorrect={ false }
+					secureTextEntry= { true }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
 					style={ formStyles.input } />

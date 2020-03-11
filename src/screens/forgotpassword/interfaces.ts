@@ -21,27 +21,7 @@ export interface Props extends CommonProps {
 export interface State {
 	keyboardOpen: boolean;
 	email: string;
-	confirmed: boolean;
-	isConfirming: boolean;
-	codeSent: boolean;
-	isSendingCode: boolean;
 	code: string;
 	password: string;
 	confirmPassword: string;
-}
-
-export interface SignUpActionResponse {
-	ok: boolean,
-	confirmationRequired?: boolean;
-	email: string;
-	codeDeliveryDetails: CodeDeliveryDetails,
-	userId: string;
-	isSignUp: boolean;
-}
-
-interface ConfirmSignUpDetails {
-	email: string;
-	codeDeliveryDetails: CodeDeliveryDetails;
-	userId: string;
-	isSignUp: boolean;
 }
