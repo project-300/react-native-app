@@ -46,13 +46,13 @@ export default class SignUpForm extends Component<Props, State> {
 					// theme={ ContrastTheme }
 					// mode={ 'outlined' }
 					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
-          autoCapitalize='none'
+			autoCapitalize='none'
 					autoCorrect={ false }
 					keyboardType={ 'phone-pad' }
 					onChangeText={ (phoneNumber: string): void => this.setState({ phoneNumber }) }
 					onFocus={ this.props.keyboardOpen }
 				/>
-        <TextInput
+		<TextInput
 					placeholder={ 'First Name' }
 					placeholderTextColor='black'
 					autoCapitalize='none'
@@ -124,11 +124,11 @@ export default class SignUpForm extends Component<Props, State> {
 					theme={ ContrastTheme }
 					mode={ 'outlined' }
 					labelStyle={ { color: Theme.accent } }
-					onPress={ (): Promise<void | boolean> => this.props.signUp(this.state.username, this.state.phoneNumber, this.state.password) }>
+					onPress={ (): Promise<void | boolean> => this.props.signUp(this.state.username, this.state.firstname, this.state.surname, this.state.phoneNumber, this.state.password) }>
 					SIGN UP
 				</Button>
 
-          <TouchableOpacity
+			<TouchableOpacity
 					onPress={ (): boolean => this.props.navigation.navigate('Login') }>
 					<Text style={ styles.loginLink }>
 						Already signed up? Sign in
