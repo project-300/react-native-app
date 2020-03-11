@@ -32,6 +32,7 @@ import { FAB, Portal } from 'react-native-paper';
 import MapUtils from '../../services/map-utils';
 import moment, { Duration } from 'moment';
 import { Colours, Theme } from '../../constants/theme';
+import toastr from '../../helpers/toastr';
 
 const { width } = Dimensions.get('window');
 const { timing } = Animated;
@@ -110,7 +111,7 @@ export class JourneyMap extends Component<Props, State> {
 
 		if (this.props.journey && (this.props.journey.journeyStatus === 'STARTED')) {
 			// this._trackDriver();
-			this.props.startLocationTracking();
+			this.props.startLocationTracking(false);
 			this._setRouteTravelled();
 		}
 		if (this.props.journey && this.props.journey.journeyStatus === 'NOT_STARTED') {
@@ -127,6 +128,18 @@ export class JourneyMap extends Component<Props, State> {
 
 	public componentWillUnmount(): void {
 		this._stopTracking();
+	}
+
+	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+		if (prevProps.currentLocation !== this.props.currentLocation) {
+			const region = {
+				...this.props.currentLocation,
+				latitudeDelta: 0.015,
+				longitudeDelta: 0.0121
+			};
+
+			this.setState({ currentPosition: region });
+		}
 	}
 
 // 	private _trackDriver = (): void => {
@@ -240,7 +253,7 @@ export class JourneyMap extends Component<Props, State> {
 	private _startJourney = async (): Promise<void> => {
 		await this.props.startJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		// this._zoomToDriverPosition();
-		this.props.startLocationTracking();
+		this.props.startLocationTracking(false);
 	}
 
 	private _pauseJourney = async (): Promise<void> => {
@@ -256,9 +269,10 @@ export class JourneyMap extends Component<Props, State> {
 	}
 
 	private _endJourney = async (): Promise<void> => {
-		console.log("ENDING");
 		await this.props.endJourney(this.state.journeyKey.journeyId, this.state.journeyKey.createdAt);
 		this._stopTracking();
+		toastr.success('Journey Complete!');
+		this.props.navigation.navigate('SearchJourneys');
 	}
 
 	private _zoomToDriverPosition = (): void => {
@@ -388,7 +402,7 @@ export class JourneyMap extends Component<Props, State> {
 						}
 
 						{
-							this.props.isStarted &&
+							// this.props.isStarted &&
 								<Marker
 									coordinate={ this.state.currentPosition }
 								>

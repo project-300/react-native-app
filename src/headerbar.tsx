@@ -56,6 +56,12 @@ export class HeaderBar extends Component<Props, State> {
 	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
 		if (prevProps.navigateToRoute !== this.props.navigateToRoute)
 			this.props.navigation.navigate(this.props.navigateToRoute, this.props.navigationParams);
+
+		// if (
+		// 	prevProps.currentJourney && this.props.currentJourney &&
+		// 	prevProps.currentJourney.journeyStatus !== this.props.currentJourney.journeyStatus &&
+		// 	this.props.currentJourney.journeyStatus === 'FINISHED' && this._travellingAs(this.props.travellingAs, 'Driver')
+		// ) this.props.navigation.navigate('')
 	}
 
 	private _goBack = (): void => { this.props.navigation.goBack(); };
@@ -116,7 +122,7 @@ export class HeaderBar extends Component<Props, State> {
 
 		switch (journeyStatus) {
 			case 'NOT_STARTED':
-				route = 'MyJourneys';
+				route = 'PassengerJourneyOverview';
 				break;
 			case 'PICKUP':
 				route = 'DriverTrackingMap';

@@ -3,6 +3,7 @@ import { CommonProps } from '../../types/common';
 import { Coords, Journey } from '@project-300/common-types';
 import Animated from 'react-native-reanimated';
 import { AppActions } from '../../types/redux-action-types';
+import { LocationTrackingState } from '../../types/redux-reducer-state-types';
 
 export interface Styles {
 	container: ViewStyle;
@@ -20,7 +21,7 @@ export interface Styles {
 	backButton: ViewStyle;
 }
 
-export interface Props extends CommonProps {
+export interface Props extends CommonProps, LocationTrackingState {
 	isStarting: boolean;
 	isPausing: boolean;
 	isResuming: boolean;
@@ -36,7 +37,7 @@ export interface Props extends CommonProps {
 	resumeJourney(journeyId: string, createdAt: string): Promise<void>;
 	endJourney(journeyId: string, createdAt: string): Promise<void>;
 	driverMovement(journeyId: string, createdAt: string, c: Coords): Promise<void>;
-	startLocationTracking(): AppActions;
+	startLocationTracking(publishLocation: boolean): AppActions;
 	stopLocationTracking(): AppActions;
 }
 

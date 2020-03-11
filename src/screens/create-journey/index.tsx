@@ -114,13 +114,11 @@ export class CreateJourney extends Component<Props, State> {
 				leavingAt
 			}
 		};
-
-		console.log(journey);
-
+		
 		const created: boolean = await this.props.createJourney(journey);
 		if (created) {
 			this.props.clearNewJourneyFormDetails();
-			this.props.navigation.navigate('Home');
+			this.props.navigation.navigate('MyJourneys');
 		}
 	}
 

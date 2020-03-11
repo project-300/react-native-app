@@ -1,7 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import {
 	View,
-	Text, ScrollView
+	Text, ScrollView, Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Props, State } from './interfaces';
@@ -110,14 +110,26 @@ export class JourneyOverview extends Component<Props, State> {
 					}
 				</View>
 
-				<ScrollView style={ styles.actionLogList }>
-					{
-						journey.actionLogs.map((log: JourneyAction) => <View style={ styles.actionLog }>
-							<Text style={ styles.actionLogText }>{ log.description }</Text>
-							<Text style={ styles.actionLogTime }>{ DatesTimes.hoursMinutes(log.time) }</Text>
-						</View>).reverse()
-					}
-				</ScrollView>
+				{
+					journey.journeyStatus === 'NOT_STARTED' && !journey.actionLogs.length &&
+						<Image
+							resizeMode={ 'contain' }
+							style={ styles.carImage }
+							source={ require('../../assets/svg/waiting-driver.png') }
+						/>
+				}
+
+				{
+					!!journey.actionLogs.length &&
+						<ScrollView style={ styles.actionLogList }>
+							{
+								journey.actionLogs.map((log: JourneyAction) => <View style={ styles.actionLog }>
+									<Text style={ styles.actionLogText }>{ log.description }</Text>
+									<Text style={ styles.actionLogTime }>{ DatesTimes.hoursMinutes(log.time) }</Text>
+								</View>).reverse()
+							}
+						</ScrollView>
+				}
 			</View>
 		);
 	}

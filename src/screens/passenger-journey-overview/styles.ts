@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import { Colours } from '../../constants/theme';
+
+const { width } = Dimensions.get('window');
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -81,6 +83,13 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	rateExperienceButton: {
 		marginHorizontal: 20
+	},
+
+	carImage: {
+		width,
+		alignSelf: 'center',
+		position: 'absolute',
+		top: 0
 	}
 });
 
