@@ -125,10 +125,8 @@ export class HeaderBar extends Component<Props, State> {
 			case 'STARTED':
 			case 'PAUSED':
 			case 'ARRIVED':
-				route = 'PassengerJourneyOverview';
-				break;
 			case 'FINISHED':
-				route = 'JourneyReview';
+				route = 'PassengerJourneyOverview';
 				break;
 			case 'CANCELLED':
 				route = null;

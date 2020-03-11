@@ -7,11 +7,13 @@ import { connect } from 'react-redux';
 import { Props, State } from './interfaces';
 import { CurrentJourneyState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import { Journey, JourneyAction } from '@project-300/common-types';
+import { Journey, JourneyAction, JourneyRating } from '@project-300/common-types';
 import styles from './styles';
-import { ActivityIndicator } from 'react-native-paper';
-import { Colours } from '../../constants/theme';
+import { ActivityIndicator, Button } from 'react-native-paper';
+import { Colours, ContrastTheme } from '../../constants/theme';
 import DatesTimes from '../../services/dates-times';
+import { Auth } from 'aws-amplify';
+import { requestRating } from '../../redux/actions';
 
 export class JourneyOverview extends Component<Props, State> {
 
@@ -22,13 +24,14 @@ export class JourneyOverview extends Component<Props, State> {
 	}
 
 	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
-		if (
-			prevProps.currentJourney && this.props.currentJourney &&
-			prevProps.currentJourney.journeyStatus !== this.props.currentJourney.journeyStatus &&
-			this.props.currentJourney.journeyStatus === 'FINISHED'
-		) console.log('test');
+		console.log(this.props.currentJourney);
+		if (prevProps.currentJourney && !this.props.currentJourney)
+			this.props.navigation.navigate('SearchJourneys');
+	}
 
-			// this.props.navigation.navigate('JourneyRating');
+	public async componentDidMount(): Promise<void> {
+		const userId: string = (await Auth.currentUserInfo()).attributes.sub;
+		this.setState({ userId });
 	}
 
 	private _renderTitleText = (): ReactElement => {
@@ -75,6 +78,10 @@ export class JourneyOverview extends Component<Props, State> {
 		}) }</View>;
 	}
 
+	private _requestRateExperience = (): void => {
+		this.props.requestRating();
+	}
+
 	public render(): ReactElement {
 		const journey: Journey = this.props.currentJourney as Journey;
 
@@ -89,6 +96,18 @@ export class JourneyOverview extends Component<Props, State> {
 						{ this._renderTitleText() }
 						<Text style={ styles.locations }>Travelling from { origin.name } to { destination.name }</Text>
 					</View>
+
+					{
+						journey.journeyStatus === 'FINISHED' && this.props.travellingAs === 'Passenger' &&
+						(!journey.ratings || (journey.ratings &&
+							!journey.ratings.find((rating: JourneyRating) => rating.passenger.userId === this.state.userId))) &&
+							<Button
+								theme={ ContrastTheme }
+								mode={ 'contained' }
+								style={ styles.rateExperienceButton }
+								onPress={ this._requestRateExperience }
+							>Rate My Experience</Button>
+					}
 				</View>
 
 				<ScrollView style={ styles.actionLogList }>
@@ -108,4 +127,6 @@ const mapStateToProps = (state: AppState): CurrentJourneyState => ({
 	...state.currentJourneyReducer
 });
 
-export default connect(mapStateToProps, { })(JourneyOverview);
+export default connect(mapStateToProps, {
+	requestRating
+})(JourneyOverview);

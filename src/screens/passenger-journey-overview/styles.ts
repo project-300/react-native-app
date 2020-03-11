@@ -77,6 +77,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 		fontSize: 12,
 		alignSelf: 'flex-end',
 		paddingTop: 10
+	},
+
+	rateExperienceButton: {
+		marginHorizontal: 20
 	}
 });
 

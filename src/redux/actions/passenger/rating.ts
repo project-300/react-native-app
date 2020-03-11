@@ -6,7 +6,9 @@ import { AppActions } from '../../../types/redux-action-types';
 import {
 	PASSENGER_JOURNEY_RATING_REQUEST,
 	PASSENGER_JOURNEY_RATING_SUCCESS,
-	PASSENGER_JOURNEY_RATING_FAILURE
+	PASSENGER_JOURNEY_RATING_FAILURE,
+	PASSENGER_REQUEST_RATING,
+	PASSENGER_STOP_RATING
 } from '../../../constants/redux-actions';
 
 const passengerJourneyRatingRequest = (): AppActions => ({ type: PASSENGER_JOURNEY_RATING_REQUEST });
@@ -14,6 +16,10 @@ const passengerJourneyRatingRequest = (): AppActions => ({ type: PASSENGER_JOURN
 const passengerJourneyRatingSuccess = (journey: Journey): AppActions => ({ type: PASSENGER_JOURNEY_RATING_SUCCESS, journey });
 
 const passengerJourneyRatingFailure = (): AppActions => ({ type: PASSENGER_JOURNEY_RATING_FAILURE });
+
+export const requestRating = (): AppActions => ({ type: PASSENGER_REQUEST_RATING });
+
+export const stopRequestRating = (): AppActions => ({ type: PASSENGER_STOP_RATING });
 
 export const passengerJourneyRating = (journeyId: string, createdAt: string, rating: number): (dispatch: Dispatch) => Promise<boolean> => {
 	return async (dispatch: Dispatch): Promise<boolean> => {

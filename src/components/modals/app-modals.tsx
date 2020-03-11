@@ -13,7 +13,9 @@ import {
 	passengerConfirmPickup,
 	passengerCancelPickup,
 	passengerJourneyRating,
-	navigateTo
+	navigateTo,
+	stopRequestRating,
+	clearCurrentJourney
 } from '../../redux/actions';
 import { AppActions } from '../../types/redux-action-types';
 import { DriverBrief, Journey } from '@project-300/common-types';
@@ -28,6 +30,8 @@ interface Props extends CommonProps, CurrentJourneyState, PassengerConfirmPickup
 	passengerCancelPickup(journeyId: string, createdAt: string): Promise<boolean>;
 	passengerJourneyRating(journeyId: string, createdAt: string, rating: number): Promise<boolean>;
 	navigateTo(route: string, params?: any): AppActions;
+	stopRequestRating(): AppActions;
+	clearCurrentJourney(): AppActions;
 }
 
 interface State {
@@ -79,6 +83,10 @@ export class ModalLayer extends Component<Props, State> {
 			this.props.currentJourney.journeyStatus === 'FINISHED' &&
 			this._travellingAs(travellingAs, 'Passenger')
 		) this.setState({ showRateJourneyModal: true });
+
+		if (
+			!prevProps.requestRating && this.props.requestRating
+		) this.setState({ showRateJourneyModal: true });
 	}
 
 	private _hideModals = (): void => {
@@ -122,6 +130,8 @@ export class ModalLayer extends Component<Props, State> {
 		this.setState({ showRateJourneyModal: false });
 		const result: boolean = await this.props.passengerJourneyRating(journeyId, createdAt, this.state.journeyRating);
 		if (!result) this.setState({ showRateJourneyModal: true });
+		this.props.stopRequestRating();
+		this.props.clearCurrentJourney();
 	}
 
 	private _renderPickupConfirmationModal = (): ReactElement => {
@@ -284,5 +294,7 @@ export default connect(mapStateToProps, {
 	passengerConfirmPickup,
 	passengerCancelPickup,
 	passengerJourneyRating,
-	navigateTo
+	navigateTo,
+	stopRequestRating,
+	clearCurrentJourney
 })(ModalLayer);

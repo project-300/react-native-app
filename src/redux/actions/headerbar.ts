@@ -1,7 +1,8 @@
 import {
 	CURRENT_JOURNEY_SUB_RECEIVED,
 	CURRENT_JOURNEY,
-	RESET_CURRENT_JOURNEY_UPDATED_FLAG
+	RESET_CURRENT_JOURNEY_UPDATED_FLAG,
+	CLEAR_CURRENT_JOURNEY
 } from '../../constants/redux-actions';
 import { AppActions } from '../../types/redux-action-types';
 import { Journey, SubscriptionPayload, UserTypes } from '@project-300/common-types';
@@ -11,6 +12,8 @@ import { JourneyService } from '../../services/journey';
 export const currentJourneySubReceived = (payload: SubscriptionPayload, userId: string): AppActions => ({ type: CURRENT_JOURNEY_SUB_RECEIVED, payload, userId });
 
 export const setCurrentJourney = (onAppLoad: boolean, journey?: Journey, travellingAs?: UserTypes, awaitingConfirmation?: boolean): AppActions => ({ type: CURRENT_JOURNEY, onAppLoad, journey, travellingAs, awaitingConfirmation });
+
+export const clearCurrentJourney = (): AppActions => ({ type: CLEAR_CURRENT_JOURNEY });
 
 export const resetCurrentJourneyUpdatedFlag = (): AppActions => ({ type: RESET_CURRENT_JOURNEY_UPDATED_FLAG });
 

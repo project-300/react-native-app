@@ -186,6 +186,7 @@ export interface PassengerConfirmPickupState {
 
 export interface PassengerJourneyRatingState {
 	isRating: boolean;
+	requestRating: boolean;
 }
 
 export interface NewJourneyState {
