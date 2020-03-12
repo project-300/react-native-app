@@ -279,7 +279,7 @@ const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigato
 	}
 },
 {
-	initialRouteName: 'MyJourneysTab',
+	initialRouteName: 'SearchTab',
 	tabBarPosition: 'bottom',
 	animationEnabled: true,
 	swipeEnabled: true,
@@ -289,16 +289,6 @@ const SignedInDriverStack: NavigationContainer = createMaterialBottomTabNavigato
 });
 
 const SwitchNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer => {
-	// let isTheDriver: boolean = false;
-	// store.subscribe(() => {
-	// 	const val = store.getState().currentJourneyReducer;
-	// 	console.log(val);
-	// 	isTheDriver = val.travellingAs || false;
-	// 	console.log(isTheDriver);
-	// });
-	//
-	// console.log('OUT ', isTheDriver);
-
 	return createSwitchNavigator(
 		{
 			SignedInStack: {
@@ -324,16 +314,3 @@ const CreateNavigator = (signedIn: boolean = false, isDriver: boolean = false): 
 	createAppContainer(SwitchNavigator(signedIn, isDriver));
 
 export default CreateNavigator;
-
-// const mapStateToProps = (state: AppState): { } => ({
-//
-// });
-//
-// const container = connect(mapStateToProps, {
-//
-// })(createAppContainer(SwitchNavigator(true)));
-//
-// const CreateNavigator = (signedIn: boolean = false, isDriver: boolean = false): NavigationContainer =>
-// 	container;
-//
-// export default CreateNavigator;

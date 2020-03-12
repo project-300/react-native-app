@@ -369,7 +369,7 @@ export class JourneyMap extends Component<Props, State> {
 					</TapGestureHandler>
 
 					{
-						(journey.journeyStatus === 'STARTED' || journey.journeyStatus === 'PAUSED') &&
+						journey && (journey.journeyStatus === 'STARTED' || journey.journeyStatus === 'PAUSED') &&
 							<TapGestureHandler
 								onHandlerStateChange={ this._toggleInfo }
 							>

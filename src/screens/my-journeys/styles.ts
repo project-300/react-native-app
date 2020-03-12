@@ -112,7 +112,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		flex: 1,
 		alignSelf: 'center',
 		paddingBottom: 15,
-		paddingTop: 5
+		paddingTop: 5,
+		padding: 10
 	},
 
 	journeyOptions: {

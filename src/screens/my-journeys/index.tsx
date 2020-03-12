@@ -110,6 +110,8 @@ export class MyJourneys extends Component<Props, State> {
 	private _renderDriverJourneyRow = (journey: Journey): ReactElement => {
 		const { journeyId, origin, destination, journeyStatus, times } = journey;
 		const lateBy: number = this._isLateBy(times.leavingAt);
+		const lastAction: { description: string; time: string } | false =
+			!!journey.actionLogs && !!journey.actionLogs.length && journey.actionLogs[journey.actionLogs.length - 1];
 
 		return (
 			<View style={ [ styles.journeyCard ] } key={ journey.journeyId }>
@@ -150,10 +152,27 @@ export class MyJourneys extends Component<Props, State> {
 							}
 
 							{
-								journeyStatus === 'NOT_STARTED' && !!lateBy &&
+								(journeyStatus === 'NOT_STARTED' || journeyStatus === 'PICKUP' || journeyStatus === 'WAITING') && lateBy > 0 &&
 									<Text style={ [ styles.journeyInfoText, { color: 'red' } ] }>
 										You are running over schedule by <Text style={ styles.bold }>{ lateBy }</Text> minute{ lateBy !== 1 && 's' }
 									</Text>
+							}
+
+							{
+								journeyStatus === 'PICKUP' &&
+									<View style={ styles.journeyInfoTextContainer }>
+										<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>You are currently picking up Passengers.</Text>
+										<Text style={ [ styles.journeyInfoText ] }>
+											Started Pickup { DatesTimes.dayAndTime(journey.times.startedPickupAt) }
+										</Text>
+									</View>
+							}
+
+							{
+								journeyStatus === 'WAITING' &&
+									<View style={ styles.journeyInfoTextContainer }>
+										<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>You are currently waiting to Start.</Text>
+									</View>
 							}
 
 							{
@@ -162,6 +181,36 @@ export class MyJourneys extends Component<Props, State> {
 										<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>This journey is currently taking place.</Text>
 										<Text style={ [ styles.journeyInfoText ] }>
 											Started { DatesTimes.dayAndTime(journey.times.startedAt) }
+										</Text>
+									</View>
+							}
+
+							{
+								journeyStatus === 'PAUSED' &&
+									<View style={ styles.journeyInfoTextContainer }>
+										<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>You have currently paused this journey.</Text>
+										<Text style={ [ styles.journeyInfoText ] }>
+											Started { DatesTimes.dayAndTime(journey.times.pausedAt) }
+										</Text>
+									</View>
+							}
+
+							{
+								journeyStatus === 'CANCELLED' &&
+									<View style={ styles.journeyInfoTextContainer }>
+										<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>This journey was Cancelled.</Text>
+										<Text style={ [ styles.journeyInfoText ] }>
+											Cancelled { DatesTimes.dayAndTime(journey.times.cancelledAt) }
+										</Text>
+                                </View>
+							}
+
+							{
+								journeyStatus === 'FINISHED' &&
+									<View style={ styles.journeyInfoTextContainer }>
+										<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>Journey Complete.</Text>
+										<Text style={ [ styles.journeyInfoText ] }>
+											Ended { DatesTimes.dayAndTime(journey.times.endedAt) }
 										</Text>
 									</View>
 							}
@@ -193,7 +242,25 @@ export class MyJourneys extends Component<Props, State> {
 						<TouchableOpacity
 							onPress={ (): boolean => this.props.navigation.navigate('PassengerPickup', { journeyKey: { journeyId, createdAt } }) }
 						>
-							<Text style={ styles.cardLink }>START</Text>
+							<Text style={ styles.cardLink }>PICKUP</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					journeyStatus === 'PICKUP' &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('PassengerPickup', { journeyKey: { journeyId, createdAt } }) }
+						>
+							<Text style={ styles.cardLink }>PICKUP</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					journeyStatus === 'WAITING' &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('JourneyMap', { journeyKey: { journeyId, createdAt } }) }
+						>
+							<Text style={ styles.cardLink }>CONTINUE</Text>
 						</TouchableOpacity>
 				}
 
@@ -225,11 +292,11 @@ export class MyJourneys extends Component<Props, State> {
 	}
 
 	private _renderPassengerJourneyRow = (journey: Journey): ReactElement => {
-		const { origin, destination, journeyStatus, times: { leavingAt, startedAt } } = journey;
+		const { origin, destination, journeyStatus, times: { leavingAt, startedAt, cancelledAt, startedPickupAt, endedAt, pausedAt } } = journey;
 
 		return (
 			<View style={ [ styles.journeyCard ] } key={ journey.journeyId }>
-				<View style={ [ styles.passengerJourneyCardHeader, journeyStatus === 'STARTED' ? { backgroundColor: 'green' } : { } ] }>
+				<View style={ [ styles.passengerJourneyCardHeader, journeyStatus === 'STARTED' ? { backgroundColor: '#7BD981' } : { } ] }>
 					<Text style={ styles.passengerJourneyLocations }>
 						<Text style={ styles.bold }>
 							{ origin.name }
@@ -253,11 +320,56 @@ export class MyJourneys extends Component<Props, State> {
 						}
 
 						{
+							journeyStatus === 'PICKUP' &&
+								<View style={ styles.journeyInfoTextContainer }>
+									<Text style={ [ styles.journeyInfoText ] }>
+										Driver has Started Pickup { DatesTimes.dayAndTime(startedPickupAt) }
+									</Text>
+								</View>
+						}
+
+						{
+							journeyStatus === 'WAITING' &&
+								<View style={ styles.journeyInfoTextContainer }>
+									<Text style={ [ styles.journeyInfoText ] }>
+										Driver is waiting to Start Journey
+									</Text>
+								</View>
+						}
+
+						{
+							journeyStatus === 'PAUSED' &&
+								<View style={ styles.journeyInfoTextContainer }>
+									<Text style={ [ styles.journeyInfoText ] }>
+										Driver has Paused the Journey { DatesTimes.dayAndTime(pausedAt) }
+									</Text>
+								</View>
+						}
+
+						{
 							journeyStatus === 'STARTED' &&
 								<View style={ styles.journeyInfoTextContainer }>
 									<Text style={ [ styles.journeyInfoText, { marginBottom: 10 } ] }>This journey is currently taking place.</Text>
 									<Text style={ [ styles.journeyInfoText ] }>
 										Started { DatesTimes.dayAndTime(startedAt) }
+									</Text>
+								</View>
+						}
+
+						{
+							journeyStatus === 'CANCELLED' &&
+								<View style={ styles.journeyInfoTextContainer }>
+									<Text style={ [ styles.journeyInfoText ] }>
+										Journey was Cancelled { DatesTimes.dayAndTime(cancelledAt) }
+									</Text>
+								</View>
+						}
+
+						{
+							journeyStatus === 'FINISHED' &&
+								<View style={ styles.journeyInfoTextContainer }>
+									<Text style={ [ styles.journeyInfoText ] }>
+										Journey Complete { DatesTimes.dayAndTime(endedAt) }
 									</Text>
 								</View>
 						}
@@ -284,11 +396,29 @@ export class MyJourneys extends Component<Props, State> {
 				}
 
 				{
-					journeyStatus === 'STARTED' &&
+					journeyStatus === 'PICKUP' &&
 						<TouchableOpacity
 							onPress={ (): boolean => this.props.navigation.navigate('DriverTrackingMap', { journeyKey: { journeyId, createdAt } }) }
 						>
 							<Text style={ styles.cardLink }>TRACK DRIVER</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					journeyStatus === 'WAITING' || journeyStatus === 'STARTED' || journeyStatus === 'PAUSED' &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('PassengerJourneyOverview') }
+						>
+							<Text style={ styles.cardLink }>VIEW</Text>
+						</TouchableOpacity>
+				}
+
+				{
+					journeyStatus === 'FINISHED' &&
+						<TouchableOpacity
+							onPress={ (): boolean => this.props.navigation.navigate('PassengerJourneyOverview') }
+						>
+							<Text style={ styles.cardLink }>RATE</Text>
 						</TouchableOpacity>
 				}
 
