@@ -10,8 +10,6 @@ const styles: Styles = StyleSheet.create<Styles>({
 		width: width * 0.8,
 		flexDirection: 'column',
 		alignSelf: 'center'
-		// flex: 1,
-		// alignItems: 'center'
 	},
 
 	text: {
@@ -24,7 +22,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 
 	loginLink: {
 		marginTop: 40,
-		alignSelf: 'stretch',
+		alignSelf: 'center',
 		color: 'white',
 		fontWeight: '500',
 		fontSize: 16
@@ -39,6 +37,31 @@ const styles: Styles = StyleSheet.create<Styles>({
 	showPasswordIcon: {
 		color: Theme.accent,
 		fontSize: 18
+	},
+
+	input: {
+		padding: 16,
+		borderWidth: 0.2,
+		borderColor: '#BBB',
+		backgroundColor: 'white',
+		borderRadius: 4,
+		marginBottom: 10
+	},
+
+	errorText: {
+		color: Colours.white,
+		textAlign: 'center'
+	},
+
+	errorTitle: {
+		fontSize: 16,
+		fontWeight: '600'
+	},
+
+	error: {
+		alignItems: 'center',
+		marginBottom: 20,
+		marginTop: -20
 	}
 });
 

@@ -1,27 +1,23 @@
 import React, { Component, ReactElement } from 'react';
 import {
-	StyleSheet,
 	KeyboardAvoidingView,
 	EmitterSubscription,
 	Keyboard,
 	View,
 	TextInput,
 	TouchableOpacity,
-	Text
+	Text, Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles, { imageStyle } from './styles';
 import { Props, State } from './interfaces';
 import { forgotPassword, forgotPasswordSubmit } from '../../redux/actions';
-import { SignUpState, ForgotPasswordState } from '../../types/redux-reducer-state-types';
+import { ForgotPasswordState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-import Background from '../../assets/svg/signup-bg.svg';
-import Logo from '../../assets/svg/mini.svg';
 import Animated, { Easing } from 'react-native-reanimated';
-import toastr from '../../helpers/toastr';
-import * as EmailValidator from 'email-validator';
-import { Auth } from 'aws-amplify';
 import formStyles from '../../styles/forms';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
+import { Button } from 'react-native-paper';
 
 const {
 	Value,
@@ -111,14 +107,6 @@ export class ForgotPassword extends Component<Props, State> {
 		}).start();
 	}
 
-	private swipeBackground = (direction: string): void => { // Background SVG image swipes across the screen
-		timing(this.background, {
-			duration: 1000,
-			toValue: direction === 'LEFT' ? 1 : 0,
-			easing: Easing.inOut(Easing.circle)
-		}).start();
-	}
-
 	private _handleSendCodeClick = async (): Promise<void> => {
 		await this.props.forgotPassword(this.state.email);
 	  }
@@ -135,19 +123,24 @@ export class ForgotPassword extends Component<Props, State> {
 		return (
 			<View>
 				<TextInput
-					placeholder={ 'EMAIL' }
-					placeholderTextColor='black'
-					onChangeText={ (email: string): void => this.setState({ email }) }
-					autoCorrect={ false }
-					autoCompleteType={ 'off' }
+					placeholder={ 'Email Address' }
+					placeholderTextColor={ Colours.middleGrey }
 					autoCapitalize='none'
-					style={ formStyles.input } />
-				<TouchableOpacity
+					autoCorrect={ false }
+					onChangeText={ (email: string): void => this.setState({ email }) }
+					style={ styles.input }
+				/>
+
+				<Button
+					style={ [ formStyles.button, { backgroundColor: 'white', marginTop: 20 } ] }
+					theme={ ContrastTheme }
+					mode={ 'outlined' }
+					labelStyle={ { color: Theme.accent } }
 					disabled={ !this._validateCodeForm() }
-					style={ formStyles.largeButton }
-					onPress={ this._handleSendCodeClick }>
-					<Text style={ formStyles.buttonText }>Send Confirmation</Text>
-				</TouchableOpacity>
+					onPress={ this._handleSendCodeClick }
+				>
+					Send Confirmation
+				</Button>
 			</View>
 		);
 	}
@@ -155,39 +148,56 @@ export class ForgotPassword extends Component<Props, State> {
 	private _renderConfirmationForm(): ReactElement {
 		return (
 			<View>
+				{
+					!!this.state.email &&
+						<Text
+							style={ styles.text }
+						>Please check your email ({ this.state.email }) for the confirmation code.</Text>
+				}
+
 				<TextInput
-					placeholder={ 'CONFIRMATION CODE' }
-					placeholderTextColor='black'
+					placeholder={ 'Confirmation Code' }
+					placeholderTextColor={ Colours.middleGrey }
 					onChangeText={ (code: string): void => this.setState({ code }) }
 					autoCorrect={ false }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
-					style={ formStyles.input } />
-				<Text>Please check your email ({ this.state.email }) for the confirmation code.</Text>
+					style={ styles.input }
+					keyboardType={ 'numeric' }
+				/>
+
 				<TextInput
-					placeholder={ 'PASSWORD' }
-					placeholderTextColor='black'
+					placeholder={ 'Password' }
+					placeholderTextColor={ Colours.middleGrey }
 					onChangeText={ (password: string): void => this.setState({ password }) }
 					autoCorrect={ false }
 					secureTextEntry= { true }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
-					style={ formStyles.input } />
+					style={ styles.input }
+				/>
+
 				<TextInput
-					placeholder={ 'CONFIRM PASSWORD' }
-					placeholderTextColor='black'
+					placeholder={ 'Confirm Password' }
+					placeholderTextColor={ Colours.middleGrey }
 					onChangeText={ (confirmPassword: string): void => this.setState({ confirmPassword }) }
 					autoCorrect={ false }
 					secureTextEntry= { true }
 					autoCompleteType={ 'off' }
 					autoCapitalize='none'
-					style={ formStyles.input } />
-				<TouchableOpacity
+					style={ styles.input }
+				/>
+
+				<Button
+					style={ [ formStyles.button, { backgroundColor: 'white', marginTop: 20 } ] }
+					theme={ ContrastTheme }
+					mode={ 'outlined' }
+					labelStyle={ { color: Theme.accent } }
 					disabled={ !this._validateResetForm() }
-					style={ formStyles.largeButton }
-					onPress={ this._handleConfirmClick }>
-					<Text style={ formStyles.buttonText }>Submit</Text>
-				</TouchableOpacity>
+					onPress={ this._handleConfirmClick }
+				>
+					Submit
+				</Button>
 			</View>
 		);
 	}
@@ -195,13 +205,15 @@ export class ForgotPassword extends Component<Props, State> {
 	private _renderSuccessMessage(): ReactElement {
 		return (
 			<View>
-				<Text>Your password has been reset</Text>
-				<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('Login') }>
-					<Text style={ styles.loginLink }>
-						Click here to login with your new credentials
-					</Text>
-				</TouchableOpacity>
+				<Text style={ styles.text }>Your password has been successfully reset!</Text>
+
+				<Button
+					style={ [ formStyles.button, { backgroundColor: 'white', marginTop: 20 } ] }
+					theme={ ContrastTheme }
+					mode={ 'outlined' }
+					labelStyle={ { color: Theme.accent } }
+					onPress={ (): boolean => this.props.navigation.navigate('Login') }
+				>Go To Sign In</Button>
 			</View>
 		);
 	}
@@ -209,13 +221,14 @@ export class ForgotPassword extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<KeyboardAvoidingView behavior='padding' style={ styles.container }>
-				<Animated.View style={ [ StyleSheet.absoluteFill, { right: this.backgroundPosition } ] }>
-					<Background preserveAspectRatio='xMaxYMid slice' />
-				</Animated.View>
 				{
 					!this.state.keyboardOpen &&
-						<Animated.View style={ imageStyle(this.imageOpacity) }>
-							<Logo style={ styles.logo } />
+						<Animated.View style={ [ imageStyle(this.imageOpacity), { width: '100%' } ] }>
+							<Image
+								source={ require('../../assets/images/dryve.png') }
+								style={ styles.logo }
+								resizeMode={ 'contain' }
+							/>
 						</Animated.View>
 				}
 

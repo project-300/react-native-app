@@ -38,7 +38,7 @@ import { AnimatedStyles } from '../../animations/styles';
 import { ImagePickerResponse } from '../../types/images';
 import { NavigationEvents } from 'react-navigation';
 import { interpolateAnimation } from '../../animations/animations';
-import { Colours, Theme } from '../../constants/theme';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
 import { userId } from '../../auth';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 
@@ -254,6 +254,7 @@ export class Profile extends Component<Props, State> {
 								</Text>
 								<Button
 									mode='outlined'
+									theme={ ContrastTheme }
 									onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
 									style={ { marginTop: 20 } }
 								>
@@ -328,17 +329,6 @@ export class Profile extends Component<Props, State> {
 							</View>
 					}
 
-					{
-						this.state.isOtherUser &&
-							<TapGestureHandler onHandlerStateChange={ this._openUserChat }>
-								<View
-									style={ styles.messageIconBadge }
-								>
-									<Icon name={ 'comment' } size={ 30 } color={ Colours.white } solid />
-								</View>
-							</TapGestureHandler>
-					}
-
 					<Text style={ styles.name }>{ user.firstName } { user.lastName }</Text>
 
 					<Divider />
@@ -346,7 +336,7 @@ export class Profile extends Component<Props, State> {
 					<View style={ styles.statsContainer }>
 						<View style={ styles.statsItem }>
 							<Text style={ styles.statsItemText }>
-								{ statistics.emissions.toFixed(2) }
+								{ statistics && statistics.emissions.toFixed(2) || 0 }
 							</Text>
 							<Text style={ styles.statsItemDesc }>
 								KG CO2 Saved
@@ -355,7 +345,7 @@ export class Profile extends Component<Props, State> {
 
 						<View style={ styles.statsItem }>
 							<Text style={ styles.statsItemText }>
-								{ statistics.fuel.toFixed(2) }
+								{ statistics && statistics.fuel.toFixed(2) || 0 }
 							</Text>
 							<Text style={ styles.statsItemDesc }>
 								Fuel Saved (L)
@@ -365,7 +355,7 @@ export class Profile extends Component<Props, State> {
 							userType === 'Driver' &&
 								<View style={ styles.statsItem }>
 									<Text style={ styles.statsItemText }>
-										{ statistics.liftsGiven || 0 }
+										{ statistics && statistics.liftsGiven || 0 }
 									</Text>
 									<Text style={ styles.statsItemDesc }>
 										Lifts Given
@@ -377,7 +367,7 @@ export class Profile extends Component<Props, State> {
 							userType !== 'Driver' &&
 								<View style={ styles.statsItem }>
 									<Text style={ styles.statsItemText }>
-										{ statistics.liftsTaken || 0 }
+										{ statistics && statistics.liftsTaken || 0 }
 									</Text>
 									<Text style={ styles.statsItemDesc }>
 										Lifts Taken
@@ -478,6 +468,15 @@ export class Profile extends Component<Props, State> {
 									'pencil-outline'
 							}
 							onPress={ this._handleEditFabPress }
+						/>
+				}
+
+				{
+					this.state.isOtherUser &&
+						<FAB
+							onPress={ this._openUserChat }
+							style={ styles.fab }
+							icon={ 'comment' }
 						/>
 				}
 

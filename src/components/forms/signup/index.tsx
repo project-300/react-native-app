@@ -29,55 +29,68 @@ export default class SignUpForm extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
+				{
+					this.props.passwordError &&
+						<View style={ styles.error }>
+							<Text style={ [ styles.errorText, styles.errorTitle ] }>Your password must be at least 8 characters long and contain</Text>
+							<Text style={ styles.errorText }>Lowercase Letters</Text>
+							<Text style={ styles.errorText }>Uppercase Letters</Text>
+							<Text style={ styles.errorText }>At least one Number</Text>
+							<Text style={ styles.errorText }>At least one Symbol</Text>
+						</View>
+				}
+
 				<TextInput
 					placeholder={ 'Email Address' }
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ ContrastTheme }
-					// mode={ 'outlined' }
-					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
 					autoCapitalize='none'
 					autoCorrect={ false }
 					onChangeText={ (username: string): void => this.setState({ username }) }
 					onFocus={ this.props.keyboardOpen }
+					style={ styles.input }
 				/>
+
 				<TextInput
 					placeholder={ 'Phone Number' }
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ ContrastTheme }
-					// mode={ 'outlined' }
-					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
-			autoCapitalize='none'
+					autoCapitalize='none'
 					autoCorrect={ false }
 					keyboardType={ 'phone-pad' }
 					onChangeText={ (phoneNumber: string): void => this.setState({ phoneNumber }) }
 					onFocus={ this.props.keyboardOpen }
+					style={ styles.input }
 				/>
-		<TextInput
+
+				<TextInput
 					placeholder={ 'First Name' }
-					placeholderTextColor='black'
+					placeholderTextColor={ Colours.middleGrey }
 					autoCapitalize='none'
+					autoCorrect={ false }
 					onChangeText={ (firstname: string): void => this.setState({ firstname }) }
 					onFocus={ this.props.keyboardOpen }
-					style={ formStyles.input } />
+					style={ styles.input }
+				/>
+
 				<TextInput
 					placeholder={ 'Surname' }
-					placeholderTextColor='black'
+					placeholderTextColor={ Colours.middleGrey }
 					autoCapitalize='none'
+					autoCorrect={ false }
 					onChangeText={ (surname: string): void => this.setState({ surname }) }
 					onFocus={ this.props.keyboardOpen }
-					style={ formStyles.input } />
+					style={ styles.input }
+				/>
+
 				<View>
 					<TextInput
 						placeholder={ 'Password' }
 						placeholderTextColor={ Colours.middleGrey }
-						// theme={ ContrastTheme }
-						// mode={ 'outlined' }
-						style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
 						autoCapitalize='none'
 						autoCorrect={ false }
 						secureTextEntry={ this.state.hidePassword }
 						onChangeText={ (password: string): void => this.setState({ password })}
 						onFocus={ this.props.keyboardOpen }
+						style={ styles.input }
 					/>
 					{
 						!!this.state.password &&
@@ -96,8 +109,6 @@ export default class SignUpForm extends Component<Props, State> {
 					<TextInput
 						placeholder={ 'Confirm Password' }
 						placeholderTextColor={ Colours.middleGrey }
-						// theme={ ContrastTheme }
-						// mode={ 'outlined' }
 						style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
 						autoCapitalize='none'
 						autoCorrect={ false }
@@ -124,12 +135,15 @@ export default class SignUpForm extends Component<Props, State> {
 					theme={ ContrastTheme }
 					mode={ 'outlined' }
 					labelStyle={ { color: Theme.accent } }
-					onPress={ (): Promise<void | boolean> => this.props.signUp(this.state.username, this.state.firstname, this.state.surname, this.state.phoneNumber, this.state.password) }>
+					onPress={ (): Promise<void | boolean> =>
+						this.props.signUp(this.state.username, this.state.firstname, this.state.surname, this.state.phoneNumber, this.state.password)
+					}>
 					SIGN UP
 				</Button>
 
-			<TouchableOpacity
-					onPress={ (): boolean => this.props.navigation.navigate('Login') }>
+          		<TouchableOpacity
+					onPress={ (): boolean => this.props.navigation.navigate('Login') }
+				>
 					<Text style={ styles.loginLink }>
 						Already signed up? Sign in
 					</Text>

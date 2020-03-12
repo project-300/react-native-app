@@ -1,19 +1,15 @@
 import React, { Component, ReactElement } from 'react';
 import {
-	StyleSheet,
 	KeyboardAvoidingView,
 	EmitterSubscription,
-	Keyboard, Image
+	Keyboard, Image, ScrollView, Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles, { imageStyle } from './styles';
 import { Props, SignUpActionResponse, State } from './interfaces';
-import { signUp, confirmAccount } from '../../redux/actions';
+import { signUp, confirmAccount, login } from '../../redux/actions';
 import { SignUpState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
-// import Background from '../../assets/svg/signup-bg.svg';
-// import Logo from '../../assets/svg/mini.svg';
-import Logo from '../../assets/images/dryve.png';
 import Animated, { Easing } from 'react-native-reanimated';
 import ConfirmationForm from '../../components/forms/confirmation';
 import SignUpForm from '../../components/forms/signup';
@@ -29,6 +25,8 @@ const {
 
 let _keyboardDidShowSubscription: EmitterSubscription | undefined;
 let _keyboardDidHideSubscription: EmitterSubscription | undefined;
+
+const { height } = Dimensions.get('window');
 
 export class SignUp extends Component<Props, State> {
 
@@ -93,17 +91,7 @@ export class SignUp extends Component<Props, State> {
 		}).start();
 	}
 
-	private swipeBackground = (direction: string): void => { // Background SVG image swipes across the screen
-		timing(this.background, {
-			duration: 1000,
-			toValue: direction === 'LEFT' ? 1 : 0,
-			easing: Easing.inOut(Easing.circle)
-		}).start();
-	}
-
 	private _signUp = async (email: string, firstname: string, surname: string, phoneNumber: string, password: string): Promise<void | boolean> => {
-		this.swipeBackground('LEFT');
-
 		if (!email) return toastr.error('Email is missing');
 		if (!EmailValidator.validate(email)) return toastr.error('Invalid Email Address');
 		if (!phoneNumber) return toastr.error('Phone number is missing');
@@ -120,53 +108,60 @@ export class SignUp extends Component<Props, State> {
 				userId,
 				email,
 				codeDeliveryDetails,
-				isSignUp
+				isSignUp,
+				password
 			}
 		});
 	}
 
 	public render(): ReactElement {
 		return (
-			<KeyboardAvoidingView behavior='padding' style={ styles.container }>
-				{
-					!this.state.keyboardOpen &&
-						<Animated.View style={ [ imageStyle(this.imageOpacity), { width: '100%' } ] }>
-							<Image
-								source={ require('../../assets/images/dryve.png') }
-								style={ styles.logo }
-								resizeMode={ 'contain' }
+			<ScrollView style={ { flex: 1, backgroundColor: 'black' } }>
+				<KeyboardAvoidingView behavior='padding' style={ styles.container }>
+					{
+						!this.state.keyboardOpen &&
+							<Animated.View style={ [ imageStyle(this.imageOpacity), { width: '100%' } ] }>
+								<Image
+									source={ require('../../assets/images/dryve.png') }
+									style={ styles.logo }
+									resizeMode={ 'contain' }
+								/>
+							</Animated.View>
+					}
+
+					{
+						!this.state.confirmationDetails &&
+							<SignUpForm
+								signUp={ this._signUp }
+								isCreatingAccount={ this.props.isCreatingAccount }
+								keyboardOpen={ this.keyboardOpen }
+								passwordError={ this.props.passwordError }
+								navigation={ this.props.navigation }
 							/>
-						</Animated.View>
-				}
+					}
 
-				{
-					!this.state.confirmationDetails &&
-						<SignUpForm
-							signUp={ this._signUp }
-							isCreatingAccount={ this.props.isCreatingAccount }
-							keyboardOpen={ this.keyboardOpen }
-							navigation={ this.props.navigation }
-						/>
-				}
-
-				{
-					this.state.confirmationDetails &&
-						<ConfirmationForm
-							navigation={ this.props.navigation }
-							confirmAccount={ this.props.confirmAccount }
-							username={ this.state.confirmationDetails.email }
-							userId={ this.state.confirmationDetails.userId }
-							codeDeliveryDetails={ this.state.confirmationDetails.codeDeliveryDetails }
-							isSignUp={ this.state.confirmationDetails.isSignUp }
-							isConfirmingAccount={ this.props.isConfirmingAccount } />
-				}
-			</KeyboardAvoidingView>
+					{
+						this.state.confirmationDetails &&
+							<ConfirmationForm
+								navigation={ this.props.navigation }
+								confirmAccount={ this.props.confirmAccount }
+                                login={ this.props.login }
+								username={ this.state.confirmationDetails.email }
+								password={ this.state.confirmationDetails.password }
+								userId={ this.state.confirmationDetails.userId }
+								codeDeliveryDetails={ this.state.confirmationDetails.codeDeliveryDetails }
+								isSignUp={ this.state.confirmationDetails.isSignUp }
+								isConfirmingAccount={ this.props.isConfirmingAccount } />
+					}
+				</KeyboardAvoidingView>
+			</ScrollView>
 		);
 	}
 }
 
 const mapStateToProps = (state: AppState): SignUpState => ({
-	...state.signUpReducer, ...state.confirmReducer
+	...state.signUpReducer,
+	...state.confirmReducer
 });
 
-export default connect(mapStateToProps, { signUp, confirmAccount })(SignUp);
+export default connect(mapStateToProps, { signUp, confirmAccount, login })(SignUp);

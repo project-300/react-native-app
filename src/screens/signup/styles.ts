@@ -10,7 +10,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		flex: 1,
 		backgroundColor: Colours.black,
 		justifyContent: 'center',
-		padding: 10
+		padding: 10,
+		paddingBottom: 20
 	},
 
 	input: {

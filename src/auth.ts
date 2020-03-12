@@ -16,6 +16,7 @@ export const setUserType = async (userType: string): Promise<void> => AsyncStora
 export const storeLogout = async (): Promise<void> => {
 	await AsyncStorage.removeItem(AUTH_KEY);
 	await AsyncStorage.removeItem(USERID_KEY);
+	await AsyncStorage.removeItem(USER_TYPE);
 };
 
 export const isStoreLoggedIn = (): Promise<boolean> => {

@@ -15,6 +15,7 @@ export interface Props extends CommonProps {
 	isConfirmingAccount: boolean;
 	signUp(u: string, fn: string, ln: string, pn: string, p: string): Promise<SignUpActionResponse | { ok: boolean }>;
 	confirmAccount(uId: string, c: string, iSU: boolean, u: string): Promise<boolean>;
+	login(username: string, password: string): Promise<boolean>;
 }
 
 export interface State {
@@ -36,4 +37,5 @@ interface ConfirmSignUpDetails {
 	codeDeliveryDetails: CodeDeliveryDetails;
 	userId: string;
 	isSignUp: boolean;
+	password: string;
 }

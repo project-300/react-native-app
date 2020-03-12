@@ -162,11 +162,13 @@ export class ViewJourneyDetails extends Component<Props, State> {
 
 	private _constructImageURL = (path: string, origin: Place, destination: Place): string => {
 		let url = `https://maps.googleapis.com/maps/api/staticmap`;
-		url += `?size=${width}x${height / 2}`;
+		url += `?size=${Math.floor(width)}x${Math.floor(height / 2)}`;
 		url += `&path=color:0x0000ff|weight:3${path}`;
 		url += `&markers=color:blue|label:O|${origin.latitude},${origin.longitude}`;
 		url += `&markers=color:green|label:D|${destination.latitude},${destination.longitude}`;
 		url += `&maptype=roadmap&key=${GoogleMapsAPIKey}`;
+
+		console.log(url);
 
 		return url;
 	}

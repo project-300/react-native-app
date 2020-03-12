@@ -8,7 +8,8 @@ import { SignUpState } from '../../types/redux-reducer-state-types';
 import { SignUpActionTypes } from '../../types/redux-action-types';
 
 const initialState: SignUpState = {
-	isCreatingAccount: false
+	isCreatingAccount: false,
+	passwordError: false
 };
 
 const signUpReducer = (state: SignUpState = initialState, action: SignUpActionTypes): SignUpState => {
@@ -16,7 +17,7 @@ const signUpReducer = (state: SignUpState = initialState, action: SignUpActionTy
 		case SIGNUP_REQUEST:
 			return { ...state, isCreatingAccount: true };
 		case SIGNUP_FAILURE:
-			return { ...state, isCreatingAccount: false };
+			return { ...state, isCreatingAccount: false, passwordError: !!action.code };
 		case SIGNUP_SUCCESS:
 			return { ...state, isCreatingAccount: false };
 		case SIGNUP_CONFIRMATION_REQUIRED:

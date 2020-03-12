@@ -1,8 +1,14 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, Platform, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import { Colours } from '../../constants/theme';
 
 const { width, height } = Dimensions.get('window');
+
+console.log(height);
+
+const formHeight: number = height >= 700 ? height / 2.5 : (height / 2.5) + 45;
+let closeButtonPosition: number = height >= 700 ? -5 : -10;
+closeButtonPosition = Platform.OS === 'ios' ? closeButtonPosition : closeButtonPosition - 16;
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
@@ -12,21 +18,22 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	heightThird: {
-		height: height / 3
+		// flex: 1,
+		height: formHeight
 	},
 
 	closeButtonContainer: {
-		position: 'relative',
-		top: -15,
+		position: 'absolute',
+		top: 45,
 		zIndex: 50
 	},
 
 	loginLink: {
-		marginTop: 40,
+		marginTop: 20,
 		alignSelf: 'stretch',
 		color: 'black',
-		fontWeight: 'bold',
-		fontSize: 16,
+		fontWeight: '500',
+		fontSize: 15,
 		textAlign: 'center'
 	},
 
@@ -38,7 +45,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'absolute',
-		top: -50,
+		top: closeButtonPosition,
+		zIndex: 1000,
 		left: (width / 2) - 20,
 		shadowOffset: {
 			width: 2,

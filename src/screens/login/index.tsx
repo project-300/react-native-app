@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CompState, Props } from './interfaces';
-import { login } from '../../redux/actions';
+import { login, getCurrentJourney } from '../../redux/actions';
 import { LoginState } from '../../types/redux-reducer-state-types';
 import { AppState } from '../../store';
 import Animated, { Easing } from 'react-native-reanimated';
@@ -25,6 +25,7 @@ import { LoginForm } from '../../components/forms/login';
 import formStyles from '../../styles/forms';
 import styles from './styles';
 import { AnimatedStyles } from '../../animations/styles';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 
 const {
 	Value,
@@ -34,6 +35,7 @@ const {
 } = Animated;
 
 const { width, height } = Dimensions.get('window');
+const circleRadius: number = height >= 700 ? height + 50 : height;
 
 let _keyboardWillShowSubscription: EmitterSubscription | undefined;
 let _keyboardDidShowSubscription: EmitterSubscription | undefined;
@@ -61,7 +63,8 @@ export class Login extends Component<Props, CompState> {
 
 		this.state = {
 			formOpen: false,
-			keyboardOpen: false
+			keyboardOpen: false,
+			isClosingForm: false
 		};
 
 		this.generalOpacity = new Value(1);
@@ -79,7 +82,7 @@ export class Login extends Component<Props, CompState> {
 
 		this.bgY = interpolate(this.generalOpacity, {
 			inputRange: [ 0, 1 ],
-			outputRange: [ (-height / 3) - heightDiff, 0 ],
+			outputRange: [ (-height / 2.5) - heightDiff, 0 ],
 			extrapolate: Extrapolate.CLAMP
 		});
 
@@ -131,12 +134,15 @@ export class Login extends Component<Props, CompState> {
 	}
 
 	private closeForm = (): void => {
+		if (this.state.isClosingForm) return;
+		this.setState({ isClosingForm: true });
+
 		timing(this.generalOpacity, {
 			duration: 1000,
 			toValue: 1,
 			easing: Easing.inOut(Easing.ease)
 		}).start(() => {
-			this.setState({ formOpen: false }); // Hide login form after opacity is invisible
+			this.setState({ formOpen: false, isClosingForm: false }); // Hide login form after opacity is invisible
 		});
 	}
 
@@ -201,7 +207,7 @@ export class Login extends Component<Props, CompState> {
 						AnimatedStyles.opacity(this.backgroundOpacity)
 					] }>
 					<Svg
-						height={ height + 50 }
+						height={ circleRadius }
 						width={ width }
 						style={ {
 							shadowOffset: {
@@ -218,18 +224,15 @@ export class Login extends Component<Props, CompState> {
 						<Image
 							href={ require('../../assets/images/login-bg.jpg') }
 							width={ width }
-							height={ height + 50 }
+							height={ circleRadius }
 							preserveAspectRatio='xMinYMid slice'
 							clipPath='url(#clip)'
 						/>
-						<View style={ { width: '100%', alignItems: 'center' } }>
+						<View style={ { width: '100%', backgroundColor: 'transparent' } }>
 							<RNImage
 								source={ require('../../assets/images/dryve.png') }
 								style={ styles.logo }
 								resizeMode={ 'contain' }
-								// height={ height + 50 }
-								// preserveAspectRatio='xMinYMid slice'
-								// clipPath='url(#clip)'
 							/>
 						</View>
 					</Svg>
@@ -269,10 +272,9 @@ export class Login extends Component<Props, CompState> {
 							AnimatedStyles.translateY(this.textInputY),
 							AnimatedStyles.opacity(this.textInputOpacity)
 						] }>
-
-						<TouchableOpacity
-							onPress={ this.closeForm }
-							style={ styles.closeButtonContainer }>
+						<TapGestureHandler
+							onHandlerStateChange={ this.closeForm }
+						>
 							<Animated.View
 								style={ [
 									styles.closeButton,
@@ -289,7 +291,7 @@ export class Login extends Component<Props, CompState> {
 									/>
 								</Animated.Text>
 							</Animated.View>
-						</TouchableOpacity>
+						</TapGestureHandler>
 
 						<LoginForm
 							isLoggingIn={ this.props.isLoggingIn }
@@ -297,6 +299,7 @@ export class Login extends Component<Props, CompState> {
 							login={ this.props.login }
 							keyboardOpen={ this.state.keyboardOpen }
 							navigation={ this.props.navigation }
+							getCurrentJourney={ this.props.getCurrentJourney }
 						/>
 						<TouchableOpacity
 							onPress={ (): boolean => this.props.navigation.navigate('ForgotPassword') }>
@@ -315,4 +318,7 @@ const mapStateToProps = (state: AppState): LoginState => ({
 	...state.loginReducer
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, {
+	login,
+	getCurrentJourney
+})(Login);

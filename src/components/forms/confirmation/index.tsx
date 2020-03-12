@@ -3,7 +3,7 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity, Dimensions
+	Dimensions
 } from 'react-native';
 import styles from './styles';
 import { Props, State } from './interfaces';
@@ -13,7 +13,7 @@ import formStyles from '../../../styles/forms';
 import { Colours, ContrastTheme, Theme } from '../../../constants/theme';
 import { Button } from 'react-native-paper';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default class ConfirmationForm extends Component<Props, State> {
 
@@ -56,15 +56,17 @@ export default class ConfirmationForm extends Component<Props, State> {
 	}
 
 	private _confirmSignUp = async (): Promise<void> => {
-		const { username, userId, code, isSignUp } = this.state;
+		const { username, userId, isSignUp, password } = this.props;
+		const { code } = this.state;
 
 		if (!code) return toastr.error('Confirmation Code is missing');
 
 		const res = await this.props.confirmAccount(userId, code, isSignUp, username);
-		if (res) this.props.navigation.navigate('Profile');
-		else {
-			toastr.error('Confirmation Code is incorrect');
-		}
+		console.log(username, password);
+		if (res) {
+			const result: boolean = await this.props.login(username, password);
+			result && this.props.navigation.navigate('SearchJourneys');
+		} else toastr.error('Confirmation Code is incorrect');
 	}
 
 	public render(): ReactElement {
@@ -75,8 +77,6 @@ export default class ConfirmationForm extends Component<Props, State> {
 				<TextInput
 					placeholder={ 'Confirmation Code' }
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ AuthTheme }
-					// mode={ 'outlined' }
 					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, width: width * 0.8, alignSelf: 'center' } }
 					onChangeText={ (code: string): void => this.setState({ code }) }
 					autoCorrect={ false }

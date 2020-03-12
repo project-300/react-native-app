@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { State, Props } from './interfaces';
 import toastr from '../../../helpers/toastr';
-import { AuthTheme, Colours, ContrastTheme, Theme } from '../../../constants/theme';
+import { Colours, ContrastTheme, Theme } from '../../../constants/theme';
 import { Button } from 'react-native-paper';
 import styles from './styles';
 import formStyles from '../../../styles/forms';
@@ -31,7 +31,10 @@ export class LoginForm extends Component<Props, State> {
 		if (!password) return toastr.error('Password is missing');
 
 		const res: boolean = await this.props.login(email, password);
-		res && this.props.navigation.navigate('SearchJourneys');
+		if (res) {
+			this.props.navigation.navigate('SearchJourneys');
+			await this.props.getCurrentJourney();
+		}
 	}
 
 	public render(): ReactElement {
@@ -45,9 +48,7 @@ export class LoginForm extends Component<Props, State> {
 				<TextInput
 					placeholder='Email Address'
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ ContrastTheme }
-					// mode={ 'outlined' }
-					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
+					style={ { padding: 16, borderWidth: 0.4, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4, marginBottom: 10 } }
 					onChangeText={ (email: string): void => this.setState({ email }) }
 					autoCorrect={ false }
 					autoCompleteType={ 'off' }
@@ -58,9 +59,7 @@ export class LoginForm extends Component<Props, State> {
 				<TextInput
 					placeholder='Password'
 					placeholderTextColor={ Colours.middleGrey }
-					// theme={ AuthTheme }
-					// mode={ 'outlined' }
-					style={ { padding: 16, borderWidth: 0.2, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4 } }
+					style={ { padding: 16, borderWidth: 0.4, borderColor: '#BBB', backgroundColor: 'white', borderRadius: 4 } }
 					secureTextEntry={ true }
 					autoCapitalize='none'
 					onChangeText={ (password: string): void => this.setState({ password })}
