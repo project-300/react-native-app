@@ -29,6 +29,8 @@ const formStyles: FormStyles = StyleSheet.create<FormStyles>({
 	buttonText: {
 		fontSize: 16,
 		fontWeight: '500',
+		alignSelf: 'stretch',
+		textAlign: 'center',
 		color: Theme.accent
 	},
 
