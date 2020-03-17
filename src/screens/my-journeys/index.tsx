@@ -25,6 +25,7 @@ import Animated, { Easing } from 'react-native-reanimated';
 import { interpolateAnimation } from '../../animations/animations';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Colours, ContrastTheme } from '../../constants/theme';
+import formStyles from '../../styles/forms';
 
 const { height } = Dimensions.get('window');
 const { timing } = Animated;
@@ -231,7 +232,7 @@ export class MyJourneys extends Component<Props, State> {
 				{
 					journeyStatus === 'NOT_STARTED' && !this._15MinutesOrLess(leavingAt) &&
 						<TouchableOpacity
-							onPress={ (): boolean => this.props.navigation.navigate('PassengerPickup', { journeyKey: { journeyId, createdAt } }) }
+							onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', { journey }) }
 						>
 							<Text style={ styles.cardLink }>VIEW</Text>
 						</TouchableOpacity>
@@ -486,17 +487,24 @@ export class MyJourneys extends Component<Props, State> {
 						this.state.driverView && !this.props.isRequesting && !this.props.journeys.driver.length &&
 							<View>
 								<Text style={ styles.centerText }>
-									You currently have no journeys created by yourself
+									You have not posted any lifts yet
 								</Text>
 							</View>
 					}
 
 					{
 						!this.state.driverView && !this.props.isRequesting && !this.props.journeys.passenger.length &&
-							<View>
+							<View style={ styles.noResults }>
 								<Text style={ styles.centerText }>
-									You currently have no accepted lifts
+									You have not accepted any lifts
 								</Text>
+
+								<Button
+									style={ [ formStyles.button, styles.noResultsButton ] }
+									theme={ ContrastTheme }
+									mode={ 'outlined' }
+									onPress={ (): boolean => this.props.navigation.navigate('SearchJourneys') }
+								>Search For One</Button>
 							</View>
 					}
 				</ScrollView>

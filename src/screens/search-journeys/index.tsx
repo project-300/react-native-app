@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	RefreshControl,
 	KeyboardAvoidingView,
-	Platform, StatusBarIOS, NativeModules, EmitterSubscription
+	Platform, StatusBarIOS, NativeModules, EmitterSubscription, TouchableWithoutFeedback, TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles, { priceBadgeText } from './styles';
@@ -77,10 +77,12 @@ class SearchJourneys extends Component<Props, State> {
 
 		return (
 			<View>
-				<TouchableOpacity
-					style={ { ...styles.liftRowContainer, borderColor: this._getBorderColour(!!userJoined, !!isOwnedByUser) } }
+				<TouchableHighlight
 					onPress={ (): boolean => this.props.navigation.navigate('ViewJourney', { journey }) }
 				>
+					<View
+						style={ { ...styles.liftRowContainer, borderColor: this._getBorderColour(!!userJoined, !!isOwnedByUser) } }
+					>
 					{
 						journey.userJoined &&
 							<NoticeBanner
@@ -114,7 +116,8 @@ class SearchJourneys extends Component<Props, State> {
 							</Text>
 						</View>
 					</View>
-				</TouchableOpacity>
+					</View>
+				</TouchableHighlight>
 			</View>
 		);
 	}

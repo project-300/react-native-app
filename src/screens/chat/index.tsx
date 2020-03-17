@@ -319,6 +319,17 @@ export class Chat extends Component<Props, State> {
 			>
 				{/*{ this._renderNavigationEvents() }*/}
 
+				{
+					this.props.chat && !this.props.messages.length &&
+						<Text
+							style={ {
+								alignSelf: 'center',
+								fontSize: 18,
+								marginTop: 50
+							} }
+						>No Messages yet</Text>
+				}
+
 				{ this._renderMessageScrollView() }
 
 				<View style={ { bottom: 0, position: 'absolute', left: 0, right: 0, backgroundColor: 'white' } }>

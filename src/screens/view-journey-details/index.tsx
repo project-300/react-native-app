@@ -246,6 +246,7 @@ export class ViewJourneyDetails extends Component<Props, State> {
 
 				<ScrollView
 					style={ styles.content }
+					contentContainerStyle={ { paddingHorizontal: 20 } }
 					refreshControl={
 						<RefreshControl refreshing={ this.props.contentReloading } onRefresh={ async (): Promise<void> => {
 							await this._getJourney(true);

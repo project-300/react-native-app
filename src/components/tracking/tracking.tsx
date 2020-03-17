@@ -8,12 +8,13 @@ import {
 } from '../../redux/actions';
 import DriverLocation from '../../services/driver-location';
 import { Coords } from '@project-300/common-types';
-import { View } from 'react-native';
+import { View, PermissionsAndroid } from 'react-native';
 import { AppActions } from '../../types/redux-action-types';
 
 interface State {
 	movementCount: number;
 	tracker: number | null;
+	allowedTracking: boolean;
 }
 
 interface Props extends LocationTrackingState {
@@ -29,12 +30,14 @@ export class LocationTracker extends Component<Props, State> {
 
 		this.state = {
 			movementCount: 0, // Current session driver movements
-			tracker: null
+			tracker: null,
+			allowedTracking: false
 		};
 	}
 
-	public componentDidMount(): void {
-		if (this.props.allowTracking) this._trackDriver();
+	public async componentDidMount(): Promise<void> {
+		await this._requestLocationPermission();
+		if (this.state.allowedTracking) if (this.props.allowTracking) this._trackDriver();
 	}
 
 	public componentWillUnmount(): void {
@@ -45,6 +48,29 @@ export class LocationTracker extends Component<Props, State> {
 		console.log(prevProps.allowTracking, this.props.allowTracking);
 		if (!prevProps.allowTracking && this.props.allowTracking) this._trackDriver();
 		if (prevProps.allowTracking && !this.props.allowTracking) this._stopTracking();
+	}
+
+	private _requestLocationPermission = async (): Promise<void> => {
+		try {
+			const granted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+				{
+					title: 'Location Acess',
+					message: 'DRYVE wants to access to your location',
+					buttonPositive: 'Ok',
+					buttonNegative: 'Deny'
+				}
+			)
+			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+				this.setState({ allowedTracking: true });
+				console.log('Location Permission Granted');
+			} else {
+				this.setState({ allowedTracking: false });
+				console.log('Location Permission Denied');
+			}
+		} catch (err) {
+			console.warn(err);
+		}
 	}
 
 	private _trackDriver = (): void => {

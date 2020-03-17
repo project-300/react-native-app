@@ -47,10 +47,10 @@ const styles: Styles = StyleSheet.create<Styles>({
 	},
 
 	content: {
-		padding: 20,
 		flex: 1,
 		borderTopWidth: 0.5,
 		borderColor: '#DDD'
+		// marginHorizontal: 20
 	},
 
 	infoBlock: {
@@ -58,7 +58,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		paddingTop: 30,
 		borderRadius: 4,
 		marginBottom: 10,
-		marginTop: 20,
+		marginTop: 40,
 		backgroundColor: Colours.white,
 		shadowColor: Colours.black,
 		shadowOffset: {
@@ -67,11 +67,13 @@ const styles: Styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 4,
-		elevation: 6,
+		// elevation: 1,
 		flex: 1,
 		flexDirection: 'column',
 		borderWidth: 0.5,
-		borderColor: '#CCC'
+		borderColor: '#CCC',
+		alignSelf: 'stretch',
+		zIndex: 100
 	},
 
 	placeText: {
@@ -105,14 +107,17 @@ const styles: Styles = StyleSheet.create<Styles>({
 		right: -20,
 		bottom: -height,
 		backgroundColor: 'black',
-		padding: 20
+		padding: 20,
+		zIndex: 500
 	},
 
 	overlayButtonContainer: {
 		position: 'absolute',
 		left: 0,
 		right: 0,
-		top: height / 10
+		top: height / 10,
+		marginHorizontal: 20,
+		zIndex: 501
 	},
 
 	overlayButton: {
@@ -138,7 +143,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.4,
 		shadowRadius: 4,
-		elevation: 6
+		elevation: 3,
+		zIndex: 100
 	}
 });
 

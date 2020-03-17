@@ -37,14 +37,15 @@ export class UpdateInterests extends Component<Props, State> {
 	public render(): ReactElement {
 		return (
 			<View style={ styles.container }>
-				<View
-					style={
-						{
-							height: this.props.panelOpen ?
-								'80%' :
-								'100%'
-						}
-					}>
+				{/*<View*/}
+				{/*	style={*/}
+				{/*		{*/}
+				{/*			height: this.props.panelOpen ?*/}
+				{/*				'100%' :*/}
+				{/*				'100%'*/}
+				{/*		}*/}
+				{/*	}*/}
+				{/*>*/}
 					<ScrollView>
 						{
 							this.props.allInterests && this.props.allInterests.map(
@@ -69,7 +70,7 @@ export class UpdateInterests extends Component<Props, State> {
 							)
 						}
 					</ScrollView>
-				</View>
+				{/*</View>*/}
 
 				{
 					this.props.panelOpen &&

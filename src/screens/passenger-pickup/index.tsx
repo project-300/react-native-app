@@ -318,7 +318,7 @@ export class PassengerPickup extends Component<Props, State> {
 					}
 
 					{
-						this.props.cancelledCount === passengers.length &&
+						this.props.cancelledCount === passengers.length && !!passengers.length &&
 							<Text style={ [ styles.summaryText, { color: 'red' } ] }>
 								You have cancelled pickup for ALL Passengers
 							</Text>

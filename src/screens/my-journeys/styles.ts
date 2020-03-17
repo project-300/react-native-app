@@ -1,9 +1,8 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import { Colours, Theme } from '../../constants/theme';
-import { Col } from 'native-base';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const containerPadding: number = 20;
 const switchViewHeight: number = 76;
@@ -11,7 +10,7 @@ const cardWidth: number = width - (containerPadding * 2);
 
 const styles: Styles = StyleSheet.create<Styles>({
 	container: {
-		paddingHorizontal: containerPadding,
+		// paddingHorizontal: containerPadding,
 		backgroundColor: Colours.whiteGrey
 	},
 
@@ -63,7 +62,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 6,
-		elevation: 2
+		// elevation: 0,
+		marginHorizontal: 20
 	},
 
 	triangle: {
@@ -232,7 +232,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 		textAlign: 'center',
 		alignSelf: 'center',
 		paddingBottom: 10,
-		fontSize: 16
+		fontSize: 18,
+		fontWeight: '500'
 	},
 
 	passengerArrowIcon: {
@@ -255,6 +256,15 @@ const styles: Styles = StyleSheet.create<Styles>({
 		elevation: 4,
 		zIndex: 10,
 		height: switchViewHeight
+	},
+
+	noResults: {
+		marginTop: height * 0.2,
+		flexDirection: 'column'
+	},
+
+	noResultsButton: {
+		alignSelf: 'center'
 	}
 });
 

@@ -41,16 +41,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		right: 0,
 		bottom: 0,
 		zIndex: 1,
-		flex: 1,
-
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 10
-		},
-		shadowOpacity: 0.18,
-		shadowRadius: 16,
-		elevation: 24
+		flex: 1
 	},
 
 	input: {
@@ -157,7 +148,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 4,
-		elevation: 6,
+		// elevation: 1,
 		flex: 1,
 		flexDirection: 'column',
 		borderWidth: 0.5,

@@ -84,7 +84,7 @@ const styles: Styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 6,
-		elevation: 6
+		elevation: 1
 	},
 
 	priceBadge: {

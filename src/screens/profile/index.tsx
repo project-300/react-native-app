@@ -141,13 +141,14 @@ export class Profile extends Component<Props, State> {
 	}
 
 	private openForm = (editType: string): void => { // Form will slide up from bottom
-		this.setState({ editType });
+		if (this.state.openingInterests) return;
+		this.setState({ editType, openingInterests: true });
 
 		timing(this.animatedValues.panelOpen, {
 			duration: 500,
 			toValue: 1,
 			easing: Easing.inOut(Easing.ease)
-		}).start(() => this.setState({ panelOpen: true }));
+		}).start(() => this.setState({ panelOpen: true, openingInterests: false }));
 	}
 
 	private closeForm = (): void => { // Form will slide back down
@@ -218,13 +219,20 @@ export class Profile extends Component<Props, State> {
 
 				{
 					!this.state.isOtherUser &&
-						<IconButton
-							icon={ user.interests && user.interests.length ? 'pencil' : 'plus' }
-							onPress={ (): void => this.openForm(EditTypes.INTERESTS) }
-							color={ Theme.accent }
-							size={ 26 }
-							style={ { position: 'absolute', top: 8, right: 6 } }
-						/>
+						<TapGestureHandler
+							numberOfTaps={ 1 }
+							onHandlerStateChange={ (): void => this.openForm(EditTypes.INTERESTS) }
+						>
+							<View
+                                style={ { position: 'absolute', top: 8, right: 6 } }
+                            >
+								<IconButton
+									icon={ user.interests && user.interests.length ? 'pencil' : 'plus' }
+									color={ Theme.accent }
+									size={ 26 }
+								/>
+							</View>
+						</TapGestureHandler>
 				}
 
 				<View>
@@ -459,7 +467,7 @@ export class Profile extends Component<Props, State> {
 				</ScrollView>
 
 				{
-					!this.state.isOtherUser &&
+					!this.state.isOtherUser && !this.state.panelOpen &&
 						<FAB
 							style={ styles.fab }
 							icon={
@@ -472,7 +480,7 @@ export class Profile extends Component<Props, State> {
 				}
 
 				{
-					this.state.isOtherUser &&
+					this.state.isOtherUser && !this.state.panelOpen &&
 						<FAB
 							onPress={ this._openUserChat }
 							style={ styles.fab }

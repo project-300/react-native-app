@@ -1,9 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, Platform, StyleSheet } from 'react-native';
 import { Styles } from './interfaces';
 import { Colours, Theme } from '../../../constants/theme';
 
 const styles = StyleSheet.create<Styles>({
 	container: {
+		flex: 1
 	},
 
 	input: {
@@ -19,25 +20,15 @@ const styles = StyleSheet.create<Styles>({
 
 	buttonsContainer: {
 		alignItems: 'center',
-		marginTop: 20,
 		position: 'absolute',
-		bottom: 0,
+		bottom: Platform.OS === 'ios' ? 180 : 130,
 		left: 0,
 		right: 0,
-		zIndex: 2,
-		height: '20%',
+		zIndex: 200,
 		backgroundColor: 'white',
-		borderTopWidth: 0.2,
+		borderTopWidth: 0.5,
 		borderTopColor: Colours.lightGrey,
-		paddingVertical: 10,
-		shadowColor: Colours.black,
-		shadowOffset: {
-			width: 0,
-			height: -4
-		},
-		shadowOpacity: 0.2,
-		shadowRadius: 6,
-		elevation: 12
+		paddingVertical: 10
 	},
 
 	button: {

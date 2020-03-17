@@ -91,7 +91,7 @@ const styles = StyleSheet.create<Styles>({
 	},
 
 	panel: {
-		backgroundColor: Colours.white
+		backgroundColor: Colours.whiteGrey
 	},
 
 	sectionContainer: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.1,
 		shadowRadius: 6,
-		elevation: 6,
+		elevation: 2,
 		borderWidth: 0.5,
 		borderColor: '#DDD',
 		marginBottom: 20
@@ -208,7 +208,8 @@ const styles = StyleSheet.create<Styles>({
 		},
 		shadowOpacity: 0.4,
 		shadowRadius: 4,
-		elevation: 6
+		elevation: 6,
+		zIndex: 50
 	}
 });
 
