@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Project300.xcodeproj">
+      location = "group:/Users/charles/Documents/programming/ReactNative/react-native-app/ios/DRYVE.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

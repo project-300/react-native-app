@@ -256,12 +256,14 @@ export class ViewJourneyDetails extends Component<Props, State> {
 
 					{
 						userJoined &&
-							<NoticeBanner
-								icon='check'
-								text='You have accepted this lift'
-								backgroundColor={ Colours.green }
-								color={ Colours.white }
-							/>
+							<View style={ { marginTop: 20 } }>
+								<NoticeBanner
+									icon='check'
+									text='You have accepted this lift'
+									backgroundColor={ Colours.green }
+									color={ Colours.white }
+								/>
+							</View>
 					}
 
 					<View style={ styles.infoBlock }>

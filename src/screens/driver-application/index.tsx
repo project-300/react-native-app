@@ -12,7 +12,7 @@ import { apply, checkIfApplied } from '../../redux/actions';
 import { AppState } from '../../store';
 import { DriverApplicationState } from '../../types/redux-reducer-state-types';
 import { Button, TextInput } from 'react-native-paper';
-import { ContrastTheme, Theme } from '../../constants/theme';
+import { Colours, ContrastTheme, Theme } from '../../constants/theme';
 import formStyles from '../../styles/forms';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -139,14 +139,25 @@ export class DriverApplication extends Component<Props, State> {
 
 				{
 					this.state.isChecking ?
-					<ActivityIndicator
-					animating={ this.state.isChecking }
-					color={ Theme.accent }
-					size={ 34 }
-					style={ styles.spinner } />
-					: this.props.applied
-					? <Text style={ styles.text }>Thanks for making an application, you will be notified soon</Text>
-					: this._renderApplicationForm()
+						<ActivityIndicator
+							animating={ this.state.isChecking }
+							color={ Theme.accent }
+							size={ 34 }
+							style={ styles.spinner }
+						/>
+						: this.props.applied ?
+							<View style={ { backgroundColor: Colours.white, paddingVertical: 40, paddingHorizontal: 20, borderWidth: 0.5, borderColor: '#CCC', borderRadius: 4 } }>
+								<Text style={ [ styles.text, { textAlign: 'center' } ] }>
+									Thanks for making an application, you will be notified soon
+								</Text>
+								<Button
+									theme={ ContrastTheme }
+									mode={ 'outlined' }
+									style={ { marginTop: 40 } }
+									onPress={ (): boolean => this.props.navigation.navigate('SearchJourneys') }
+								>Go Back</Button>
+							</View>
+							: this._renderApplicationForm()
 				}
 
 			</ScrollView>

@@ -14,6 +14,7 @@ import { AppState } from '../../store';
 import { AllChatState } from '../../types/redux-reducer-state-types';
 import { Chat } from '@project-300/common-types';
 import { ActivityIndicator, Badge } from 'react-native-paper';
+import { Colours } from '../../constants/theme';
 
 export class AllChats extends Component<Props, State> {
 
@@ -59,7 +60,7 @@ export class AllChats extends Component<Props, State> {
 					this.props.fetchingChats &&
 						<ActivityIndicator
 							size={ 40 }
-							color={ 'red' }
+							color={ Colours.primary }
 						/>
 				}
 

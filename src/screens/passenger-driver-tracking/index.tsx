@@ -19,6 +19,7 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native
 import { Journey, Place } from '@project-300/common-types';
 import { Container } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Animated from "react-native-reanimated";
 
 export class DriverTracking extends Component<Props, State> {
 
@@ -103,7 +104,16 @@ export class DriverTracking extends Component<Props, State> {
 					>
 						{ journey && this._createMarker(journey.origin) }
 						{ journey && this._createMarker(journey.destination) }
-						{ driverLocation && this._createMarker({ ...driverLocation, name: 'Driver' }, 'green') }
+						{ driverLocation &&
+							<Marker
+								coordinate={ driverLocation }
+							>
+								<Animated.Image
+									source={ require('../../assets/images/car2.png') }
+									// style={ { transform: [ { rotateY: '180deg' } ] } }
+								/>
+							</Marker>
+						}
 						{ passengerLocation && this._createMarker({ ...passengerLocation, name: 'You' }) }
 
 						<Polyline
