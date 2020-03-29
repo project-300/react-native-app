@@ -105,9 +105,7 @@ export class InteractiveMap extends Component<Props, State> {
 
 		return (
 			<View style={ styles.container }>
-				<Text>test</Text>
 				<View style={ styles.mapContainer }>
-					<Text>test</Text>
 					<MapView
 						provider={ PROVIDER_GOOGLE }
 						style={ styles.map}
@@ -123,7 +121,6 @@ export class InteractiveMap extends Component<Props, State> {
 							strokeWidth={ 4 }
 						/>
 					</MapView>
-					<Text>test</Text>
 				</View>
 			</View>
 		);

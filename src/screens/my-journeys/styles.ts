@@ -158,7 +158,8 @@ const styles: Styles = StyleSheet.create<Styles>({
 	passengerJourneyLocations: {
 		fontSize: 20,
 		color: Colours.darkGrey,
-		alignSelf: 'flex-end'
+		alignSelf: 'flex-end',
+		textAlign: 'right'
 	},
 
 	fab: {
